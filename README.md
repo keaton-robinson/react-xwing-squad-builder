@@ -1,0 +1,7 @@
+This is a learning project I undertook to implement the main features of a "squad builder" for the X-Wing Miniatures game by Atomic Mass Games. The tool I am aiming to recreate is called "Yet Another Squad Builder 2.0", or YASB 2.0. 
+
+You can see it live here: https://raithos.github.io/ and you can visit its GitHub repository here: https://github.com/raithos/xwing.
+
+My goal was to challenge myself to implement something interesting and familiar to me so that I may see what I would learn from the process. It was interesting thinking through YASB's UI components interact, recreating the UI layout of the page, and learning how to use a specialized fonts to put all the icons throughout the page. I also gained a big appreciation for unit tests. I wanted to see if making this without tests would leave me wishing I had them, and it did. I have made changes multiple times to enable a new behavior, but broken an old one. At the time I'm writing this readme, I haven't made any tests for this project, but I am no longer a skeptic of whether they'd be worth the effort.    
+
+My intent with this project was to focus on learning React and making some of my own HTML/CSS -- not to create everything from scratch. To that end, I used some things from YASB 2.0 so that I could focus on the things I was interested in. I am using some of YASB 2.0's data, images, custom fonts, and SVG-markup in my page. 
