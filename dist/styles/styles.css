@@ -1,0 +1,286 @@
+@font-face {
+    font-family: EurostileStandard;
+    src: url("../fonts/EurostileLTStd.otf");
+}
+
+@font-face {
+    font-family: kimberley;
+    src: url("../fonts/kimberley\ bl.ttf");
+}
+
+body {
+    margin: 0;
+    background-color: #202020;
+    font-family: "EurostileStandard";
+    color: white;
+}
+
+select {
+    font-size: 1rem;
+}
+
+
+#navbar {
+    color: rgb(0, 153, 255);
+    background-color: #101010;
+}
+
+#factionChooser {
+    font-size: 1.25rem;
+}
+
+.squad-name-and-points-row {
+    background-color: #161616;
+}
+
+
+
+
+/* Nav Layout */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+nav ul {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    list-style-type: none;
+    padding: 0;
+    margin: 0px;
+}
+
+nav ul li {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+
+
+/* Squad and points tracker layout */
+
+.squad-name-and-points-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.squad-name-and-points-row h3 {
+    margin-top: 0px;
+}
+
+
+/* Ship info layout */
+
+.shipAndInfoContainer {
+    display: flex;
+}
+
+.shipAndInfoContainer .shipAndObstacleSelectors {
+    flex: 2;
+}
+
+.shipAndInfoContainer .infoPanel {
+    flex: 1;
+    margin-left: 20px;
+}
+
+/* ship row layout */
+.shipRow {
+    display: flex;
+    padding: 5px;
+    min-height: 100px;
+}
+
+
+/* ship, points, upgrades flex sizes */
+.shipAndPilotSelectorDiv{
+    flex: 3;
+    min-width: 200px;
+}
+
+.shipPointCost {
+    flex: 1;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.shipUpgrades {
+    flex: 4;
+}
+
+/* ship / pilot settings */
+.shipSelector {
+    width: 100%;
+    max-width: 225px;
+}
+
+.pilotSelector {
+    width: 100%;
+    max-width: 225px;
+}
+
+/* ship point cost settings */
+.shipPointCost {
+    text-align: center;
+    min-width: 50px;
+}
+
+/* upgrade settings */ 
+.shipUpgrades select{
+    width: 45%;
+    min-width: 200px;
+}
+
+.shipPilotName {
+    margin-top: 0px;
+    margin-bottom:5px;
+}
+
+
+.infoPanel {
+    background-color: white;
+    color: black;
+}
+
+/* overriding annoying css color property inheritance of "white" from table element */
+.info-stats {
+    color: black;
+}
+
+.info-stats tr.stat-icon{
+    height: 3rem;
+}
+
+
+.info-maneuvers {
+    background-color: #a29199;
+    border-collapse: collapse;
+    font-family: "kimberley";
+    font-size: 1.5rem;
+    color: white;
+
+}
+
+.info-maneuvers > tbody > tr > td {
+    border: 2px solid #d6c9d2;
+}
+
+.info-maneuvers > tbody > tr > td:first-child {
+    background-color: #888888;
+    background-image: linear-gradient(rgba(45, 45, 45, 0.2) 50%, transparent 50%, transparent 100%);
+    background-size: 5px 5px;
+    padding: 5px;
+    text-align: center;
+
+}
+
+.btn-info {
+    color: white;
+    background-color: #17a2b8;
+    font-family: "EurostileStandard";
+    padding: 5px;
+    margin: 5px;
+}
+
+.btn-danger {
+    color: white;
+    background-color: #dc3545;
+    font-family: "EurostileStandard";
+    padding: 5px;
+    margin: 5px;
+}
+
+
+.header-stat {
+    background-color: black;
+    border-radius: 50%;
+    padding:2px;
+}
+
+.info-initiative {
+    color: #CD6D2D;
+    font-family: "kimberley";
+    font-size: 1.5rem;
+}
+
+.header-attack {
+    color: #EF232B;
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-bottom: 7px;
+}
+
+.info-attack {
+    color: #EF232B;
+    font-family: "kimberley";
+    font-size: 1.5rem;
+}
+
+.header-agility {
+    color: #6BBE44;
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-bottom: 6px;
+}
+
+.info-agility {
+    color: #6BBE44;
+    font-family: "kimberley";
+    font-size: 1.5rem;
+}
+
+.header-hull {
+    color: #B6B335;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 7px;
+}
+
+.info-hull {
+    color: #B6B335;
+    font-family: "kimberley";
+    font-size: 1.5rem;
+}
+
+.header-shield {
+    color: #7ED3E5;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 8px;
+}
+
+.info-shield {
+    color: #7ED3E5;
+    font-family: "kimberley";
+    font-size: 1.5rem;
+}
+
+.header-force {
+    color: #9D899D;
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-bottom: 7px;
+
+}
+
+.info-force {
+    color: #9D899D;
+    font-family: "kimberley";
+    font-size: 1.5rem;
+}
+
+.header-charge {
+    color: #C2B230;
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-bottom: 7px;
+}
+
+.info-charge {
+    color: #C2B230;
+    font-family: "kimberley";
+    font-size: 1.5rem;
+}
