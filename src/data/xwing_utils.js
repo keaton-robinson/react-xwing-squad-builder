@@ -601,7 +601,7 @@ function setUpgrade(upgradeSlot, newlySelectedUpgrade, pilot){
 
     removeUpgrade(upgradeSlot, pilot);
   
-    if(newlySelectedUpgrade){
+    if(newlySelectedUpgrade){  //if no newly selected upgrade, it means an upgrade is being removed
         upgradeSlot.selectedUpgradeId = newlySelectedUpgrade.id;
  
         if(newlySelectedUpgrade.unequips_upgrades){

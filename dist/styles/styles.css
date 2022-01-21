@@ -134,7 +134,12 @@ nav ul li {
     min-width: 200px;
 }
 
-.shipPilotName {
+.infoName {
+    margin-top: 0px;
+    margin-bottom:5px;
+}
+
+.infoType {
     margin-top: 0px;
     margin-bottom:5px;
 }
@@ -143,6 +148,14 @@ nav ul li {
 .infoPanel {
     background-color: white;
     color: black;
+}
+
+.red {
+    color: red;
+}
+
+.force {
+    color: purple;
 }
 
 /* overriding annoying css color property inheritance of "white" from table element */
@@ -283,4 +296,8 @@ nav ul li {
     color: #C2B230;
     font-family: "kimberley";
     font-size: 1.5rem;
+}
+
+svg > g.maneuver.backwards {
+    transform: translate(200px, 200px) rotate(180deg); 
 }

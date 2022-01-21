@@ -7,9 +7,7 @@ import * as xwingUtils from '../data/xwing_utils'
 
 export default class SquadBuilderCpt extends React.Component {
     
-    state = {
-        squad: []
-    };
+    
 
     nextUIKey = 0;
     
@@ -28,11 +26,22 @@ export default class SquadBuilderCpt extends React.Component {
 
         this.factionShips = Object.keys(xwingData.ships).filter(ship => xwingData.ships[ship].factions.includes(props.faction)).sort();
 
+
+        this.state = {
+            squad: [],
+            infoPanelCardToShow: null // will expect an object of format { type: ("Ship"/"Pilot"/"Upgrade"), key: (string, number, number) }
+        };
+
+        if(props.faction == 'Rebel Alliance'){
+            this.state.infoPanelCardToShow = { type:"Ship", key: "CR90 Corellian Corvette" };
+        }
+
     }
 
     removeInvalidUpgradesAndSetState(updatedSquad){
         xwingUtils.removeInvalidUpgrades(updatedSquad);
-        this.setState({ squad: updatedSquad });
+        const state = this.state;
+        this.setState({ ...state, squad: updatedSquad });
     }
 
     setUpgradesOnNewPilot(appReadyNewPilot, upgradesToApply, squadIncludingNewPilot) {
@@ -176,7 +185,7 @@ export default class SquadBuilderCpt extends React.Component {
                             <button className="btn-info">Choose Obstacles</button>
                         </div>
                     </div>
-                    <InfoPanelCpt />
+                    {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : null }  
                 </div>
             </div>
         );

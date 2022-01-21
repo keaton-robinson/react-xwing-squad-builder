@@ -6054,6 +6054,32 @@ const slots = {
     Cargo: { key: "Cargo", displayName: "Cargo" }
 };
 
+const sloticon = {
+    Astromech: '<i class="xwing-miniatures-font xwing-miniatures-font-astromech"></i>',
+    Force: '<i class="xwing-miniatures-font xwing-miniatures-font-forcepower"></i>',
+    Bomb: '<i class="xwing-miniatures-font xwing-miniatures-font-bomb"></i>',
+    Cannon: '<i class="xwing-miniatures-font xwing-miniatures-font-cannon"></i>',
+    Crew: '<i class="xwing-miniatures-font xwing-miniatures-font-crew"></i>',
+    Talent: '<i class="xwing-miniatures-font xwing-miniatures-font-talent"></i>',
+    Missile: '<i class="xwing-miniatures-font xwing-miniatures-font-missile"></i>',
+    Sensor: '<i class="xwing-miniatures-font xwing-miniatures-font-sensor"></i>',
+    Torpedo: '<i class="xwing-miniatures-font xwing-miniatures-font-torpedo"></i>',
+    Turret: '<i class="xwing-miniatures-font xwing-miniatures-font-turret"></i>',
+    Illicit: '<i class="xwing-miniatures-font xwing-miniatures-font-illicit"></i>',
+    Configuration: '<i class="xwing-miniatures-font xwing-miniatures-font-configuration"></i>',
+    Modification: '<i class="xwing-miniatures-font xwing-miniatures-font-modification"></i>',
+    Gunner: '<i class="xwing-miniatures-font xwing-miniatures-font-gunner"></i>',
+    Device: '<i class="xwing-miniatures-font xwing-miniatures-font-device"></i>',
+    Tech: '<i class="xwing-miniatures-font xwing-miniatures-font-tech"></i>',
+    Title: '<i class="xwing-miniatures-font xwing-miniatures-font-title"></i>',
+    Hardpoint: '<i class="xwing-miniatures-font xwing-miniatures-font-hardpoint"></i>',
+    Team: '<i class="xwing-miniatures-font xwing-miniatures-font-team"></i>',
+    Cargo: '<i class="xwing-miniatures-font xwing-miniatures-font-cargo"></i>',
+    Command: '<i class="xwing-miniatures-font xwing-miniatures-font-command"></i>',
+    HardpointShip: '<i class="xwing-miniatures-font xwing-miniatures-font-hardpoint"></i>',
+    "Tactical Relay": '<i class="xwing-miniatures-font xwing-miniatures-font-tacticalrelay"></i>'
+}
+
 const upgrades = [{
     name: '"Chopper" (Astromech)',
     id: 0,
@@ -9809,11 +9835,36 @@ const upgrades = [{
     restrictions: [
         ["Base", "Huge"]
     ]
-}]
+}];
+
+const difficulties = {
+    impossible: 0,
+    blue: 1,
+    white: 2,
+    red: 3,
+    purple: 4
+};
+
+const bearings = {
+    left_hard: "left_hard",
+    left_bank: "left_bank",
+    straight: "straight",
+    right_bank: "right_bank",
+    right_hard: "right_hard",
+    k_turn: "k_turn",
+    left_sloop: "left_sloop",
+    right_sloop: "right_sloop",
+    left_tallion: "left_tallion",
+    right_tallion: "right_tallion",
+    stationary: "stationary",
+    reverse_left: "reverse_left",
+    reverse_straight: "reverse_straight",
+    reverse_right: "reverse_right"
+};
 
 // const cardRulesEnglish = 
 //virtually unlimited object property keys are possible
 // but it may be worth spreading the various upgrade card types out
 // names like "Luke Skywalker" and "Darth Vader" have pilot and crew cards...
 
-export { factionNames, ships, pilots, slots, upgrades };
+export { factionNames, ships, pilots, slots, sloticon, upgrades, difficulties, bearings };
