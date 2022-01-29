@@ -141,12 +141,6 @@ export default class SquadBuilderCpt extends React.Component {
                 <div className="squad-name-and-points-row">
                     <div>
                         <h3>{`${this.props.faction} Squadron`}</h3>
-                        <select name="format" id="format">
-                            <option value="Extended">Extended</option>
-                            <option value="Hyperspace">Hyperspace</option>
-                            <option value="Epic">Epic</option>
-                            <option value="QuickBuild">QuickBuild</option>
-                        </select>
                     </div>
                     <div className="points-display-container">
                         <span>Points: { xwingUtils.getSquadCost(this.state.squad) }/200 ({200-xwingUtils.getSquadCost(this.state.squad)} left)</span>
@@ -183,9 +177,6 @@ export default class SquadBuilderCpt extends React.Component {
                         <AddShipCpt factionShips={this.factionShips} 
                             onShipSelected={this.addCheapestAvailablePilotForShip}
                             onRecordMouseEnter = { this.showInfoPanelCard }/>
-                        <div>
-                            <button className="btn-info">Choose Obstacles</button>
-                        </div>
                     </div>
                     {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : null }  
                 </div>

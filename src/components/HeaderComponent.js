@@ -20,16 +20,6 @@ export default class HeaderComponent extends React.Component {
                   ))}
                 </ul>
             </nav>
-            <nav>
-                <ul>
-                    <li>Rules</li>
-                    <li>Card Browser</li>
-                    <li>About</li>
-                    <li>English</li>
-                    <li>Log In</li>
-                    <li>Submit Bug/Feature Request</li>
-                </ul>
-            </nav>
         </header>
   
       </div>
