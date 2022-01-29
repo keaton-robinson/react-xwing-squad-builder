@@ -11,7 +11,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
 
         return (
             <div>
-                <h3 className="infoName">{ this.props.cardData.name }</h3>
+                <h3 className="infoName">Go make an upgrade infopanel component</h3>
                 <h4 className="infoType">upgradEEDEA!</h4>
             </div>
         );

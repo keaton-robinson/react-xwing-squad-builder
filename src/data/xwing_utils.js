@@ -660,5 +660,12 @@ function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot, squad){
     return false;
 }
 
+const InfoPanelCardTypes = {
+    Ship: "Ship",
+    Pilot: "Pilot",
+    Upgrade: "Upgrade"
+}
+
 export { isNotNullOrUndefined, getUpgradeCost, getPilotCost, getSquadCost, getPilotEffectiveStats, maxPilotOrUpgradeReached, isUpgradeAllowed, 
-    addUpgrades, getAppReadyPilot, getCheapestAvailablePilotForShip, removeInvalidUpgrades, upgradeSquadShip, squadContainsAnotherSolitaryCardForThisSlot }
+    addUpgrades, getAppReadyPilot, getCheapestAvailablePilotForShip, removeInvalidUpgrades, upgradeSquadShip, squadContainsAnotherSolitaryCardForThisSlot,
+    InfoPanelCardTypes }

@@ -4,31 +4,8 @@ import * as xwingData from '../data/xwing_data';
 
 export default class UpgradesCpt extends React.Component{
 
-    slotCountAcrossPilots = {};  
-    //example after constructor finishes: {'Torpedo':{numPerPilot: 2, numPilots: 4} 'Astromech':{numPerPilot: 2, numPilots: 4}, 'Talent': {numPerPilot: 2, numPilots: 4}, 'Force': {numPerPilot: 2, numPilots: 4}}
-
     constructor(props){
         super(props);
-
-
-        for(const pilot of props.pilots){
-            let slotCountForCurrentPilot = {};
-            for(const slot of pilot.slots){
-                if(!slotCountForCurrentPilot[slot]){
-                    slotCountForCurrentPilot[slot] = 1;
-                } else {
-                    slotCountForCurrentPilot[slot]++;
-                }
-            }
-
-            for(const slotCount of Object.entries(slotCountForCurrentPilot)){
-                if(!this.slotCountAcrossPilots[slotCount[0]]){
-                    this.slotCountAcrossPilots[slotCount[0]] = {numPilots: 1, numSlotsPerPilot: slotCountForCurrentPilot[slotCount[0]]};
-                } else {
-                    this.slotCountAcrossPilots[slotCount[0]].numPilots++;
-                }
-            }
-        }
     }
 
     getSlotMarkup(slot){
@@ -49,9 +26,32 @@ export default class UpgradesCpt extends React.Component{
 
 
     render(){
+        const slotCountAcrossPilots = {};  
+        //example: {'Torpedo':{numPerPilot: 2, numPilots: 4} 'Astromech':{numPerPilot: 2, numPilots: 4}, 'Talent': {numPerPilot: 2, numPilots: 4}, 'Force': {numPerPilot: 2, numPilots: 4}}
+
+        //grrr...having to do this sort of thing in the render method seems inefficient....wonder if it could go somewhere else...
+        for(const pilot of this.props.pilots){
+            let slotCountForCurrentPilot = {};
+            for(const slot of pilot.slots){
+                if(!slotCountForCurrentPilot[slot]){
+                    slotCountForCurrentPilot[slot] = 1;
+                } else {
+                    slotCountForCurrentPilot[slot]++;
+                }
+            }
+
+            for(const slotCount of Object.entries(slotCountForCurrentPilot)){
+                if(!slotCountAcrossPilots[slotCount[0]]){
+                    slotCountAcrossPilots[slotCount[0]] = {numPilots: 1, numSlotsPerPilot: slotCountForCurrentPilot[slotCount[0]]};
+                } else {
+                    slotCountAcrossPilots[slotCount[0]].numPilots++;
+                }
+            }
+        }
+
         return (
             <td>
-                {Object.entries(this.slotCountAcrossPilots).map(slot => this.getSlotMarkup(slot) )}
+                {Object.entries(slotCountAcrossPilots).map(slot => this.getSlotMarkup(slot) )}
             </td>
         );
     }

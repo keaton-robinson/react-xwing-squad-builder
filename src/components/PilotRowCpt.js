@@ -2,51 +2,97 @@ import React from 'react';
 import * as xwingData from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
 import ShipUpgradeCpt from './ShipUpgradeCpt';
+import { Dropdown } from 'reactjs-dropdown-component';
+import { DropDownStyles } from '../styleData/styleData';
 
 export default class PilotRowCpt extends React.Component {
 
     constructor(props) {
         super(props);
-        this.handleShipSelection = this.handleShipSelection.bind(this);
-        this.handlePilotSelection = this.handlePilotSelection.bind(this);
-        this.delBtnPressed = this.delBtnPressed.bind(this);
-        this.cloneBtnPressed = this.cloneBtnPressed.bind(this);
+        // this.handleShipSelection = this.handleShipSelection.bind(this);
+        // this.handlePilotSelection = this.handlePilotSelection.bind(this);
+        // this.delBtnPressed = this.delBtnPressed.bind(this);
+        // this.cloneBtnPressed = this.cloneBtnPressed.bind(this);
+
+        this.ddlSelectPilotRef = React.createRef();
     }
 
-    handleShipSelection(e) {
-        this.props.changeShip(e.target.value, this.props.selectedPilot);
+    handleShipSelection = (selectedShip) => {
+        if(selectedShip.value != this.props.selectedPilot.ship){
+            this.props.changeShip(selectedShip.value, this.props.selectedPilot);
+        }
     }
 
-    handlePilotSelection(e)  {
-        this.props.changePilot(this.props.selectedPilot, this.props.availablePilots.find(pilot => pilot.id == e.target.value));
+    handlePilotSelection = (selectedPilot) =>  {
+        if(selectedPilot.value != this.props.selectedPilot.id)
+        {
+            this.props.changePilot(this.props.selectedPilot, this.props.availablePilots.find(pilot => pilot.id == selectedPilot.value));
+        }
     }
 
-    delBtnPressed(e) {
+    handleShipMouseEnter = (ship) => {
+        this.handleMouseEnter(ship, xwingUtils.InfoPanelCardTypes.Ship);
+    }
+
+    handlePilotMouseEnter = (pilot) => {
+        this.handleMouseEnter(pilot, xwingUtils.InfoPanelCardTypes.Pilot);
+    }
+
+    handleUpgradeMouseEnter = (upgrade) => {
+        this.handleMouseEnter(upgrade, xwingUtils.InfoPanelCardTypes.Upgrade);
+    }
+
+    handleMouseEnter = (shipPilotOrUpgradeRecord, type) => {
+        this.props.onRecordMouseEnter(shipPilotOrUpgradeRecord.value, type);
+    }
+
+    delBtnPressed = (e) => {
         this.props.removePilot(this.props.selectedPilot);
     }
 
-    cloneBtnPressed(e) {
+    cloneBtnPressed = (e) => {
         this.props.clonePilot(this.props.selectedPilot);
+    }
+
+    componentDidUpdate = (prevProps) => {
+        //the custom dropdowns don't automatically update their selected item or "title" on re-renders, sadly
+        let current = this.ddlSelectPilotRef.current;
+        if(current.state.selectedItem.value != this.props.selectedPilot.id){
+            current.selectSingleItem({value: this.props.selectedPilot.id});
+        }
     }
 
     
     render() {
+        const shipsForCustomDropdown = this.props.factionShips.map(ship => ({ label: ship, value: ship}));
+        const pilotsForCustomDropDown = this.props.availablePilots.map(pilot => ({ label: pilot.name + " (" + pilot.points + ")", value: pilot.id}));
         return (
             <div className={'shipRow ship-' + PilotRowCpt.getShipBackgroundStylePostFix(this.props.selectedPilot.ship)}>
                 <div className="shipAndPilotSelectorDiv">
                     <div>
-                        <select className="shipSelector" value={this.props.selectedPilot.ship} onChange={this.handleShipSelection}>
-                        {this.props.factionShips.map(ship=> (
-                                <option key={ship} value={ship}>{ship}</option>
-                            ))}
-                        </select>
+                        <Dropdown 
+                            name="selectShip"
+                            titleSingular="Ship"
+                            title="Select a ship"
+                            list={shipsForCustomDropdown}
+                            onChange={this.handleShipSelection}
+                            select={{value: this.props.selectedPilot.ship}}
+                            styles={DropDownStyles}
+                            onMouseEnter={this.handleShipMouseEnter}
+                        />
                     </div>
                     <div>
-                        <select className="pilotSelector" value={this.props.selectedPilot.id} onChange={this.handlePilotSelection}>
-                            {this.props.availablePilots.map(pilot =>(
-                                <option key={pilot.id} value={pilot.id}>{pilot.name + " (" + pilot.points + ")"}</option>
-                            ))}
-                        </select>
+                        <Dropdown 
+                            name="selectPilot"
+                            titleSingular="Pilot"
+                            title="Select a pilot"
+                            list={pilotsForCustomDropDown}
+                            onChange={this.handlePilotSelection}
+                            select={{value: this.props.selectedPilot.id}}
+                            ref={this.ddlSelectPilotRef}
+                            styles={DropDownStyles}
+                            onMouseEnter={this.handlePilotMouseEnter}
+                        />
                     </div>
                 </div>
                 <div className="shipPointCost">
@@ -59,6 +105,7 @@ export default class PilotRowCpt extends React.Component {
                             changeUpgrade= {this.props.changeUpgrade}
                             pilot= {this.props.selectedPilot}
                             squad= {this.props.squad}
+                            onRecordMouseEnter= {this.handleUpgradeMouseEnter}
                         />
                     )) }
                 </div> 

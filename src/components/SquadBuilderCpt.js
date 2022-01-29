@@ -26,16 +26,15 @@ export default class SquadBuilderCpt extends React.Component {
 
         this.factionShips = Object.keys(xwingData.ships).filter(ship => xwingData.ships[ship].factions.includes(props.faction)).sort();
 
-
         this.state = {
             squad: [],
             infoPanelCardToShow: null // will expect an object of format { type: ("Ship"/"Pilot"/"Upgrade"), key: (string, number, number) }
         };
+    }
 
-        if(props.faction == 'Rebel Alliance'){
-            this.state.infoPanelCardToShow = { type:"Ship", key: "CR90 Corellian Corvette" };
-        }
-
+    showInfoPanelCard = (cardKey, cardType) => {
+        const state = this.state;
+        this.setState({ ...state, infoPanelCardToShow: {type: cardType, key: cardKey} });
     }
 
     removeInvalidUpgradesAndSetState(updatedSquad){
@@ -178,9 +177,12 @@ export default class SquadBuilderCpt extends React.Component {
                                 changeShip = {this.changeShip }
                                 removePilot = {this.removePilot }
                                 clonePilot = {this.clonePilot }
-                                changeUpgrade = { this.changeUpgrade } />
+                                changeUpgrade = { this.changeUpgrade }
+                                onRecordMouseEnter = { this.showInfoPanelCard } />
                         ))}
-                        <AddShipCpt factionShips={this.factionShips} onShipSelected={this.addCheapestAvailablePilotForShip}/>
+                        <AddShipCpt factionShips={this.factionShips} 
+                            onShipSelected={this.addCheapestAvailablePilotForShip}
+                            onRecordMouseEnter = { this.showInfoPanelCard }/>
                         <div>
                             <button className="btn-info">Choose Obstacles</button>
                         </div>

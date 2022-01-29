@@ -16,8 +16,8 @@ export default class InfoPanelShipCpt extends React.Component {
     }
 
     initializeShipData(){ 
-        //object assign makes a copy of the pilot so I don't have side effects on my "data repo"
-        Object.assign(this.shipData, xwingData.ships[this.props.dataKey]);
+        //make a copy of the pilot so I don't have side effects on my "data repo"
+        this.shipData = JSON.parse(JSON.stringify(xwingData.ships[this.props.dataKey]))
         this.shipData.pilotsForShip = xwingData.pilots.filter(pilot => pilot.ship == this.shipData.name && pilot.faction == this.props.faction);
 
         if(this.shipData.huge){
@@ -131,11 +131,11 @@ export default class InfoPanelShipCpt extends React.Component {
                         </tr> 
                     : null }
                     <tr>
-                        <td>Actions</td>
+                        <td>Actions:</td>
                         <ActionsCpt actions={this.shipData.actions}/>
                     </tr>
                     <tr>
-                        <td>Upgrades</td>
+                        <td>Upgrades:</td>
                         <UpgradesCpt pilots={this.shipData.pilotsForShip}/>
                     </tr>
                 </tbody>

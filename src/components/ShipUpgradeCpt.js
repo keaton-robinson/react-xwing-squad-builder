@@ -1,6 +1,8 @@
 import React from 'react';
 import * as xwingData from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
+import { Dropdown } from 'reactjs-dropdown-component';
+import { DropDownStyles } from '../styleData/styleData';
 
 export default class ShipUpgradeCpt extends React.Component {
 
@@ -34,24 +36,37 @@ export default class ShipUpgradeCpt extends React.Component {
 
 
 
-    handleUpgradeSelection(e) {
-        const newlySelectedUpgrade = xwingData.upgrades.find(upgrade => upgrade.id == e.target.value);
-        this.props.changeUpgrade(this.props.upgradeSlot, newlySelectedUpgrade, this.props.pilot);
+    handleUpgradeSelection(selectedUpgrade) {
+        if(selectedUpgrade.value != this.props.upgradeSlot.selectedUpgradeId){
+            const newlySelectedUpgrade = xwingData.upgrades.find(upgrade => upgrade.id == selectedUpgrade.value);
+            this.props.changeUpgrade(this.props.upgradeSlot, newlySelectedUpgrade, this.props.pilot);
+        }
     }
 
+    handleMouseEnter = (upgrade) => {
+        if(upgrade.value){
+            this.props.onRecordMouseEnter(upgrade);
+        }
+    }
 
     render() {
         const squadContainsAnotherSolitaryCardForThisSlot = xwingUtils.squadContainsAnotherSolitaryCardForThisSlot(this.props.upgradeSlot,this.props.squad);
+        const availableUpgrades = this.getAvailableUpgrades(squadContainsAnotherSolitaryCardForThisSlot)
+                .sort((upgrade1, upgrade2 )=> (xwingUtils.getUpgradeCost(upgrade1, this.props.pilot) - xwingUtils.getUpgradeCost(upgrade2, this.props.pilot))) 
+        const upgradesForCustomDropdown = availableUpgrades.map(availUpgrade => ({ label: availUpgrade.name + " (" + xwingUtils.getUpgradeCost(availUpgrade, this.props.pilot) + ")", value: availUpgrade.id}));
+        upgradesForCustomDropdown.unshift({ value: null , label: `No ${xwingData.slots[this.props.upgradeSlot.slot].displayName} Upgrade` }) // needed so that people can remove upgrades
         return (
-            <select value={this.props.upgradeSlot.selectedUpgradeId ? this.props.upgradeSlot.selectedUpgradeId : ""} 
-            onChange={this.handleUpgradeSelection} 
-                disabled={this.props.upgradeSlot.parentUpgradeSlotKey
-                    || squadContainsAnotherSolitaryCardForThisSlot}>
-                <option value={{}}>No { xwingData.slots[this.props.upgradeSlot.slot].displayName } Upgrade</option>
-                { this.getAvailableUpgrades(squadContainsAnotherSolitaryCardForThisSlot)
-                .sort((upgrade1, upgrade2 )=> (xwingUtils.getUpgradeCost(upgrade1, this.props.pilot) - xwingUtils.getUpgradeCost(upgrade2, this.props.pilot)))
-                .map(availUpgrade => (<option key={availUpgrade.id} value={availUpgrade.id}>{availUpgrade.name +" (" + xwingUtils.getUpgradeCost(availUpgrade, this.props.pilot) + ")"}</option>)) }
-            </select>
+            <Dropdown 
+                name="selectUpgrade"
+                titleSingular="Upgrade"
+                title={upgradesForCustomDropdown[0].label}
+                list={upgradesForCustomDropdown}
+                onChange={this.handleUpgradeSelection}
+                styles={DropDownStyles}
+                onMouseEnter={this.handleMouseEnter}
+                immutable={this.props.upgradeSlot.parentUpgradeSlotKey || squadContainsAnotherSolitaryCardForThisSlot}
+                select={this.props.upgradeSlot.selectedUpgradeId ? {value: this.props.upgradeSlot.selectedUpgradeId} : null}
+            />
         ); 
     }
 }
