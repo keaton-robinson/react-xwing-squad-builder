@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown } from 'reactjs-dropdown-component';
+import { Dropdown } from '@keatonr06/reactjs-dropdown-component';
 import { DropDownStyles } from '../styleData/styleData';
 import * as xwingUtils from '../data/xwing_utils';
 
