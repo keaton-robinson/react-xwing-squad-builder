@@ -201,7 +201,7 @@ nav ul li {
 }
 
 
-.header-stat {
+.header-attack, .header-agility, .header-hull, .header-shield, .header-force, .header-charge {
     background-color: black;
     border-radius: 50%;
     padding:2px;

@@ -14,7 +14,7 @@ export default class InfoPanelCpt extends React.Component {
                 {
                     {
                         "Ship": <InfoPanelShipCpt dataKey={this.props.cardToShow.key} faction={this.props.faction}/>,
-                        "Upgrade": <InfoPanelUpgradeCpt dataKey={this.props.cardToShow.key} faction={this.props.faction}/>,
+                        "Upgrade": <InfoPanelUpgradeCpt dataKey={this.props.cardToShow.key}/>,
                         "Pilot": <h3>Go make a pilot infopanel component</h3>
                     }[this.props.cardToShow.type]
                 }

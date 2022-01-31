@@ -70,75 +70,75 @@ export default class InfoPanelShipCpt extends React.Component {
                 <h3 className="infoName">{this.shipData.name}</h3>
                 <h4 className="infoType">Ship</h4>
                 <table className="info-stats">
-                <tbody>
-                    <tr><td>Base</td><td>{this.shipData.size}</td></tr>
-                    <tr><td>Initiative</td><td className="info-initiative">{this.getPilotSkillsString()}</td></tr>
-                    <tr><td>Points</td><td>{this.shipData.minPilotCost + "-" + this.shipData.maxPilotCost}</td></tr>
-                    { this.shipData.attack ? 
+                    <tbody>
+                        <tr><td>Base</td><td>{this.shipData.size}</td></tr>
+                        <tr><td>Initiative</td><td className="info-initiative">{this.getPilotSkillsString()}</td></tr>
+                        <tr><td>Points</td><td>{this.shipData.minPilotCost + "-" + this.shipData.maxPilotCost}</td></tr>
+                        { this.shipData.attack ? 
+                            <tr className="stat-icon">
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-frontarc header-attack"></i></td>
+                            <td className="info-attack">{this.shipData.attack}</td>
+                            </tr>
+                        : null }
+                        { this.shipData.attackf ? 
+                            <tr className="stat-icon">
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-fullfrontarc header-attack"></i></td>
+                            <td className="info-attack">{this.shipData.attackf}</td>
+                            </tr>
+                        : null }
+                        { this.shipData.attackb ? 
+                            <tr className="stat-icon">
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-reararc header-attack"></i></td>
+                            <td className="info-attack">{this.shipData.attackb}</td>
+                            </tr>
+                        : null }
+                        { this.shipData.attackl ? 
+                            <tr className="stat-icon">
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-leftarc header-attack"></i></td>
+                            <td className="info-attack">{this.shipData.attackl}</td>
+                            </tr>
+                        : null }
+                        { this.shipData.attackr ? 
+                            <tr className="stat-icon">
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-rightarc header-attack"></i></td>
+                            <td className="info-attack">{this.shipData.attackr}</td>
+                            </tr>
+                        : null }
+                        { this.shipData.attackt ? 
+                            <tr className="stat-icon">
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-singleturretarc header-attack"></i></td>
+                            <td className="info-attack">{this.shipData.attackt}</td>
+                            </tr>
+                        : null }
+                        { this.shipData.attackdt ? 
+                            <tr className="stat-icon">
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-doubleturretarc header-attack"></i></td>
+                            <td className="info-attack">{this.shipData.attackdt}</td>
+                            </tr>
+                        : null }
                         <tr className="stat-icon">
-                        <td><i className="xwing-miniatures-font xwing-miniatures-font-frontarc header-stat header-attack"></i></td>
-                        <td className="info-attack">{this.shipData.attack}</td>
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-agility header-agility"></i></td>
+                            <td className="info-agility">{this.shipData.agility}</td>
                         </tr>
-                    : null }
-                    { this.shipData.attackf ? 
                         <tr className="stat-icon">
-                        <td><i className="xwing-miniatures-font xwing-miniatures-font-fullfrontarc header-stat header-attack"></i></td>
-                        <td className="info-attack">{this.shipData.attackf}</td>
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-hull header-hull"></i></td>
+                            <td className="info-hull">{this.shipData.hull}</td>
                         </tr>
-                    : null }
-                    { this.shipData.attackb ? 
-                        <tr className="stat-icon">
-                        <td><i className="xwing-miniatures-font xwing-miniatures-font-reararc header-stat header-attack"></i></td>
-                        <td className="info-attack">{this.shipData.attackb}</td>
+                        { this.shipData.shields ? 
+                            <tr className="stat-icon">
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-shield header-shield"></i></td>
+                            <td className="info-shield">{this.shipData.shields}</td>
+                            </tr> 
+                        : null }
+                        <tr>
+                            <td>Actions:</td>
+                            <ActionsCpt actions={this.shipData.actions}/>
                         </tr>
-                    : null }
-                    { this.shipData.attackl ? 
-                        <tr className="stat-icon">
-                        <td><i className="xwing-miniatures-font xwing-miniatures-font-leftarc header-stat header-attack"></i></td>
-                        <td className="info-attack">{this.shipData.attackl}</td>
+                        <tr>
+                            <td>Upgrades:</td>
+                            <UpgradesCpt pilots={this.shipData.pilotsForShip}/>
                         </tr>
-                    : null }
-                    { this.shipData.attackr ? 
-                        <tr className="stat-icon">
-                        <td><i className="xwing-miniatures-font xwing-miniatures-font-rightarc header-stat header-attack"></i></td>
-                        <td className="info-attack">{this.shipData.attackr}</td>
-                        </tr>
-                    : null }
-                    { this.shipData.attackt ? 
-                        <tr className="stat-icon">
-                        <td><i className="xwing-miniatures-font xwing-miniatures-font-singleturretarc header-stat header-attack"></i></td>
-                        <td className="info-attack">{this.shipData.attackt}</td>
-                        </tr>
-                    : null }
-                    { this.shipData.attackdt ? 
-                        <tr className="stat-icon">
-                        <td><i className="xwing-miniatures-font xwing-miniatures-font-doubleturretarc header-stat header-attack"></i></td>
-                        <td className="info-attack">{this.shipData.attackdt}</td>
-                        </tr>
-                    : null }
-                    <tr className="stat-icon">
-                        <td><i className="xwing-miniatures-font xwing-miniatures-font-agility header-stat header-agility"></i></td>
-                        <td className="info-agility">{this.shipData.agility}</td>
-                    </tr>
-                    <tr className="stat-icon">
-                        <td><i className="xwing-miniatures-font xwing-miniatures-font-hull header-stat header-hull"></i></td>
-                        <td className="info-hull">{this.shipData.hull}</td>
-                    </tr>
-                    { this.shipData.shields ? 
-                        <tr className="stat-icon">
-                        <td><i className="xwing-miniatures-font xwing-miniatures-font-shield header-stat header-shield"></i></td>
-                        <td className="info-shield">{this.shipData.shields}</td>
-                        </tr> 
-                    : null }
-                    <tr>
-                        <td>Actions:</td>
-                        <ActionsCpt actions={this.shipData.actions}/>
-                    </tr>
-                    <tr>
-                        <td>Upgrades:</td>
-                        <UpgradesCpt pilots={this.shipData.pilotsForShip}/>
-                    </tr>
-                </tbody>
+                    </tbody>
                 </table>
                 <ManeuversCpt maneuvers={this.shipData.maneuvers}/>
             </div>

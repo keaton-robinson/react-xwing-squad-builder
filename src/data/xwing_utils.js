@@ -371,7 +371,7 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
                     return false;
                 }
                 break;
-            case 'EnergyGreatterThan':
+            case 'EnergyGreaterThan':
                 if(pilot.pilotShip.energy <= restriction[1]){
                     return false;
                 }
