@@ -130,17 +130,19 @@ export default class InfoPanelShipCpt extends React.Component {
                             <td className="info-shield">{this.shipData.shields}</td>
                             </tr> 
                         : null }
-                        <tr>
-                            <td>Actions:</td>
-                            <ActionsCpt actions={this.shipData.actions}/>
-                        </tr>
-                        <tr>
-                            <td>Upgrades:</td>
-                            <UpgradesCpt pilots={this.shipData.pilotsForShip}/>
-                        </tr>
                     </tbody>
                 </table>
-                <ManeuversCpt maneuvers={this.shipData.maneuvers}/>
+                <div>
+                    <span style={{'marginRight': '10px'}}>Actions:</span>
+                    <ActionsCpt actions={this.shipData.actions}/>
+                </div>
+                <div>
+                    <span style={{'marginRight': '10px'}}>Upgrades:</span>
+                    <UpgradesCpt pilots={this.shipData.pilotsForShip}/>
+                </div>
+                <div style={{ 'marginTop': '10px'}}>
+                    <ManeuversCpt maneuvers={this.shipData.maneuvers}/>
+                </div>
             </div>
         );
 

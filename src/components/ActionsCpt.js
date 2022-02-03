@@ -64,7 +64,7 @@ export default class ActionsCpt extends React.Component {
 
     getActionMarkup(action, ordinal) {
         return (
-            <span key={ordinal}>
+            <span key={action+ordinal}>
                 {/* //first action shouldn't have a comma or > before it */}
                 {ordinal != 0 ? this.getActionSeparator(action) : null} 
                 <i className={"xwing-miniatures-font " + this.getActionStyle(action) + " " + this.getActionDifficulty(action)}></i>
@@ -76,6 +76,6 @@ export default class ActionsCpt extends React.Component {
         for(let i=0; i < this.props.actions.length; i++){
             spans.push(this.getActionMarkup(this.props.actions[i], i));
         }
-        return ( <td>{spans}</td> );
+        return ( <span>{spans}</span> );
     }
 }

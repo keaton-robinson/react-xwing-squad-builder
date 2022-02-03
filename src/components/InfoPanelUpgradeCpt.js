@@ -1,5 +1,6 @@
 import React from 'react';
 import * as xwingData from '../data/xwing_data';
+import ActionsCpt from './ActionsCpt';
 
 export default class InfoPanelUpgradeCpt extends React.Component {
 
@@ -9,26 +10,28 @@ export default class InfoPanelUpgradeCpt extends React.Component {
 
     renderRestrictions = (upgrade) => {
         if(upgrade.faction || upgrade.ship || upgrade.restrictions){
-            const restrictionsToRender = [];
+            const textRestrictions = [];
+            const actionRestrictions = [];
+
             if(upgrade.faction){
                 let allowedFaction;
                 if(Array.isArray(upgrade.faction)){
-                    let orUniqueRestriction = upgrade.restrictions.find(restr => restr[0] == "orUnique");
+                    let orUniqueRestriction = upgrade.restrictions?.find(restr => restr[0] == "orUnique");
                     if(orUniqueRestriction){
                         //or unique only allows one faction or with a unique character (character part handled later)
                         allowedFaction = upgrade.restrictions.find(restr => restr[0] == "Faction")[1];
-                        restrictionsToRender.push(`${allowedFaction} or squad containing ${orUniqueRestriction[1]}`);
+                        textRestrictions.push(`${allowedFaction} or squad containing ${orUniqueRestriction[1]}`);
                     } else {
                         for(let faction of upgrade.faction){   
-                            restrictionsToRender.push(faction);
+                            textRestrictions.push(faction);
                         }
                     }
                 } else {
-                    restrictionsToRender.push(upgrade.faction);
+                    textRestrictions.push(upgrade.faction);
                 }
             }
             if(upgrade.ship){
-                restrictionsToRender.push(upgrade.ship);
+                textRestrictions.push(upgrade.ship);
             }
             if(upgrade.restrictions){
                 for(let restriction of upgrade.restrictions){
@@ -38,16 +41,13 @@ export default class InfoPanelUpgradeCpt extends React.Component {
                     switch(restrictionType){
                         case 'Base':
                             if(restrictionValue == "Standard"){
-                                restrictionsToRender.push("Non-huge ship");
+                                textRestrictions.push("Non-huge ship");
                             } else{
-                                restrictionsToRender.push(`${restrictionValue} ship`);
+                                textRestrictions.push(`${restrictionValue} ship`);
                             }
                             break;
-                        case 'Action':
-                            restrictionsToRender.push(`${restrictionValue} action`);
-                            break;
                         case 'Slot':
-                            restrictionsToRender.push(`Extra ${restrictionValue} slot`);
+                            textRestrictions.push(`Extra ${restrictionValue} slot`);
                             break;
                         case 'orUnique':
                             //do nothing, already handled in the faction step
@@ -57,43 +57,56 @@ export default class InfoPanelUpgradeCpt extends React.Component {
                             break;
                         case 'AttackArc':
                             if(restrictionValue === "Rear Arc"){
-                                restrictionsToRender.push("Rear firing arc required");
+                                textRestrictions.push("Rear firing arc required");
                             }
                             break;
                         case 'Keyword':
-                            restrictionsToRender.push(restrictionValue);
+                            textRestrictions.push(restrictionValue);
                             break;
                         case 'isUnique':
                             if(restrictionValue){
-                                restrictionsToRender.push("Unique pilot");
+                                textRestrictions.push("Unique pilot");
                             } else {
-                                restrictionsToRender.push("Generic pilot");
+                                textRestrictions.push("Generic pilot");
                             }
                             break;
                         case 'Equipped':
-                            restrictionsToRender.push(`${restrictionValue} equipped`);
+                            textRestrictions.push(`${restrictionValue} equipped`);
                             break;
                         case 'ShieldsGreaterThan':
-                            restrictionsToRender.push(`Shields greater than ${restrictionValue}`);
+                            textRestrictions.push(`Shields greater than ${restrictionValue}`);
                             break;
                         case 'InitiativeGreaterThan':
-                            restrictionsToRender.push(`Initiative greater than ${restrictionValue}`);
+                            textRestrictions.push(`Initiative greater than ${restrictionValue}`);
                             break;
                         case 'InitiativeLessThan':
-                            restrictionsToRender.push(`Initiative less than ${restrictionValue}`);
+                            textRestrictions.push(`Initiative less than ${restrictionValue}`);
                             break;
                         case 'EnergyGreaterThan':
-                            restrictionsToRender.push(`Energy greater than ${restrictionValue}`);
+                            textRestrictions.push(`Energy greater than ${restrictionValue}`);
                             break;
                         case 'AgilityEquals':
-                            restrictionsToRender.push(`Agility ${restrictionValue} ship`);
+                            textRestrictions.push(`Agility ${restrictionValue} ship`);
+                            break;
+                        case 'Action':
+                            actionRestrictions.push(`${restrictionValue}`);
                             break;
                     }
                 }
             }
             return (
                 <div>
-                    <strong>Restrictions: </strong>{restrictionsToRender.map(restrictionToRender => <span>{`${restrictionToRender}, `}</span>)}
+                    <strong>Restrictions: </strong>
+                    {
+                        textRestrictions.map((restriction, index) => (
+                        <span key={`${upgrade.id}_${index}`}>
+                            {restriction + (index < textRestrictions.length-1  || actionRestrictions.length > 0 ? ", " : "")}
+                        </span>))
+                    }
+                    {actionRestrictions.length > 0 ? 
+                        <ActionsCpt actions={actionRestrictions} /> 
+                        : null
+                    }
                 </div>);
         } 
         return null;    
@@ -183,7 +196,107 @@ export default class InfoPanelUpgradeCpt extends React.Component {
     }
 
     renderRules = (upgrade) => {
-        return <div dangerouslySetInnerHTML={{__html: this.fixIcons(xwingData.upgradeRules[upgrade.name].text)}} />
+        let removestext =''
+        let addText=''; 
+        let comma = '';
+
+        const statchange = {
+            attack: 0,
+            attackf: 0,
+            attackbull: 0,
+            attackb: 0,
+            attackt: 0,
+            attackl: 0,
+            attackr: 0,
+            attackdt: 0,
+            energy: 0,
+            agility: 0,
+            hull: 0,
+            shields: 0,
+            force: 0,
+            actions: [],
+            maneuvers: [0, 0]
+        };
+
+        if(upgrade.modifier_func){
+            upgrade.modifier_func(statchange);
+            if(statchange.attack != 0){
+                addText += comma + `%FRONTARC% (${statchange.attack})`
+                comma = ', '
+            }
+            if(statchange.attackf != 0){
+                addText += comma + `%FULLFRONTARC% (${statchange.attackf})`
+                comma = ', '
+            }
+            if(statchange.attackbull != 0){
+                addText += comma + `%BULLSEYEARC% (${statchange.attackbull})`
+                comma = ', '
+            }
+            if(statchange.attackb != 0){
+                addText += comma + `%REARARC% (${statchange.attackb})`
+                comma = ', '
+            }
+            if(statchange.attackt != 0){
+                addText += comma + `%SINGLETURRETARC% (${statchange.attackt})`
+                comma = ', '
+            }
+            if(statchange.attackl != 0){
+                addText += comma + `%LEFTARC% (${statchange.attackl})`
+                comma = ', '
+            }
+            if(statchange.attackr != 0){
+                addText += comma + `%RIGHTARC% (${statchange.attackr})`
+                comma = ', '
+            }
+            if(statchange.attackdt != 0){
+                addText += comma + `%DOUBLETURRETARC% (${statchange.attackdt})`
+                comma = ', '
+            }
+            if(statchange.energy != 0){
+                addText += comma + `%ENERGY% (${statchange.energy})`
+                comma = ', '
+            }
+            if(statchange.agility != 0){
+                addText += comma + `%AGILITY% (${statchange.agility})`
+                comma = ', '
+            }
+            if(statchange.hull != 0){
+                addText += comma + `%HULL% (${statchange.hull})`
+                comma = ', '
+            }
+            if(statchange.shields != 0){
+                addText += comma + `%SHIELD% (${statchange.shields})`
+                comma = ', '
+            }
+        }
+        if(upgrade.confersAddons){
+            for(const addonname of upgrade.confersAddons){
+                addText += comma + `%${addonname.slot.toUpperCase().replace(/[^a-z0-9]/gi, '')}%`; 
+                comma = ', ';
+            }
+        }
+        if(upgrade.unequips_upgrades){
+            comma = '';
+            for(const slot of upgrade.unequips_upgrades){
+                removestext += comma + `%${slot.toUpperCase().replace(/[^a-z0-9]/gi, '')}%`;
+                comma = ', ';
+            }
+        }
+
+        return (
+        <div>
+            { addText != '' ? 
+                <div><strong>Adds: </strong><span dangerouslySetInnerHTML={{__html: this.fixIcons(addText)}}/></div>
+            : null }
+            { statchange.actions.length > 0 ? 
+                <div><strong>Adds Actions: </strong><ActionsCpt actions={statchange.actions}/></div>
+            : null }
+            { removestext != '' ?
+                <div><strong>Removes: </strong><span dangerouslySetInnerHTML={{__html: this.fixIcons(removestext)}}/></div> 
+            : null }
+            <br/>
+            <div dangerouslySetInnerHTML={{__html: this.fixIcons(xwingData.upgradeRules[upgrade.name].text)}}/>
+        </div>)
     }
 
     render() {
@@ -197,44 +310,50 @@ export default class InfoPanelUpgradeCpt extends React.Component {
                     <tbody>
                         { upgrade.attack ? 
                             <tr className="stat-icon">
-                            <td><i className="xwing-miniatures-font xwing-miniatures-font-frontarc header-stat header-attack"></i></td>
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-frontarc header-attack"></i></td>
                             <td className="info-attack">{upgrade.attack}</td>
                             </tr>
                         : null }
                         { upgrade.attackf ? 
                             <tr className="stat-icon">
-                            <td><i className="xwing-miniatures-font xwing-miniatures-font-fullfrontarc header-stat header-attack"></i></td>
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-fullfrontarc header-attack"></i></td>
                             <td className="info-attack">{upgrade.attackf}</td>
                             </tr>
                         : null }
                         { upgrade.attackb ? 
                             <tr className="stat-icon">
-                            <td><i className="xwing-miniatures-font xwing-miniatures-font-reararc header-stat header-attack"></i></td>
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-reararc header-attack"></i></td>
                             <td className="info-attack">{upgrade.attackb}</td>
                             </tr>
                         : null }
                         { upgrade.attackl ? 
                             <tr className="stat-icon">
-                            <td><i className="xwing-miniatures-font xwing-miniatures-font-leftarc header-stat header-attack"></i></td>
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-leftarc header-attack"></i></td>
                             <td className="info-attack">{upgrade.attackl}</td>
                             </tr>
                         : null }
                         { upgrade.attackr ? 
                             <tr className="stat-icon">
-                            <td><i className="xwing-miniatures-font xwing-miniatures-font-rightarc header-stat header-attack"></i></td>
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-rightarc header-attack"></i></td>
                             <td className="info-attack">{upgrade.attackr}</td>
                             </tr>
                         : null }
                         { upgrade.attackt ? 
                             <tr className="stat-icon">
-                            <td><i className="xwing-miniatures-font xwing-miniatures-font-singleturretarc header-stat header-attack"></i></td>
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-singleturretarc header-attack"></i></td>
                             <td className="info-attack">{upgrade.attackt}</td>
                             </tr>
                         : null }
                         { upgrade.attackdt ? 
                             <tr className="stat-icon">
-                            <td><i className="xwing-miniatures-font xwing-miniatures-font-doubleturretarc header-stat header-attack"></i></td>
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-doubleturretarc header-attack"></i></td>
                             <td className="info-attack">{upgrade.attackdt}</td>
+                            </tr>
+                        : null }
+                        { upgrade.attackbull ? 
+                            <tr className="stat-icon">
+                            <td><i className="xwing-miniatures-font xwing-miniatures-font-bullseyearc header-attack"></i></td>
+                            <td className="info-attack">{upgrade.attackbull}</td>
                             </tr>
                         : null }
                         { upgrade.agility ?  
@@ -269,6 +388,18 @@ export default class InfoPanelUpgradeCpt extends React.Component {
                         : null } 
                     </tbody>
                 </table>
+                { upgrade.range ? 
+                            <div style={{'marginTop':'5px'}}>
+                                <span>
+                                    <strong>Range </strong><span>{upgrade.range}</span>
+                                </span>
+                                <span style={{ 'marginLeft':'10px' }}>
+                                    { upgrade.rangebonus ? 
+                                        <i className="xwing-miniatures-font red header-range xwing-miniatures-font-rangebonusindicator"></i>
+                                    : null}
+                                </span>
+                            </div>
+                        : null }
                 { this.renderRestrictions(upgrade) }
                 <br/>
                 { this.renderRules(upgrade) }

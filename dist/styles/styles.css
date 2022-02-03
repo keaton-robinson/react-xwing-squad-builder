@@ -157,6 +157,10 @@ nav ul li {
     color: black;
 }
 
+table.info-stats > tbody > tr >td:nth-child(1) {
+    width: 50px;
+}
+
 .info-stats tr.stat-icon{
     height: 3rem;
 }
@@ -255,7 +259,7 @@ nav ul li {
 .header-shield {
     color: #7ED3E5;
     padding-left: 8px;
-    padding-right: 8px;
+    padding-right: 9px;
     padding-bottom: 8px;
 }
 
@@ -281,8 +285,8 @@ nav ul li {
 
 .header-charge {
     color: #C2B230;
-    padding-left: 7px;
-    padding-right: 7px;
+    padding-left: 9px;
+    padding-right: 9px;
     padding-bottom: 7px;
 }
 
@@ -291,6 +295,17 @@ nav ul li {
     font-family: "kimberley";
     font-size: 1.5rem;
 }
+
+i.header-range {
+    vertical-align: middle;
+    padding: 0px 3px;
+    background-color: black;
+    color: #EF232B; 
+}
+
+r { color: #EF232B; }
+  
+f { color: #9D899D; }
 
 svg > g.maneuver.backwards {
     transform: translate(200px, 200px) rotate(180deg); 

@@ -50,9 +50,9 @@ export default class UpgradesCpt extends React.Component{
         }
 
         return (
-            <td>
+            <span>
                 {Object.entries(slotCountAcrossPilots).map(slot => this.getSlotMarkup(slot) )}
-            </td>
+            </span>
         );
     }
 
