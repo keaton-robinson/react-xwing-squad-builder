@@ -663,6 +663,7 @@ function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot, squad){
 const InfoPanelCardTypes = {
     Ship: "Ship",
     Pilot: "Pilot",
+    SelectedPilot: "SelectedPilot",
     Upgrade: "Upgrade"
 }
 

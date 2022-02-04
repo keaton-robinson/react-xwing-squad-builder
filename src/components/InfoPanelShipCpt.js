@@ -17,7 +17,7 @@ export default class InfoPanelShipCpt extends React.Component {
 
     initializeShipData(){ 
         //make a copy of the pilot so I don't have side effects on my "data repo"
-        this.shipData = JSON.parse(JSON.stringify(xwingData.ships[this.props.dataKey]))
+        this.shipData = JSON.parse(JSON.stringify(this.props.ship))
         this.shipData.pilotsForShip = xwingData.pilots.filter(pilot => pilot.ship == this.shipData.name && pilot.faction == this.props.faction);
 
         if(this.shipData.huge){

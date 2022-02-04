@@ -300,7 +300,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
     }
 
     render() {
-        const upgrade = xwingData.upgrades.find(upgr => upgr.id === this.props.dataKey);
+        const upgrade = this.props.upgrade;
 
         return (
             <div>

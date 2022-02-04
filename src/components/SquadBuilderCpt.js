@@ -32,9 +32,9 @@ export default class SquadBuilderCpt extends React.Component {
         };
     }
 
-    showInfoPanelCard = (cardKey, cardType) => {
+    showInfoPanelCard = (shipPilotOrUpgradeToShow, cardType) => {
         const state = this.state;
-        this.setState({ ...state, infoPanelCardToShow: {type: cardType, key: cardKey} });
+        this.setState({ ...state, infoPanelCardToShow: {type: cardType, cardData: shipPilotOrUpgradeToShow} });
     }
 
     removeInvalidUpgradesAndSetState(updatedSquad){

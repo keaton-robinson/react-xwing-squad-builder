@@ -30,12 +30,12 @@ export default class PilotRowCpt extends React.Component {
         }
     }
 
-    handleShipMouseEnter = (ship) => {
-        this.handleMouseEnter(ship, xwingUtils.InfoPanelCardTypes.Ship);
+    handleShipMouseEnter = (shipDropDownItem) => {
+        this.handleMouseEnter(xwingData.ships[shipDropDownItem.value], xwingUtils.InfoPanelCardTypes.Ship);
     }
 
-    handlePilotMouseEnter = (pilot) => {
-        this.handleMouseEnter(pilot, xwingUtils.InfoPanelCardTypes.Pilot);
+    handlePilotMouseEnter = (pilotDropDownItem) => {
+        this.handleMouseEnter(pilotDropDownItem.pilotRecord, xwingUtils.InfoPanelCardTypes.Pilot);
     }
 
     handleUpgradeMouseEnter = (upgrade) => {
@@ -43,7 +43,11 @@ export default class PilotRowCpt extends React.Component {
     }
 
     handleMouseEnter = (shipPilotOrUpgradeRecord, type) => {
-        this.props.onRecordMouseEnter(shipPilotOrUpgradeRecord.value, type);
+        this.props.onRecordMouseEnter(shipPilotOrUpgradeRecord, type);
+    }
+
+    handlePilotHeaderMouseEnter = () => {
+        this.props.onRecordMouseEnter(this.props.selectedPilot, xwingUtils.InfoPanelCardTypes.SelectedPilot);
     }
 
     delBtnPressed = (e) => {
@@ -65,7 +69,7 @@ export default class PilotRowCpt extends React.Component {
     
     render() {
         const shipsForCustomDropdown = this.props.factionShips.map(ship => ({ label: ship, value: ship}));
-        const pilotsForCustomDropDown = this.props.availablePilots.map(pilot => ({ label: pilot.name + " (" + pilot.points + ")", value: pilot.id}));
+        const pilotsForCustomDropDown = this.props.availablePilots.map(pilot => ({ label: pilot.name + " (" + pilot.points + ")", value: pilot.id, pilotRecord: pilot}));
         return (
             <div className={'shipRow ship-' + PilotRowCpt.getShipBackgroundStylePostFix(this.props.selectedPilot.ship)}>
                 <div className="shipAndPilotSelectorDiv">
@@ -91,6 +95,7 @@ export default class PilotRowCpt extends React.Component {
                             select={{value: this.props.selectedPilot.id}}
                             ref={this.ddlSelectPilotRef}
                             styles={DropDownStyles}
+                            onHeaderMouseEnter={this.handlePilotHeaderMouseEnter}
                             onMouseEnter={this.handlePilotMouseEnter}
                         />
                     </div>

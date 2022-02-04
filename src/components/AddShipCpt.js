@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dropdown } from '@keatonr06/reactjs-dropdown-component';
 import { DropDownStyles } from '../styleData/styleData';
+import * as xwingData from '../data/xwing_data'
 import * as xwingUtils from '../data/xwing_utils';
 
 export default class AddShipCpt extends React.Component {
@@ -12,15 +13,16 @@ export default class AddShipCpt extends React.Component {
         this.ddlAddShipRef = React.createRef();
     }
 
-    handleShipSelection(shipSelected, name) {
+    handleShipSelection(shipSelected) {
         if(shipSelected){
             this.props.onShipSelected(shipSelected.value);
             this.ddlAddShipRef.current.clearSelection(); //tell parent component about new ship, but reset this dropdown's value to "none"
         }
     }
 
-    handleMouseEnter = (ship, type) => {
-        this.props.onRecordMouseEnter(ship.value, xwingUtils.InfoPanelCardTypes.Ship);
+    handleMouseEnter = (shipDropDownItem) => {
+        const ship = xwingData.ships[shipDropDownItem.value]
+        this.props.onRecordMouseEnter(ship, xwingUtils.InfoPanelCardTypes.Ship);
     }
 
     render() {
