@@ -412,15 +412,13 @@ function addUpgrades(newPilot, upgradesToAdd, squad){
 }
 
 function getAppReadyPilot(pilot) {
-        
-    const pilotCopy = {};
-    //object assign makes a copy of the pilot so I don't have side effects on my "data repo"
-    Object.assign(pilotCopy, pilot);
-
+    //makes a deep copy of the pilot so I don't have side effects on my "data repo"    
+    const pilotCopy = JSON.parse(JSON.stringify(pilot));
+    
     //add any additional properties I want to use to the object
     
     //attach ship
-    const shipCopy = {};
+    
     const shipForPilot = xwingData.ships[pilot.ship]; 
     if(!shipForPilot)
     {
@@ -429,7 +427,8 @@ function getAppReadyPilot(pilot) {
             pilotVal: pilot 
         }
     }
-    Object.assign(shipCopy, shipForPilot)
+    //make deep copy of ship to attach
+    const shipCopy =  JSON.parse(JSON.stringify(shipForPilot));
     pilotCopy.pilotShip = shipCopy;
     
     //add upgrades
