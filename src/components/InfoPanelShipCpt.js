@@ -1,4 +1,5 @@
 import React from 'react';
+import * as xwingUtils from '../data/xwing_utils'
 import * as xwingData from '../data/xwing_data';
 import ActionsCpt from './ActionsCpt';
 import ManeuversCpt from './ManeuversCpt';
@@ -20,19 +21,6 @@ export default class InfoPanelShipCpt extends React.Component {
         //make a copy of the pilot so I don't have side effects on my "data repo"
         this.shipData = JSON.parse(JSON.stringify(this.props.ship))
         this.shipData.pilotsForShip = xwingData.pilots.filter(pilot => pilot.ship == this.shipData.name && pilot.faction == this.props.faction);
-
-        if(this.shipData.huge){
-            this.shipData.size = "huge";
-        }
-        else if(this.shipData.large){
-            this.shipData.size = "large";
-        } 
-        else if(this.shipData.medium) {
-            this.shipData.size = "medium";
-        } 
-        else {
-            this.shipData.size = "small";
-        }
 
         this.shipData.pilotSkills = [];
         this.shipData.minPilotCost = this.shipData.pilotsForShip[0].points;
@@ -70,7 +58,10 @@ export default class InfoPanelShipCpt extends React.Component {
             <div>
                 <h3 className="infoName">{this.shipData.name}</h3>
                 <h4 className="infoType">Ship</h4>
-                <StatBlockCpt ship={this.shipData}/>
+                <div><strong>Base: </strong><span>{xwingUtils.getShipBaseSize(this.shipData)}</span></div>
+                <div><strong>Initiative: </strong><span className='info-initiative'>{this.getPilotSkillsString()}</span></div>
+                <div><strong>Points: </strong><span>{`${this.shipData.minPilotCost} - ${this.shipData.maxPilotCost}`}</span></div>
+                <div><StatBlockCpt ship={this.shipData}/></div>
                 <div>
                     <strong>Actions:</strong>
                     <ActionsCpt actions={this.shipData.actions}/>
@@ -79,7 +70,7 @@ export default class InfoPanelShipCpt extends React.Component {
                     <strong>Upgrades:</strong>
                     <UpgradesCpt pilots={this.shipData.pilotsForShip}/>
                 </div>
-                <ManeuversCpt maneuvers={this.shipData.maneuvers}/>
+                <div><ManeuversCpt maneuvers={this.shipData.maneuvers}/></div>
             </div>
         );
 

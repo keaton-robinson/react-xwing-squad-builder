@@ -224,7 +224,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
             <div>
                 <h3 className="infoName">{upgrade.name}</h3>
                 <h4 className="infoType">Upgrade</h4>
-                <StatBlockCpt upgrade={upgrade}/>
+                <div><StatBlockCpt upgrade={upgrade}/></div>
                 { upgrade.range ? 
                     <div style={{'marginTop':'5px'}}>
                         <span>
@@ -237,8 +237,8 @@ export default class InfoPanelUpgradeCpt extends React.Component {
                         </span>
                     </div>
                 : null }
-                { this.renderRestrictions(upgrade) }
-                { this.renderRules(upgrade) }
+                <div>{ this.renderRestrictions(upgrade) }</div>
+                <div>{ this.renderRules(upgrade) }</div>
             </div>
         );
     }

@@ -221,6 +221,7 @@ table.info-stats > tbody > tr >td:nth-child(1) {
 }
 
 .info-initiative {
+    margin-left: 5px;
     color: #CD6D2D;
     font-family: "kimberley";
     font-size: 1.5rem;

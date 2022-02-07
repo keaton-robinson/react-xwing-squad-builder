@@ -35,12 +35,12 @@ export default class InfoPanelPilotCpt extends React.Component {
                 <h4 className="infoType">Pilot</h4>
                 <div><strong>Ship: </strong><span>{pilotEffectiveStats.pilotShip.name}</span></div>
                 <div><strong>Base: </strong><span>{xwingUtils.getShipBaseSize(pilotEffectiveStats.pilotShip)}</span></div>
-                <div><strong>Initiative: </strong><span>{pilotEffectiveStats.skill}</span></div>
-                <StatBlockCpt pilot={pilotBaseStats} pilotAfterUpgrades={pilotEffectiveStats}/>
+                <div><strong>Initiative: </strong><span className='info-initiative'>{pilotEffectiveStats.skill}</span></div>
+                <div><StatBlockCpt pilot={pilotBaseStats} pilotAfterUpgrades={pilotEffectiveStats}/></div>
                 <div><strong>Actions: </strong><ActionsCpt actions={pilotEffectiveStats.pilotShip.actions}/></div>
                 <div><strong>Upgrades: </strong><UpgradesCpt pilots={[pilotEffectiveStats]}/></div>
                 <div className='info-rules-text' dangerouslySetInnerHTML={{__html: this.getRulesMarkupForPilot(pilotEffectiveStats)}}/>
-                <ManeuversCpt maneuvers={pilotBaseStats.pilotShip.maneuvers} maneuversAfterUpgrades={pilotEffectiveStats.pilotShip.maneuvers}/>
+                <div><ManeuversCpt maneuvers={pilotBaseStats.pilotShip.maneuvers} maneuversAfterUpgrades={pilotEffectiveStats.pilotShip.maneuvers}/></div>
                             
             </div>
         );
