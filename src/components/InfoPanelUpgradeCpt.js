@@ -213,8 +213,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
             { removestext != '' ?
                 <div><strong>Removes: </strong><span dangerouslySetInnerHTML={{__html: xwingUtils.fixIcons(removestext)}}/></div> 
             : null }
-            <br/>
-            <div dangerouslySetInnerHTML={{__html: xwingUtils.fixIcons(xwingData.upgradeRules[upgrade.name].text)}}/>
+            <div className='info-rules-text' dangerouslySetInnerHTML={{__html: xwingUtils.fixIcons(xwingData.upgradeRules[upgrade.name].text)}}/>
         </div>)
     }
 
@@ -239,7 +238,6 @@ export default class InfoPanelUpgradeCpt extends React.Component {
                     </div>
                 : null }
                 { this.renderRestrictions(upgrade) }
-                <br/>
                 { this.renderRules(upgrade) }
             </div>
         );

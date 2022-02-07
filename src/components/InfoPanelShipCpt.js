@@ -72,16 +72,14 @@ export default class InfoPanelShipCpt extends React.Component {
                 <h4 className="infoType">Ship</h4>
                 <StatBlockCpt ship={this.shipData}/>
                 <div>
-                    <span style={{'marginRight': '10px'}}>Actions:</span>
+                    <strong>Actions:</strong>
                     <ActionsCpt actions={this.shipData.actions}/>
                 </div>
                 <div>
-                    <span style={{'marginRight': '10px'}}>Upgrades:</span>
+                    <strong>Upgrades:</strong>
                     <UpgradesCpt pilots={this.shipData.pilotsForShip}/>
                 </div>
-                <div style={{ 'marginTop': '10px'}}>
-                    <ManeuversCpt maneuvers={this.shipData.maneuvers}/>
-                </div>
+                <ManeuversCpt maneuvers={this.shipData.maneuvers}/>
             </div>
         );
 

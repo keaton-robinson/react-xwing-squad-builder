@@ -12756,7 +12756,7 @@ const upgradeRules = {
         text: '<strong>Attached:</strong> %SLAM% <i class="xwing-miniatures-font xwing-miniatures-font-linked"></i> <r>%LOCK%</r></i>%LINEBREAK% <strong>Setup:</strong> Equip this side faceup. %LINEBREAK% <i>(Added Actions available on this side only)</i>%LINEBREAK% During the System Phase, gain 1 disarm token unless you flip this card. %LINEBREAK% At the end of the End Phase, if you have no active %CHARGE%, flip this card. %LINEBREAK% <strong>Detached:</strong> <i>Empty</i>'
     },
     "XX-23 S-Thread Tracers": {
-        text: "<strong>Attack: [%FOCUS%, %CALCULATE%, or %LOCK%]</strong>Spend 1 %CHARGE%. If this attack hits, each friendly ship at range 1-3 of the defender may acquire a lock on the defender. Then cancel all dice results."
+        text: "<strong>Attack: [%FOCUS%, %CALCULATE%, or %LOCK%]</strong>&nbspSpend 1 %CHARGE%. If this attack hits, each friendly ship at range 1-3 of the defender may acquire a lock on the defender. Then cancel all dice results."
     },
     "Independent Calculations": {
         text: "Replace your <strong>Networked Calculations</strong> ship ability with the following: %LINEBREAK% <strong>Independent Calculations:</strong> While you perform a white %CALCULATE% action, you may treat it as red to gain 1 additional calculate token. Other ships cannot spend your calculate tokens using the <strong>Networked Calculations</strong> ship ability."

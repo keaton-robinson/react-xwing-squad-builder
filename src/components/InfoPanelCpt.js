@@ -29,8 +29,10 @@ export default class InfoPanelCpt extends React.Component {
         }
 
         return (
-            <div className="infoPanel">
+            <div className="infoPanelMaster">
+                <div className="infoPanel">
                 {childPanel}                    
+                </div>
             </div>
         );
     }

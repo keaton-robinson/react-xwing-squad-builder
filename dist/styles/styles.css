@@ -81,12 +81,14 @@ nav ul li {
 }
 
 .shipAndInfoContainer .shipAndObstacleSelectors {
-    flex: 2;
+    flex: 3;
 }
 
-.shipAndInfoContainer .infoPanel {
+.shipAndInfoContainer .infoPanelMaster {
     flex: 1;
-    margin-left: 20px;
+    margin-left: 10px;
+    margin-right: 15px;
+    margin-bottom:10px;
 }
 
 /* ship row layout */
@@ -142,6 +144,7 @@ nav ul li {
 .infoPanel {
     background-color: white;
     color: black;
+    padding: 10px;
 }
 
 .red {
@@ -165,6 +168,11 @@ table.info-stats > tbody > tr >td:nth-child(1) {
     height: 3rem;
 }
 
+.info-rules-text {
+    margin-top:10px;
+}
+
+
 
 .info-maneuvers {
     background-color: #a29199;
@@ -172,6 +180,7 @@ table.info-stats > tbody > tr >td:nth-child(1) {
     font-family: "kimberley";
     font-size: 1.5rem;
     color: white;
+    margin-top: 10px;
 
 }
 
@@ -309,4 +318,9 @@ f { color: #9D899D; }
 
 svg > g.maneuver.backwards {
     transform: translate(200px, 200px) rotate(180deg); 
+}
+
+.xwing-miniatures-font-linked {
+    margin-left: 3px;
+    margin-right:3px;
 }

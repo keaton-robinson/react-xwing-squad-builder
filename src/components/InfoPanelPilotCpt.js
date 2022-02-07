@@ -39,7 +39,7 @@ export default class InfoPanelPilotCpt extends React.Component {
                 <StatBlockCpt pilot={pilotBaseStats} pilotAfterUpgrades={pilotEffectiveStats}/>
                 <div><strong>Actions: </strong><ActionsCpt actions={pilotEffectiveStats.pilotShip.actions}/></div>
                 <div><strong>Upgrades: </strong><UpgradesCpt pilots={[pilotEffectiveStats]}/></div>
-                <div dangerouslySetInnerHTML={{__html: this.getRulesMarkupForPilot(pilotEffectiveStats)}}/>
+                <div className='info-rules-text' dangerouslySetInnerHTML={{__html: this.getRulesMarkupForPilot(pilotEffectiveStats)}}/>
                 <ManeuversCpt maneuvers={pilotBaseStats.pilotShip.maneuvers} maneuversAfterUpgrades={pilotEffectiveStats.pilotShip.maneuvers}/>
                             
             </div>
