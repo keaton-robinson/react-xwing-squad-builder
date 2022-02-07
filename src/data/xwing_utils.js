@@ -9,6 +9,25 @@ function isNotNullOrUndefined(value){
     return false;
 }
 
+const shipBaseSizes = {
+    Small: "Small",
+    Medium: "Medium",
+    Large: "Large",
+    Huge: "Huge"
+}
+
+const getShipBaseSize = (ship) => {
+    if(ship.huge){
+        return shipBaseSizes.Huge;
+    } else if(ship.large){
+        return shipBaseSizes.Large;
+    } else if(ship.medium){
+        return shipBaseSizes.Medium;
+    } else {
+        return shipBaseSizes.Small;
+    }
+}
+
 function getUpgradeCost(upgrade, pilot){
     if(isNotNullOrUndefined(upgrade.points)){
         return upgrade.points; 
@@ -65,6 +84,8 @@ function getPilotEffectiveStats(pilot) {
     }
     
     const pilotCopy = JSON.parse(JSON.stringify(pilot));
+    
+
     for(const selectedUpgrade of pilotCopy.selectedUpgrades){
         //gotta get the upgrade data
         if(isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)){
@@ -411,11 +432,28 @@ function addUpgrades(newPilot, upgradesToAdd, squad){
     });  
 }
 
+//sets all optional values to zero if they aren't already set
+const setInitialValuesForAppReadyPilot = (pilot) => {
+    pilot.force = pilot.force || 0;
+    pilot.charge = pilot.charge || 0;
+    
+    const ship = pilot.pilotShip;
+    ship.attack = ship.attack || 0;
+    ship.attackf = ship.attackf || 0;
+    ship.attackb = ship.attackb || 0;
+    ship.attackl = ship.attackl || 0;
+    ship.attackr = ship.attackr || 0;
+    ship.attackt = ship.attackt || 0;
+    ship.attackdt = ship.attackdt || 0;
+    ship.attackbull = ship.attackbull || 0;
+    ship.shields = ship.shields || 0;
+    ship.force = ship.force || 0;
+    ship.charge = ship.charge || 0;
+}
+
 function getAppReadyPilot(pilot) {
     //makes a deep copy of the pilot so I don't have side effects on my "data repo"    
     const pilotCopy = JSON.parse(JSON.stringify(pilot));
-    
-    //add any additional properties I want to use to the object
     
     //attach ship
     
@@ -430,6 +468,10 @@ function getAppReadyPilot(pilot) {
     //make deep copy of ship to attach
     const shipCopy =  JSON.parse(JSON.stringify(shipForPilot));
     pilotCopy.pilotShip = shipCopy;
+
+    //set all of the non-set optional values to zero for ease of incrementing them or displaying zero later
+    // (mostly for StatBlockCpt)
+    setInitialValuesForAppReadyPilot(pilotCopy);
     
     //add upgrades
     pilotCopy.selectedUpgrades = [];
@@ -442,6 +484,7 @@ function getAppReadyPilot(pilot) {
         });
     });
 
+    //sets UI keys for upgrades...doesn't actually 'select' any upgrades
     setSelectedUpgradeKeys(pilotCopy.selectedUpgrades);
     
     return pilotCopy;
@@ -666,6 +709,89 @@ const InfoPanelCardTypes = {
     Upgrade: "Upgrade"
 }
 
+const fixIcons = (text) => {
+    if (text != null){
+        return text.replace(/%BULLSEYEARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-bullseyearc"></i>')
+        .replace(/%SINGLETURRETARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-singleturretarc"></i>')
+        .replace(/%DOUBLETURRETARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-doubleturretarc"></i>')
+        .replace(/%FRONTARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-frontarc"></i>')
+        .replace(/%REARARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-reararc"></i>')
+        .replace(/%LEFTARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-leftarc"></i>')
+        .replace(/%RIGHTARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-rightarc"></i>')
+        .replace(/%ROTATEARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-rotatearc"></i>')
+        .replace(/%FULLFRONTARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-fullfrontarc"></i>')
+        .replace(/%FULLREARARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-fullreararc"></i>')
+        .replace(/%DEVICE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-device"></i>')
+        .replace(/%MODIFICATION%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-modification"></i>')
+        .replace(/%RELOAD%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-reload"></i>')
+        .replace(/%FORCE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-forcecharge"></i>')
+        .replace(/%CHARGE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-charge"></i>')
+        .replace(/%ENERGY%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-energy"></i>')
+        .replace(/%CALCULATE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-calculate"></i>')
+        .replace(/%BANKLEFT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-bankleft"></i>')
+        .replace(/%BANKRIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-bankright"></i>')
+        .replace(/%BARRELROLL%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-barrelroll"></i>')
+        .replace(/%BOOST%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-boost"></i>')
+        .replace(/%CANNON%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-cannon"></i>')
+        .replace(/%CARGO%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-cargo"></i>')
+        .replace(/%CLOAK%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-cloak"></i>')
+        .replace(/%F-COORDINATE%/g, '<i class="xwing-miniatures-font force xwing-miniatures-font-coordinate"></i>')
+        .replace(/%COORDINATE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-coordinate"></i>')
+        .replace(/%CRIT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-crit"></i>')
+        .replace(/%ASTROMECH%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-astromech"></i>')
+        .replace(/%GUNNER%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-gunner"></i>')
+        .replace(/%CREW%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-crew"></i>')
+        .replace(/%DUALCARD%/g, '<span class="card-restriction">Dual card.</span>')
+        .replace(/%ELITE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-elite"></i>')
+        .replace(/%TACTICALRELAY%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-tacticalrelay"></i>')
+        .replace(/%SALVAGEDASTROMECH%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-salvagedastromech"></i>')
+        .replace(/%HARDPOINT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-hardpoint"></i>')
+        .replace(/%EVADE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-evade"></i>')
+        .replace(/%FOCUS%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-focus"></i>')
+        .replace(/%HIT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-hit"></i>')
+        .replace(/%ILLICIT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-illicit"></i>')
+        .replace(/%JAM%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-jam"></i>')
+        .replace(/%KTURN%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-kturn"></i>')
+        .replace(/%MISSILE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-missile"></i>')
+        .replace(/%RECOVER%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-recover"></i>')
+        .replace(/%F-REINFORCE%/g, '<i class="xwing-miniatures-font force xwing-miniatures-font-reinforce"></i>')
+        .replace(/%REINFORCE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-reinforce"></i>')
+        .replace(/%REVERSESTRAIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-reversestraight"></i>')
+        .replace(/%REVERSEBANKLEFT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-reversebankleft"></i>')
+        .replace(/%REVERSEBANKRIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-reversebankright"></i>')
+        .replace(/%SHIELD%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-shield"></i>')
+        .replace(/%SLAM%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-slam"></i>')
+        .replace(/%SLOOPLEFT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-sloopleft"></i>')
+        .replace(/%SLOOPRIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-sloopright"></i>')
+        .replace(/%STRAIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-straight"></i>')
+        .replace(/%STOP%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-stop"></i>')
+        .replace(/%SENSOR%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-sensor"></i>')
+        .replace(/%LOCK%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-lock"></i>')
+        .replace(/%TORPEDO%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-torpedo"></i>')
+        .replace(/%TROLLLEFT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-trollleft"></i>')
+        .replace(/%TROLLRIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-trollright"></i>')
+        .replace(/%TURNLEFT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-turnleft"></i>')
+        .replace(/%TURNRIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-turnright"></i>')
+        .replace(/%TURRET%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-turret"></i>')
+        .replace(/%UTURN%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-kturn"></i>')
+        .replace(/%TALENT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-talent"></i>')
+        .replace(/%TITLE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-title"></i>')
+        .replace(/%TEAM%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-team"></i>')
+        .replace(/%TECH%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-tech"></i>')
+        .replace(/%FORCEPOWER%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-forcepower"></i>')
+        .replace(/%LARGESHIPONLY%/g, '<span class="card-restriction">Large ship only.</span>')
+        .replace(/%SMALLSHIPONLY%/g, '<span class="card-restriction">Small ship only.</span>')
+        .replace(/%REBELONLY%/g, '<span class="card-restriction">Rebel only.</span>')
+        .replace(/%IMPERIALONLY%/g, '<span class="card-restriction">Imperial only.</span>')
+        .replace(/%SCUMONLY%/g, '<span class="card-restriction">Scum only.</span>')
+        .replace(/%LIMITED%/g, '<span class="card-restriction">Limited.</span>')
+        .replace(/%CONFIGURATION%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-config"></i>')
+        .replace(/%AGILITY%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-agility"></i>')
+        .replace(/%HULL%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-hull"></i>')
+        .replace(/%LINEBREAK%/g, "<br /><br />")
+    } 
+}
+
 export { isNotNullOrUndefined, getUpgradeCost, getPilotCost, getSquadCost, getPilotEffectiveStats, maxPilotOrUpgradeReached, isUpgradeAllowed, 
     addUpgrades, getAppReadyPilot, getCheapestAvailablePilotForShip, removeInvalidUpgrades, upgradeSquadShip, squadContainsAnotherSolitaryCardForThisSlot,
-    InfoPanelCardTypes }
+    InfoPanelCardTypes, shipBaseSizes, getShipBaseSize, fixIcons }
