@@ -97,7 +97,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
                 }
             }
             return (
-                <div>
+                <i>
                     <strong>Restrictions: </strong>
                     {
                         textRestrictions.map((restriction, index) => (
@@ -109,7 +109,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
                         <ActionsCpt actions={actionRestrictions} /> 
                         : null
                     }
-                </div>);
+                </i>);
         } 
         return null;    
     }
@@ -213,7 +213,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
             { removestext != '' ?
                 <div><strong>Removes: </strong><span dangerouslySetInnerHTML={{__html: xwingUtils.fixIcons(removestext)}}/></div> 
             : null }
-            <div className='info-rules-text' dangerouslySetInnerHTML={{__html: xwingUtils.fixIcons(xwingData.upgradeRules[upgrade.name].text)}}/>
+            <div className='info-text' dangerouslySetInnerHTML={{__html: xwingUtils.fixIcons(xwingData.upgradeRules[upgrade.name].text)}}/>
         </div>)
     }
 

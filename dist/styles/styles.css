@@ -8,11 +8,17 @@
     src: url("../fonts/kimberley\ bl.ttf");
 }
 
+@font-face {
+    font-family: BankGothicHD;
+    src: url("../fonts/bankgthd.ttf");
+}
+
 body {
     margin: 0;
     background-color: #202020;
     font-family: "EurostileStandard";
     color: white;
+    font-size: 0.9em;
 }
 
 .dd-wrapper {
@@ -133,11 +139,17 @@ nav ul li {
 .infoName {
     margin-top: 0px;
     margin-bottom:5px;
+    font-size: 1.5em;
+    font-weight: normal;
+    font-family: 'BankGothicHD';
 }
 
 .infoType {
     margin-top: 0px;
     margin-bottom:5px;
+    font-family: 'BankGothicHD';
+    font-size: 1.2em;
+    font-weight: normal;
 }
 
 
@@ -168,7 +180,7 @@ table.info-stats > tbody > tr >td:nth-child(1) {
     height: 3rem;
 }
 
-.info-rules-text {
+.info-text {
     margin-top:10px;
 }
 
