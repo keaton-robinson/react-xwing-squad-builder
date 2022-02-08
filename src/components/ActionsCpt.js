@@ -5,13 +5,9 @@ export default class ActionsCpt extends React.Component {
 
     constructor(props){
         super(props);
-
-        this.getActionMarkup = this.getActionMarkup.bind(this);
-        this.getActionSeparator = this.getActionSeparator.bind(this);
-        this.getActionDifficulty = this.getActionDifficulty.bind(this);
     }
 
-    getActionSeparator(action){
+    getActionSeparator = (action) => {
         if(action.includes("->")){
             return (
                 <i className="xwing-miniatures-font xwing-miniatures-font-linked"></i>
@@ -20,7 +16,7 @@ export default class ActionsCpt extends React.Component {
         return ", ";
     }
 
-    getActionDifficulty(action){
+    getActionDifficulty = (action) => {
         if(action.includes("R-")){
             return "red";
         }
@@ -30,7 +26,7 @@ export default class ActionsCpt extends React.Component {
         return "";
     }
 
-    getActionStyle(action){
+    getActionStyle = (action) => {
         let stylePrefix = "xwing-miniatures-font-"
 
         
@@ -62,7 +58,7 @@ export default class ActionsCpt extends React.Component {
             return stylePrefix+"slam";
     }
 
-    getActionMarkup(action, ordinal) {
+    getActionMarkup = (action, ordinal) => {
         return (
             <span key={action+ordinal}>
                 {/* //first action shouldn't have a comma or > before it */}

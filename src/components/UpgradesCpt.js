@@ -8,7 +8,7 @@ export default class UpgradesCpt extends React.Component{
         super(props);
     }
 
-    getSlotMarkup(slot){
+    getSlotMarkup = (slot) => {
         let slotName = slot[0];
         let numSlotsPerPilot = slot[1].numSlotsPerPilot;
         let upgradeIsAvailableToAllPilots = slot[1].numPilots == this.props.pilots.length;  //slot count is slot[1].numPilots

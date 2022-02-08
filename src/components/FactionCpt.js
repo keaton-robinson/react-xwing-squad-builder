@@ -7,29 +7,22 @@ export default class FactionCpt extends React.Component {
         super(props);
     }
   
-    static getFontClassName(factionName) {
+    static getFontClassName = (factionName) => {
         switch (factionName) {
             case factionNames['Rebel Alliance']:
                 return "xwing-miniatures-font-rebel";
-                break;
             case factionNames['Galactic Empire']:
                 return "xwing-miniatures-font-empire"
-                break;
             case factionNames['Scum and Villainy']:
                 return "xwing-miniatures-font-scum";
-                break;
             case factionNames.Resistance:
                 return "xwing-miniatures-font-rebel-outline";
-                break;
             case factionNames['First Order']:
                 return "xwing-miniatures-font-firstorder";
-                break;
             case factionNames['Galactic Republic']:
                 return "xwing-miniatures-font-republic";
-                break;
             case factionNames['Separatist Alliance']:
                 return "xwing-miniatures-font-separatists";
-                break;
             default:
                 return "";
         }

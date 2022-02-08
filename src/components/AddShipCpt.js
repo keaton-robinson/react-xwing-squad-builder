@@ -8,12 +8,11 @@ export default class AddShipCpt extends React.Component {
     constructor(props) {
         super(props);
 
-        this.handleShipSelection = this.handleShipSelection.bind(this);
         this.shipsForCustomDropdown = this.props.factionShips.map(ship => ({ label: ship, value: ship}));
         this.ddlAddShipRef = React.createRef();
     }
 
-    handleShipSelection(shipSelected) {
+    handleShipSelection = (shipSelected) => {
         if(shipSelected){
             this.props.onShipSelected(shipSelected.value);
             this.ddlAddShipRef.current.clearSelection(); //tell parent component about new ship, but reset this dropdown's value to "none"

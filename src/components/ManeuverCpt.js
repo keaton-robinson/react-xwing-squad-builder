@@ -5,11 +5,9 @@ export default class ManeuverCpt extends React.Component {
     
     constructor(props) {
         super(props);
-
-        this.getDifficultyUIColor = this.getDifficultyUIColor.bind(this);
     }
 
-    getDifficultyUIColor(){
+    getDifficultyUIColor = () => {
         switch(this.props.difficulty){
             case xwingData.difficulties.blue:
                 return "dodgerblue";

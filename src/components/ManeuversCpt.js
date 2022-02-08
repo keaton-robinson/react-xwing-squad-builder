@@ -6,12 +6,9 @@ export default class ManeuversCpt extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.buildSpeedRows = this.getSpeedRows.bind(this);
-        this.determineRowsAndColumnsToRender = this.determineRowsAndColumnsToRender.bind(this);
     }
 
-    determineRowsAndColumnsToRender() {
+    determineRowsAndColumnsToRender = () => {
         const rowsToRender = {};
         const columnsToRender = {};
         for(let i = 0; i < this.props.maneuvers.length; i++){
@@ -33,7 +30,7 @@ export default class ManeuversCpt extends React.Component {
     }
 
 
-    getSpeedRows() {
+    getSpeedRows = () => {
 
         const rowsAndColumnsToRender = this.determineRowsAndColumnsToRender();
         const rowsToRender = rowsAndColumnsToRender.rowsToRender;

@@ -20,11 +20,9 @@ export default class App extends React.Component  {
 
   constructor(props){
     super(props);
-
-    this.setSelectedFaction = this.setSelectedFaction.bind(this);
   }
 
-  setSelectedFaction(faction) {
+  setSelectedFaction = (faction) => {
     this.setState( {selectedFaction: faction} );
   }
 

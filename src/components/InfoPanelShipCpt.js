@@ -12,12 +12,9 @@ export default class InfoPanelShipCpt extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.getPilotSkillsString = this.getPilotSkillsString.bind(this);
-        this.initializeShipData = this.initializeShipData.bind(this);
     }
 
-    initializeShipData(){ 
+    initializeShipData = () => { 
         //make a copy of the pilot so I don't have side effects on my "data repo"
         this.shipData = JSON.parse(JSON.stringify(this.props.ship))
         this.shipData.pilotsForShip = xwingData.pilots.filter(pilot => pilot.ship == this.shipData.name && pilot.faction == this.props.faction);
@@ -40,7 +37,7 @@ export default class InfoPanelShipCpt extends React.Component {
         this.shipData.pilotSkills.sort((firstEle, secondEle) => (firstEle - secondEle));
     }
 
-    getPilotSkillsString(){
+    getPilotSkillsString = () => {
         let pilotSkillString = "";
         for(let i=0; i < this.shipData.pilotSkills.length-1; i++){
             pilotSkillString += this.shipData.pilotSkills[i] + ", ";

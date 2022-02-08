@@ -9,11 +9,6 @@ export default class PilotRowCpt extends React.Component {
 
     constructor(props) {
         super(props);
-        // this.handleShipSelection = this.handleShipSelection.bind(this);
-        // this.handlePilotSelection = this.handlePilotSelection.bind(this);
-        // this.delBtnPressed = this.delBtnPressed.bind(this);
-        // this.cloneBtnPressed = this.cloneBtnPressed.bind(this);
-
         this.ddlSelectPilotRef = React.createRef();
     }
 
