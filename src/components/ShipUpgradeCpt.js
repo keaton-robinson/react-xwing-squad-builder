@@ -13,6 +13,10 @@ export default class ShipUpgradeCpt extends React.Component {
         this.getAvailableUpgrades = this.getAvailableUpgrades.bind(this);
     }
 
+    upgradeAlreadySelectedOnADifferentSlot = (upgrade) =>{
+        return this.props.pilot.selectedUpgrades.find(selUpgrade => selUpgrade.selectedUpgradeId == upgrade.id && selUpgrade.key != this.props.upgradeSlot.key);
+    } 
+
     getAvailableUpgrades(squadContainsAnotherSolitaryCardForThisSlot) {
         if (squadContainsAnotherSolitaryCardForThisSlot){
             //if another ship has selected a 'solitary' upgrade for this slot, this ship cannot select an upgrade for this slot (ex. tactical relays)
@@ -31,7 +35,8 @@ export default class ShipUpgradeCpt extends React.Component {
 
         return xwingData.upgrades.filter(upgrade => matchingSlots.includes(upgrade.slot)  // upgrade.slot === this.props.upgradeSlot.slot 
             && (!xwingUtils.maxPilotOrUpgradeReached(upgrade, this.props.squad) || this.props.upgradeSlot.selectedUpgradeId == upgrade.id)
-            && xwingUtils.isUpgradeAllowed(this.props.upgradeSlot, upgrade, this.props.pilot, this.props.squad))
+            && xwingUtils.isUpgradeAllowed(this.props.upgradeSlot, upgrade, this.props.pilot, this.props.squad)
+            && !this.upgradeAlreadySelectedOnADifferentSlot(upgrade))
     }
 
 
