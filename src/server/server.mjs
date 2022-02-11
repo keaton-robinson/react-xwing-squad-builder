@@ -13,12 +13,14 @@ server.get('/', (req, res) => {
   // the whole "window is not defined" problem for server side rendering. Using server side rendering for this project seems fairly silly anyway.
   // having to learn static site generation for real world seems fairly likely as well 
   res.send(`
+    <!DOCTYPE html>
     <html>
       <head>
         <title>X-Wing Squad Builder</title>
         <link rel="stylesheet" href="fonts/xwing-miniatures.css">
         <link rel="stylesheet" href="styles/backgrounds.css">
         <link rel="stylesheet" href="styles/styles.css">
+        <script src="https://kit.fontawesome.com/e5814cf8ca.js" crossorigin="anonymous"></script>
       </head>
       <body>
         <div id="mountNode"></div>

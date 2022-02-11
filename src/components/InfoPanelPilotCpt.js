@@ -13,7 +13,11 @@ export default class InfoPanelPilotCpt extends React.Component {
     }
 
     getRulesMarkupForPilot = (pilotToShow) => {
-        return xwingUtils.fixIcons(xwingData.pilotRules[pilotToShow.name].text);
+        const pilotRules = xwingData.pilotRules[pilotToShow.name];
+        if(pilotRules){
+            return xwingUtils.fixIcons(pilotRules.text);
+        }
+        return null;
     }
 
     render(){

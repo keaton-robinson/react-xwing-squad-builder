@@ -2,6 +2,8 @@ import React from 'react';
 import InfoPanelCpt from './InfoPanelCpt';
 import PilotRowCpt from './PilotRowCpt';
 import AddShipCpt from './AddShipCpt';
+import ModalContainer from './modals/ModalContainer';
+import PrintSquadModal from './modals/PrintSquadModal';
 import * as xwingData from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils'
 
@@ -18,8 +20,14 @@ export default class SquadBuilderCpt extends React.Component {
 
         this.state = {
             squad: [],
+            showPrintModal: false,
             infoPanelCardToShow: null // will expect an object of format { type: ("Ship"/"Pilot"/"Upgrade"), key: (string, number, number) }
         };
+    }
+
+    togglePrintModal = () => {
+        const state = this.state;
+        this.setState({ ...state, showPrintModal: !state.showPrintModal });
     }
 
     showInfoPanelCard = (shipPilotOrUpgradeToShow, cardType) => {
@@ -136,7 +144,7 @@ export default class SquadBuilderCpt extends React.Component {
                         <span>Points: { xwingUtils.getSquadCost(this.state.squad) }/200 ({200-xwingUtils.getSquadCost(this.state.squad)} left)</span>
                     </div>
                     <div>
-                        <button className="btn-info">Print/Export</button>
+                        <button className="btn-info" onClick={this.togglePrintModal}>Print/Export</button>
                         <button className="btn-danger">Randomize!</button>
                     </div>
                 </div>
@@ -170,6 +178,13 @@ export default class SquadBuilderCpt extends React.Component {
                     </div>
                     {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : null }  
                 </div>
+                { this.state.showPrintModal 
+                && <ModalContainer handleClose={this.togglePrintModal} 
+                        headerTitle={`${this.props.selectedFaction} Squadron (${xwingUtils.getSquadCost(this.state.squad)})` }
+                        children={
+                            <PrintSquadModal squad={this.state.squad} />
+                        }
+                    />}
             </div>
         );
     }
