@@ -17,6 +17,7 @@ server.get('/', (req, res) => {
     <html>
       <head>
         <title>X-Wing Squad Builder</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="fonts/xwing-miniatures.css">
         <link rel="stylesheet" href="styles/backgrounds.css">
         <link rel="stylesheet" href="styles/styles.css">

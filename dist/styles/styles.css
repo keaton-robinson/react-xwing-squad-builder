@@ -398,6 +398,52 @@ svg > g.maneuver.backwards {
     border-radius: .25rem;
 }
 
+.onlyShowOnMobile {
+    display: none;
+}
+
+@media only screen and (max-width: 450px) {
+    
+    .hideOnMobile {
+        display: none;
+    }
+
+    .onlyShowOnMobile {
+        display: unset;
+    }
+    
+    #factionChooser {
+        font-size: 2.0rem;
+    }
+
+    .squad-name-and-points-row h3 {
+        font-size: 1.05em
+    }
+
+    .printBtn {
+        display: none;
+    }
+    
+    .shipAndInfoContainer {
+        display: block;
+    }
+
+    .shipRow {
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    .shipUpgrades {
+        display: block;
+    }
+
+    .deleteOrCopyShip{
+        max-width: 300px;
+        text-align: right;
+    }
+}
+
+
 @media print {
     body * {
         visibility: hidden;

@@ -95,8 +95,11 @@ export default class PilotRowCpt extends React.Component {
                         />
                     </div>
                 </div>
-                <div className="shipPointCost">
+                <div className="shipPointCost hideOnMobile">
                     <span>{ xwingUtils.getPilotCost(this.props.selectedPilot)}</span>
+                </div>
+                <div className="showOnlyOnMobile" style={{backgroundColor: 'rgb(32,32,32, .6)', maxWidth: '300px'}}>
+                    Upgrades:
                 </div>
                 <div className="shipUpgrades">
                     { this.props.selectedPilot.selectedUpgrades.map(selectedUpgrade => (
@@ -110,6 +113,7 @@ export default class PilotRowCpt extends React.Component {
                     )) }
                 </div> 
                 <div className="deleteOrCopyShip">
+                    <span className="onlyShowOnMobile">{`Total ship points: ${xwingUtils.getPilotCost(this.props.selectedPilot)}  `}</span>
                     <button className="btn-danger" onClick={this.delBtnPressed}>Delete</button>
                     <button className="btn-info" onClick={this.cloneBtnPressed}>Clone</button>
                 </div>

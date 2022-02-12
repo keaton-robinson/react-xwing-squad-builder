@@ -143,9 +143,9 @@ export default class SquadBuilderCpt extends React.Component {
                     <div className="points-display-container">
                         <span>Points: { xwingUtils.getSquadCost(this.state.squad) }/200 ({200-xwingUtils.getSquadCost(this.state.squad)} left)</span>
                     </div>
-                    <div>
-                        <button className="btn-info" onClick={this.togglePrintModal}>Print/Export</button>
-                        <button className="btn-danger">Randomize!</button>
+                    <div className='printBtn'>
+                        <button className="btn-info" onClick={this.togglePrintModal}>Print</button>
+                        {/* <button className="btn-danger">Randomize!</button> */}
                     </div>
                 </div>
                 <div className="squad-save-import-row">
