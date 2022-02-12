@@ -98,7 +98,7 @@ export default class PilotRowCpt extends React.Component {
                 <div className="shipPointCost hideOnMobile">
                     <span>{ xwingUtils.getPilotCost(this.props.selectedPilot)}</span>
                 </div>
-                <div className="showOnlyOnMobile" style={{backgroundColor: 'rgb(32,32,32, .6)', maxWidth: '300px'}}>
+                <div className="onlyShowOnMobile" style={{backgroundColor: 'rgb(32,32,32, .6)', maxWidth: '300px'}}>
                     Upgrades:
                 </div>
                 <div className="shipUpgrades">
