@@ -1,4 +1,4 @@
-# a practice project more interesting than a to-do list
+# A practice project more interesting than a to-do list
 This is my reimplementation of an existing tool, "Yet Another Squad Builder 2.0", or YASB 2.0. YASB 2.0 is a "squad builder" for the X-Wing Miniatures game by Atomic Mass Games. You can see YASB 2.0 live here: https://raithos.github.io/ and you can visit its GitHub repository here: https://github.com/raithos/xwing.
 
 I am making this as a practice and portfolio sample project. I want to stretch my React skills, but I want to be able to borrow some visual assets and an interesting dataset to work with. YASB has both. 
@@ -17,7 +17,7 @@ What I wrote myself:
 
 My goal was to challenge myself to implement something interesting and familiar to me so that I may see what I would learn from the process.
 
-Things I learned:
+# Things I learned:
 - Obviously, I got much more comfortable with React by doing this. I kind of decided I prefer class components over function components, but either way works. 
 - Unit tests are totally worth the effort. In the past, I have wondered if they are reallllllyyy worth doing, so I decided to not include any in this project to see if I miss them. It didn't take long before I was wishing I had a safety net of tests backing my code base. I still haven't tried to add any here. I imagine my code isn't very testable in its current form, but I'm definitely interested in investing the time to master the use of unit tests now.
 - JavaScript arrow functions are awesome. The "this" keyword needs to learn its proper place. I'm sure regular JavaScript functions can do some cool stuff, but not having to fight the 'this' keyword so often is really nice.
