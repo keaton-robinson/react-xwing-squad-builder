@@ -112,7 +112,7 @@ export default class PilotRowCpt extends React.Component {
                         />
                     )) }
                 </div> 
-                <div className="deleteOrCopyShip">
+                <div className="deleteOrCopyShip" style={{marginTop:"5px"}}>
                     <span className="onlyShowOnMobile">{`Total ship points: ${xwingUtils.getPilotCost(this.props.selectedPilot)}  `}</span>
                     <button className="btn-danger" onClick={this.delBtnPressed}>Delete</button>
                     <button className="btn-info" onClick={this.cloneBtnPressed}>Clone</button>

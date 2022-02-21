@@ -209,20 +209,27 @@ table.info-stats > tbody > tr >td:nth-child(1) {
 
 }
 
+.btn-primary, .btn-info, .btn-danger {
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-family: "EurostileStandard";
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+  }
+
 .btn-info {
     color: white;
     background-color: #17a2b8;
-    font-family: "EurostileStandard";
-    padding: 5px;
-    margin: 5px;
+    
 }
 
 .btn-danger {
     color: white;
     background-color: #dc3545;
-    font-family: "EurostileStandard";
-    padding: 5px;
-    margin: 5px;
 }
 
 
@@ -375,7 +382,7 @@ svg > g.maneuver.backwards {
     padding-top: 5px;
     padding-left: 20px;
     padding-right: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .modal-close {

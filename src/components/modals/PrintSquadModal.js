@@ -52,7 +52,7 @@ export default class PrintSquadModal extends React.Component {
                         </tbody>
                     </table>
                 )}
-                <div style={{textAlign:'right'}}><button className='no-print' onClick={this.print}><i className="fa-solid fa-print"></i> Print</button></div>
+                <div style={{textAlign:'right'}}><button className='btn-primary no-print' onClick={this.print}><i className="fa-solid fa-print"></i> Print</button></div>
                 
             </div>
         );
