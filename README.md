@@ -4,7 +4,7 @@ YASB 2.0 is a "squad builder" for the X-Wing Miniatures game by Atomic Mass Game
 
 I am making this as a practice and portfolio sample project. I could make something simple, like a todo list, but I wanted to make something more interesting, while staying focused on the engineering aspects of the project. I didn't want to spend time doing image editing. I find YASB to be a pretty visually interesting, so I decided that reimplenting it would be a fun exercise. This let me borrow their images and some other visuals. I also got to learn how they handled putting all their cool star wars icons throughout the UI. 
 
-What I borrowed from YASB 2.0: 
+What I borrowed from YASB: 
 - overall visual design & layout plan (although I reimplemented it with my own CSS)
 - images for pictures of Star Wars ships
 - fonts for xwing icons
