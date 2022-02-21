@@ -30,4 +30,4 @@ Things I learned:
 - A bunch more stuff but this list is getting long
 
 
-My intent with this project was to focus on learning React and making some of my own HTML/CSS
+This has been a fun project to work on and I've learned a lot in the process. 
