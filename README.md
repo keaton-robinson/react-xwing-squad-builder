@@ -1,4 +1,4 @@
-# A practice project more interesting than a to-do list
+# A portfolio project more interesting than a to-do list
 This is my reimplementation of an existing tool, "Yet Another Squad Builder 2.0", or YASB 2.0. 
 YASB 2.0 is a "squad builder" for the X-Wing Miniatures game by Atomic Mass Games. You can see YASB 2.0 live here: https://raithos.github.io/ and you can visit its GitHub repository here: https://github.com/raithos/xwing.
 
