@@ -149,7 +149,8 @@ export default class SquadBuilderCpt extends React.Component {
                     </div>
                 </div>
                 <div className="squad-save-import-row">
-                    <button className="btn-info">Import</button>
+                    <button className="btn-info">Save Squad</button>
+                    <button className="btn-info">Load Squad</button>
                     <button className="btn-danger">New Squad</button>
                 </div>
                 <div className="shipAndInfoContainer">

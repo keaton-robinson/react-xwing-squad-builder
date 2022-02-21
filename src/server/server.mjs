@@ -7,11 +7,7 @@ const server = express();
 server.use(express.static('dist'));
 
 server.get('/', (req, res) => {
-  // started off using server side rendering because my initial tutorials suggested it...but got rid of it when custom dropdown components broke
-  // const initialMarkup = ReactDOMServer.renderToString(<App />);   custom dropdown component broke in SSR due to depending on window object
-  // doing server side rendering may be required in the real world...but for now, I have other things to master before worrying about getting good at solutions to 
-  // the whole "window is not defined" problem for server side rendering. Using server side rendering for this project seems fairly silly anyway.
-  // having to learn static site generation for real world seems fairly likely as well 
+  // could switch to static file serving, perhaps even with initial react components rendered already and using react's hydrate on the client side
   res.send(`
     <!DOCTYPE html>
     <html>
