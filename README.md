@@ -22,7 +22,8 @@ My goal was to challenge myself to implement something interesting and familiar 
 - Obviously, I got much more comfortable with React by doing this. I kind of decided I prefer class components over function components, but either way works. 
 - Unit tests are totally worth the effort. In the past, I have wondered if they are reallllllyyy worth doing, so I decided to not include any in this project to see if I miss them. It didn't take long before I was wishing I had a safety net of tests backing my code base. I still haven't tried to add any here. I imagine my code isn't very testable in its current form, but I'm definitely interested in investing the time to master the use of unit tests now.
 - JavaScript arrow functions are awesome. The "this" keyword needs to learn its proper place. I'm sure regular JavaScript functions can do some cool stuff, but not having to fight the 'this' keyword so often is really nice.
-- How to use specialized fonts to insert icons into a web page. 
+- How to use specialized fonts to insert icons into a web page.
+- be careful about letting setState get called multiple times if you want to avoid race conditions in your React state updates. 
 - Got muuuuuch more comfortable with CSS. Including: (flexbox, grids, box-model size troubleshooting, specificity and cascade rules, and more)
 - Learned about pros and cons of client-side rendering, server-side rendering, and static file generation. I just dumbed this project down to the simplest thing I could, but it originally started off using server-side rendering with ReactDOM.hydrate. (I ran into issues with my custom drop down component calling the window object in my webpack bundle, which kept causing errors during the server side rendering. I decided fixing that issue was kind of beyond the scope of this project, so I got rid of server side rendering)
 - Learned about webpack and static + dynamic bundling strategies. 
