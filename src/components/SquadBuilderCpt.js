@@ -6,6 +6,7 @@ import ModalContainer from './modals/ModalContainer';
 import PrintSquadModal from './modals/PrintSquadModal';
 import NewSquadConfirmModal from './modals/NewSquadConfirmModal';
 import SaveModal from './modals/SaveModal';
+import LoadModal from './modals/LoadModal';
 import * as xwingData from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
 
@@ -13,7 +14,6 @@ export default class SquadBuilderCpt extends React.Component {
     
     
 
-    nextUIKey = 0;
     saveStatusMessages = {
         saving: "saving...",
         success: "successfully saved!",
@@ -27,7 +27,8 @@ export default class SquadBuilderCpt extends React.Component {
         this.availableModals = {
             printModal: 'printModal',
             newSquadConfirmModal: 'newSquadConfirmModal',
-            saveModal: 'saveModal'
+            saveModal: 'saveModal',
+            loadModal: 'loadModal'
         };
 
 
@@ -38,7 +39,7 @@ export default class SquadBuilderCpt extends React.Component {
             modalToShow: null,
             infoPanelCardToShow: null, // will expect an object of format { type: ("Ship"/"Pilot"/"Upgrade"), key: (string, number, number) }
             showSaveStatus: false,
-            saveStatusMessage: this.saveStatusMessages.saving
+            saveStatusMessage: ""
         };
         this.state = this.initialState;
     }
@@ -52,12 +53,12 @@ export default class SquadBuilderCpt extends React.Component {
             body: JSON.stringify({
                 faction: this.props.selectedFaction,
                 name: newSquadTitle,
+                points: xwingUtils.getSquadCost(this.state.squad),
                 pilots: this.state.squad
             })
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             //stop spinner
             //show save success message
             const state = this.state;
@@ -65,7 +66,6 @@ export default class SquadBuilderCpt extends React.Component {
         })
         .catch(error => {
             //show error message
-            console.log(error);
             const state = this.state;
             this.setState({ ...state, saveStatusMessage: this.saveStatusMessages.error, showSaveStatus: true });
         }); 
@@ -76,8 +76,17 @@ export default class SquadBuilderCpt extends React.Component {
         
     }
 
+    loadSquad = (selectedSquad) => {
+        const initialState = this.initialState;
+        this.setState({...initialState, squad: selectedSquad.pilots, squadName: selectedSquad.name});
+    }
+
     showSaveModal = () => {
         this.toggleModal(this.availableModals.saveModal);
+    }
+
+    showLoadModal = () => {
+        this.toggleModal(this.availableModals.loadModal);
     }
 
     createNewSquad = () => {
@@ -110,9 +119,12 @@ export default class SquadBuilderCpt extends React.Component {
                 childComponent = <NewSquadConfirmModal cancel={this.toggleModal} createNewSquad={this.createNewSquad} />;
                 break;
             case this.availableModals.saveModal:
-                SaveModal
                 headerTitle = 'Save squad';
                 childComponent = <SaveModal saveSquad={this.saveSquad} squadName={this.state.squadName}/>
+                break;
+            case this.availableModals.loadModal:
+                headerTitle = 'Load squad';
+                childComponent = <LoadModal faction={this.props.faction} loadSquad={this.loadSquad} />
                 break;
         }
 
@@ -149,7 +161,7 @@ export default class SquadBuilderCpt extends React.Component {
 
     addPilot = (pilotToAdd, upgradesToApply) => {
         const appReadyNewPilot = xwingUtils.getAppReadyPilot(pilotToAdd);
-        appReadyNewPilot.uiKey = ++this.nextUIKey;
+        appReadyNewPilot.uiKey =  xwingUtils.makeid(25);
         const newSquadAfterAddition = [...this.state.squad, appReadyNewPilot];
 
         this.setUpgradesOnNewPilot(appReadyNewPilot, upgradesToApply, newSquadAfterAddition);
@@ -241,7 +253,7 @@ export default class SquadBuilderCpt extends React.Component {
                 </div>
                 <div className="squad-save-import-row">
                     <button className="btn-info" onClick={this.showSaveModal}>Save Squad</button>
-                    <button className="btn-info">Load Squad</button>
+                    <button className="btn-info" onClick={this.showLoadModal}>Load Squad</button>
                     <button className="btn-danger" style={{margin: "5px"}} onClick={this.showNewSquadConfirmModal}>New Squad</button>
                     <span style={{visibility: this.state.showSaveStatus ? "visible" : "hidden"}}>{this.state.saveStatusMessage}</span>
                 </div>
@@ -269,7 +281,7 @@ export default class SquadBuilderCpt extends React.Component {
                             onShipSelected={this.addCheapestAvailablePilotForShip}
                             onRecordMouseEnter = { this.showInfoPanelCard }/>
                     </div>
-                    {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : null }  
+                    {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : <div style={{flex:1}}></div> }  
                 </div>
                 { this.state.modalToShow && this.getModalToShow()}
             </div>
