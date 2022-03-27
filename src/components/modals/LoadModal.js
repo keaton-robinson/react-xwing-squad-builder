@@ -39,7 +39,7 @@ export default class LoadModal extends React.Component {
                 .then(data => {
                     const state = this.state;
                     const squadsCopy = [...this.state.squads];
-                    const indexOfSquadToRemove = squadsCopy.findIndex(squad => squad._id === state.selectedSquad);
+                    const indexOfSquadToRemove = squadsCopy.findIndex(squad => squad._id === state.selectedSquad._id);
                     squadsCopy.splice(indexOfSquadToRemove, 1);
 
                     this.setState({ ...state, squads: squadsCopy });
