@@ -5,7 +5,7 @@ import AddShipCpt from './AddShipCpt';
 import ModalContainer from './modals/ModalContainer';
 import PrintSquadModal from './modals/PrintSquadModal';
 import NewSquadConfirmModal from './modals/NewSquadConfirmModal';
-import SaveModal from './modals/SaveModal';
+import SaveAsModal from './modals/SaveAsModal';
 import LoadModal from './modals/LoadModal';
 import * as xwingData from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
@@ -27,24 +27,60 @@ export default class SquadBuilderCpt extends React.Component {
         this.availableModals = {
             printModal: 'printModal',
             newSquadConfirmModal: 'newSquadConfirmModal',
-            saveModal: 'saveModal',
+            saveAsModal: 'saveAsModal',
             loadModal: 'loadModal'
         };
 
 
 
         this.initialState = {
+            squadId: null,
             squad: [],
             squadName: `${this.props.faction} Squadron`,
             modalToShow: null,
             infoPanelCardToShow: null, // will expect an object of format { type: ("Ship"/"Pilot"/"Upgrade"), key: (string, number, number) }
             showSaveStatus: false,
-            saveStatusMessage: ""
+            saveStatusMessage: "",
+            editingSquadName: false
         };
         this.state = this.initialState;
     }
 
-    saveSquad = (newSquadTitle) => {
+    saveClicked = (event) => {
+        if(this.state.squadId) {
+            // do a put request to update squad
+            fetch(`http://localhost:3000/squads/${this.state.squadId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify({
+                    name: this.state.squadName,
+                    points: xwingUtils.getSquadCost(this.state.squad),
+                    pilots: this.state.squad
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const state = this.state;
+                this.setState({ ...state, squadId: data._id ,saveStatusMessage: this.saveStatusMessages.success, showSaveStatus: true });
+            })
+            .catch(error => {
+                //show error message
+                const state = this.state;
+                this.setState({ ...state, saveStatusMessage: this.saveStatusMessages.error, showSaveStatus: true });
+            }); 
+
+            //close modal and show save status message 
+            const state = this.state;
+            this.toggleModal(null, { ...state, showSaveStatus: true, saveStatusMessage: this.saveStatusMessages.saving});
+        } else {
+            // do a post request to create new squad
+            this.saveSquadAs(this.state.squadName)
+        }
+    }
+
+    saveSquadAs = (newSquadTitle) => {
         fetch('http://localhost:3000/squads', {
             method: "POST",
             headers: {
@@ -59,10 +95,8 @@ export default class SquadBuilderCpt extends React.Component {
         })
         .then(response => response.json())
         .then(data => {
-            //stop spinner
-            //show save success message
             const state = this.state;
-            this.setState({ ...state, saveStatusMessage: this.saveStatusMessages.success, showSaveStatus: true });
+            this.setState({ ...state, squadId: data._id ,saveStatusMessage: this.saveStatusMessages.success, showSaveStatus: true });
         })
         .catch(error => {
             //show error message
@@ -78,11 +112,11 @@ export default class SquadBuilderCpt extends React.Component {
 
     loadSquad = (selectedSquad) => {
         const initialState = this.initialState;
-        this.setState({...initialState, squad: selectedSquad.pilots, squadName: selectedSquad.name});
+        this.setState({...initialState, squadId: selectedSquad._id, squad: selectedSquad.pilots, squadName: selectedSquad.name});
     }
 
-    showSaveModal = () => {
-        this.toggleModal(this.availableModals.saveModal);
+    showSaveAsModal = () => {
+        this.toggleModal(this.availableModals.saveAsModal);
     }
 
     showLoadModal = () => {
@@ -118,12 +152,12 @@ export default class SquadBuilderCpt extends React.Component {
                 headerTitle = `Create new squad?`;
                 childComponent = <NewSquadConfirmModal cancel={this.toggleModal} createNewSquad={this.createNewSquad} />;
                 break;
-            case this.availableModals.saveModal:
+            case this.availableModals.saveAsModal:
                 headerTitle = 'Save squad';
-                childComponent = <SaveModal saveSquad={this.saveSquad} squadName={this.state.squadName}/>
+                childComponent = <SaveAsModal saveSquad={this.saveSquadAs} squadName={this.state.squadName}/>
                 break;
             case this.availableModals.loadModal:
-                headerTitle = 'Load squad';
+                headerTitle = `Load ${this.props.faction} squad`;
                 childComponent = <LoadModal faction={this.props.faction} loadSquad={this.loadSquad} />
                 break;
         }
@@ -234,25 +268,55 @@ export default class SquadBuilderCpt extends React.Component {
         this.removeInvalidUpgradesAndSetState(this.state.squad);
     }
 
-    
+    editSquadClicked = (event) => {
+        const state = this.state;
+
+        window.addEventListener("mousedown", this.editSquadCloseListener);
+
+        this.setState({...state, editingSquadName: true});
+    }
+
+    onSquadNameChanged = (event) => {
+        const state = this.state;
+        this.setState({...state, squadName: event.target.value});
+    }
+
+    onSquadNameEditKeyDown = (event) => {
+        const state = this.state;
+        if(event.keyCode == 13) { //they pressed "enter"
+            this.setState({...state, editingSquadName: false});
+        }
+    }
+
+    editSquadCloseListener = (event) => {
+        if(!(event.target.className == 'editSquadName')){
+            window.removeEventListener("mousedown", this.editSquadCloseListener);
+        const state = this.state;
+        this.setState({ ...state, editingSquadName:false });
+        }
+    }
 
     render() {
         return (
             <div style={this.props.faction !== this.props.selectedFaction ? { display: 'none'} : {}}>
                 <div className="squad-name-and-points-row">
                     <div>
-                        <h3>{this.state.squadName}</h3>
+                        { this.state.editingSquadName  
+                            ? <input className='editSquadName' autoFocus={true} type='text' value={this.state.squadName} onChange={this.onSquadNameChanged} onKeyDown={this.onSquadNameEditKeyDown}
+                                 style={{fontSize:"1.2rem"}}/> 
+                            : <h2 style={{display: 'inline'}}>{this.state.squadName}</h2>} 
+                        <i className="far fa-edit" style={{marginLeft: "5px", fontSize: "1.2rem"}} onClick={this.editSquadClicked}></i>
                     </div>
                     <div className="points-display-container">
                         <span>Points: { xwingUtils.getSquadCost(this.state.squad) }/200 ({200-xwingUtils.getSquadCost(this.state.squad)} left)</span>
                     </div>
                     <div className='printBtn'>
                         <button className="btn-info" style={{margin:"5px"}} onClick={this.showPrintModal}>Print</button>
-                        {/* <button className="btn-danger">Randomize!</button> */}
                     </div>
                 </div>
                 <div className="squad-save-import-row">
-                    <button className="btn-info" onClick={this.showSaveModal}>Save Squad</button>
+                    <button className="btn-primary" onClick={this.saveClicked}><i className="fa-solid fa-save" style={{marginRight:"5px"}}></i>Save</button>
+                    <button className="btn-primary" onClick={this.showSaveAsModal}><i className="fa-solid fa-file" style={{marginRight:"5px"}}></i>Save As</button>
                     <button className="btn-info" onClick={this.showLoadModal}>Load Squad</button>
                     <button className="btn-danger" style={{margin: "5px"}} onClick={this.showNewSquadConfirmModal}>New Squad</button>
                     <span style={{visibility: this.state.showSaveStatus ? "visible" : "hidden"}}>{this.state.saveStatusMessage}</span>

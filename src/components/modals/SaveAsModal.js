@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class SaveModal extends React.Component {
+export default class SaveAsModal extends React.Component {
     
     constructor(props) {
         super(props);
@@ -12,7 +12,7 @@ export default class SaveModal extends React.Component {
         this.setState({squadName: event.target.value});
     }
 
-    saveClicked = (event) => {
+    saveAsClicked = (event) => {
         this.props.saveSquad(this.state.squadName);
     }
 
@@ -22,10 +22,10 @@ export default class SaveModal extends React.Component {
                 <div>
                     Save your squad?
                 </div>
-                <span>New Squad Name <input type="text" value={this.state.squadName} onChange={this.squadNameChanged} maxLength={30}/></span>
+                <span>Squad Name: <input type="text" value={this.state.squadName} onChange={this.squadNameChanged} maxLength={30}/></span>
                 <hr/>
                 <div style={{ textAlign: "right"}}>
-                    <button className="btn-primary" onClick={this.saveClicked}><i className="fa-solid fa-save"></i> Save</button>
+                    <button className="btn-primary" onClick={this.saveAsClicked}><i className="fa-solid fa-save"></i> Save</button>
                 </div>
             </div>
         );
