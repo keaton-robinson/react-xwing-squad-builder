@@ -2,7 +2,6 @@ import React from 'react';
 import InfoPanelCpt from './InfoPanelCpt';
 import PilotRowCpt from './PilotRowCpt';
 import AddShipCpt from './AddShipCpt';
-import ModalContainer from './modals/ModalContainer';
 import PrintSquadModal from './modals/PrintSquadModal';
 import NewSquadConfirmModal from './modals/NewSquadConfirmModal';
 import SaveAsModal from './modals/SaveAsModal';
@@ -24,14 +23,6 @@ export default class SquadBuilderCpt extends React.Component {
         super(props);
 
         this.factionShips = Object.keys(xwingData.ships).filter(ship => xwingData.ships[ship].factions.includes(props.faction)).sort();
-        this.availableModals = {
-            printModal: 'printModal',
-            newSquadConfirmModal: 'newSquadConfirmModal',
-            saveAsModal: 'saveAsModal',
-            loadModal: 'loadModal'
-        };
-
-
 
         this.initialState = {
             squadId: null,
@@ -63,17 +54,18 @@ export default class SquadBuilderCpt extends React.Component {
             .then(response => response.json())
             .then(data => {
                 const state = this.state;
-                this.setState({ ...state, squadId: data._id ,saveStatusMessage: this.saveStatusMessages.success, showSaveStatus: true });
+                this.setState({ ...state, squadId: data._id, showSaveStatus: true, saveStatusMessage: this.saveStatusMessages.success });
             })
             .catch(error => {
                 //show error message
                 const state = this.state;
-                this.setState({ ...state, saveStatusMessage: this.saveStatusMessages.error, showSaveStatus: true });
+                this.setState({ ...state, showSaveStatus: true, saveStatusMessage: this.saveStatusMessages.error});
             }); 
 
-            //close modal and show save status message 
+            //show save status message 
             const state = this.state;
-            this.toggleModal(null, { ...state, showSaveStatus: true, saveStatusMessage: this.saveStatusMessages.saving});
+            this.setState({ ...state, showSaveStatus: true, saveStatusMessage: this.saveStatusMessages.saving});
+            
         } else {
             // do a post request to create new squad
             this.saveSquadAs(this.state.squadName)
@@ -104,9 +96,10 @@ export default class SquadBuilderCpt extends React.Component {
             this.setState({ ...state, saveStatusMessage: this.saveStatusMessages.error, showSaveStatus: true });
         }); 
 
-        //close modal and show save status message 
+        //show save status message 
         const state = this.state;
-        this.toggleModal(null, { ...state, squadName: newSquadTitle, showSaveStatus: true, saveStatusMessage: this.saveStatusMessages.saving});
+        this.setState({ ...state, squadName: newSquadTitle, showSaveStatus: true, saveStatusMessage: this.saveStatusMessages.saving});
+        this.props.setModal(null);
         
     }
 
@@ -116,55 +109,36 @@ export default class SquadBuilderCpt extends React.Component {
     }
 
     showSaveAsModal = () => {
-        this.toggleModal(this.availableModals.saveAsModal);
+        this.props.setModal({ 
+            title: 'Save squad', 
+            children: <SaveAsModal saveSquad={this.saveSquadAs} squadName={this.state.squadName}/> 
+        });
     }
 
     showLoadModal = () => {
-        this.toggleModal(this.availableModals.loadModal);
+        this.props.setModal({ 
+            title: `Load ${this.props.faction} squad`, 
+            children: <LoadModal faction={this.props.faction} loadSquad={this.loadSquad} /> 
+        });
     }
 
     createNewSquad = () => {
         this.setState(this.initialState);
+        this.props.setModal(null);
     }
 
     showNewSquadConfirmModal = () => {
-        this.toggleModal(this.availableModals.newSquadConfirmModal);
+        this.props.setModal({ 
+            title: `Create new squad?`, 
+            children: <NewSquadConfirmModal cancel={() => this.props.setModal(null)} createNewSquad={this.createNewSquad} /> 
+        });
     }
 
     showPrintModal = () => {
-        this.toggleModal(this.availableModals.printModal);
-    }
-
-    toggleModal = (modalToShow, pendingStateChanges) => {
-        const state = pendingStateChanges ? pendingStateChanges : this.state;
-        this.setState({ ...state, modalToShow: this.availableModals[modalToShow] ? modalToShow : null });
-    }
-
-    getModalToShow = () => {
-        let headerTitle, childComponent;
-
-        switch(this.state.modalToShow){
-            case this.availableModals.printModal:
-                headerTitle = `${this.props.selectedFaction} Squadron (${xwingUtils.getSquadCost(this.state.squad)})`
-                childComponent = <PrintSquadModal squad={this.state.squad} />;
-                break;
-            case this.availableModals.newSquadConfirmModal:
-                headerTitle = `Create new squad?`;
-                childComponent = <NewSquadConfirmModal cancel={this.toggleModal} createNewSquad={this.createNewSquad} />;
-                break;
-            case this.availableModals.saveAsModal:
-                headerTitle = 'Save squad';
-                childComponent = <SaveAsModal saveSquad={this.saveSquadAs} squadName={this.state.squadName}/>
-                break;
-            case this.availableModals.loadModal:
-                headerTitle = `Load ${this.props.faction} squad`;
-                childComponent = <LoadModal faction={this.props.faction} loadSquad={this.loadSquad} />
-                break;
-        }
-
-        return  <ModalContainer handleClose={this.toggleModal} 
-                        headerTitle={headerTitle}
-                        children={childComponent}/>
+        this.props.setModal({ 
+            title: `${this.props.selectedFaction} Squadron (${xwingUtils.getSquadCost(this.state.squad)})`, 
+            children: <PrintSquadModal squad={this.state.squad} /> 
+        });
     }
 
     showInfoPanelCard = (shipPilotOrUpgradeToShow, cardType) => {
@@ -347,7 +321,6 @@ export default class SquadBuilderCpt extends React.Component {
                     </div>
                     {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : <div style={{flex:1}}></div> }  
                 </div>
-                { this.state.modalToShow && this.getModalToShow()}
             </div>
         );
     }
