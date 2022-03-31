@@ -7,17 +7,26 @@ export default class LoadModal extends React.Component {
 
         this.state = { squads: [], statusMessage: "Fetching squads...", selectedSquad: null};
 
-        fetch('http://localhost:3000/squads/' + this.props.faction)
+        this.controller = new AbortController();
+        const signal = this.controller.signal;
+
+        fetch('http://localhost:3000/squads/' + this.props.faction, { signal })
         .then(response => response.json())
         .then(data => {
             const state = this.state;
             this.setState({...state, squads: data, statusMessage: null});
         })
         .catch(error => {
-            const state = this.state;
-            this.setState({...state, statusMessage: "Failed to load squads", squads: []});
+            if(error.name != 'AbortError'){
+                const state = this.state;
+                this.setState({...state, statusMessage: "Failed to load squads", squads: []});
+            }
         })
 
+    }
+
+    componentWillUnmount() {
+        this.controller.abort(); //cancel fetches to avoid react getting mad at me for leaving asynch requests open after unmount
     }
 
     loadClicked = (event) => {
@@ -30,10 +39,12 @@ export default class LoadModal extends React.Component {
         if(this.state.selectedSquad){
             const selectedSquad = this.state.selectedSquad;
             let deleteConfirmed = confirm(`Delete ${selectedSquad.name}?`);
+            const signal = this.controller.signal;
+
             if(deleteConfirmed){
                 //delete the squad
                 fetch(`http://localhost:3000/squads/${selectedSquad._id}`, {
-                    method: "DELETE"
+                    method: "DELETE", signal
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -45,7 +56,9 @@ export default class LoadModal extends React.Component {
                     this.setState({ ...state, squads: squadsCopy });
                 })
                 .catch(error => {
-                    alert("An error occured...please try again.");
+                    if(error.name != 'AbortError'){
+                        alert("An error occured...please try deleting again.");
+                    }
                 }); 
             }
         }
