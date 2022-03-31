@@ -30,8 +30,7 @@ export default class SquadBuilderCpt extends React.Component {
             squadName: `${this.props.faction} Squadron`,
             modalToShow: null,
             infoPanelCardToShow: null, // will expect an object of format { type: ("Ship"/"Pilot"/"Upgrade"), key: (string, number, number) }
-            showSaveStatus: false,
-            saveStatusMessage: "",
+            saveStatusMessage: null,
             editingSquadName: false
         };
         this.state = this.initialState;
@@ -54,17 +53,17 @@ export default class SquadBuilderCpt extends React.Component {
             .then(response => response.json())
             .then(data => {
                 const state = this.state;
-                this.setState({ ...state, squadId: data._id, showSaveStatus: true, saveStatusMessage: this.saveStatusMessages.success });
+                this.setState({ ...state, squadId: data._id, saveStatusMessage: this.saveStatusMessages.success });
             })
             .catch(error => {
                 //show error message
                 const state = this.state;
-                this.setState({ ...state, showSaveStatus: true, saveStatusMessage: this.saveStatusMessages.error});
+                this.setState({ ...state, saveStatusMessage: this.saveStatusMessages.error});
             }); 
 
             //show save status message 
             const state = this.state;
-            this.setState({ ...state, showSaveStatus: true, saveStatusMessage: this.saveStatusMessages.saving});
+            this.setState({ ...state, saveStatusMessage: this.saveStatusMessages.saving});
             
         } else {
             // do a post request to create new squad
@@ -88,17 +87,17 @@ export default class SquadBuilderCpt extends React.Component {
         .then(response => response.json())
         .then(data => {
             const state = this.state;
-            this.setState({ ...state, squadId: data._id ,saveStatusMessage: this.saveStatusMessages.success, showSaveStatus: true });
+            this.setState({ ...state, squadId: data._id ,saveStatusMessage: this.saveStatusMessages.success});
         })
         .catch(error => {
             //show error message
             const state = this.state;
-            this.setState({ ...state, saveStatusMessage: this.saveStatusMessages.error, showSaveStatus: true });
+            this.setState({ ...state, saveStatusMessage: this.saveStatusMessages.error });
         }); 
 
         //show save status message 
         const state = this.state;
-        this.setState({ ...state, squadName: newSquadTitle, showSaveStatus: true, saveStatusMessage: this.saveStatusMessages.saving});
+        this.setState({ ...state, squadName: newSquadTitle, saveStatusMessage: this.saveStatusMessages.saving});
         this.props.setModal(null);
         
     }
@@ -293,7 +292,7 @@ export default class SquadBuilderCpt extends React.Component {
                     <button className="btn-primary" onClick={this.showSaveAsModal}><i className="fa-solid fa-file" style={{marginRight:"5px"}}></i>Save As</button>
                     <button className="btn-info" onClick={this.showLoadModal}>Load Squad</button>
                     <button className="btn-danger" style={{margin: "5px"}} onClick={this.showNewSquadConfirmModal}>New Squad</button>
-                    <span style={{visibility: this.state.showSaveStatus ? "visible" : "hidden"}}>{this.state.saveStatusMessage}</span>
+                    <span style={{visibility: this.state.saveStatusMessage ? "visible" : "hidden"}}>{this.state.saveStatusMessage}</span>
                 </div>
                 <div className="shipAndInfoContainer">
                     <div className="shipAndObstacleSelectors">
