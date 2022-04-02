@@ -13,13 +13,11 @@ export default class LoadModal extends React.Component {
         fetch('http://localhost:3000/squads/' + this.props.faction, { signal })
         .then(response => response.json())
         .then(data => {
-            const state = this.state;
-            this.setState({...state, squads: data, statusMessage: null});
+            this.setState({ squads: data, statusMessage: null});
         })
         .catch(error => {
             if(error.name != 'AbortError'){
-                const state = this.state;
-                this.setState({...state, statusMessage: "Failed to load squads", squads: []});
+                this.setState({ statusMessage: "Failed to load squads", squads: []});
             }
         })
 
@@ -48,12 +46,11 @@ export default class LoadModal extends React.Component {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    const state = this.state;
                     const squadsCopy = [...this.state.squads];
-                    const indexOfSquadToRemove = squadsCopy.findIndex(squad => squad._id === state.selectedSquad._id);
+                    const indexOfSquadToRemove = squadsCopy.findIndex(squad => squad._id === this.state.selectedSquad._id);
                     squadsCopy.splice(indexOfSquadToRemove, 1);
 
-                    this.setState({ ...state, squads: squadsCopy });
+                    this.setState({ squads: squadsCopy });
                 })
                 .catch(error => {
                     if(error.name != 'AbortError'){
@@ -65,8 +62,7 @@ export default class LoadModal extends React.Component {
     }
     
     selectSquad = (clickedSquad) => {
-        const state = this.state;
-        this.setState({...state, selectedSquad: clickedSquad});
+        this.setState({ selectedSquad: clickedSquad});
     }
 
 
