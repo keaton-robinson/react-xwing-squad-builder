@@ -52,18 +52,13 @@ export default class SquadBuilderCpt extends React.Component {
             })
             .then(response => response.json())
             .then(data => {
-                const state = this.state;
-                this.setState({ ...state, squadId: data._id, saveStatusMessage: this.saveStatusMessages.success });
+                this.setState({ squadId: data._id, saveStatusMessage: this.saveStatusMessages.success });
             })
             .catch(error => {
-                //show error message
-                const state = this.state;
-                this.setState({ ...state, saveStatusMessage: this.saveStatusMessages.error});
+                this.setState({ saveStatusMessage: this.saveStatusMessages.error});
             }); 
 
-            //show save status message 
-            const state = this.state;
-            this.setState({ ...state, saveStatusMessage: this.saveStatusMessages.saving});
+            this.setState({ saveStatusMessage: this.saveStatusMessages.saving});
             
         } else {
             // do a post request to create new squad
@@ -86,18 +81,13 @@ export default class SquadBuilderCpt extends React.Component {
         })
         .then(response => response.json())
         .then(data => {
-            const state = this.state;
-            this.setState({ ...state, squadId: data._id ,saveStatusMessage: this.saveStatusMessages.success});
+            this.setState({ squadId: data._id ,saveStatusMessage: this.saveStatusMessages.success});
         })
         .catch(error => {
-            //show error message
-            const state = this.state;
-            this.setState({ ...state, saveStatusMessage: this.saveStatusMessages.error });
+            this.setState({ saveStatusMessage: this.saveStatusMessages.error });
         }); 
-
-        //show save status message 
-        const state = this.state;
-        this.setState({ ...state, squadName: newSquadTitle, saveStatusMessage: this.saveStatusMessages.saving});
+        
+        this.setState({ squadName: newSquadTitle, saveStatusMessage: this.saveStatusMessages.saving});
         this.props.setModal(null);
         
     }
@@ -141,14 +131,12 @@ export default class SquadBuilderCpt extends React.Component {
     }
 
     showInfoPanelCard = (shipPilotOrUpgradeToShow, cardType) => {
-        const state = this.state;
-        this.setState({ ...state, infoPanelCardToShow: {type: cardType, cardData: shipPilotOrUpgradeToShow} });
+        this.setState({ infoPanelCardToShow: {type: cardType, cardData: shipPilotOrUpgradeToShow} });
     }
 
     removeInvalidUpgradesAndSetState= (updatedSquad) => {
         xwingUtils.removeInvalidUpgrades(updatedSquad);
-        const state = this.state;
-        this.setState({ ...state, squad: updatedSquad });
+        this.setState({ squad: updatedSquad });
     }
 
     setUpgradesOnNewPilot = (appReadyNewPilot, upgradesToApply, squadIncludingNewPilot) => {
@@ -242,30 +230,25 @@ export default class SquadBuilderCpt extends React.Component {
     }
 
     editSquadClicked = (event) => {
-        const state = this.state;
-
         window.addEventListener("mousedown", this.editSquadCloseListener);
 
-        this.setState({...state, editingSquadName: true});
+        this.setState({ editingSquadName: true });
     }
 
     onSquadNameChanged = (event) => {
-        const state = this.state;
-        this.setState({...state, squadName: event.target.value});
+        this.setState({ squadName: event.target.value });
     }
 
     onSquadNameEditKeyDown = (event) => {
-        const state = this.state;
         if(event.keyCode == 13) { //they pressed "enter"
-            this.setState({...state, editingSquadName: false});
+            this.setState({ editingSquadName: false });
         }
     }
 
     editSquadCloseListener = (event) => {
         if(!(event.target.className == 'editSquadName')){
             window.removeEventListener("mousedown", this.editSquadCloseListener);
-        const state = this.state;
-        this.setState({ ...state, editingSquadName:false });
+            this.setState({ editingSquadName:false });
         }
     }
 
