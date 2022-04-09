@@ -27,8 +27,6 @@ module.exports = {
       },
     },
     rules: {
-      // You can do your customizations here...
-      // For example, if you don't want to use the prop-types package,
-      // you can turn off that recommended rule with: 'react/prop-types': ['off']
+      'react/prop-types': ['off']
     },
   };
