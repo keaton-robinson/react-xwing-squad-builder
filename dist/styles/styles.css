@@ -413,6 +413,40 @@ svg > g.maneuver.backwards {
     border-radius: .25rem;
 }
 
+.loginDivider {
+    border-top: 1px solid grey;
+    position: relative;
+    margin-top: 4.75%;
+    height: 15px;
+    text-align: center;
+}
+
+.loginRegisterForm > input {
+    width: 100%;
+    margin-top: .65em;
+    font-size: 1.3em;
+    height: 2em;
+}
+
+.loginDividerText {
+    background-color: #fff;
+    padding: 0 0.5em;
+    position: relative;
+    color: grey;
+    top: -0.7em;
+}
+
+.loginRegisterBtn {
+    margin-top: .65em;
+}
+
+.inputValidationMsg {
+    width: 100%;
+    text-align: left;
+    color: red;
+    margin-top: 3px;
+}
+
 .onlyShowOnMobile {
     display: none;
 }
