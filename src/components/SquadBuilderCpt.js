@@ -200,20 +200,14 @@ export default class SquadBuilderCpt extends React.Component {
                     {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : null }  
                 </div>
                 { this.state.modalToShow == this.availableModals.printModal 
-                && <ModalContainer handleClose={this.toggleModal} 
-                        headerTitle={`${this.props.selectedFaction} Squadron (${xwingUtils.getSquadCost(this.state.squad)})` }
-                        children={
-                            <PrintSquadModal squad={this.state.squad} />
-                        }
-                    />
+                && <ModalContainer handleClose={this.toggleModal} headerTitle={`${this.props.selectedFaction} Squadron (${xwingUtils.getSquadCost(this.state.squad)})` }>
+                        <PrintSquadModal squad={this.state.squad} />
+                    </ModalContainer>
                 }
                 { this.state.modalToShow == this.availableModals.newSquadConfirmModal 
-                && <ModalContainer handleClose={this.toggleModal} 
-                        headerTitle={`Create new squad?` }
-                        children={
-                            <NewSquadConfirmModal cancel={this.toggleModal} createNewSquad={this.createNewSquad} />
-                        }
-                    />
+                && <ModalContainer handleClose={this.toggleModal} headerTitle={`Create new squad?` }>
+                        <NewSquadConfirmModal cancel={this.toggleModal} createNewSquad={this.createNewSquad} />
+                    </ModalContainer>
                 }
             </div>
         );
