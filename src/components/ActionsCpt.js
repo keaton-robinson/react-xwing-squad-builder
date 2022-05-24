@@ -1,4 +1,3 @@
-import react from 'react';
 import React from 'react';
 
 export default class ActionsCpt extends React.Component {
