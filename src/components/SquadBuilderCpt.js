@@ -36,7 +36,8 @@ export default class SquadBuilderCpt extends React.Component {
         this.state = this.initialState;
     }
 
-    saveClicked = (event) => {
+    // eslint-disable-next-line
+    saveClicked = (event) => {  // I want to be reminded this variable is available
         if(this.state.squadId) {
             // do a put request to update squad
             fetch(`http://localhost:3000/squads/${this.state.squadId}`, {
@@ -53,8 +54,8 @@ export default class SquadBuilderCpt extends React.Component {
             .then(response => response.json())
             .then(data => {
                 this.setState({ squadId: data._id, saveStatusMessage: this.saveStatusMessages.success });
-            })
-            .catch(error => {
+            }) // eslint-disable-next-line  
+            .catch(error => { //I want to be reminded this variable is available
                 this.setState({ saveStatusMessage: this.saveStatusMessages.error});
             }); 
 
@@ -83,7 +84,8 @@ export default class SquadBuilderCpt extends React.Component {
         .then(data => {
             this.setState({ squadId: data._id ,saveStatusMessage: this.saveStatusMessages.success});
         })
-        .catch(error => {
+        // eslint-disable-next-line
+        .catch(error => { // I want to be reminded this variable is available
             this.setState({ saveStatusMessage: this.saveStatusMessages.error });
         }); 
         
@@ -229,7 +231,8 @@ export default class SquadBuilderCpt extends React.Component {
         this.removeInvalidUpgradesAndSetState(this.state.squad);
     }
 
-    editSquadClicked = (event) => {
+    // eslint-disable-next-line 
+    editSquadClicked = (event) => { // I want to be reminded this variable is available
         window.addEventListener("mousedown", this.editSquadCloseListener);
 
         this.setState({ editingSquadName: true });
