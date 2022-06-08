@@ -103,10 +103,6 @@ export default class ManeuversCpt extends React.Component {
     }
 
     render(){
-
-        const difficulties = xwingData.difficulties;
-        const bearings = xwingData.bearings;
-
         const speedRows = this.getSpeedRows();
 
         return (
