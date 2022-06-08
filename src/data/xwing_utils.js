@@ -271,7 +271,7 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
                     return false;
                 }
                 break;
-            case 'Action':
+            case 'Action': {
                 let actionFound = false;
                 for(const action of pilot.pilotShip.actions){
                     if(!action.includes(">") &&  action.includes(restriction[1])){  //i think red and purple actions count...well..I can't engine upgrade an A-wing tho...
@@ -287,7 +287,8 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
                 if(!actionFound){
                     return false;
                 }
-                break;   
+                break;
+            }
             case 'Slot':
                 //if the upgrade is not currently the equiped upgrade, need to check if another slot of the specified type is available
                 if(selectedUpgradeSlot.selectedUpgradeId != upgrade.id){
@@ -305,7 +306,7 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
                     }
                 }
                 break;
-            case 'orUnique':
+            case 'orUnique': {
                 //if there's "uniqueName" pilot or upgrade in the squad, they are in.
                 let uniqueFound = isUniqueInSquad(restriction[1], squad);
 
@@ -325,6 +326,7 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
                     return false;
                 }
                 break;
+            }
             case 'Faction':
                 if(!(restriction[1] === pilot.faction)){
                     return false;
@@ -337,7 +339,7 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
                     }
                 }
                 break;
-            case 'Keyword':
+            case 'Keyword': {
                 const keywordToFind = restriction[1];
                 let keywordFound = false;
 
@@ -366,17 +368,19 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
                     return false;
                 }
                 break;
+            }
             case 'isUnique':
                 if(restriction[1] && !(pilot.unique) || (!restriction[1] && pilot.unique)){
                     return false;
                 }
                 break;
-            case 'Equipped':
+            case 'Equipped': {
                 const selectedUpgradeForSlot = pilot.selectedUpgrades.find(selUpgrade => selUpgrade.slot == restriction[1]);
                 if (!selectedUpgradeForSlot ||  (selectedUpgradeForSlot.selectedUpgradeId !== 0 && !(selectedUpgradeForSlot.selectedUpgradeId))){
                     return false; 
                 }
                 break;
+            }
             case 'ShieldsGreaterThan':
                 if(!pilot.pilotShip.shields || !(pilot.pilotShip.shields > restriction[1])){
                     return false;
@@ -509,7 +513,7 @@ function setSelectedUpgradeKeys(selectedUpgrades){
                 throw {
                     message: "A selectedUpgrade had a different key than expected. This will probably lead to many errors. Investigate this.",
                     error: error,
-                    selectedUpgradesVal: selectedUgprades,
+                    selectedUpgradesVal: selectedUpgrades,
                     slotNameUsedTrackerVal: slotNameUsedTracker
                 };
             }

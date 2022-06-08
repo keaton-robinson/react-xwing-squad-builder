@@ -20,9 +20,9 @@ export default class App extends React.Component  {
   ];
 
   setModal = ( modalConfig ) => {
-    const modalToShow = modalConfig ? <ModalContainer handleClose={() => this.setModal(null)} 
-                        headerTitle={modalConfig.title}
-                        children={modalConfig.children}/> : null;
+    const modalToShow = modalConfig ? <ModalContainer handleClose={() => this.setModal(null)} headerTitle={modalConfig.title}>
+        {modalConfig.children}
+      </ModalContainer> : null;
 
     if(this.state.modalToShow != modalToShow){
       this.setState({ modalToShow: modalToShow });

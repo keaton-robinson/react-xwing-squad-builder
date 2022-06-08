@@ -45,14 +45,18 @@ export default class PilotRowCpt extends React.Component {
         this.props.onRecordMouseEnter(this.props.selectedPilot, xwingUtils.InfoPanelCardTypes.SelectedPilot);
     }
 
+    // eslint-disable-next-line no-unused-vars
     delBtnPressed = (e) => {
         this.props.removePilot(this.props.selectedPilot);
     }
 
+    // eslint-disable-next-line no-unused-vars
     cloneBtnPressed = (e) => {
         this.props.clonePilot(this.props.selectedPilot);
     }
 
+    // leaving this lint error in place for now because I don't fully recall why I needed this code in the first place
+    // and componentDidUpdate usually checks previous props...but I didn't
     componentDidUpdate = (prevProps) => {
         //the custom dropdowns don't automatically update their selected item or "title" on re-renders, sadly
         let current = this.ddlSelectPilotRef.current;
@@ -219,8 +223,6 @@ export default class PilotRowCpt extends React.Component {
                 return "scurrgh6bomber";
             case xwingData.ships['YV-666'].name:
                 return "yv666";
-            case xwingData.ships['TIE/SF Fighter'].name:
-                return "tiesffighter";
             case xwingData.ships['TIE/VN Silencer'].name:
                 return "tievnsilencer";
             case xwingData.ships['Scavenged YT-1300'].name:
