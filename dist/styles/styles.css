@@ -421,7 +421,12 @@ svg > g.maneuver.backwards {
     text-align: center;
 }
 
+.loginRegisterForm {
+    text-align: center;
+}
+
 .loginRegisterForm > input {
+    display: block;
     width: 100%;
     margin-top: .65em;
     font-size: 1.3em;
@@ -440,11 +445,27 @@ svg > g.maneuver.backwards {
     margin-top: .65em;
 }
 
+.btn-primary:disabled {
+    background-color: #84afdd;
+}
+
 .inputValidationMsg {
     width: 100%;
     text-align: left;
     color: red;
     margin-top: 3px;
+}
+
+@keyframes shake{
+    25%{
+        transform:translateX(4px)
+    }
+    50%{
+        transform:translateX(-4px)
+    }
+    75%{
+        transform:translateX(4px)
+    }
 }
 
 .onlyShowOnMobile {

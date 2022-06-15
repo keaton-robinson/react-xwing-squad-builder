@@ -1,7 +1,6 @@
 import React from 'react';
 import FactionCpt from './FactionCpt';
 import LoginModal from './modals/LoginModal';
-import CounterModal from './modals/CounterModal';
 import RegisterModal from './modals/RegisterModal';
 
 export default class HeaderComponent extends React.Component {
@@ -13,8 +12,7 @@ export default class HeaderComponent extends React.Component {
   loginClicked = () => {
     this.props.setModal({
       title: "Login",
-      children: <CounterModal />
-      //children: <LoginModal switchToRegister={this.switchToRegister}/>
+      children: <LoginModal switchToRegister={this.switchToRegister}/>
     })
   } 
 
