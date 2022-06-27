@@ -9,17 +9,17 @@ export default class HeaderComponent extends React.Component {
     super(props);
   }
 
-  loginClicked = () => {
+  showLogin = () => {
     this.props.setModal({
       title: "Login",
-      children: <LoginModal switchToRegister={this.switchToRegister}/>
+      children: <LoginModal switchToRegister={this.showRegister}/>
     })
   } 
 
-  switchToRegister = () => {
+  showRegister = () => {
     this.props.setModal({
       title: "Register",
-      children: <RegisterModal />
+      children: <RegisterModal switchToLogin={this.showLogin}/>
     })
   }
 
@@ -39,7 +39,7 @@ export default class HeaderComponent extends React.Component {
           <nav id="navLinks">
               <ul>
                 <li><a href="https://github.com/keaton-robinson/react-xwing-squad-builder">GitHub Repository</a></li>
-                <li id="loginBtn" onClick={this.loginClicked}><a style={{cursor: "pointer"}}><i className="fa fa-sign-in-alt" style={{marginRight: "5px"}}></i>Log In</a></li>
+                <li id="loginBtn" onClick={this.showLogin}><a style={{cursor: "pointer"}}><i className="fa fa-sign-in-alt" style={{marginRight: "5px"}}></i>Log In</a></li>
               </ul>      
           </nav>
         </header>
