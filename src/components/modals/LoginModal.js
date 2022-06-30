@@ -1,13 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import {XwingTextInput, XwingFormSubmitButton, XwingForm } from '../CustomFormikControls/XwingFormikCustomControls';
 import { UserContext } from '../App.js'
 
 export default function LoginModal(props) {
-
+    const mounted = useRef(false);
     const [statusMessage, setStatusMessage] = useState('');
     const [successfullyLoggedIn, setSuccessfullyLoggedIn] = useState(false);
+
+    const fetchAbortController = new AbortController();
+    useEffect(() => {
+        mounted.current = true;
+        return () => { 
+            mounted.current = false;
+            fetchAbortController.abort(); 
+        };
+    }, []);
 
     return (
         <UserContext.Consumer>
@@ -33,7 +42,8 @@ export default function LoginModal(props) {
                             body: JSON.stringify({
                                 username: values.username,
                                 password: values.password
-                            })
+                            }),
+                            signal: fetchAbortController.signal
                         })
                         .then((response) => {
                             return response.json()
@@ -48,10 +58,14 @@ export default function LoginModal(props) {
                             }
                         })
                         .catch((error) => {
-                            alert(error);
+                            if(mounted.current){
+                                setStatusMessage(error.message);
+                            }
                         })
                         .finally(() => {
-                            setSubmitting(false);
+                            if(mounted.current){
+                                setSubmitting(false);
+                            }
                         });
                     }}
                 >
