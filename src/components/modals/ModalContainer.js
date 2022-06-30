@@ -7,7 +7,7 @@ const MyModal = ({ handleClose, headerTitle, children }) => {
     }
 
   return (
-    <div className="modal" onClick={handleClose}>
+    <div className="modal">
         <section className="modal-main" onClick={modalContentClicked}>
             <div className="modal-header-container">
                 <div className="modal-header-content">{headerTitle}</div>

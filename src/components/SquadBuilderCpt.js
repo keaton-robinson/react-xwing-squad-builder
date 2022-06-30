@@ -2,63 +2,168 @@ import React from 'react';
 import InfoPanelCpt from './InfoPanelCpt';
 import PilotRowCpt from './PilotRowCpt';
 import AddShipCpt from './AddShipCpt';
-import ModalContainer from './modals/ModalContainer';
 import PrintSquadModal from './modals/PrintSquadModal';
-import * as xwingData from '../data/xwing_data';
-import * as xwingUtils from '../data/xwing_utils'
 import NewSquadConfirmModal from './modals/NewSquadConfirmModal';
+import SaveAsModal from './modals/SaveAsModal';
+import LoadModal from './modals/LoadModal';
+import * as xwingData from '../data/xwing_data';
+import * as xwingUtils from '../data/xwing_utils';
+import { UserContext } from './UserContext.js'; 
 
-export default class SquadBuilderCpt extends React.Component {
-    
-    
+const saveStatusMessages = {
+    saving: "saving...",
+    success: "successfully saved!",
+    error: "error saving...please try again"
+};
 
-    nextUIKey = 0;
-    
+export default class SquadBuilderCpt extends React.Component {    
     constructor(props) {
         super(props);
 
         this.factionShips = Object.keys(xwingData.ships).filter(ship => xwingData.ships[ship].factions.includes(props.faction)).sort();
-        this.availableModals = {
-            printModal: 'printModal',
-            newSquadConfirmModal: 'newSquadConfirmModal'
-        };
 
-
-
+        //initial state useful for reverting to defaults for "new squad" button
         this.initialState = {
+            squadId: null,
             squad: [],
+            squadName: `${this.props.faction} Squadron`,
             modalToShow: null,
-            infoPanelCardToShow: null // will expect an object of format { type: ("Ship"/"Pilot"/"Upgrade"), key: (string, number, number) }
+            infoPanelCardToShow: null, // will expect an object of format { type: ("Ship"/"Pilot"/"Upgrade"), key: (string, number, number) }
+            saveStatusMessage: null,
+            editingSquadName: false
         };
         this.state = this.initialState;
     }
 
+    componentDidMount() {
+        this.fetchAbortController = new AbortController();
+    }
+
+    componentWillUnmount() {
+        this.fetchAbortController.abort();
+        this.willUnmount = true;
+    }
+
+    // eslint-disable-next-line
+    saveClicked = (event) => {  // I want to be reminded this variable is available
+        //need to include user token here
+        if(this.state.squadId) {
+            // do a put request to update squad
+            fetch(`http://localhost:3000/squads/${this.state.squadId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: this.context.user.token
+                },
+                body: JSON.stringify({
+                    name: this.state.squadName,
+                    points: xwingUtils.getSquadCost(this.state.squad),
+                    pilots: this.state.squad
+                })
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                if(responseData.success){
+                    this.setState({ squadId: responseData.savedSquad._id, saveStatusMessage: saveStatusMessages.success });
+                } else {
+                    this.setState({saveStatusMessage: saveStatusMessages.error});
+                }
+            }) // eslint-disable-next-line  
+            .catch(error => { //I want to be reminded this variable is available
+                if(!this.willUnmount){
+                    this.setState({ saveStatusMessage: saveStatusMessages.error});
+                }
+            }); 
+
+            this.setState({ saveStatusMessage: saveStatusMessages.saving});
+            
+        } else {
+            // do a post request to create new squad
+            this.saveSquadAs(this.state.squadName)
+        }
+    }
+
+    saveSquadAs = (newSquadTitle) => {
+        //need to include user token here
+        fetch('http://localhost:3000/squads', {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                Authorization: this.context.user.token
+            },
+            body: JSON.stringify({
+                faction: this.props.selectedFaction,
+                name: newSquadTitle,
+                points: xwingUtils.getSquadCost(this.state.squad),
+                pilots: this.state.squad
+            })
+        })
+        .then(response => response.json())
+        .then(responseData => {
+            if(responseData.success){
+                this.setState({ squadId: responseData.savedSquad._id ,saveStatusMessage: saveStatusMessages.success});
+            } else {
+                this.setState({ saveStatusMessage: saveStatusMessages.error });
+            }
+        })
+        // eslint-disable-next-line
+        .catch(error => { // I want to be reminded this variable is available
+            if(!this.willUnmount){
+                this.setState({ saveStatusMessage: saveStatusMessages.error });
+            }
+        }); 
+        
+        this.setState({ squadName: newSquadTitle, saveStatusMessage: saveStatusMessages.saving});
+        this.props.setModal(null);
+        
+    }
+
+    loadSquad = (selectedSquad) => {
+        const initialState = this.initialState;
+        this.setState({...initialState, squadId: selectedSquad._id, squad: selectedSquad.pilots, squadName: selectedSquad.name});
+        this.props.setModal(null);
+    }
+
+    showSaveAsModal = () => {
+        this.props.setModal({ 
+            title: 'Save squad', 
+            children: <SaveAsModal saveSquad={this.saveSquadAs} squadName={this.state.squadName}/> 
+        });
+    }
+
+    showLoadModal = () => {
+        this.props.setModal({ 
+            title: `Load ${this.props.faction} squad`, 
+            children: <LoadModal faction={this.props.faction} loadSquad={this.loadSquad} /> 
+        });
+    }
+
     createNewSquad = () => {
         this.setState(this.initialState);
+        this.props.setModal(null);
     }
 
     showNewSquadConfirmModal = () => {
-        this.toggleModal(this.availableModals.newSquadConfirmModal);
+        this.props.setModal({ 
+            title: `Create new squad?`, 
+            children: <NewSquadConfirmModal cancel={() => this.props.setModal(null)} createNewSquad={this.createNewSquad} /> 
+        });
     }
 
     showPrintModal = () => {
-        this.toggleModal(this.availableModals.printModal);
-    }
-
-    toggleModal = (modalToShow) => {
-        const state = this.state;
-        this.setState({ ...state, modalToShow: this.availableModals[modalToShow] ? modalToShow : null });
+        this.props.setModal({ 
+            title: `${this.props.selectedFaction} Squadron (${xwingUtils.getSquadCost(this.state.squad)})`, 
+            children: <PrintSquadModal squad={this.state.squad} /> 
+        });
     }
 
     showInfoPanelCard = (shipPilotOrUpgradeToShow, cardType) => {
-        const state = this.state;
-        this.setState({ ...state, infoPanelCardToShow: {type: cardType, cardData: shipPilotOrUpgradeToShow} });
+        this.setState({ infoPanelCardToShow: {type: cardType, cardData: shipPilotOrUpgradeToShow} });
     }
 
     removeInvalidUpgradesAndSetState= (updatedSquad) => {
         xwingUtils.removeInvalidUpgrades(updatedSquad);
-        const state = this.state;
-        this.setState({ ...state, squad: updatedSquad });
+        this.setState({ squad: updatedSquad });
     }
 
     setUpgradesOnNewPilot = (appReadyNewPilot, upgradesToApply, squadIncludingNewPilot) => {
@@ -78,7 +183,7 @@ export default class SquadBuilderCpt extends React.Component {
 
     addPilot = (pilotToAdd, upgradesToApply) => {
         const appReadyNewPilot = xwingUtils.getAppReadyPilot(pilotToAdd);
-        appReadyNewPilot.uiKey = ++this.nextUIKey;
+        appReadyNewPilot.uiKey =  xwingUtils.makeid(25);
         const newSquadAfterAddition = [...this.state.squad, appReadyNewPilot];
 
         this.setUpgradesOnNewPilot(appReadyNewPilot, upgradesToApply, newSquadAfterAddition);
@@ -151,27 +256,54 @@ export default class SquadBuilderCpt extends React.Component {
         this.removeInvalidUpgradesAndSetState(this.state.squad);
     }
 
-    
+    // eslint-disable-next-line 
+    editSquadClicked = (event) => { // I want to be reminded this variable is available
+        window.addEventListener("mousedown", this.editSquadCloseListener);
+
+        this.setState({ editingSquadName: true });
+    }
+
+    onSquadNameChanged = (event) => {
+        this.setState({ squadName: event.target.value });
+    }
+
+    onSquadNameEditKeyDown = (event) => {
+        if(event.keyCode == 13) { //they pressed "enter"
+            this.setState({ editingSquadName: false });
+        }
+    }
+
+    editSquadCloseListener = (event) => {
+        if(!(event.target.className == 'editSquadName')){
+            window.removeEventListener("mousedown", this.editSquadCloseListener);
+            this.setState({ editingSquadName:false });
+        }
+    }
 
     render() {
         return (
             <div style={this.props.faction !== this.props.selectedFaction ? { display: 'none'} : {}}>
                 <div className="squad-name-and-points-row">
                     <div>
-                        <h3>{`${this.props.faction} Squadron`}</h3>
+                        { this.state.editingSquadName  
+                            ? <input className='editSquadName' autoFocus={true} type='text' value={this.state.squadName} onChange={this.onSquadNameChanged} onKeyDown={this.onSquadNameEditKeyDown}
+                                style={{fontSize:"1.2rem"}}/> 
+                            : <h2 style={{display: 'inline'}}>{this.state.squadName}</h2>} 
+                        <i className="far fa-edit" style={{marginLeft: "5px", fontSize: "1.2rem"}} onClick={this.editSquadClicked}></i>
                     </div>
                     <div className="points-display-container">
                         <span>Points: { xwingUtils.getSquadCost(this.state.squad) }/200 ({200-xwingUtils.getSquadCost(this.state.squad)} left)</span>
                     </div>
                     <div className='printBtn'>
                         <button className="btn-info" style={{margin:"5px"}} onClick={this.showPrintModal}>Print</button>
-                        {/* <button className="btn-danger">Randomize!</button> */}
                     </div>
                 </div>
                 <div className="squad-save-import-row">
-                    {/* <button className="btn-info">Save Squad</button>
-                    <button className="btn-info">Load Squad</button> */}
+                    { this.context.user && <button className="btn-primary" onClick={this.saveClicked}><i className="fa-solid fa-save" style={{marginRight:"5px"}}></i>Save</button> }
+                    { this.context.user && <button className="btn-primary" onClick={this.showSaveAsModal}><i className="fa-solid fa-file" style={{marginRight:"5px"}}></i>Save As</button> }
+                    { this.context.user && <button className="btn-info" onClick={this.showLoadModal}>Load Squad</button> }
                     <button className="btn-danger" style={{margin: "5px"}} onClick={this.showNewSquadConfirmModal}>New Squad</button>
+                    { this.context.user && <span style={{visibility: this.state.saveStatusMessage ? "visible" : "hidden"}}>{this.state.saveStatusMessage}</span> }
                 </div>
                 <div className="shipAndInfoContainer">
                     <div className="shipAndObstacleSelectors">
@@ -197,20 +329,11 @@ export default class SquadBuilderCpt extends React.Component {
                             onShipSelected={this.addCheapestAvailablePilotForShip}
                             onRecordMouseEnter = { this.showInfoPanelCard }/>
                     </div>
-                    {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : null }  
+                    {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : <div style={{flex:1}}></div> }  
                 </div>
-                { this.state.modalToShow == this.availableModals.printModal 
-                && <ModalContainer handleClose={this.toggleModal} headerTitle={`${this.props.selectedFaction} Squadron (${xwingUtils.getSquadCost(this.state.squad)})` }>
-                        <PrintSquadModal squad={this.state.squad} />
-                    </ModalContainer>
-                }
-                { this.state.modalToShow == this.availableModals.newSquadConfirmModal 
-                && <ModalContainer handleClose={this.toggleModal} headerTitle={`Create new squad?` }>
-                        <NewSquadConfirmModal cancel={this.toggleModal} createNewSquad={this.createNewSquad} />
-                    </ModalContainer>
-                }
             </div>
         );
     }
-    
 }
+
+SquadBuilderCpt.contextType = UserContext;

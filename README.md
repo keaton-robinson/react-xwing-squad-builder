@@ -2,6 +2,8 @@
 This is my reimplementation of an existing tool, "Yet Another Squad Builder 2.0", or YASB 2.0. 
 YASB 2.0 is a "squad builder" for the X-Wing Miniatures game by Atomic Mass Games. You can see YASB 2.0 live here: https://raithos.github.io/ and you can visit its GitHub repository here: https://github.com/raithos/xwing.
 
+This is the front-end repository. To see the backend api, see this repo: https://github.com/keaton-robinson/react-xwing-backend.
+
 I am making this as a practice and portfolio sample project. I could make something simple, like a todo list, but I wanted to make something more interesting, while staying focused on the engineering aspects of the project. I didn't want to spend time doing image editing. I find YASB to be a pretty visually interesting, so I decided that reimplenting it would be a fun exercise. This let me borrow their images and some other visuals. I also got to learn how they handled putting all their cool star wars icons throughout the UI. 
 
 What I borrowed from YASB: 
