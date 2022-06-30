@@ -8,7 +8,7 @@ import SaveAsModal from './modals/SaveAsModal';
 import LoadModal from './modals/LoadModal';
 import * as xwingData from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
-import { UserContext } from './App.js'; 
+import { UserContext } from './UserContext.js'; 
 
 const saveStatusMessages = {
     saving: "saving...",
@@ -35,6 +35,15 @@ export default class SquadBuilderCpt extends React.Component {
         this.state = this.initialState;
     }
 
+    componentDidMount() {
+        this.fetchAbortController = new AbortController();
+    }
+
+    componentWillUnmount() {
+        this.fetchAbortController.abort();
+        this.willUnmount = true;
+    }
+
     // eslint-disable-next-line
     saveClicked = (event) => {  // I want to be reminded this variable is available
         //need to include user token here
@@ -43,7 +52,8 @@ export default class SquadBuilderCpt extends React.Component {
             fetch(`http://localhost:3000/squads/${this.state.squadId}`, {
                 method: "PATCH",
                 headers: {
-                    "Content-type": "application/json; charset=UTF-8"
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: this.context.user.token
                 },
                 body: JSON.stringify({
                     name: this.state.squadName,
@@ -52,11 +62,17 @@ export default class SquadBuilderCpt extends React.Component {
                 })
             })
             .then(response => response.json())
-            .then(data => {
-                this.setState({ squadId: data._id, saveStatusMessage: saveStatusMessages.success });
+            .then(responseData => {
+                if(responseData.success){
+                    this.setState({ squadId: responseData.savedSquad._id, saveStatusMessage: saveStatusMessages.success });
+                } else {
+                    this.setState({saveStatusMessage: saveStatusMessages.error});
+                }
             }) // eslint-disable-next-line  
             .catch(error => { //I want to be reminded this variable is available
-                this.setState({ saveStatusMessage: saveStatusMessages.error});
+                if(!this.willUnmount){
+                    this.setState({ saveStatusMessage: saveStatusMessages.error});
+                }
             }); 
 
             this.setState({ saveStatusMessage: saveStatusMessages.saving});
@@ -72,7 +88,8 @@ export default class SquadBuilderCpt extends React.Component {
         fetch('http://localhost:3000/squads', {
             method: "POST",
             headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                Authorization: this.context.user.token
             },
             body: JSON.stringify({
                 faction: this.props.selectedFaction,
@@ -82,12 +99,18 @@ export default class SquadBuilderCpt extends React.Component {
             })
         })
         .then(response => response.json())
-        .then(data => {
-            this.setState({ squadId: data._id ,saveStatusMessage: saveStatusMessages.success});
+        .then(responseData => {
+            if(responseData.success){
+                this.setState({ squadId: responseData.savedSquad._id ,saveStatusMessage: saveStatusMessages.success});
+            } else {
+                this.setState({ saveStatusMessage: saveStatusMessages.error });
+            }
         })
         // eslint-disable-next-line
         .catch(error => { // I want to be reminded this variable is available
-            this.setState({ saveStatusMessage: saveStatusMessages.error });
+            if(!this.willUnmount){
+                this.setState({ saveStatusMessage: saveStatusMessages.error });
+            }
         }); 
         
         this.setState({ squadName: newSquadTitle, saveStatusMessage: saveStatusMessages.saving});
@@ -259,64 +282,58 @@ export default class SquadBuilderCpt extends React.Component {
 
     render() {
         return (
-            <UserContext.Consumer>
-                {(userContextBundle) => {
-                    return (
-                        <div style={this.props.faction !== this.props.selectedFaction ? { display: 'none'} : {}}>
-                            <div className="squad-name-and-points-row">
-                                <div>
-                                    { this.state.editingSquadName  
-                                        ? <input className='editSquadName' autoFocus={true} type='text' value={this.state.squadName} onChange={this.onSquadNameChanged} onKeyDown={this.onSquadNameEditKeyDown}
-                                            style={{fontSize:"1.2rem"}}/> 
-                                        : <h2 style={{display: 'inline'}}>{this.state.squadName}</h2>} 
-                                    <i className="far fa-edit" style={{marginLeft: "5px", fontSize: "1.2rem"}} onClick={this.editSquadClicked}></i>
-                                </div>
-                                <div className="points-display-container">
-                                    <span>Points: { xwingUtils.getSquadCost(this.state.squad) }/200 ({200-xwingUtils.getSquadCost(this.state.squad)} left)</span>
-                                </div>
-                                <div className='printBtn'>
-                                    <button className="btn-info" style={{margin:"5px"}} onClick={this.showPrintModal}>Print</button>
-                                </div>
-                            </div>
-                            <div className="squad-save-import-row">
-                                { userContextBundle.user && <button className="btn-primary" onClick={this.saveClicked}><i className="fa-solid fa-save" style={{marginRight:"5px"}}></i>Save</button> }
-                                { userContextBundle.user && <button className="btn-primary" onClick={this.showSaveAsModal}><i className="fa-solid fa-file" style={{marginRight:"5px"}}></i>Save As</button> }
-                                { userContextBundle.user && <button className="btn-info" onClick={this.showLoadModal}>Load Squad</button> }
-                                <button className="btn-danger" style={{margin: "5px"}} onClick={this.showNewSquadConfirmModal}>New Squad</button>
-                                { userContextBundle.user && <span style={{visibility: this.state.saveStatusMessage ? "visible" : "hidden"}}>{this.state.saveStatusMessage}</span> }
-                            </div>
-                            <div className="shipAndInfoContainer">
-                                <div className="shipAndObstacleSelectors">
-                                    {this.state.squad.map(squadPilot => (
-                                        <PilotRowCpt
-                                            key={squadPilot.uiKey} 
-                                            factionShips={this.factionShips}
-                                            squad={this.state.squad}  
-                                            selectedPilot={squadPilot}
-                                            availablePilots={xwingData.pilots
-                                                .filter(availPilot => availPilot.ship===squadPilot.ship && availPilot.faction === this.props.faction
-                                                        && (!xwingUtils.maxPilotOrUpgradeReached(availPilot, this.state.squad)
-                                                            || availPilot.id == squadPilot.id))
-                                                .sort((first, second) => (first.points - second.points))}
-                                            changePilot= {this.changePilot} 
-                                            changeShip = {this.changeShip }
-                                            removePilot = {this.removePilot }
-                                            clonePilot = {this.clonePilot }
-                                            changeUpgrade = { this.changeUpgrade }
-                                            onRecordMouseEnter = { this.showInfoPanelCard } />
-                                    ))}
-                                    <AddShipCpt factionShips={this.factionShips} 
-                                        onShipSelected={this.addCheapestAvailablePilotForShip}
-                                        onRecordMouseEnter = { this.showInfoPanelCard }/>
-                                </div>
-                                {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : <div style={{flex:1}}></div> }  
-                            </div>
-                        </div>
-                    );
-                }}
-            
-            </UserContext.Consumer>
+            <div style={this.props.faction !== this.props.selectedFaction ? { display: 'none'} : {}}>
+                <div className="squad-name-and-points-row">
+                    <div>
+                        { this.state.editingSquadName  
+                            ? <input className='editSquadName' autoFocus={true} type='text' value={this.state.squadName} onChange={this.onSquadNameChanged} onKeyDown={this.onSquadNameEditKeyDown}
+                                style={{fontSize:"1.2rem"}}/> 
+                            : <h2 style={{display: 'inline'}}>{this.state.squadName}</h2>} 
+                        <i className="far fa-edit" style={{marginLeft: "5px", fontSize: "1.2rem"}} onClick={this.editSquadClicked}></i>
+                    </div>
+                    <div className="points-display-container">
+                        <span>Points: { xwingUtils.getSquadCost(this.state.squad) }/200 ({200-xwingUtils.getSquadCost(this.state.squad)} left)</span>
+                    </div>
+                    <div className='printBtn'>
+                        <button className="btn-info" style={{margin:"5px"}} onClick={this.showPrintModal}>Print</button>
+                    </div>
+                </div>
+                <div className="squad-save-import-row">
+                    { this.context.user && <button className="btn-primary" onClick={this.saveClicked}><i className="fa-solid fa-save" style={{marginRight:"5px"}}></i>Save</button> }
+                    { this.context.user && <button className="btn-primary" onClick={this.showSaveAsModal}><i className="fa-solid fa-file" style={{marginRight:"5px"}}></i>Save As</button> }
+                    { this.context.user && <button className="btn-info" onClick={this.showLoadModal}>Load Squad</button> }
+                    <button className="btn-danger" style={{margin: "5px"}} onClick={this.showNewSquadConfirmModal}>New Squad</button>
+                    { this.context.user && <span style={{visibility: this.state.saveStatusMessage ? "visible" : "hidden"}}>{this.state.saveStatusMessage}</span> }
+                </div>
+                <div className="shipAndInfoContainer">
+                    <div className="shipAndObstacleSelectors">
+                        {this.state.squad.map(squadPilot => (
+                            <PilotRowCpt
+                                key={squadPilot.uiKey} 
+                                factionShips={this.factionShips}
+                                squad={this.state.squad}  
+                                selectedPilot={squadPilot}
+                                availablePilots={xwingData.pilots
+                                    .filter(availPilot => availPilot.ship===squadPilot.ship && availPilot.faction === this.props.faction
+                                            && (!xwingUtils.maxPilotOrUpgradeReached(availPilot, this.state.squad)
+                                                || availPilot.id == squadPilot.id))
+                                    .sort((first, second) => (first.points - second.points))}
+                                changePilot= {this.changePilot} 
+                                changeShip = {this.changeShip }
+                                removePilot = {this.removePilot }
+                                clonePilot = {this.clonePilot }
+                                changeUpgrade = { this.changeUpgrade }
+                                onRecordMouseEnter = { this.showInfoPanelCard } />
+                        ))}
+                        <AddShipCpt factionShips={this.factionShips} 
+                            onShipSelected={this.addCheapestAvailablePilotForShip}
+                            onRecordMouseEnter = { this.showInfoPanelCard }/>
+                    </div>
+                    {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : <div style={{flex:1}}></div> }  
+                </div>
+            </div>
         );
     }
-    
 }
+
+SquadBuilderCpt.contextType = UserContext;

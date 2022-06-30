@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import {XwingTextInput, XwingFormSubmitButton, XwingForm } from '../CustomFormikControls/XwingFormikCustomControls';
-import { UserContext } from '../App.js'
+import { UserContext } from '../UserContext.js'
 
 export default function LoginModal(props) {
     const mounted = useRef(false);

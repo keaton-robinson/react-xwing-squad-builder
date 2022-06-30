@@ -4,7 +4,7 @@ import SquadBuilderCpt from './SquadBuilderCpt.js';
 import ModalContainer from './modals/ModalContainer.js';
 import ms from 'ms';
 import * as xwingData from '../data/xwing_data';
-
+import { UserContext } from './UserContext.js';
 
 const factionsOrdered = [
   xwingData.factionNames["Rebel Alliance"],
@@ -16,9 +16,6 @@ const factionsOrdered = [
   xwingData.factionNames["Separatist Alliance"]
   //,"MultiFaction"
 ];
-
-export const UserContext = React.createContext(null);
-UserContext.displayName = "UserContext";
 
 export default class App extends React.Component  {
   constructor(props){
