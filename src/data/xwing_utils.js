@@ -706,6 +706,16 @@ function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot, squad){
     return false;
 }
 
+function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+   }
+   return result;
+}
+
 const InfoPanelCardTypes = {
     Ship: "Ship",
     Pilot: "Pilot",
@@ -798,4 +808,4 @@ const fixIcons = (text) => {
 
 export { isNotNullOrUndefined, getUpgradeCost, getPilotCost, getSquadCost, getPilotEffectiveStats, maxPilotOrUpgradeReached, isUpgradeAllowed, 
     addUpgrades, getAppReadyPilot, getCheapestAvailablePilotForShip, removeInvalidUpgrades, upgradeSquadShip, squadContainsAnotherSolitaryCardForThisSlot,
-    InfoPanelCardTypes, shipBaseSizes, getShipBaseSize, fixIcons }
+    InfoPanelCardTypes, shipBaseSizes, getShipBaseSize, fixIcons, makeid }
