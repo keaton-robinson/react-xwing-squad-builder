@@ -98,6 +98,7 @@ export default class SquadBuilderCpt extends React.Component {
     loadSquad = (selectedSquad) => {
         const initialState = this.initialState;
         this.setState({...initialState, squadId: selectedSquad._id, squad: selectedSquad.pilots, squadName: selectedSquad.name});
+        this.props.setModal(null);
     }
 
     showSaveAsModal = () => {
