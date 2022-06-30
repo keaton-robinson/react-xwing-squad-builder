@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import * as yup from 'yup';
-import { Formik, Form } from 'formik';
-import { XwingTextInput, XwingFormSubmitButton } from '../CustomFormikControls/XwingFormikCustomControls';
+import { Formik } from 'formik';
+import { XwingTextInput, XwingFormSubmitButton, XwingForm } from '../CustomFormikControls/XwingFormikCustomControls';
 
 export default function RegisterModal(props) {
 
@@ -55,20 +55,21 @@ export default function RegisterModal(props) {
         // eslint-disable-next-line
         .catch(error => { // I want to be reminded this variable is available
             setStatusMessage(error);
+        })
+        .finally(() => {
+          setSubmitting(false);
         }); 
-        
-        setSubmitting(false);
       }
     }>
       <div className="loginRegisterForm">
         <span style={{color: successfullyRegistered ? "black" : "red"}}>{statusMessage}</span>
-        { !successfullyRegistered ? <Form>
+        { !successfullyRegistered ? <XwingForm>
             <XwingTextInput type='text' name='username' style={{marginTop: '0px'}} />          
             <XwingTextInput type='password' name='password'/>
             <XwingTextInput type='password' name='passwordConfirmation' placeholder='confirm password' />
             
             <XwingFormSubmitButton className="btn-primary loginRegisterBtn">Register</XwingFormSubmitButton> 
-          </Form>
+          </XwingForm>
         : <div>
             <button className="btn-primary loginRegisterBtn" onClick={props.switchToLogin} >Go back to login ...</button> 
           </div>

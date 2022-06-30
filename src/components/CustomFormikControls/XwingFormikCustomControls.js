@@ -1,5 +1,5 @@
 import React from 'react';
-import { useField, useFormikContext } from 'formik';
+import { useField, useFormikContext, Form } from 'formik';
  
 export const XwingTextInput = (props) => {
   // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
@@ -20,6 +20,15 @@ export const XwingTextInput = (props) => {
 export const XwingFormSubmitButton = (({children,...props}) => {
   const formikContext = useFormikContext();
   
-  return (<button type="submit" disabled={formikContext.isSubmitting} {...props}>{children}</button>); 
+  return (<button type="submit" disabled={formikContext.isSubmitting} {...props}>{formikContext.isSubmitting ? 'Loading...' : children}</button>); 
 });
 
+export const XwingForm = (({children,...props}) => {
+  const formikContext = useFormikContext();
+  return (
+    <Form {...props}>
+      <fieldset disabled={formikContext.isSubmitting} style={{borderStyle: 'none'}}>
+        {children}
+      </fieldset>
+    </Form>); 
+});

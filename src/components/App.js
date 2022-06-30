@@ -2,22 +2,47 @@ import React from 'react';
 import HeaderComponent from './HeaderComponent.js';
 import SquadBuilderCpt from './SquadBuilderCpt.js';
 import ModalContainer from './modals/ModalContainer.js';
+import ms from 'ms';
 import * as xwingData from '../data/xwing_data';
 
+
+const factionsOrdered = [
+  xwingData.factionNames["Rebel Alliance"],
+  xwingData.factionNames["Galactic Empire"],
+  xwingData.factionNames["Scum and Villainy"],
+  xwingData.factionNames.Resistance,
+  xwingData.factionNames["First Order"],
+  xwingData.factionNames["Galactic Republic"],
+  xwingData.factionNames["Separatist Alliance"]
+  //,"MultiFaction"
+];
+
+export const UserContext = React.createContext(null);
+UserContext.displayName = "UserContext";
+
 export default class App extends React.Component  {
+  constructor(props){
+    super(props);
+    this.state = { 
+      selectedFaction: xwingData.factionNames['Rebel Alliance'], 
+      modalToShow: null,
+      user: null 
+    };
+  }
 
-  state = { selectedFaction: xwingData.factionNames['Rebel Alliance'], modalToShow: null }
-
-  factionsOrdered = [
-    xwingData.factionNames["Rebel Alliance"],
-    xwingData.factionNames["Galactic Empire"],
-    xwingData.factionNames["Scum and Villainy"],
-    xwingData.factionNames.Resistance,
-    xwingData.factionNames["First Order"],
-    xwingData.factionNames["Galactic Republic"],
-    xwingData.factionNames["Separatist Alliance"]
-    //,"MultiFaction"
-  ];
+  componentDidMount() {
+    // get and set currently logged in user into state
+    const foundUser = localStorage.getItem("user");
+    if(foundUser) {
+      const userObj = JSON.parse(foundUser);
+      //make sure that login token hasn't expired
+      if(userObj.expiresIn && Date.now() > userObj.loginTime + ms(userObj.expiresIn)){
+        localStorage.removeItem("user"); 
+      } else {
+        this.setState({user: userObj});
+      }
+    }
+  }
 
   setModal = ( modalConfig ) => {
     const modalToShow = modalConfig ? <ModalContainer handleClose={() => this.setModal(null)} headerTitle={modalConfig.title}>
@@ -29,25 +54,34 @@ export default class App extends React.Component  {
     }
   }
 
-  constructor(props){
-    super(props);
-  }
-
   setSelectedFaction = (faction) => {
     this.setState( {selectedFaction: faction} );
   }
 
   render() {
+    const userContextBundle = {
+      user: this.state.user,
+      login: (userObj) => {
+        userObj.loginTime = Date.now();
+        this.setState({user: userObj});
+        localStorage.setItem("user", JSON.stringify(userObj));
+      },
+      logout: () => {
+        this.setState({user: null});
+        localStorage.removeItem("user");
+      }
+    }
+
     return (
-      <div>
+      <UserContext.Provider value={userContextBundle}>
         <HeaderComponent 
-          factions={this.factionsOrdered} 
+          factions={factionsOrdered} 
           selectedFaction={this.state.selectedFaction}
           onClick={this.setSelectedFaction}
           setModal={this.setModal} 
         />
         <main>
-          {this.factionsOrdered.map(faction=> (
+          {factionsOrdered.map(faction=> (
             <SquadBuilderCpt
             selectedFaction={this.state.selectedFaction} 
             key={faction} 
@@ -56,7 +90,7 @@ export default class App extends React.Component  {
           ))}
         </main>
         { this.state.modalToShow && this.state.modalToShow }
-      </div>
+      </UserContext.Provider>
     );
   }
 }

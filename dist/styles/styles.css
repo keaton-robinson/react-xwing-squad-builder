@@ -449,6 +449,10 @@ svg > g.maneuver.backwards {
     background-color: #84afdd;
 }
 
+.btn-info:disabled {
+    background-color: #7cb7c1;
+}
+
 .inputValidationMsg {
     width: 100%;
     text-align: left;
