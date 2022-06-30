@@ -2,7 +2,7 @@ import React from 'react';
 import FactionCpt from './FactionCpt';
 import LoginModal from './modals/LoginModal';
 import RegisterModal from './modals/RegisterModal';
-import { UserContext } from './App.js'
+import { UserContext } from './UserContext.js'
 
 export default function HeaderComponent(props)  {
   const showLogin = () => {
@@ -18,7 +18,6 @@ export default function HeaderComponent(props)  {
       children: <RegisterModal switchToLogin={showLogin}/>
     })
   }
-
 
   return (
     <UserContext.Consumer>
