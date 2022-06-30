@@ -8,22 +8,21 @@ import SaveAsModal from './modals/SaveAsModal';
 import LoadModal from './modals/LoadModal';
 import * as xwingData from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
+import { UserContext } from './App.js'; 
 
-export default class SquadBuilderCpt extends React.Component {
-    
-    
+const saveStatusMessages = {
+    saving: "saving...",
+    success: "successfully saved!",
+    error: "error saving...please try again"
+};
 
-    saveStatusMessages = {
-        saving: "saving...",
-        success: "successfully saved!",
-        error: "error saving...please try again"
-    }
-    
+export default class SquadBuilderCpt extends React.Component {    
     constructor(props) {
         super(props);
 
         this.factionShips = Object.keys(xwingData.ships).filter(ship => xwingData.ships[ship].factions.includes(props.faction)).sort();
 
+        //initial state useful for reverting to defaults for "new squad" button
         this.initialState = {
             squadId: null,
             squad: [],
@@ -38,6 +37,7 @@ export default class SquadBuilderCpt extends React.Component {
 
     // eslint-disable-next-line
     saveClicked = (event) => {  // I want to be reminded this variable is available
+        //need to include user token here
         if(this.state.squadId) {
             // do a put request to update squad
             fetch(`http://localhost:3000/squads/${this.state.squadId}`, {
@@ -53,13 +53,13 @@ export default class SquadBuilderCpt extends React.Component {
             })
             .then(response => response.json())
             .then(data => {
-                this.setState({ squadId: data._id, saveStatusMessage: this.saveStatusMessages.success });
+                this.setState({ squadId: data._id, saveStatusMessage: saveStatusMessages.success });
             }) // eslint-disable-next-line  
             .catch(error => { //I want to be reminded this variable is available
-                this.setState({ saveStatusMessage: this.saveStatusMessages.error});
+                this.setState({ saveStatusMessage: saveStatusMessages.error});
             }); 
 
-            this.setState({ saveStatusMessage: this.saveStatusMessages.saving});
+            this.setState({ saveStatusMessage: saveStatusMessages.saving});
             
         } else {
             // do a post request to create new squad
@@ -68,6 +68,7 @@ export default class SquadBuilderCpt extends React.Component {
     }
 
     saveSquadAs = (newSquadTitle) => {
+        //need to include user token here
         fetch('http://localhost:3000/squads', {
             method: "POST",
             headers: {
@@ -82,14 +83,14 @@ export default class SquadBuilderCpt extends React.Component {
         })
         .then(response => response.json())
         .then(data => {
-            this.setState({ squadId: data._id ,saveStatusMessage: this.saveStatusMessages.success});
+            this.setState({ squadId: data._id ,saveStatusMessage: saveStatusMessages.success});
         })
         // eslint-disable-next-line
         .catch(error => { // I want to be reminded this variable is available
-            this.setState({ saveStatusMessage: this.saveStatusMessages.error });
+            this.setState({ saveStatusMessage: saveStatusMessages.error });
         }); 
         
-        this.setState({ squadName: newSquadTitle, saveStatusMessage: this.saveStatusMessages.saving});
+        this.setState({ squadName: newSquadTitle, saveStatusMessage: saveStatusMessages.saving});
         this.props.setModal(null);
         
     }
@@ -257,56 +258,63 @@ export default class SquadBuilderCpt extends React.Component {
 
     render() {
         return (
-            <div style={this.props.faction !== this.props.selectedFaction ? { display: 'none'} : {}}>
-                <div className="squad-name-and-points-row">
-                    <div>
-                        { this.state.editingSquadName  
-                            ? <input className='editSquadName' autoFocus={true} type='text' value={this.state.squadName} onChange={this.onSquadNameChanged} onKeyDown={this.onSquadNameEditKeyDown}
-                                 style={{fontSize:"1.2rem"}}/> 
-                            : <h2 style={{display: 'inline'}}>{this.state.squadName}</h2>} 
-                        <i className="far fa-edit" style={{marginLeft: "5px", fontSize: "1.2rem"}} onClick={this.editSquadClicked}></i>
-                    </div>
-                    <div className="points-display-container">
-                        <span>Points: { xwingUtils.getSquadCost(this.state.squad) }/200 ({200-xwingUtils.getSquadCost(this.state.squad)} left)</span>
-                    </div>
-                    <div className='printBtn'>
-                        <button className="btn-info" style={{margin:"5px"}} onClick={this.showPrintModal}>Print</button>
-                    </div>
-                </div>
-                <div className="squad-save-import-row">
-                    <button className="btn-primary" onClick={this.saveClicked}><i className="fa-solid fa-save" style={{marginRight:"5px"}}></i>Save</button>
-                    <button className="btn-primary" onClick={this.showSaveAsModal}><i className="fa-solid fa-file" style={{marginRight:"5px"}}></i>Save As</button>
-                    <button className="btn-info" onClick={this.showLoadModal}>Load Squad</button>
-                    <button className="btn-danger" style={{margin: "5px"}} onClick={this.showNewSquadConfirmModal}>New Squad</button>
-                    <span style={{visibility: this.state.saveStatusMessage ? "visible" : "hidden"}}>{this.state.saveStatusMessage}</span>
-                </div>
-                <div className="shipAndInfoContainer">
-                    <div className="shipAndObstacleSelectors">
-                        {this.state.squad.map(squadPilot => (
-                            <PilotRowCpt
-                                key={squadPilot.uiKey} 
-                                factionShips={this.factionShips}
-                                squad={this.state.squad}  
-                                selectedPilot={squadPilot}
-                                availablePilots={xwingData.pilots
-                                    .filter(availPilot => availPilot.ship===squadPilot.ship && availPilot.faction === this.props.faction
-                                            && (!xwingUtils.maxPilotOrUpgradeReached(availPilot, this.state.squad)
-                                                || availPilot.id == squadPilot.id))
-                                    .sort((first, second) => (first.points - second.points))}
-                                changePilot= {this.changePilot} 
-                                changeShip = {this.changeShip }
-                                removePilot = {this.removePilot }
-                                clonePilot = {this.clonePilot }
-                                changeUpgrade = { this.changeUpgrade }
-                                onRecordMouseEnter = { this.showInfoPanelCard } />
-                        ))}
-                        <AddShipCpt factionShips={this.factionShips} 
-                            onShipSelected={this.addCheapestAvailablePilotForShip}
-                            onRecordMouseEnter = { this.showInfoPanelCard }/>
-                    </div>
-                    {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : <div style={{flex:1}}></div> }  
-                </div>
-            </div>
+            <UserContext.Consumer>
+                {(userContextBundle) => {
+                    return (
+                        <div style={this.props.faction !== this.props.selectedFaction ? { display: 'none'} : {}}>
+                            <div className="squad-name-and-points-row">
+                                <div>
+                                    { this.state.editingSquadName  
+                                        ? <input className='editSquadName' autoFocus={true} type='text' value={this.state.squadName} onChange={this.onSquadNameChanged} onKeyDown={this.onSquadNameEditKeyDown}
+                                            style={{fontSize:"1.2rem"}}/> 
+                                        : <h2 style={{display: 'inline'}}>{this.state.squadName}</h2>} 
+                                    <i className="far fa-edit" style={{marginLeft: "5px", fontSize: "1.2rem"}} onClick={this.editSquadClicked}></i>
+                                </div>
+                                <div className="points-display-container">
+                                    <span>Points: { xwingUtils.getSquadCost(this.state.squad) }/200 ({200-xwingUtils.getSquadCost(this.state.squad)} left)</span>
+                                </div>
+                                <div className='printBtn'>
+                                    <button className="btn-info" style={{margin:"5px"}} onClick={this.showPrintModal}>Print</button>
+                                </div>
+                            </div>
+                            <div className="squad-save-import-row">
+                                { userContextBundle.user && <button className="btn-primary" onClick={this.saveClicked}><i className="fa-solid fa-save" style={{marginRight:"5px"}}></i>Save</button> }
+                                { userContextBundle.user && <button className="btn-primary" onClick={this.showSaveAsModal}><i className="fa-solid fa-file" style={{marginRight:"5px"}}></i>Save As</button> }
+                                { userContextBundle.user && <button className="btn-info" onClick={this.showLoadModal}>Load Squad</button> }
+                                <button className="btn-danger" style={{margin: "5px"}} onClick={this.showNewSquadConfirmModal}>New Squad</button>
+                                { userContextBundle.user && <span style={{visibility: this.state.saveStatusMessage ? "visible" : "hidden"}}>{this.state.saveStatusMessage}</span> }
+                            </div>
+                            <div className="shipAndInfoContainer">
+                                <div className="shipAndObstacleSelectors">
+                                    {this.state.squad.map(squadPilot => (
+                                        <PilotRowCpt
+                                            key={squadPilot.uiKey} 
+                                            factionShips={this.factionShips}
+                                            squad={this.state.squad}  
+                                            selectedPilot={squadPilot}
+                                            availablePilots={xwingData.pilots
+                                                .filter(availPilot => availPilot.ship===squadPilot.ship && availPilot.faction === this.props.faction
+                                                        && (!xwingUtils.maxPilotOrUpgradeReached(availPilot, this.state.squad)
+                                                            || availPilot.id == squadPilot.id))
+                                                .sort((first, second) => (first.points - second.points))}
+                                            changePilot= {this.changePilot} 
+                                            changeShip = {this.changeShip }
+                                            removePilot = {this.removePilot }
+                                            clonePilot = {this.clonePilot }
+                                            changeUpgrade = { this.changeUpgrade }
+                                            onRecordMouseEnter = { this.showInfoPanelCard } />
+                                    ))}
+                                    <AddShipCpt factionShips={this.factionShips} 
+                                        onShipSelected={this.addCheapestAvailablePilotForShip}
+                                        onRecordMouseEnter = { this.showInfoPanelCard }/>
+                                </div>
+                                {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : <div style={{flex:1}}></div> }  
+                            </div>
+                        </div>
+                    );
+                }}
+            
+            </UserContext.Consumer>
         );
     }
     
