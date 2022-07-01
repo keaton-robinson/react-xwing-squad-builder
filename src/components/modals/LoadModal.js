@@ -13,7 +13,7 @@ export default function LoadModal(props) {
         mounted.current = true;
         const signal = fetchAbortController.signal;
 
-        fetch('http://localhost:3000/squads/' + props.faction, 
+        fetch(XWING_API_ENDPOINT + '/squads/' + props.faction, 
         {   
             signal,
             headers: { Authorization: userContextBundle.user.token }
@@ -53,7 +53,7 @@ export default function LoadModal(props) {
 
             if(deleteConfirmed){
                 //delete the squad
-                fetch(`http://localhost:3000/squads/${selectedSquad._id}`, {
+                fetch(XWING_API_ENDPOINT + `/squads/${selectedSquad._id}`, {
                     method: "DELETE", signal, headers: { Authorization: userContextBundle.user.token }
                 })
                 .then(response => response.json())
