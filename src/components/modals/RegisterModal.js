@@ -31,7 +31,7 @@ export default function RegisterModal(props) {
           .oneOf([yup.ref('password'), null], 'Passwords must match')
       })}
       onSubmit={(values, { setSubmitting }) => { 
-        fetch('http://localhost:3000/users/register', {
+        fetch(XWING_API_ENDPOINT + '/users/register', {
           method: "POST",
           headers: {
             "Content-type": "application/json; charset=UTF-8"

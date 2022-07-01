@@ -8,8 +8,26 @@
         <link rel="stylesheet" href="styles/styles.css">
         <script src="https://kit.fontawesome.com/e5814cf8ca.js" crossorigin="anonymous"></script>
     </head>
-        <body>
-            <div id="mountNode"></div>
-            <script src="main.js"></script>
-        </body>
+    <body>
+        <div id="mountNode"></div>
+        <script src="main.js"></script>
+        <script>
+            var XWING_API_ENDPOINT;
+            fetch("/env_vars_hack_for_github_pages.json")
+            .then((response) => {
+                return response.json();
+            })
+            .then((responseData) => {
+                if(responseData.api_url){
+                    XWING_API_ENDPOINT = responseData.api_url;
+                }
+                else {
+                    throw new Error();
+                }
+            })
+            .catch((error) => {
+                console.error("Failed to get api endpoint. You won't be able to save or load squads.");
+            })
+        </script>
+    </body>
 </html>

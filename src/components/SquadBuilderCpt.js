@@ -49,7 +49,7 @@ export default class SquadBuilderCpt extends React.Component {
         //need to include user token here
         if(this.state.squadId) {
             // do a put request to update squad
-            fetch(`http://localhost:3000/squads/${this.state.squadId}`, {
+            fetch(XWING_API_ENDPOINT + `/squads/${this.state.squadId}`, {
                 method: "PATCH",
                 headers: {
                     "Content-type": "application/json; charset=UTF-8",
@@ -85,7 +85,7 @@ export default class SquadBuilderCpt extends React.Component {
 
     saveSquadAs = (newSquadTitle) => {
         //need to include user token here
-        fetch('http://localhost:3000/squads', {
+        fetch(XWING_API_ENDPOINT + '/squads', {
             method: "POST",
             headers: {
                 "Content-type": "application/json; charset=UTF-8",
