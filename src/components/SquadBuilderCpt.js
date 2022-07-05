@@ -49,6 +49,7 @@ export default class SquadBuilderCpt extends React.Component {
         //need to include user token here
         if(this.state.squadId) {
             // do a put request to update squad
+            // eslint-disable-next-line no-undef
             fetch(XWING_API_ENDPOINT + `/squads/${this.state.squadId}`, {
                 method: "PATCH",
                 headers: {
@@ -85,6 +86,7 @@ export default class SquadBuilderCpt extends React.Component {
 
     saveSquadAs = (newSquadTitle) => {
         //need to include user token here
+        // eslint-disable-next-line no-undef
         fetch(XWING_API_ENDPOINT + '/squads', {
             method: "POST",
             headers: {

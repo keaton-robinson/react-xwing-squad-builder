@@ -31,9 +31,7 @@ export default function LoginModal(props) {
                         password: yup.string().required('Required')
                     })}
                     onSubmit={(values, { setSubmitting }) => {
-                        //ask server for jwt. Put jwt in local storage or state...show "successful login" and a close modal button. Show logged in user status somewhere in header?
-                        //if fail...show errors and let user try again
-                        //dont forget about logout buttons
+                        // eslint-disable-next-line no-undef
                         fetch(XWING_API_ENDPOINT + '/users/login', {
                             method: "POST",
                             headers: {

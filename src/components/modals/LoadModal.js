@@ -13,6 +13,7 @@ export default function LoadModal(props) {
         mounted.current = true;
         const signal = fetchAbortController.signal;
 
+        // eslint-disable-next-line no-undef
         fetch(XWING_API_ENDPOINT + '/squads/' + props.faction, 
         {   
             signal,
@@ -27,7 +28,7 @@ export default function LoadModal(props) {
                 setStatusMessage(responseData.message);
             }
         })
-        .catch(error => {
+        .catch(() => {
             if(mounted.current){
                 setStatusMessage("Failed to load squads");
                 setSquads([]);
@@ -40,19 +41,20 @@ export default function LoadModal(props) {
         };
     }, []);
 
-    const loadClicked = (event) => {
+    const loadClicked = () => {
         if(selectedSquad){
             props.loadSquad(selectedSquad);
         }
     }
 
-    const deleteClicked = (event) => {
+    const deleteClicked = () => {
         if(selectedSquad){
             let deleteConfirmed = confirm(`Delete ${selectedSquad.name}?`);
             const signal = fetchAbortController.signal;
 
             if(deleteConfirmed){
                 //delete the squad
+                // eslint-disable-next-line no-undef
                 fetch(XWING_API_ENDPOINT + `/squads/${selectedSquad._id}`, {
                     method: "DELETE", signal, headers: { Authorization: userContextBundle.user.token }
                 })
@@ -67,7 +69,7 @@ export default function LoadModal(props) {
                         setStatusMessage(responseData.message);
                     }
                 })
-                .catch(error => {
+                .catch(() => {
                     if(mounted.current){
                         setStatusMessage("An error occured...please try deleting again.");
                     }
