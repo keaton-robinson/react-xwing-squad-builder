@@ -1,5 +1,4 @@
 import React from 'react';
-import { UserContext } from '../App.js';
 
 export default class SaveAsModal extends React.Component {
     
@@ -13,7 +12,7 @@ export default class SaveAsModal extends React.Component {
         this.setState({squadName: event.target.value});
     }
 
-    saveAsClicked = (event) => {
+    saveAsClicked = () => {
         this.props.saveSquad(this.state.squadName);
     }
 

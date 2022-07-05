@@ -31,6 +31,7 @@ export default function RegisterModal(props) {
           .oneOf([yup.ref('password'), null], 'Passwords must match')
       })}
       onSubmit={(values, { setSubmitting }) => { 
+        // eslint-disable-next-line no-undef
         fetch(XWING_API_ENDPOINT + '/users/register', {
           method: "POST",
           headers: {
