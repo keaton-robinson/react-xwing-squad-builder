@@ -50,12 +50,12 @@ export default function RegisterModal(props) {
             setStatusMessage("You have succesfully registered");
             setSuccessfullyRegistered(true);
           }else {
-            setStatusMessage(Object.entries(responseData.errors)[0][1].message); //hack to show just first error
+            setStatusMessage(responseData.message); 
           }
         })
         // eslint-disable-next-line
         .catch(error => { // I want to be reminded this variable is available
-            setStatusMessage(error);
+            setStatusMessage("Sorry, there was an error while trying to register.");
         })
         .finally(() => {
           setSubmitting(false);

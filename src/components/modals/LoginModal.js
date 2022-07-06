@@ -52,12 +52,12 @@ export default function LoginModal(props) {
                                 setStatusMessage("You are now logged in.");
                                 userContextBundle.login(responseData.user);
                             } else {
-                                setStatusMessage(responseData.msg);
+                                setStatusMessage(responseData.message);
                             }
                         })
-                        .catch((error) => {
+                        .catch(() => {
                             if(mounted.current){
-                                setStatusMessage(error.message);
+                                setStatusMessage("Sorry, there was an error while trying to login.");
                             }
                         })
                         .finally(() => {
