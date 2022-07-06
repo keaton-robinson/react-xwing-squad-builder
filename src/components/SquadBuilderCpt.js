@@ -16,8 +16,8 @@ const saveStatusMessages = {
     error: "error saving...please try again"
 };
 
-export default class SquadBuilderCpt extends React.Component {    
-    constructor(props) {
+export default class SquadBuilderCpt extends React.Component {    	
+	constructor(props) {
         super(props);
 
         this.factionShips = Object.keys(xwingData.ships).filter(ship => xwingData.ships[ship].factions.includes(props.faction)).sort();
@@ -36,12 +36,25 @@ export default class SquadBuilderCpt extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchAbortController = new AbortController();
+			this.fetchAbortController = new AbortController();
+			this.loggedInUserOnPreviousRender = this.context.user?.username;
     }
 
+	componentDidUpdate() {
+		// TODO: research better ways of doing this
+		// a probably improper way of clearing the squad builder if the user logs out. 
+		// part of the reason to clear squad builder is to avoid a loaded squad's _id mongo property attempting to copy to a new user's squads
+		// could just remove that property from the squad instead, but clearing the squad builder is probably expected behavior for my audience (software dev interviewers)
+		if(this.loggedInUserOnPreviousRender && !(this.context.user?.username)){
+			this.setState( this.initialState );
+		}
+
+		this.loggedInUserOnPreviousRender = this.context.user?.username;
+	}
+
     componentWillUnmount() {
-        this.fetchAbortController.abort();
-        this.willUnmount = true;
+			this.fetchAbortController.abort();
+			this.willUnmount = true;
     }
 
     // eslint-disable-next-line
