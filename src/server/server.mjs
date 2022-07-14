@@ -1,5 +1,7 @@
 import https from 'https';
 import fs from 'fs';
+import compression from 'compression'
+import helmet from 'helmet';
 
 import express from 'express';
 // import React from 'react';    not using server side rendering anymore for now...
@@ -7,6 +9,8 @@ import express from 'express';
 // import App from '../components/App';
 
 const app = express();
+app.use(compression());
+app.use(helmet());
 
 // could switch to static file serving, perhaps even with initial react components rendered already and using react's hydrate on the client side
 app.use(express.static('dist'));
