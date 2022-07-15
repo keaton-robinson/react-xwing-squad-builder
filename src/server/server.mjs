@@ -16,6 +16,7 @@ const app = express();
 // could switch to static file serving, perhaps even with initial react components rendered already and using react's hydrate on the client side
 app.use(express.static('dist'));
 
+// for local https development
 // const options = {
 //     key: fs.readFileSync("./cert/key.pem"),
 //     cert: fs.readFileSync("./cert/cert.pem"),
