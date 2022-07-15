@@ -9,8 +9,8 @@ import express from 'express';
 // import App from '../components/App';
 
 const app = express();
-app.use(compression());
-app.use(helmet());
+// app.use(compression());   //TODO: get these turned back on
+// app.use(helmet());
 
 // could switch to static file serving, perhaps even with initial react components rendered already and using react's hydrate on the client side
 app.use(express.static('dist'));
