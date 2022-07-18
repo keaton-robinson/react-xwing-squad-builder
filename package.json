@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:server": "nodemon src/server/server.mjs --ignore dist/",
     "dev:bundler": "webpack -w --mode=development",
-	 "start": "node src/server/server.mjs"
+	 "start": "node src/server/server.mjs",
+	 "build": "webpack --mode=production"
   },
   "author": "",
   "license": "ISC",
