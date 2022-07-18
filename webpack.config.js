@@ -28,7 +28,7 @@ module.exports = (env, argv) => {
 			apiHost = "'http://localhost:3000'";
 			break;
 		case "production":
-			apiHost = "'https://production.com'";
+			apiHost = "'dummy value until I get backend deployed to heroku'";
 			break;
 		default:
 			throw new Error("You must specify development or production for webpack build --mode"); 
