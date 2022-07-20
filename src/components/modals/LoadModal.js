@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { UserContext } from '../UserContext.js';
-import { XWING_API_ENDPOINT } from '../../APIConstants.js'
 
 export default function LoadModal(props) {
     const mounted = useRef(false);

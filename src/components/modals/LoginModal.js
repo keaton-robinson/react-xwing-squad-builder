@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { XWING_API_ENDPOINT } from '../../APIConstants.js';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import {XwingTextInput, XwingFormSubmitButton, XwingForm } from '../CustomFormikControls/XwingFormikCustomControls';
