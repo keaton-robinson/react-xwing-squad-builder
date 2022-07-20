@@ -1,5 +1,4 @@
 import React from 'react';
-import { XWING_API_ENDPOINT } from '../APIConstants.js'
 import InfoPanelCpt from './InfoPanelCpt';
 import PilotRowCpt from './PilotRowCpt';
 import AddShipCpt from './AddShipCpt';

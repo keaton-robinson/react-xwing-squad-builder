@@ -35,7 +35,7 @@ module.exports = (env, argv) => {
 				
 	}
 	config.plugins.push(new webpack.DefinePlugin({
-		__API__: apiHost
+		XWING_API_ENDPOINT: apiHost
 	}));	
 
 	return config;
