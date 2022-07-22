@@ -538,7 +538,7 @@ svg > g.maneuver.backwards {
         margin-bottom: 20px;
     }
 
-    #loginBtn {
+    #loginBtn, #logoutBtn {
         flex-grow: 1;
         text-align: right;
     }
