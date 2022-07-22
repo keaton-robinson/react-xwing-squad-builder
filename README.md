@@ -1,12 +1,12 @@
 # A fun practice and portfolio project
-This is my reimplementation of an existing tool, "Yet Another Squad Builder 2.0", or YASB 2.0. 
-YASB 2.0 is a "squad builder" for the X-Wing miniatures game by Atomic Mass Games. You can see YASB 2.0 live here: https://raithos.github.io/ and you can visit its GitHub repository here: https://github.com/raithos/xwing.
+This is my reimplementation of an existing tool, "Yet Another Squad Builder", or YASB. 
+YASB is a "squad builder" for the X-Wing miniatures game by Atomic Mass Games. You can see YASB live here: https://yasb.app and you can visit its GitHub repository here: https://github.com/raithos/xwing.
 
 This is the front-end repository. To see the backend api, see this repo: https://github.com/keaton-robinson/react-xwing-backend.
 
 I made this for practice and to use as a portfolio sample project. 
 
-I borrowed a few things from YASB 2.0 so that I could focus on the engineering aspects of this project.   
+I borrowed a few things from YASB so that I could focus on the engineering aspects of this project.   
 
 What I borrowed from YASB: 
 - overall visual design & layout plan (although I reimplemented it with my own CSS)
@@ -16,8 +16,8 @@ What I borrowed from YASB:
 - their dataset which contains the statistics for ships, pilots, and upgrades in the X-Wing miniatures game
 
 What I wrote myself:
-- my own React components which implement the core features of YASB 2.0
-- my own CSS which achieves the same layout and design as YASB 2.0
+- my own React components which implement the core features of YASB
+- my own CSS which achieves the same layout and design as YASB
 - my own "business logic" to work with YASB's dataset to achieve the requirements of the squad builder
 - my own backend service user registration and saving squads for those users  (https://github.com/keaton-robinson/react-xwing-backend)
 
