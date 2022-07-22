@@ -1,6 +1,6 @@
 # A fun practice and portfolio project
 This is my reimplementation of an existing tool, "Yet Another Squad Builder", or YASB. 
-YASB is a "squad builder" for the X-Wing miniatures game by Atomic Mass Games. You can see YASB live here: https://yasb.app and you can visit its GitHub repository here: https://github.com/raithos/xwing.
+YASB is a "squad builder" for the X-Wing miniatures game by Atomic Mass Games. You can see YASB live here: https://raithos.github.io/ and you can visit its GitHub repository here: https://github.com/raithos/xwing.
 
 This is the front-end repository. To see the backend api, see this repo: https://github.com/keaton-robinson/react-xwing-backend.
 
