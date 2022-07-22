@@ -1,8 +1,8 @@
 import http from 'http';
-import https from 'https';
-import fs from 'fs';
-import compression from 'compression'
-import helmet from 'helmet';
+// import https from 'https';
+// import fs from 'fs';
+// import compression from 'compression'
+// import helmet from 'helmet';
 
 import express from 'express';
 // import React from 'react';    not using server side rendering anymore for now...
@@ -16,6 +16,8 @@ const app = express();
 // could switch to static file serving, perhaps even with initial react components rendered already and using react's hydrate on the client side
 app.use(express.static('dist'));
 
+
+// going to just use Heroku out of the box SSL for the moment. Technically should add https redirects and use helmet to avoid https downgrades and stuff
 // for local https development
 // const options = {
 //     key: fs.readFileSync("./cert/key.pem"),
