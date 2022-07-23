@@ -1,7 +1,7 @@
 {
   "name": "xwing_react",
   "version": "1.0.0",
-  "description": "Recreation of yasb 2.0 using react and some of the yasb 2.0 images and fonts for learning purposes.",
+  "description": "Recreation of yasb 2.0 using react and some of the yasb 2.0 images and fonts for learning purposes",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
