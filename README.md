@@ -4,8 +4,7 @@ YASB is a "squad builder" for the X-Wing miniatures game by Atomic Mass Games. Y
 
 This is the front-end repository. To see the backend api, see this repo: https://github.com/keaton-robinson/react-xwing-backend.
 
-# see this app live here:
-https://keatonr-xwing.herokuapp.com/
+# go to live app: https://keatonr-xwing.herokuapp.com/
 
 I made this for practice and to use as a portfolio sample project. 
 
