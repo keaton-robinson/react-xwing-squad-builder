@@ -17,7 +17,8 @@ const app = express();
 app.use(express.static('dist'));
 
 
-// going to just use Heroku out of the box SSL for the moment. Technically should add https redirects and use helmet to avoid https downgrades and stuff
+// old: going to just use Heroku out of the box SSL for the moment. Technically should add https redirects and use helmet to avoid https downgrades and stuff
+// TODO: ponder doing something with Amazon EC2 since we aren't using Heroku anymore...  
 // for local https development
 // const options = {
 //     key: fs.readFileSync("./cert/key.pem"),
