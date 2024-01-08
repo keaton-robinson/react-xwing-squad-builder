@@ -2,21 +2,21 @@ import * as xwingData from "./xwing_data"
 
 //intended to be used for checking if an id is selected. Ids start at zero, so you have to check for zero or something bigger
 //    >=  operator doesn't work as a shortcut because javascript converts null to zero. 
-function isNotNullOrUndefined(value){
+export function isNotNullOrUndefined(value){
     if(value==0 || value){
         return true;
     }
     return false;
 }
 
-const shipBaseSizes = {
+export const shipBaseSizes = {
     Small: "Small",
     Medium: "Medium",
     Large: "Large",
     Huge: "Huge"
 }
 
-const getShipBaseSize = (ship) => {
+export const getShipBaseSize = (ship) => {
     if(ship.huge){
         return shipBaseSizes.Huge;
     } else if(ship.large){
@@ -28,7 +28,7 @@ const getShipBaseSize = (ship) => {
     }
 }
 
-function getUpgradeCost(upgrade, pilot){
+export function getUpgradeCost(upgrade, pilot){
     if(isNotNullOrUndefined(upgrade.points)){
         return upgrade.points; 
     }
@@ -57,7 +57,7 @@ function getUpgradeCost(upgrade, pilot){
     }
 }
 
-function getPilotCost(pilot) {
+export function getPilotCost(pilot) {
     return pilot.points +  pilot.selectedUpgrades.reduce((prevPointsSum, selectedUpgrade) => {
         if(isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)){  
             const upgradeData = xwingData.upgrades.find(upgradeFromData=> upgradeFromData.id === selectedUpgrade.selectedUpgradeId)
@@ -68,13 +68,13 @@ function getPilotCost(pilot) {
 }
 
 
-function getSquadCost(squad) {
+export function getSquadCost(squad) {
     return squad.reduce((prevPointsSum, pilot) => {
         return prevPointsSum + getPilotCost(pilot);
     }, 0);
 }
 
-function getPilotEffectiveStats(pilot) {
+export function getPilotEffectiveStats(pilot) {
     
     if(!pilot){
         throw {
@@ -106,7 +106,7 @@ function getPilotEffectiveStats(pilot) {
 }
 
 //returns true if unique or max_per_squad pilot has already been selected max_times in the squad already
-function maxPilotOrUpgradeReached(cardToCheck, squad){
+export function maxPilotOrUpgradeReached(cardToCheck, squad){
 
     if(cardToCheck.max_per_squad){
         if(!cardToCheck.slot){
@@ -188,7 +188,7 @@ function isUniqueInSquad(uniqueCanonName,squad){
 }
 
 //upgrade should be data-repo upgrade, not "selected" upgrade
-function isUpgradeAllowed(selectedUpgradeSlot, upgrade, pilot, squad){
+export function isUpgradeAllowed(selectedUpgradeSlot, upgrade, pilot, squad){
     if(!selectedUpgradeSlot || !upgrade || !pilot || !squad){
         throw {
             message: "selectedUpgradeSlot, upgrade, pilot, and squad arguments are required for isUpgradeAllowed function",
@@ -414,7 +414,7 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
 }
 
 //copies selected upgrades from prevPilot to new pilot (in place). Ignores upgrade slots that aren't available on new pilot
-function addUpgrades(newPilot, upgradesToAdd, squad){
+export function addUpgrades(newPilot, upgradesToAdd, squad){
     if(!newPilot || !upgradesToAdd || !squad){
         throw {
             message: "newPilot, upgradesToAdd, and squad must be provided to addUpgrades function",
@@ -455,7 +455,7 @@ const setInitialValuesForAppReadyPilot = (pilot) => {
     ship.charge = ship.charge || 0;
 }
 
-function getAppReadyPilot(pilot) {
+export function getAppReadyPilot(pilot) {
     //makes a deep copy of the pilot so I don't have side effects on my "data repo"    
     const pilotCopy = JSON.parse(JSON.stringify(pilot));
     
@@ -522,7 +522,7 @@ function setSelectedUpgradeKeys(selectedUpgrades){
 }
 
 //returns cheapest pilot in-faction that hasn't been selected max-times or selected elsewhere with uniqueness
-function getCheapestAvailablePilotForShip(ship, faction, squad) {
+export function getCheapestAvailablePilotForShip(ship, faction, squad) {
  
     if(!ship || !faction || !squad){
         throw {
@@ -544,7 +544,7 @@ function getCheapestAvailablePilotForShip(ship, faction, squad) {
     return cheapestPilotForShip;
 }
 
-function removeInvalidUpgrades(squad) {
+export function removeInvalidUpgrades(squad) {
     let needToSearchForInvalidUpgrades = true;
 
     while(needToSearchForInvalidUpgrades){
@@ -588,7 +588,7 @@ function removeUpgrade(selectedUpgradeSlot, pilot) {
     }
 }
 
-function upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, squad){
+export function upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, squad){
     const prevUpgradeRecord = xwingData.upgrades.find(upgrade => upgrade.id == upgradeSlot.selectedUpgradeId);
     const shipType = pilot.pilotShip.name;
     const shipsOfSameType = squad.filter(squadPilot => squadPilot.pilotShip.name == shipType);
@@ -692,7 +692,7 @@ function setUpgrade(upgradeSlot, newlySelectedUpgrade, pilot){
 }
 
 //returns true if there is a solitary upgrade card equiped to another slot of the same type within the squad
-function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot, squad){
+export function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot, squad){
     for(const squadPilot of squad){
         for(const squadPilotUpgrade of squadPilot.selectedUpgrades){
             if(squadPilotUpgrade != upgradeSlot  && squadPilotUpgrade.slot == upgradeSlot.slot && isNotNullOrUndefined(squadPilotUpgrade.selectedUpgradeId)){
@@ -706,7 +706,7 @@ function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot, squad){
     return false;
 }
 
-function makeid(length) {
+export function makeid(length) {
     var result           = '';
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
@@ -716,14 +716,14 @@ function makeid(length) {
    return result;
 }
 
-const InfoPanelCardTypes = {
+export const InfoPanelCardTypes = {
     Ship: "Ship",
     Pilot: "Pilot",
     SelectedPilot: "SelectedPilot",
     Upgrade: "Upgrade"
 }
 
-const fixIcons = (text) => {
+export const fixIcons = (text) => {
     if (text != null){
         return text.replace(/%BULLSEYEARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-bullseyearc"></i>')
         .replace(/%SINGLETURRETARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-singleturretarc"></i>')
@@ -805,7 +805,3 @@ const fixIcons = (text) => {
         .replace(/%LINEBREAK%/g, "<br /><br />")
     } 
 }
-
-export { isNotNullOrUndefined, getUpgradeCost, getPilotCost, getSquadCost, getPilotEffectiveStats, maxPilotOrUpgradeReached, isUpgradeAllowed, 
-    addUpgrades, getAppReadyPilot, getCheapestAvailablePilotForShip, removeInvalidUpgrades, upgradeSquadShip, squadContainsAnotherSolitaryCardForThisSlot,
-    InfoPanelCardTypes, shipBaseSizes, getShipBaseSize, fixIcons, makeid }
