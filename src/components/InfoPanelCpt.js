@@ -1,8 +1,8 @@
 import React from 'react';
-import InfoPanelShipCpt from './InfoPanelShipCpt';
-import InfoPanelUpgradeCpt from './InfoPanelUpgradeCpt';
-import InfoPanelPilotCpt from './InfoPanelPilotCpt';
-import * as xwingUtils from '../data/xwing_utils';
+import InfoPanelShipCpt from './InfoPanelShipCpt.js';
+import InfoPanelUpgradeCpt from './InfoPanelUpgradeCpt.js';
+import InfoPanelPilotCpt from './InfoPanelPilotCpt.js';
+import * as xwingUtils from '../data/xwing_utils.js';
 
 export default class InfoPanelCpt extends React.Component {
     
