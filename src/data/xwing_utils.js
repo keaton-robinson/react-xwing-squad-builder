@@ -1,4 +1,4 @@
-import * as xwingData from "./xwing_data"
+import * as xwingData from "./xwing_data.js"
 
 //intended to be used for checking if an id is selected. Ids start at zero, so you have to check for zero or something bigger
 //    >=  operator doesn't work as a shortcut because javascript converts null to zero. 

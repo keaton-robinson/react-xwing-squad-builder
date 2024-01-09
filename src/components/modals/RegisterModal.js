@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import * as yup from 'yup';
 import { Formik } from 'formik';
-import { XwingTextInput, XwingFormSubmitButton, XwingForm } from '../CustomFormikControls/XwingFormikCustomControls';
+import { XwingTextInput, XwingFormSubmitButton, XwingForm } from '../CustomFormikControls/XwingFormikCustomControls.js';
 
 export default function RegisterModal(props) {
 
