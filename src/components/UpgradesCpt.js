@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as xwingData from '../data/xwing_data';
+import * as xwingData from '../data/xwing_data.js';
 
 export default class UpgradesCpt extends React.Component{
 

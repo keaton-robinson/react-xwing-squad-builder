@@ -1,6 +1,6 @@
 import React from 'react';
-import * as xwingUtils from '../../data/xwing_utils';
-import * as xwingData from '../../data/xwing_data';
+import * as xwingUtils from '../../data/xwing_utils.js';
+import * as xwingData from '../../data/xwing_data.js';
 
 export default class PrintSquadModal extends React.Component {
     

@@ -3,7 +3,7 @@ import HeaderComponent from './HeaderComponent.js';
 import SquadBuilderCpt from './SquadBuilderCpt.js';
 import ModalContainer from './modals/ModalContainer.js';
 import ms from 'ms';
-import * as xwingData from '../data/xwing_data';
+import * as xwingData from '../data/xwing_data.js';
 import { UserContext } from './UserContext.js';
 
 const factionsOrdered = [
