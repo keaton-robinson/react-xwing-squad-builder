@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import * as yup from 'yup';
-import { Formik } from 'formik';
-import {XwingTextInput, XwingFormSubmitButton, XwingForm } from '../CustomFormikControls/XwingFormikCustomControls.js';
-import { UserContext } from '../UserContext.js'
+const React = require('react');
+const { useState, useEffect, useRef } = React;
+const yup = require('yup');
+const { Formik } = require('formik');
+const { XwingTextInput, XwingFormSubmitButton, XwingForm } = require('../CustomFormikControls/XwingFormikCustomControls.js');
+const { UserContext } = require('../UserContext.js');
 
-export default function LoginModal(props) {
+
+function LoginModal(props) {
     const mounted = useRef(false);
     const [statusMessage, setStatusMessage] = useState('');
     const [successfullyLoggedIn, setSuccessfullyLoggedIn] = useState(false);
@@ -88,3 +90,5 @@ export default function LoginModal(props) {
         </UserContext.Consumer>
     );   
 }
+
+module.exports = LoginModal;
