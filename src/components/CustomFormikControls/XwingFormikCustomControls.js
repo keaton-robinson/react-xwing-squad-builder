@@ -1,7 +1,7 @@
-import React from 'react';
-import { useField, useFormikContext, Form } from 'formik';
+const React = require('react');
+const { useField, useFormikContext, Form } = require('formik');
  
-export const XwingTextInput = (props) => {
+const XwingTextInput = (props) => {
   // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
   // which we can spread on <input>. We can use field meta to show an error
   // message if the field is invalid and it has been touched (i.e. visited)
@@ -17,13 +17,13 @@ export const XwingTextInput = (props) => {
   );
 };
 
-export const XwingFormSubmitButton = (({children,...props}) => {
+const XwingFormSubmitButton = (({children,...props}) => {
   const formikContext = useFormikContext();
   
   return (<button type="submit" disabled={formikContext.isSubmitting} {...props}>{formikContext.isSubmitting ? 'Loading...' : children}</button>); 
 });
 
-export const XwingForm = (({children,...props}) => {
+const XwingForm = (({children,...props}) => {
   const formikContext = useFormikContext();
   return (
     <Form {...props}>
@@ -32,3 +32,5 @@ export const XwingForm = (({children,...props}) => {
       </fieldset>
     </Form>); 
 });
+
+module.exports = { XwingTextInput, XwingFormSubmitButton, XwingForm };

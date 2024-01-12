@@ -1,8 +1,8 @@
-import React from 'react';
-import * as xwingUtils from '../../data/xwing_utils.js';
-import * as xwingData from '../../data/xwing_data.js';
+const React = require('react');
+const xwingUtils = require('../../data/xwing_utils.js');
+const xwingData = require('../../data/xwing_data.js');
 
-export default class PrintSquadModal extends React.Component {
+class PrintSquadModal extends React.Component {
     
     constructor(props) {
         super(props);
@@ -58,3 +58,5 @@ export default class PrintSquadModal extends React.Component {
         );
     }
 }
+
+module.exports = PrintSquadModal;

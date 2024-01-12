@@ -1,4 +1,4 @@
-import * as xwingData from "./xwing_data.js"
+const xwingData = require('./xwing_data.js')
 
 //intended to be used for checking if an id is selected. Ids start at zero, so you have to check for zero or something bigger
 //    >=  operator doesn't work as a shortcut because javascript converts null to zero. 
@@ -806,6 +806,6 @@ const fixIcons = (text) => {
     } 
 }
 
-export { isNotNullOrUndefined, getUpgradeCost, getPilotCost, getSquadCost, getPilotEffectiveStats, maxPilotOrUpgradeReached, isUpgradeAllowed, 
+module.exports  = { isNotNullOrUndefined, getUpgradeCost, getPilotCost, getSquadCost, getPilotEffectiveStats, maxPilotOrUpgradeReached, isUpgradeAllowed, 
     addUpgrades, getAppReadyPilot, getCheapestAvailablePilotForShip, removeInvalidUpgrades, upgradeSquadShip, squadContainsAnotherSolitaryCardForThisSlot,
     InfoPanelCardTypes, shipBaseSizes, getShipBaseSize, fixIcons, makeid }

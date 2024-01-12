@@ -1,6 +1,6 @@
-import React from 'react';
+const React = require('react');
 
-export default class StatBlockCpt extends React.Component {
+class StatBlockCpt extends React.Component {
     
     constructor(props) {
         super(props);
@@ -130,3 +130,5 @@ export default class StatBlockCpt extends React.Component {
         );
     }
 }
+
+module.exports = StatBlockCpt;
