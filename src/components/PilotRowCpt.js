@@ -1,11 +1,11 @@
-import React from 'react';
-import * as xwingData from '../data/xwing_data.js';
-import * as xwingUtils from '../data/xwing_utils.js';
-import ShipUpgradeCpt from './ShipUpgradeCpt.js';
-import { Dropdown } from '@keatonr06/reactjs-dropdown-component';
-import { DropDownStyles } from '../styleData/styleData.js';
+const React = require('react');
+const xwingData = require('../data/xwing_data.js');
+const xwingUtils = require('../data/xwing_utils.js');
+const ShipUpgradeCpt = require('./ShipUpgradeCpt.js');
+const { Dropdown } = require('@keatonr06/reactjs-dropdown-component');
+const { DropDownStyles } = require('../styleData/styleData.js');
 
-export default class PilotRowCpt extends React.Component {
+class PilotRowCpt extends React.Component {
 
     constructor(props) {
         super(props);
@@ -297,5 +297,4 @@ export default class PilotRowCpt extends React.Component {
     }
 }
 
-
-
+module.exports = PilotRowCpt;

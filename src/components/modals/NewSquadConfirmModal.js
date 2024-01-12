@@ -1,6 +1,6 @@
-import React from 'react';
+const React = require('react');
 
-export default class NewSquadConfirmModal extends React.Component {
+class NewSquadConfirmModal extends React.Component {
     
     constructor(props) {
         super(props);
@@ -21,3 +21,5 @@ export default class NewSquadConfirmModal extends React.Component {
         );
     }
 }
+
+module.exports = NewSquadConfirmModal;

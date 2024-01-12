@@ -1,4 +1,4 @@
-import React from "react";
+const React = require("react");
 
 const MyModal = ({ handleClose, headerTitle, children }) => {
 
@@ -20,4 +20,4 @@ const MyModal = ({ handleClose, headerTitle, children }) => {
   );
 };
 
-export default MyModal;
+module.exports = MyModal;

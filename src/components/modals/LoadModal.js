@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { UserContext } from '../UserContext.js';
+const React = require('react');
+const { useState, useEffect, useContext, useRef } = React;
+const { UserContext } = require('../UserContext.js');
 
-export default function LoadModal(props) {
+
+function LoadModal(props) {
     const mounted = useRef(false);
     const userContextBundle = useContext(UserContext);
     const [squads, setSquads] = useState([]);
@@ -110,3 +112,5 @@ export default function LoadModal(props) {
         </div>
     );
 }
+
+module.exports = LoadModal;

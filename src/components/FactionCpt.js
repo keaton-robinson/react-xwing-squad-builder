@@ -1,7 +1,7 @@
-import React from 'react';
-import { factionNames } from '../data/xwing_data.js';
+const React = require('react');
+const { factionNames } = require('../data/xwing_data.js');
 
-export default class FactionCpt extends React.Component {
+class FactionCpt extends React.Component {
 
     constructor(props) {
         super(props);
@@ -43,3 +43,5 @@ export default class FactionCpt extends React.Component {
           );
     }
 }
+
+module.exports = FactionCpt;

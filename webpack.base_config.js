@@ -1,10 +1,6 @@
-import path from 'path';
+const path = require('path');
 
-import * as url from 'url';
-//const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-
-export default {	
+module.exports = {	
 	entry: './src/reactEntryPoint.js',
 	output : {
 		path: path.resolve(__dirname, 'dist'),

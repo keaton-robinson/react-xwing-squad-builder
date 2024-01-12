@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
-import * as yup from 'yup';
-import { Formik } from 'formik';
-import { XwingTextInput, XwingFormSubmitButton, XwingForm } from '../CustomFormikControls/XwingFormikCustomControls.js';
+const React = require('react');
+const { useState } = React;
+const yup = require('yup');
+const { Formik } = require('formik');
+const { XwingTextInput, XwingFormSubmitButton, XwingForm } = require('../CustomFormikControls/XwingFormikCustomControls.js');
 
-export default function RegisterModal(props) {
+
+function RegisterModal(props) {
 
   const [usernameMin, usernameMax] = [6, 30];
   const [passwordMin, passwordMax] = [6, 50];
@@ -80,4 +82,4 @@ export default function RegisterModal(props) {
   );
 }
 
-
+module.exports = RegisterModal;

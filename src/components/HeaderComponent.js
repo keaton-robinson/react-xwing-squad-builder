@@ -1,10 +1,10 @@
-import React from 'react';
-import FactionCpt from './FactionCpt.js';
-import LoginModal from './modals/LoginModal.js';
-import RegisterModal from './modals/RegisterModal.js';
-import { UserContext } from './UserContext.js'
+const React = require('react');
+const FactionCpt = require('./FactionCpt.js');
+const LoginModal = require('./modals/LoginModal.js');
+const RegisterModal = require('./modals/RegisterModal.js');
+const { UserContext } = require('./UserContext.js');
 
-export default function HeaderComponent(props)  {
+function HeaderComponent(props)  {
   const showLogin = () => {
     props.setModal({
       title: "Login",
@@ -47,3 +47,5 @@ export default function HeaderComponent(props)  {
     </UserContext.Consumer>
   );
 }
+
+module.exports = HeaderComponent;
