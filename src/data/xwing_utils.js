@@ -1,13 +1,10 @@
 const xwingData = require('./xwing_data.js')
 
-//intended to be used for checking if an id is selected. Ids start at zero, so you have to check for zero or something bigger
-//    >=  operator doesn't work as a shortcut because javascript converts null to zero. 
-function isNotNullOrUndefined(value){
-    if(value==0 || value){
-        return true;
-    }
-    return false;
+//intended to be used for checking if an id is selected
+function isNotNullOrUndefined(value) {
+    return value !== null && value !== undefined;
 }
+
 
 const shipBaseSizes = {
     Small: "Small",
