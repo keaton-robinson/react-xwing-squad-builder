@@ -198,7 +198,7 @@ class SquadBuilderCpt extends React.Component {
     }
 
     addPilot = (pilotToAdd, upgradesToApply) => {
-        const appReadyNewPilot = xwingUtils.getAppReadyPilot(pilotToAdd);
+        const appReadyNewPilot = xwingUtils.getAppReadyPilot(pilotToAdd, xwingData.ships);
         appReadyNewPilot.uiKey =  xwingUtils.makeid(25);
         const newSquadAfterAddition = [...this.state.squad, appReadyNewPilot];
 
@@ -207,7 +207,7 @@ class SquadBuilderCpt extends React.Component {
     }
 
     changePilot = (prevSelectedPilot, newPilot, copyUpgrades = true) => {
-        const appReadyNewPilot = xwingUtils.getAppReadyPilot(newPilot);
+        const appReadyNewPilot = xwingUtils.getAppReadyPilot(newPilot, xwingData.ships);
         //transfer the existing UI key to the new pilot object so react rcognizes it as the previous one
         appReadyNewPilot.uiKey = prevSelectedPilot.uiKey;  
 
@@ -236,7 +236,7 @@ class SquadBuilderCpt extends React.Component {
     
 
     addCheapestAvailablePilotForShip = (ship, upgradesToInclude) => {
-        const cheapestAvailablePilot = xwingUtils.getCheapestAvailablePilotForShip(ship, this.props.faction, this.state.squad, xwingData.upgrades);
+        const cheapestAvailablePilot = xwingUtils.getCheapestAvailablePilotForShip(ship, this.props.faction, this.state.squad, xwingData.upgrades, xwingData.pilots);
         if(cheapestAvailablePilot){
             this.addPilot(cheapestAvailablePilot, upgradesToInclude);
         } else {
@@ -245,7 +245,7 @@ class SquadBuilderCpt extends React.Component {
     }
 
     changeShip = (shipToChangeTo, prevSelectedPilot) => {
-        const cheapestAvailablePilotForShip = xwingUtils.getCheapestAvailablePilotForShip(shipToChangeTo, this.props.faction, this.state.squad, xwingData.upgrades);
+        const cheapestAvailablePilotForShip = xwingUtils.getCheapestAvailablePilotForShip(shipToChangeTo, this.props.faction, this.state.squad, xwingData.upgrades, xwingData.pilots);
         if(cheapestAvailablePilotForShip){
             this.changePilot(prevSelectedPilot, cheapestAvailablePilotForShip, false);
         } else {

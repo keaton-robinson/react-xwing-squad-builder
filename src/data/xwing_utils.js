@@ -1,5 +1,3 @@
-const xwingData = require('./xwing_data.js')
-
 //intended to be used for checking if an id is selected
 function isNotNullOrUndefined(value) {
     return value !== null && value !== undefined;
@@ -454,13 +452,13 @@ const setInitialValuesForAppReadyPilot = (pilot) => {
     ship.charge = ship.charge || 0;
 }
 
-function getAppReadyPilot(pilot) {
+function getAppReadyPilot(pilot, shipsData) {
     //makes a deep copy of the pilot so I don't have side effects on my "data repo"    
     const pilotCopy = JSON.parse(JSON.stringify(pilot));
     
     //attach ship
     
-    const shipForPilot = xwingData.ships[pilot.ship]; 
+    const shipForPilot = shipsData[pilot.ship]; 
     if(!shipForPilot)
     {
         throw {
@@ -521,7 +519,7 @@ function setSelectedUpgradeKeys(selectedUpgrades){
 }
 
 //returns cheapest pilot in-faction that hasn't been selected max-times or selected elsewhere with uniqueness
-function getCheapestAvailablePilotForShip(ship, faction, squad, upgradesData) {
+function getCheapestAvailablePilotForShip(ship, faction, squad, upgradesData, pilotsData) {
  
     if(!ship || !faction || !squad){
         throw {
@@ -532,7 +530,7 @@ function getCheapestAvailablePilotForShip(ship, faction, squad, upgradesData) {
         };
     }
     
-    const availablePilotsForShip = xwingData.pilots.filter(pilot => pilot.ship === ship && pilot.faction === faction 
+    const availablePilotsForShip = pilotsData.filter(pilot => pilot.ship === ship && pilot.faction === faction 
         && !maxPilotOrUpgradeReached(pilot, squad, upgradesData));
 
     if(!availablePilotsForShip.length){
