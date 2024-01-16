@@ -113,50 +113,40 @@ describe('getUpgradeCost', () => {
 })
 
 describe('getPilotCost', () => {
-    const mockUpgradesData = [
-        { id: 1, points: 10 }, // Mock upgrade data
+    const stubUpgradesData = [
+        { id: 1, points: 10 },
         { id: 2, points: 15 },
-        // ... other mock upgrade data
     ];
 
-    it('calculates pilot cost without upgrades', () => {
-        const pilot = { points: 100, selectedUpgrades: [] };
-        const cost = xwing_utils.getPilotCost(pilot, mockUpgradesData);
-        expect(cost).toBe(100);
+    it('throws exception for invalid upgrade IDs', () => {
+        const pilotWithInvalidUpgrade = { points: 100, selectedUpgrades: [{ selectedUpgradeId: 99 }] }; // 99 is an invalid ID
+        expect(() => xwing_utils.getPilotCost(pilotWithInvalidUpgrade, stubUpgradesData)).toThrow('Invalid upgrade');
     });
 
-    it('calculates pilot cost with one upgrade', () => {
-        const pilot = { points: 100, selectedUpgrades: [{ selectedUpgradeId: 1 }] };
-        const cost = xwing_utils.getPilotCost(pilot, mockUpgradesData);
-        expect(cost).toBe(110); // 100 (pilot points) + 10 (upgrade points)
+    it.each([
+        ['with no upgrades returns just pilot cost', { points: 100, selectedUpgrades: [] }, 100],
+        ['with one upgrade, sums pilot cost with upgrade cost', { points: 100, selectedUpgrades: [{ selectedUpgradeId: 1 }] }, 110],
+        ['with two upgrades, sums pilot with cost of both upgrades', { points: 100, selectedUpgrades: [{ selectedUpgradeId: 1 }, { selectedUpgradeId: 2 }] }, 125],
+        ['with null selectedUpgradeId, returns pilot cost alone', { points: 100, selectedUpgrades: [{ selectedUpgradeId: null }] }, 100],
+        ['with undefined selectedUpgradeId, returns pilot cost alone', { points: 100, selectedUpgrades: [{ selectedUpgradeId: undefined }] }, 100],
+    ])('%s', (description, pilot, expectedCost) => {
+        const cost = xwing_utils.getPilotCost(pilot, stubUpgradesData);
+        expect(cost).toBe(expectedCost);
     });
+});
 
-    it('calculates pilot cost with multiple upgrades', () => {
-        const pilot = { points: 100, selectedUpgrades: [{ selectedUpgradeId: 1 }, { selectedUpgradeId: 2 }] };
-        const cost = xwing_utils.getPilotCost(pilot, mockUpgradesData);
-        expect(cost).toBe(125); // 100 (pilot points) + 10 (first upgrade) + 15 (second upgrade)
-    });
+describe('getSquadCost', () => {
+    const emptyDummyUpgradeData = [];
+    const fiftyPointPilot = { points: 50, selectedUpgrades: [] };
+    const fortyFivePointPilot = { points: 45, selectedUpgrades: [] };
 
-    it('invalid upgrade IDs throws exception', () => {
-        const pilot = { points: 100, selectedUpgrades: [{ selectedUpgradeId: 99 }] }; // 99 is an invalid ID
-        expect(() => xwing_utils.getPilotCost(pilot, mockUpgradesData)).toThrow('Invalid upgrade');
-    });
-
-    it('handles null selectedUpgradeId', () => {
-        const pilot = {
-            points: 100,
-            selectedUpgrades: [{ selectedUpgradeId: null }]
-        };
-        const cost = xwing_utils.getPilotCost(pilot, mockUpgradesData);
-        expect(cost).toBe(100); // Assuming the function ignores the null upgradeId
-    });
-
-    it('handles undefined selectedUpgradeId', () => {
-        const pilot = {
-            points: 100,
-            selectedUpgrades: [{ selectedUpgradeId: undefined }]
-        };
-        const cost = xwing_utils.getPilotCost(pilot, mockUpgradesData);
-        expect(cost).toBe(100); // Assuming the function ignores the undefined upgradeId
+    it.each([
+        ['empty squad costs zero', [], 0],
+        ['one 50 point pilot costs 50', [fiftyPointPilot], 50],
+        ['50 point pilot + 45 point pilot costs 95', [fiftyPointPilot, fortyFivePointPilot], 95],
+        // Add more test cases here if needed
+    ])('%s', (testName, squad, expectedCost) => {
+        const cost = xwing_utils.getSquadCost(squad, emptyDummyUpgradeData);
+        expect(cost).toBe(expectedCost);
     });
 });

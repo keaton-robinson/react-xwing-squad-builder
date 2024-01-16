@@ -68,9 +68,9 @@ function getPilotCost(pilot, upgradesData) {
 }
 
 
-function getSquadCost(squad) {
+function getSquadCost(squad, upgradesData) {
     return squad.reduce((prevPointsSum, pilot) => {
-        return prevPointsSum + getPilotCost(pilot, xwingData.upgrades);
+        return prevPointsSum + getPilotCost(pilot, upgradesData);
     }, 0);
 }
 
