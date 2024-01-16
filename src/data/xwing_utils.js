@@ -691,11 +691,11 @@ function setUpgrade(upgradeSlot, newlySelectedUpgrade, pilot){
 }
 
 //returns true if there is a solitary upgrade card equiped to another slot of the same type within the squad
-function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot, squad){
+function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot, squad, upgradesData){
     for(const squadPilot of squad){
         for(const squadPilotUpgrade of squadPilot.selectedUpgrades){
             if(squadPilotUpgrade != upgradeSlot  && squadPilotUpgrade.slot == upgradeSlot.slot && isNotNullOrUndefined(squadPilotUpgrade.selectedUpgradeId)){
-                const upgradeRecord = xwingData.upgrades.find(upgrade => upgrade.id == squadPilotUpgrade.selectedUpgradeId)
+                const upgradeRecord = upgradesData.find(upgrade => upgrade.id == squadPilotUpgrade.selectedUpgradeId)
                 if(upgradeRecord.solitary){
                     return true;
                 }
