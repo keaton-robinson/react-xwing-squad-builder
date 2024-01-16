@@ -413,7 +413,7 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
 }
 
 //copies selected upgrades from prevPilot to new pilot (in place). Ignores upgrade slots that aren't available on new pilot
-function addUpgrades(newPilot, upgradesToAdd, squad){
+function addUpgrades(newPilot, upgradesToAdd, squad, upgradesData){
     if(!newPilot || !upgradesToAdd || !squad){
         throw {
             message: "newPilot, upgradesToAdd, and squad must be provided to addUpgrades function",
@@ -426,9 +426,9 @@ function addUpgrades(newPilot, upgradesToAdd, squad){
     upgradesToAdd.forEach(upgradeToAdd => {
         if(isNotNullOrUndefined(upgradeToAdd.selectedUpgradeId)){
             const newPilotUpgradeSlot = newPilot.selectedUpgrades.find(newPilotUpgrade => newPilotUpgrade.key == upgradeToAdd.key);
-            const upgradeData = xwingData.upgrades.find(upgrade => upgrade.id === upgradeToAdd.selectedUpgradeId);
+            const upgradeData = upgradesData.find(upgrade => upgrade.id === upgradeToAdd.selectedUpgradeId);
 
-            if(newPilotUpgradeSlot && !maxPilotOrUpgradeReached(upgradeData, squad, xwingData.upgrades)){
+            if(newPilotUpgradeSlot && !maxPilotOrUpgradeReached(upgradeData, squad, upgradesData)){
                 setUpgrade(newPilotUpgradeSlot, upgradeData, newPilot)                
             }
         }

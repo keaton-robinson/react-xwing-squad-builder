@@ -184,7 +184,7 @@ class SquadBuilderCpt extends React.Component {
 
     setUpgradesOnNewPilot = (appReadyNewPilot, upgradesToApply, squadIncludingNewPilot) => {
         if(upgradesToApply){
-            xwingUtils.addUpgrades(appReadyNewPilot, upgradesToApply, squadIncludingNewPilot);
+            xwingUtils.addUpgrades(appReadyNewPilot, upgradesToApply, squadIncludingNewPilot, xwingData.upgrades);
         } else {
             //if no upgrades specified, attach the default auto-equips
             const selectedShip = xwingData.ships[appReadyNewPilot.ship];
@@ -218,7 +218,6 @@ class SquadBuilderCpt extends React.Component {
 
 
         if(copyUpgrades) {
-            //xwingUtils.addUpgrades(appReadyNewPilot, prevSelectedPilot.selectedUpgrades, squadCopy);
             this.setUpgradesOnNewPilot(appReadyNewPilot, prevSelectedPilot.selectedUpgrades, squadCopy);
         } else {
             this.setUpgradesOnNewPilot(appReadyNewPilot, null, squadCopy);
