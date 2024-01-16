@@ -266,7 +266,7 @@ class SquadBuilderCpt extends React.Component {
         if(newlySelectedUpgrade && xwingUtils.maxPilotOrUpgradeReached(newlySelectedUpgrade, this.state.squad, xwingData.upgrades)){
             alert("Already have max amount of " + newlySelectedUpgrade.name);
         } else {
-            xwingUtils.upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, this.state.squad);
+            xwingUtils.upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, this.state.squad, xwingData.upgrades);
         }
         this.removeInvalidUpgradesAndSetState(this.state.squad);
     }

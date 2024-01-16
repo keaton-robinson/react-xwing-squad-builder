@@ -587,15 +587,15 @@ function removeUpgrade(selectedUpgradeSlot, pilot, upgradesData) {
     }
 }
 
-function upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, squad){
-    const prevUpgradeRecord = xwingData.upgrades.find(upgrade => upgrade.id == upgradeSlot.selectedUpgradeId);
+function upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, squad, upgradesData){
+    const prevUpgradeRecord = upgradesData.find(upgrade => upgrade.id == upgradeSlot.selectedUpgradeId);
     const shipType = pilot.pilotShip.name;
     const shipsOfSameType = squad.filter(squadPilot => squadPilot.pilotShip.name == shipType);
     
     if(prevUpgradeRecord && prevUpgradeRecord.standardized){
         for(const squadPilot of shipsOfSameType){
             const squadPilotUpgradeSlot = squadPilot.selectedUpgrades.find(slot => slot.key == upgradeSlot.key);
-            removeUpgrade(squadPilotUpgradeSlot, squadPilot, xwingData.upgrades);
+            removeUpgrade(squadPilotUpgradeSlot, squadPilot, upgradesData);
         }
     }
 
@@ -644,7 +644,7 @@ function setUpgrade(upgradeSlot, newlySelectedUpgrade, pilot){
         }
     }
 
-    removeUpgrade(upgradeSlot, pilot, xwingData.upgrades);
+    removeUpgrade(upgradeSlot, pilot, upgradesData);
   
     if(newlySelectedUpgrade){  //if no newly selected upgrade, it means an upgrade is being removed
         upgradeSlot.selectedUpgradeId = newlySelectedUpgrade.id;
@@ -653,7 +653,7 @@ function setUpgrade(upgradeSlot, newlySelectedUpgrade, pilot){
             //unequips last matching slot
             for(const unequip_slot of newlySelectedUpgrade.unequips_upgrades){
                 const lastMatchingUnequipSlot = [...pilot.selectedUpgrades].reverse().find(selUpgrade => selUpgrade.slot == unequip_slot); 
-                removeUpgrade(lastMatchingUnequipSlot, pilot, xwingData.upgrades);
+                removeUpgrade(lastMatchingUnequipSlot, pilot, upgradesData);
             }
         }
                 
