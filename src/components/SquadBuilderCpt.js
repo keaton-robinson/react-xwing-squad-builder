@@ -72,7 +72,7 @@ class SquadBuilderCpt extends React.Component {
                 },
                 body: JSON.stringify({
                     name: this.state.squadName,
-                    points: xwingUtils.getSquadCost(this.state.squad),
+                    points: xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades),
                     pilots: this.state.squad
                 })
             })
@@ -110,7 +110,7 @@ class SquadBuilderCpt extends React.Component {
             body: JSON.stringify({
                 faction: this.props.selectedFaction,
                 name: newSquadTitle,
-                points: xwingUtils.getSquadCost(this.state.squad),
+                points: xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades),
                 pilots: this.state.squad
             })
         })
@@ -168,7 +168,7 @@ class SquadBuilderCpt extends React.Component {
 
     showPrintModal = () => {
         this.props.setModal({ 
-            title: `${this.props.selectedFaction} Squadron (${xwingUtils.getSquadCost(this.state.squad)})`, 
+            title: `${this.props.selectedFaction} Squadron (${xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades)})`, 
             children: <PrintSquadModal squad={this.state.squad} /> 
         });
     }
@@ -308,7 +308,7 @@ class SquadBuilderCpt extends React.Component {
                         <i className="far fa-edit" style={{marginLeft: "5px", fontSize: "1.2rem"}} onClick={this.editSquadClicked}></i>
                     </div>
                     <div className="points-display-container">
-                        <span>Points: { xwingUtils.getSquadCost(this.state.squad) }/200 ({200-xwingUtils.getSquadCost(this.state.squad)} left)</span>
+                        <span>Points: { xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades) }/200 ({200-xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades)} left)</span>
                     </div>
                     <div className='printBtn'>
                         <button className="btn-info" style={{margin:"5px"}} onClick={this.showPrintModal}>Print</button>
