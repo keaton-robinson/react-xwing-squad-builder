@@ -187,7 +187,7 @@ function isUniqueInSquad(uniqueCanonName,squad, upgradesData){
 }
 
 //upgrade should be data-repo upgrade, not "selected" upgrade
-function isUpgradeAllowed(selectedUpgradeSlot, upgrade, pilot, squad){
+function isUpgradeAllowed(selectedUpgradeSlot, upgrade, pilot, squad, upgradesData){
     if(!selectedUpgradeSlot || !upgrade || !pilot || !squad){
         throw {
             message: "selectedUpgradeSlot, upgrade, pilot, and squad arguments are required for isUpgradeAllowed function",
@@ -198,7 +198,7 @@ function isUpgradeAllowed(selectedUpgradeSlot, upgrade, pilot, squad){
         };
     }
 
-    const effectivePilot = getPilotEffectiveStats(pilot, xwingData.upgrades);
+    const effectivePilot = getPilotEffectiveStats(pilot, upgradesData);
 
     if(upgrade.faction) {
         if(Array.isArray(upgrade.faction)){
@@ -552,7 +552,7 @@ function removeInvalidUpgrades(squad) {
             for(const selectedUpgrade of pilot.selectedUpgrades){
                 if(isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)){
                     const upgradeRecord = xwingData.upgrades.find(upgrade => upgrade.id == selectedUpgrade.selectedUpgradeId);
-                    if(!isUpgradeAllowed(selectedUpgrade, upgradeRecord, pilot, squad)){
+                    if(!isUpgradeAllowed(selectedUpgrade, upgradeRecord, pilot, squad, xwingData.upgrades)){
                         needToSearchForInvalidUpgrades = true;
                         removeUpgrade(selectedUpgrade, pilot);
                     }
