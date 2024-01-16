@@ -178,7 +178,7 @@ class SquadBuilderCpt extends React.Component {
     }
 
     removeInvalidUpgradesAndSetState= (updatedSquad) => {
-        xwingUtils.removeInvalidUpgrades(updatedSquad);
+        xwingUtils.removeInvalidUpgrades(updatedSquad, xwingData.upgrades);
         this.setState({ squad: updatedSquad });
     }
 
