@@ -236,7 +236,7 @@ class SquadBuilderCpt extends React.Component {
     
 
     addCheapestAvailablePilotForShip = (ship, upgradesToInclude) => {
-        const cheapestAvailablePilot = xwingUtils.getCheapestAvailablePilotForShip(ship, this.props.faction, this.state.squad);
+        const cheapestAvailablePilot = xwingUtils.getCheapestAvailablePilotForShip(ship, this.props.faction, this.state.squad, xwingData.upgrades);
         if(cheapestAvailablePilot){
             this.addPilot(cheapestAvailablePilot, upgradesToInclude);
         } else {
@@ -245,7 +245,7 @@ class SquadBuilderCpt extends React.Component {
     }
 
     changeShip = (shipToChangeTo, prevSelectedPilot) => {
-        const cheapestAvailablePilotForShip = xwingUtils.getCheapestAvailablePilotForShip(shipToChangeTo, this.props.faction, this.state.squad);
+        const cheapestAvailablePilotForShip = xwingUtils.getCheapestAvailablePilotForShip(shipToChangeTo, this.props.faction, this.state.squad, xwingData.upgrades);
         if(cheapestAvailablePilotForShip){
             this.changePilot(prevSelectedPilot, cheapestAvailablePilotForShip, false);
         } else {

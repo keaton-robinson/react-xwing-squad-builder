@@ -521,7 +521,7 @@ function setSelectedUpgradeKeys(selectedUpgrades){
 }
 
 //returns cheapest pilot in-faction that hasn't been selected max-times or selected elsewhere with uniqueness
-function getCheapestAvailablePilotForShip(ship, faction, squad) {
+function getCheapestAvailablePilotForShip(ship, faction, squad, upgradesData) {
  
     if(!ship || !faction || !squad){
         throw {
@@ -533,7 +533,7 @@ function getCheapestAvailablePilotForShip(ship, faction, squad) {
     }
     
     const availablePilotsForShip = xwingData.pilots.filter(pilot => pilot.ship === ship && pilot.faction === faction 
-        && !maxPilotOrUpgradeReached(pilot, squad, xwingData.upgrades));
+        && !maxPilotOrUpgradeReached(pilot, squad, upgradesData));
 
     if(!availablePilotsForShip.length){
         return null;
