@@ -54,11 +54,14 @@ function getUpgradeCost(upgrade, pilot){
     }
 }
 
-function getPilotCost(pilot) {
+function getPilotCost(pilot, upgradesData) {
     return pilot.points +  pilot.selectedUpgrades.reduce((prevPointsSum, selectedUpgrade) => {
         if(isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)){  
-            const upgradeData = xwingData.upgrades.find(upgradeFromData=> upgradeFromData.id === selectedUpgrade.selectedUpgradeId)
-            return prevPointsSum + getUpgradeCost(upgradeData, pilot);
+            const upgrade = upgradesData.find(upgradeFromData=> upgradeFromData.id === selectedUpgrade.selectedUpgradeId)
+            if(!upgrade){
+                throw new Error("Invalid upgrade id specified");
+            }
+            return prevPointsSum + getUpgradeCost(upgrade, pilot);
         }
         return prevPointsSum;
     }, 0);
@@ -67,7 +70,7 @@ function getPilotCost(pilot) {
 
 function getSquadCost(squad) {
     return squad.reduce((prevPointsSum, pilot) => {
-        return prevPointsSum + getPilotCost(pilot);
+        return prevPointsSum + getPilotCost(pilot, xwingData.upgrades);
     }, 0);
 }
 

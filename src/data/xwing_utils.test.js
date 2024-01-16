@@ -112,3 +112,51 @@ describe('getUpgradeCost', () => {
     
 })
 
+describe('getPilotCost', () => {
+    const mockUpgradesData = [
+        { id: 1, points: 10 }, // Mock upgrade data
+        { id: 2, points: 15 },
+        // ... other mock upgrade data
+    ];
+
+    it('calculates pilot cost without upgrades', () => {
+        const pilot = { points: 100, selectedUpgrades: [] };
+        const cost = xwing_utils.getPilotCost(pilot, mockUpgradesData);
+        expect(cost).toBe(100);
+    });
+
+    it('calculates pilot cost with one upgrade', () => {
+        const pilot = { points: 100, selectedUpgrades: [{ selectedUpgradeId: 1 }] };
+        const cost = xwing_utils.getPilotCost(pilot, mockUpgradesData);
+        expect(cost).toBe(110); // 100 (pilot points) + 10 (upgrade points)
+    });
+
+    it('calculates pilot cost with multiple upgrades', () => {
+        const pilot = { points: 100, selectedUpgrades: [{ selectedUpgradeId: 1 }, { selectedUpgradeId: 2 }] };
+        const cost = xwing_utils.getPilotCost(pilot, mockUpgradesData);
+        expect(cost).toBe(125); // 100 (pilot points) + 10 (first upgrade) + 15 (second upgrade)
+    });
+
+    it('invalid upgrade IDs throws exception', () => {
+        const pilot = { points: 100, selectedUpgrades: [{ selectedUpgradeId: 99 }] }; // 99 is an invalid ID
+        expect(() => xwing_utils.getPilotCost(pilot, mockUpgradesData)).toThrow('Invalid upgrade');
+    });
+
+    it('handles null selectedUpgradeId', () => {
+        const pilot = {
+            points: 100,
+            selectedUpgrades: [{ selectedUpgradeId: null }]
+        };
+        const cost = xwing_utils.getPilotCost(pilot, mockUpgradesData);
+        expect(cost).toBe(100); // Assuming the function ignores the null upgradeId
+    });
+
+    it('handles undefined selectedUpgradeId', () => {
+        const pilot = {
+            points: 100,
+            selectedUpgrades: [{ selectedUpgradeId: undefined }]
+        };
+        const cost = xwing_utils.getPilotCost(pilot, mockUpgradesData);
+        expect(cost).toBe(100); // Assuming the function ignores the undefined upgradeId
+    });
+});
