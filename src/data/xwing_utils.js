@@ -149,7 +149,7 @@ function maxPilotOrUpgradeReached(cardToCheck, squad){
     }
     
     if(cardToCheck.unique){
-        if(isUniqueInSquad(cardToCheck.canonical_name ? cardToCheck.canonical_name : cardToCheck.name, squad)){
+        if(isUniqueInSquad(cardToCheck.canonical_name ? cardToCheck.canonical_name : cardToCheck.name, squad, xwingData.upgrades)){
             return true;
         }
     }
@@ -158,7 +158,7 @@ function maxPilotOrUpgradeReached(cardToCheck, squad){
 }
 
 
-function isUniqueInSquad(uniqueCanonName,squad){
+function isUniqueInSquad(uniqueCanonName,squad, upgradesData){
     //if there's "uniqueName" pilot or upgrade in the squad, they are in.
     let uniqueFound = false;
                 
@@ -171,7 +171,7 @@ function isUniqueInSquad(uniqueCanonName,squad){
                 for(const selectedUpgrade of pilot.selectedUpgrades){
                     //gotta go get the upgrade...
                     if(isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)){
-                        const upgradeData = xwingData.upgrades.find(upgradeRecord => upgradeRecord.id == selectedUpgrade.selectedUpgradeId)
+                        const upgradeData = upgradesData.find(upgradeRecord => upgradeRecord.id == selectedUpgrade.selectedUpgradeId)
                         if(upgradeData.name.includes(uniqueCanonName)){
                             uniqueFound = true;
                             break;
@@ -307,7 +307,7 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
                 break;
             case 'orUnique': {
                 //if there's "uniqueName" pilot or upgrade in the squad, they are in.
-                let uniqueFound = isUniqueInSquad(restriction[1], squad);
+                let uniqueFound = isUniqueInSquad(restriction[1], squad, xwingData.upgrades);
 
                 //the "Or" part is handled here...
                 if(restrictions.length < 1) {
