@@ -543,7 +543,7 @@ function getCheapestAvailablePilotForShip(ship, faction, squad, upgradesData) {
     return cheapestPilotForShip;
 }
 
-function removeInvalidUpgrades(squad) {
+function removeInvalidUpgrades(squad, upgradesData) {
     let needToSearchForInvalidUpgrades = true;
 
     while(needToSearchForInvalidUpgrades){
@@ -551,8 +551,8 @@ function removeInvalidUpgrades(squad) {
         for(const pilot of squad){
             for(const selectedUpgrade of pilot.selectedUpgrades){
                 if(isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)){
-                    const upgradeRecord = xwingData.upgrades.find(upgrade => upgrade.id == selectedUpgrade.selectedUpgradeId);
-                    if(!isUpgradeAllowed(selectedUpgrade, upgradeRecord, pilot, squad, xwingData.upgrades)){
+                    const upgradeRecord = upgradesData.find(upgrade => upgrade.id == selectedUpgrade.selectedUpgradeId);
+                    if(!isUpgradeAllowed(selectedUpgrade, upgradeRecord, pilot, squad, upgradesData)){
                         needToSearchForInvalidUpgrades = true;
                         removeUpgrade(selectedUpgrade, pilot);
                     }
