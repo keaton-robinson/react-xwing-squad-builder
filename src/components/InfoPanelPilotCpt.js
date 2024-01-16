@@ -27,10 +27,10 @@ class InfoPanelPilotCpt extends React.Component {
         if(this.props.isSelectedPilot){
             pilotBaseStats = this.props.selectedPilot;
         } else {
-            pilotBaseStats = xwingUtils.getAppReadyPilot(this.props.pilot);
+            pilotBaseStats = xwingUtils.getAppReadyPilot(this.props.pilot, xwingData.ships);
         }
 
-        const pilotEffectiveStats = xwingUtils.getPilotEffectiveStats(pilotBaseStats);
+        const pilotEffectiveStats = xwingUtils.getPilotEffectiveStats(pilotBaseStats, xwingData.upgrades);
 
 
         return (
