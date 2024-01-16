@@ -256,7 +256,7 @@ class SquadBuilderCpt extends React.Component {
 
 
     clonePilot = (pilot) => {
-        if(xwingUtils.maxPilotOrUpgradeReached(pilot, this.state.squad)) {
+        if(xwingUtils.maxPilotOrUpgradeReached(pilot, this.state.squad, xwingData.upgrades)) {
             this.addCheapestAvailablePilotForShip(pilot.ship, pilot.selectedUpgrades);
         } else {
             this.addPilot(pilot, pilot.selectedUpgrades);
@@ -264,7 +264,7 @@ class SquadBuilderCpt extends React.Component {
     }
 
     changeUpgrade = (upgradeSlot, newlySelectedUpgrade, pilot) => {
-        if(newlySelectedUpgrade && xwingUtils.maxPilotOrUpgradeReached(newlySelectedUpgrade, this.state.squad)){
+        if(newlySelectedUpgrade && xwingUtils.maxPilotOrUpgradeReached(newlySelectedUpgrade, this.state.squad, xwingData.upgrades)){
             alert("Already have max amount of " + newlySelectedUpgrade.name);
         } else {
             xwingUtils.upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, this.state.squad);
@@ -331,7 +331,7 @@ class SquadBuilderCpt extends React.Component {
                                 selectedPilot={squadPilot}
                                 availablePilots={xwingData.pilots
                                     .filter(availPilot => availPilot.ship===squadPilot.ship && availPilot.faction === this.props.faction
-                                            && (!xwingUtils.maxPilotOrUpgradeReached(availPilot, this.state.squad)
+                                            && (!xwingUtils.maxPilotOrUpgradeReached(availPilot, this.state.squad, xwingData.upgrades)
                                                 || availPilot.id == squadPilot.id))
                                     .sort((first, second) => (first.points - second.points))}
                                 changePilot= {this.changePilot} 

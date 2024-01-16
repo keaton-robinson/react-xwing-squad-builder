@@ -105,7 +105,7 @@ function getPilotEffectiveStats(pilot, upgradesData) {
 }
 
 //returns true if unique or max_per_squad pilot has already been selected max_times in the squad already
-function maxPilotOrUpgradeReached(cardToCheck, squad){
+function maxPilotOrUpgradeReached(cardToCheck, squad, upgradesData){
 
     if(cardToCheck.max_per_squad){
         if(!cardToCheck.slot){
@@ -149,7 +149,7 @@ function maxPilotOrUpgradeReached(cardToCheck, squad){
     }
     
     if(cardToCheck.unique){
-        if(isUniqueInSquad(cardToCheck.canonical_name ? cardToCheck.canonical_name : cardToCheck.name, squad, xwingData.upgrades)){
+        if(isUniqueInSquad(cardToCheck.canonical_name ? cardToCheck.canonical_name : cardToCheck.name, squad, upgradesData)){
             return true;
         }
     }
@@ -428,7 +428,7 @@ function addUpgrades(newPilot, upgradesToAdd, squad){
             const newPilotUpgradeSlot = newPilot.selectedUpgrades.find(newPilotUpgrade => newPilotUpgrade.key == upgradeToAdd.key);
             const upgradeData = xwingData.upgrades.find(upgrade => upgrade.id === upgradeToAdd.selectedUpgradeId);
 
-            if(newPilotUpgradeSlot && !maxPilotOrUpgradeReached(upgradeData, squad)){
+            if(newPilotUpgradeSlot && !maxPilotOrUpgradeReached(upgradeData, squad, xwingData.upgrades)){
                 setUpgrade(newPilotUpgradeSlot, upgradeData, newPilot)                
             }
         }
@@ -533,7 +533,7 @@ function getCheapestAvailablePilotForShip(ship, faction, squad) {
     }
     
     const availablePilotsForShip = xwingData.pilots.filter(pilot => pilot.ship === ship && pilot.faction === faction 
-        && !maxPilotOrUpgradeReached(pilot, squad));
+        && !maxPilotOrUpgradeReached(pilot, squad, xwingData.upgrades));
 
     if(!availablePilotsForShip.length){
         return null;
