@@ -13204,4 +13204,6 @@ const bearings = {
 // but it may be worth spreading the various upgrade card types out
 // names like "Luke Skywalker" and "Darth Vader" have pilot and crew cards...
 
-module.exports = { factionNames, ships, pilots, pilotRules, slots, sloticon, upgrades, upgradeRules, difficulties, bearings };
+const xwingData = { factionNames, ships, pilots, pilotRules, slots, sloticon, upgrades, upgradeRules, difficulties, bearings };
+
+module.exports = xwingData;

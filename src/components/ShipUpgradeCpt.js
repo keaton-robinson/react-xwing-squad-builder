@@ -31,8 +31,8 @@ class ShipUpgradeCpt extends React.Component {
         }
 
         return xwingData.upgrades.filter(upgrade => matchingSlots.includes(upgrade.slot)  // upgrade.slot === this.props.upgradeSlot.slot 
-            && (!xwingUtils.maxPilotOrUpgradeReached(upgrade, this.props.squad) || this.props.upgradeSlot.selectedUpgradeId == upgrade.id)
-            && xwingUtils.isUpgradeAllowed(this.props.upgradeSlot, upgrade, this.props.pilot, this.props.squad)
+            && (!xwingUtils.maxPilotOrUpgradeReached(upgrade, this.props.squad, xwingData.upgrades) || this.props.upgradeSlot.selectedUpgradeId == upgrade.id)
+            && xwingUtils.isUpgradeAllowed(this.props.upgradeSlot, upgrade, this.props.pilot, this.props.squad, xwingData.upgrades)
             && !this.upgradeAlreadySelectedOnADifferentSlot(upgrade))
     }
 
@@ -52,7 +52,7 @@ class ShipUpgradeCpt extends React.Component {
     }
 
     render() {
-        const squadContainsAnotherSolitaryCardForThisSlot = xwingUtils.squadContainsAnotherSolitaryCardForThisSlot(this.props.upgradeSlot,this.props.squad);
+        const squadContainsAnotherSolitaryCardForThisSlot = xwingUtils.squadContainsAnotherSolitaryCardForThisSlot(this.props.upgradeSlot,this.props.squad, xwingData.upgrades);
         const availableUpgrades = this.getAvailableUpgrades(squadContainsAnotherSolitaryCardForThisSlot)
                 .sort((upgrade1, upgrade2 )=> (xwingUtils.getUpgradeCost(upgrade1, this.props.pilot) - xwingUtils.getUpgradeCost(upgrade2, this.props.pilot))) 
         const upgradesForCustomDropdown = availableUpgrades.map(availUpgrade => ({ label: availUpgrade.name + " (" + xwingUtils.getUpgradeCost(availUpgrade, this.props.pilot) + ")", value: availUpgrade.id, upgradeRecord: availUpgrade}));

@@ -100,7 +100,7 @@ class PilotRowCpt extends React.Component {
                     </div>
                 </div>
                 <div className="shipPointCost hideOnMobile">
-                    <span>{ xwingUtils.getPilotCost(this.props.selectedPilot)}</span>
+                    <span>{ xwingUtils.getPilotCost(this.props.selectedPilot, xwingData.upgrades)}</span>
                 </div>
                 <div className="onlyShowOnMobile" style={{backgroundColor: 'rgb(32,32,32, .6)', maxWidth: '300px'}}>
                     Upgrades:
@@ -117,7 +117,7 @@ class PilotRowCpt extends React.Component {
                     )) }
                 </div> 
                 <div className="deleteOrCopyShip" style={{marginTop:"5px"}}>
-                    <span className="onlyShowOnMobile">{`Total ship points: ${xwingUtils.getPilotCost(this.props.selectedPilot)}  `}</span>
+                    <span className="onlyShowOnMobile">{`Total ship points: ${xwingUtils.getPilotCost(this.props.selectedPilot, xwingData.upgrades)}  `}</span>
                     <button className="btn-danger" onClick={this.delBtnPressed}>Delete</button>
                     <button className="btn-info" onClick={this.cloneBtnPressed}>Clone</button>
                 </div>

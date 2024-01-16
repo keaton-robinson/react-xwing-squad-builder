@@ -72,7 +72,7 @@ class SquadBuilderCpt extends React.Component {
                 },
                 body: JSON.stringify({
                     name: this.state.squadName,
-                    points: xwingUtils.getSquadCost(this.state.squad),
+                    points: xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades),
                     pilots: this.state.squad
                 })
             })
@@ -110,7 +110,7 @@ class SquadBuilderCpt extends React.Component {
             body: JSON.stringify({
                 faction: this.props.selectedFaction,
                 name: newSquadTitle,
-                points: xwingUtils.getSquadCost(this.state.squad),
+                points: xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades),
                 pilots: this.state.squad
             })
         })
@@ -168,7 +168,7 @@ class SquadBuilderCpt extends React.Component {
 
     showPrintModal = () => {
         this.props.setModal({ 
-            title: `${this.props.selectedFaction} Squadron (${xwingUtils.getSquadCost(this.state.squad)})`, 
+            title: `${this.props.selectedFaction} Squadron (${xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades)})`, 
             children: <PrintSquadModal squad={this.state.squad} /> 
         });
     }
@@ -178,13 +178,13 @@ class SquadBuilderCpt extends React.Component {
     }
 
     removeInvalidUpgradesAndSetState= (updatedSquad) => {
-        xwingUtils.removeInvalidUpgrades(updatedSquad);
+        xwingUtils.removeInvalidUpgrades(updatedSquad, xwingData.upgrades);
         this.setState({ squad: updatedSquad });
     }
 
     setUpgradesOnNewPilot = (appReadyNewPilot, upgradesToApply, squadIncludingNewPilot) => {
         if(upgradesToApply){
-            xwingUtils.addUpgrades(appReadyNewPilot, upgradesToApply, squadIncludingNewPilot);
+            xwingUtils.addUpgrades(appReadyNewPilot, upgradesToApply, squadIncludingNewPilot, xwingData.upgrades);
         } else {
             //if no upgrades specified, attach the default auto-equips
             const selectedShip = xwingData.ships[appReadyNewPilot.ship];
@@ -198,7 +198,7 @@ class SquadBuilderCpt extends React.Component {
     }
 
     addPilot = (pilotToAdd, upgradesToApply) => {
-        const appReadyNewPilot = xwingUtils.getAppReadyPilot(pilotToAdd);
+        const appReadyNewPilot = xwingUtils.getAppReadyPilot(pilotToAdd, xwingData.ships);
         appReadyNewPilot.uiKey =  xwingUtils.makeid(25);
         const newSquadAfterAddition = [...this.state.squad, appReadyNewPilot];
 
@@ -207,7 +207,7 @@ class SquadBuilderCpt extends React.Component {
     }
 
     changePilot = (prevSelectedPilot, newPilot, copyUpgrades = true) => {
-        const appReadyNewPilot = xwingUtils.getAppReadyPilot(newPilot);
+        const appReadyNewPilot = xwingUtils.getAppReadyPilot(newPilot, xwingData.ships);
         //transfer the existing UI key to the new pilot object so react rcognizes it as the previous one
         appReadyNewPilot.uiKey = prevSelectedPilot.uiKey;  
 
@@ -218,7 +218,6 @@ class SquadBuilderCpt extends React.Component {
 
 
         if(copyUpgrades) {
-            //xwingUtils.addUpgrades(appReadyNewPilot, prevSelectedPilot.selectedUpgrades, squadCopy);
             this.setUpgradesOnNewPilot(appReadyNewPilot, prevSelectedPilot.selectedUpgrades, squadCopy);
         } else {
             this.setUpgradesOnNewPilot(appReadyNewPilot, null, squadCopy);
@@ -237,7 +236,7 @@ class SquadBuilderCpt extends React.Component {
     
 
     addCheapestAvailablePilotForShip = (ship, upgradesToInclude) => {
-        const cheapestAvailablePilot = xwingUtils.getCheapestAvailablePilotForShip(ship, this.props.faction, this.state.squad);
+        const cheapestAvailablePilot = xwingUtils.getCheapestAvailablePilotForShip(ship, this.props.faction, this.state.squad, xwingData.upgrades, xwingData.pilots);
         if(cheapestAvailablePilot){
             this.addPilot(cheapestAvailablePilot, upgradesToInclude);
         } else {
@@ -246,7 +245,7 @@ class SquadBuilderCpt extends React.Component {
     }
 
     changeShip = (shipToChangeTo, prevSelectedPilot) => {
-        const cheapestAvailablePilotForShip = xwingUtils.getCheapestAvailablePilotForShip(shipToChangeTo, this.props.faction, this.state.squad);
+        const cheapestAvailablePilotForShip = xwingUtils.getCheapestAvailablePilotForShip(shipToChangeTo, this.props.faction, this.state.squad, xwingData.upgrades, xwingData.pilots);
         if(cheapestAvailablePilotForShip){
             this.changePilot(prevSelectedPilot, cheapestAvailablePilotForShip, false);
         } else {
@@ -256,7 +255,7 @@ class SquadBuilderCpt extends React.Component {
 
 
     clonePilot = (pilot) => {
-        if(xwingUtils.maxPilotOrUpgradeReached(pilot, this.state.squad)) {
+        if(xwingUtils.maxPilotOrUpgradeReached(pilot, this.state.squad, xwingData.upgrades)) {
             this.addCheapestAvailablePilotForShip(pilot.ship, pilot.selectedUpgrades);
         } else {
             this.addPilot(pilot, pilot.selectedUpgrades);
@@ -264,10 +263,10 @@ class SquadBuilderCpt extends React.Component {
     }
 
     changeUpgrade = (upgradeSlot, newlySelectedUpgrade, pilot) => {
-        if(newlySelectedUpgrade && xwingUtils.maxPilotOrUpgradeReached(newlySelectedUpgrade, this.state.squad)){
+        if(newlySelectedUpgrade && xwingUtils.maxPilotOrUpgradeReached(newlySelectedUpgrade, this.state.squad, xwingData.upgrades)){
             alert("Already have max amount of " + newlySelectedUpgrade.name);
         } else {
-            xwingUtils.upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, this.state.squad);
+            xwingUtils.upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, this.state.squad, xwingData.upgrades);
         }
         this.removeInvalidUpgradesAndSetState(this.state.squad);
     }
@@ -308,7 +307,7 @@ class SquadBuilderCpt extends React.Component {
                         <i className="far fa-edit" style={{marginLeft: "5px", fontSize: "1.2rem"}} onClick={this.editSquadClicked}></i>
                     </div>
                     <div className="points-display-container">
-                        <span>Points: { xwingUtils.getSquadCost(this.state.squad) }/200 ({200-xwingUtils.getSquadCost(this.state.squad)} left)</span>
+                        <span>Points: { xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades) }/200 ({200-xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades)} left)</span>
                     </div>
                     <div className='printBtn'>
                         <button className="btn-info" style={{margin:"5px"}} onClick={this.showPrintModal}>Print</button>
@@ -331,7 +330,7 @@ class SquadBuilderCpt extends React.Component {
                                 selectedPilot={squadPilot}
                                 availablePilots={xwingData.pilots
                                     .filter(availPilot => availPilot.ship===squadPilot.ship && availPilot.faction === this.props.faction
-                                            && (!xwingUtils.maxPilotOrUpgradeReached(availPilot, this.state.squad)
+                                            && (!xwingUtils.maxPilotOrUpgradeReached(availPilot, this.state.squad, xwingData.upgrades)
                                                 || availPilot.id == squadPilot.id))
                                     .sort((first, second) => (first.points - second.points))}
                                 changePilot= {this.changePilot} 
