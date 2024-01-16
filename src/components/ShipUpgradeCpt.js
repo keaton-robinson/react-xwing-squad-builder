@@ -31,7 +31,7 @@ class ShipUpgradeCpt extends React.Component {
         }
 
         return xwingData.upgrades.filter(upgrade => matchingSlots.includes(upgrade.slot)  // upgrade.slot === this.props.upgradeSlot.slot 
-            && (!xwingUtils.maxPilotOrUpgradeReached(upgrade, this.props.squad) || this.props.upgradeSlot.selectedUpgradeId == upgrade.id)
+            && (!xwingUtils.maxPilotOrUpgradeReached(upgrade, this.props.squad, xwingData.upgrades) || this.props.upgradeSlot.selectedUpgradeId == upgrade.id)
             && xwingUtils.isUpgradeAllowed(this.props.upgradeSlot, upgrade, this.props.pilot, this.props.squad)
             && !this.upgradeAlreadySelectedOnADifferentSlot(upgrade))
     }
