@@ -429,7 +429,7 @@ function addUpgrades(newPilot, upgradesToAdd, squad, upgradesData){
             const upgradeData = upgradesData.find(upgrade => upgrade.id === upgradeToAdd.selectedUpgradeId);
 
             if(newPilotUpgradeSlot && !maxPilotOrUpgradeReached(upgradeData, squad, upgradesData)){
-                setUpgrade(newPilotUpgradeSlot, upgradeData, newPilot)                
+                setUpgrade(newPilotUpgradeSlot, upgradeData, newPilot, upgradesData)                
             }
         }
     });  
@@ -602,14 +602,14 @@ function upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, squad, upgra
     if(newlySelectedUpgrade && newlySelectedUpgrade.standardized){ 
         for(const squadPilot of shipsOfSameType){
             const squadPilotUpgradeSlot = squadPilot.selectedUpgrades.find(slot => slot.key == upgradeSlot.key);
-            setUpgrade(squadPilotUpgradeSlot, newlySelectedUpgrade, squadPilot);
+            setUpgrade(squadPilotUpgradeSlot, newlySelectedUpgrade, squadPilot, upgradesData);
         }
     } else {
-        setUpgrade(upgradeSlot, newlySelectedUpgrade, pilot);
+        setUpgrade(upgradeSlot, newlySelectedUpgrade, pilot, upgradesData);
     }
 }
 
-function setUpgrade(upgradeSlot, newlySelectedUpgrade, pilot){
+function setUpgrade(upgradeSlot, newlySelectedUpgrade, pilot, upgradesData){
     if(!upgradeSlot || !pilot) {
         const error = new Error();
         throw {
