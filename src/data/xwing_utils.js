@@ -226,14 +226,14 @@ function isUpgradeAllowed(selectedUpgradeSlot, upgrade, pilot, squad, upgradesDa
     }
     if(upgrade.restrictions) {
         const restrictionsCopy = [...upgrade.restrictions];
-        if(!isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictionsCopy, upgrade, effectivePilot, squad)){
+        if(!isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictionsCopy, upgrade, effectivePilot, squad, upgradesData)){
             return false;
         }
     }
     return true;
 }
 
-function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgrade, pilot, squad){
+function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgrade, pilot, squad, upgradesData){
 
     if(!selectedUpgradeSlot || !restrictions || !upgrade || !pilot || !squad){
         throw {
@@ -307,7 +307,7 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
                 break;
             case 'orUnique': {
                 //if there's "uniqueName" pilot or upgrade in the squad, they are in.
-                let uniqueFound = isUniqueInSquad(restriction[1], squad, xwingData.upgrades);
+                let uniqueFound = isUniqueInSquad(restriction[1], squad, upgradesData);
 
                 //the "Or" part is handled here...
                 if(restrictions.length < 1) {
@@ -321,7 +321,7 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
                 }
                 const nextRestriction = restrictions.shift();
                 //evaluate next restriction by itself by putting it in its own array
-                if(!(uniqueFound || isUpgradeAllowedByRestrictions(selectedUpgradeSlot,[nextRestriction], upgrade, pilot, squad))) {
+                if(!(uniqueFound || isUpgradeAllowedByRestrictions(selectedUpgradeSlot,[nextRestriction], upgrade, pilot, squad, upgradesData))) {
                     return false;
                 }
                 break;
@@ -407,7 +407,7 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
                 break;
         }
 
-        return isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgrade, pilot, squad);
+        return isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgrade, pilot, squad, upgradesData);
     }
     return true;
 }
