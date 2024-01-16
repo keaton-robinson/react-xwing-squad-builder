@@ -46,7 +46,7 @@ class PrintSquadModal extends React.Component {
                             { selectedPilot.selectedUpgrades.map(upgrade => this.renderUpgrade(upgrade, selectedPilot)) }
                             <tr></tr>
                             <tr>
-                                <td><strong>{`Half Points: ${Math.ceil(this.getTotalCost(selectedPilot)/2)}   Threshold: ${Math.ceil((xwingUtils.getPilotEffectiveStats(selectedPilot).pilotShip.hull + xwingUtils.getPilotEffectiveStats(selectedPilot).pilotShip.shields)/2)}`}</strong></td>
+                                <td><strong>{`Half Points: ${Math.ceil(this.getTotalCost(selectedPilot)/2)}   Threshold: ${Math.ceil((xwingUtils.getPilotEffectiveStats(selectedPilot, xwingData.upgrades).pilotShip.hull + xwingUtils.getPilotEffectiveStats(selectedPilot, xwingData.upgrades).pilotShip.shields)/2)}`}</strong></td>
                                 <td style={{textAlign:'right'}}><strong>{`Ship Total: ${this.getTotalCost(selectedPilot)}`}</strong></td>
                             </tr>
                         </tbody>

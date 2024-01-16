@@ -150,3 +150,40 @@ describe('getSquadCost', () => {
         expect(cost).toBe(expectedCost);
     });
 });
+
+describe('getPilotEffectiveStats', () => {
+    const stubUpgradesData = [
+        { id: 1, modifier_func: (pilotShip) => { pilotShip.statToChange = 'modified'; } }, // upgrade with modifier function
+        { id: 2 }, // no modifier function in this upgrade        
+    ];
+
+    it('throws an error if no pilot is provided', () => {
+        expect(() => xwing_utils.getPilotEffectiveStats(null, stubUpgradesData)).toThrow('pilot required for getPilotEffectiveStats');
+    });
+
+    it('throws an error if upgrade data is missing for an upgrade ID', () => {
+        const pilotWithInvalidUpgrade = {
+            selectedUpgrades: [{ selectedUpgradeId: 99 }]
+        };
+        expect(() => xwing_utils.getPilotEffectiveStats(pilotWithInvalidUpgrade, stubUpgradesData))
+            .toThrow('Failed to find upgrade record for upgrade record id: 99');
+    });
+
+    it('with upgrade that modifies pilot ship, applies modifications to pilot ship', () => {
+        const pilot = { selectedUpgrades: [{ selectedUpgradeId: 1 }], pilotShip: { statToChange: "initial value" } };
+        const expectedModifiedStat = 'modified';
+
+        const result = xwing_utils.getPilotEffectiveStats(pilot, stubUpgradesData);
+        
+        expect(result.pilotShip.statToChange).toBe(expectedModifiedStat);
+
+    });
+
+    it('with upgrade that does not modify pilot ship, does not make modifications to pilot ship', () => {
+        const pilot = { selectedUpgrades: [{ selectedUpgradeId: 2 }], pilotShip: { statToChange: "initial value" } }
+
+        const result = xwing_utils.getPilotEffectiveStats(pilot, stubUpgradesData);
+        
+        expect(JSON.stringify(pilot)).toBe(JSON.stringify(result));
+    });
+});

@@ -74,7 +74,7 @@ function getSquadCost(squad, upgradesData) {
     }, 0);
 }
 
-function getPilotEffectiveStats(pilot) {
+function getPilotEffectiveStats(pilot, upgradesData) {
     
     if(!pilot){
         throw {
@@ -85,11 +85,10 @@ function getPilotEffectiveStats(pilot) {
     
     const pilotCopy = JSON.parse(JSON.stringify(pilot));
     
-
     for(const selectedUpgrade of pilotCopy.selectedUpgrades){
         //gotta get the upgrade data
         if(isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)){
-            const upgradeData = xwingData.upgrades.find(upgrade => upgrade.id == selectedUpgrade.selectedUpgradeId)
+            const upgradeData = upgradesData.find(upgrade => upgrade.id == selectedUpgrade.selectedUpgradeId)
             if(!upgradeData){
                 throw {
                     message: "Failed to find upgrade record for upgrade record id: " + selectedUpgrade.selectedUpgradeId,
@@ -199,7 +198,7 @@ function isUpgradeAllowed(selectedUpgradeSlot, upgrade, pilot, squad){
         };
     }
 
-    const effectivePilot = getPilotEffectiveStats(pilot);
+    const effectivePilot = getPilotEffectiveStats(pilot, xwingData.upgrades);
 
     if(upgrade.faction) {
         if(Array.isArray(upgrade.faction)){
