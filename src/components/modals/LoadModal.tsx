@@ -55,6 +55,7 @@ export default function LoadModal(props) {
             if(deleteConfirmed){
                 //delete the squad
                 // eslint-disable-next-line no-undef
+                // @ts-ignore (environment variable)
                 fetch(XWING_API_ENDPOINT + `/squads/${selectedSquad._id}`, {
                     method: "DELETE", signal, headers: { Authorization: userContextBundle.user.token }
                 })
