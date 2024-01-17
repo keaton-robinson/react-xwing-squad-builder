@@ -1,13 +1,13 @@
 import React from 'react';
-import InfoPanelCpt from './InfoPanelCpt.js';
-import PilotRowCpt from './PilotRowCpt.js';
-import AddShipCpt from './AddShipCpt.js';
-import PrintSquadModal from './modals/PrintSquadModal.js';
-import NewSquadConfirmModal from './modals/NewSquadConfirmModal.js';
-import SaveAsModal from './modals/SaveAsModal.js';
-import LoadModal from './modals/LoadModal.js';
-import * as xwingData from '../data/xwing_data.js';
-import * as xwingUtils from '../data/xwing_utils.js';
+import InfoPanelCpt from './InfoPanelCpt';
+import PilotRowCpt from './PilotRowCpt';
+import AddShipCpt from './AddShipCpt';
+import PrintSquadModal from './modals/PrintSquadModal';
+import NewSquadConfirmModal from './modals/NewSquadConfirmModal';
+import SaveAsModal from './modals/SaveAsModal';
+import LoadModal from './modals/LoadModal';
+import * as xwingData from '../data/xwing_data';
+import * as xwingUtils from '../data/xwing_utils';
 import { UserContext } from './UserContext.js'; 
 
 const saveStatusMessages = {

@@ -1,7 +1,7 @@
 import React from 'react';
-import * as xwingData from '../data/xwing_data.js';
-import * as xwingUtils from '../data/xwing_utils.js';
-import ActionsCpt from './ActionsCpt.js';
+import * as xwingData from '../data/xwing_data';
+import * as xwingUtils from '../data/xwing_utils';
+import ActionsCpt from './ActionsCpt';
 import StatBlockCpt from './StatBlockCpt.js';
 
 export default class InfoPanelUpgradeCpt extends React.Component {

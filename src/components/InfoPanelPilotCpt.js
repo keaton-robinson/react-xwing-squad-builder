@@ -1,10 +1,10 @@
 import React from 'react';
-import * as xwingData from '../data/xwing_data.js';
-import * as xwingUtils from '../data/xwing_utils.js';
-import ActionsCpt from './ActionsCpt.js';
-import ManeuversCpt from './ManeuversCpt.js';
-import StatBlockCpt from './StatBlockCpt.js';
-import UpgradesCpt from './UpgradesCpt.js';
+import * as xwingData from '../data/xwing_data';
+import * as xwingUtils from '../data/xwing_utils';
+import ActionsCpt from './ActionsCpt';
+import ManeuversCpt from './ManeuversCpt';
+import StatBlockCpt from './StatBlockCpt';
+import UpgradesCpt from './UpgradesCpt';
 
 export default class InfoPanelPilotCpt extends React.Component {
 

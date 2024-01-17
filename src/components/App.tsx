@@ -1,10 +1,10 @@
 import * as React from 'react';
-const HeaderComponent = require('./HeaderComponent.js');
-const SquadBuilderCpt = require('./SquadBuilderCpt.js');
-const ModalContainer = require('./modals/ModalContainer.js');
+const HeaderComponent = require('./HeaderComponent');
+const SquadBuilderCpt = require('./SquadBuilderCpt');
+const ModalContainer = require('./modals/ModalContainer');
 const ms = require('ms');
-import * as xwingData from '../data/xwing_data.js';
-const { UserContext } = require('./UserContext.js');
+import * as xwingData from '../data/xwing_data';
+const { UserContext } = require('./UserContext');
 
 const factionsOrdered = [
   xwingData.factionNames["Rebel Alliance"],

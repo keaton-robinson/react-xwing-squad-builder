@@ -1,8 +1,8 @@
 import React from 'react';
 import { Dropdown } from '@keatonr06/reactjs-dropdown-component';
-import { DropDownStyles } from '../styleData/styleData.js';
-import * as xwingData from '../data/xwing_data.js'
-import * as xwingUtils from '../data/xwing_utils.js';
+import { DropDownStyles } from '../styleData/styleData';
+import * as xwingData from '../data/xwing_data'
+import * as xwingUtils from '../data/xwing_utils';
 
 export default class AddShipCpt extends React.Component {
     constructor(props) {
