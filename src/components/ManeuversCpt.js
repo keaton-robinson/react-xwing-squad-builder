@@ -1,6 +1,6 @@
 import React from 'react';
-import ManeuverCpt from './ManeuverCpt.js';
-import * as xwingData from '../data/xwing_data.js';
+import ManeuverCpt from './ManeuverCpt';
+import * as xwingData from '../data/xwing_data';
 
 export default class ManeuversCpt extends React.Component {
 

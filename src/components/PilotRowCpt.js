@@ -1,9 +1,9 @@
 import React from 'react';
-import * as xwingData from '../data/xwing_data.js';
-import * as xwingUtils from '../data/xwing_utils.js';
-import ShipUpgradeCpt from './ShipUpgradeCpt.js';
+import * as xwingData from '../data/xwing_data';
+import * as xwingUtils from '../data/xwing_utils';
+import ShipUpgradeCpt from './ShipUpgradeCpt';
 import { Dropdown } from '@keatonr06/reactjs-dropdown-component';
-import { DropDownStyles } from '../styleData/styleData.js';
+import { DropDownStyles } from '../styleData/styleData';
 
 export default class PilotRowCpt extends React.Component {
 

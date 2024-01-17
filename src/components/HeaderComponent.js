@@ -1,7 +1,7 @@
 import React from 'react';
-import FactionCpt from './FactionCpt.js';
-import LoginModal from './modals/LoginModal.js';
-import RegisterModal from './modals/RegisterModal.js';
+import FactionCpt from './FactionCpt';
+import LoginModal from './modals/LoginModal';
+import RegisterModal from './modals/RegisterModal';
 import { UserContext } from './UserContext.js'
 
 export default function HeaderComponent(props)  {

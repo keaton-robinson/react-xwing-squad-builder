@@ -1,9 +1,9 @@
 import React from 'react';
-import * as xwingUtils from '../data/xwing_utils.js'
-import * as xwingData from '../data/xwing_data.js';
-import ActionsCpt from './ActionsCpt.js';
-import ManeuversCpt from './ManeuversCpt.js';
-import UpgradesCpt from './UpgradesCpt.js';
+import * as xwingUtils from '../data/xwing_utils'
+import * as xwingData from '../data/xwing_data';
+import ActionsCpt from './ActionsCpt';
+import ManeuversCpt from './ManeuversCpt';
+import UpgradesCpt from './UpgradesCpt';
 import StatBlockCpt from './StatBlockCpt.js';
 
 export default class InfoPanelShipCpt extends React.Component {

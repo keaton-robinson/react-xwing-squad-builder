@@ -1,5 +1,5 @@
 import React from 'react';
-import { factionNames } from '../data/xwing_data.js';
+import { factionNames } from '../data/xwing_data';
 
 export default class FactionCpt extends React.Component {
 
