@@ -1,9 +1,9 @@
-const React = require('react');
+import * as React from 'react';
 const HeaderComponent = require('./HeaderComponent.js');
 const SquadBuilderCpt = require('./SquadBuilderCpt.js');
 const ModalContainer = require('./modals/ModalContainer.js');
 const ms = require('ms');
-const xwingData = require('../data/xwing_data.js');
+import * as xwingData from '../data/xwing_data.js';
 const { UserContext } = require('./UserContext.js');
 
 
@@ -18,11 +18,18 @@ const factionsOrdered = [
   //,"MultiFaction"
 ];
 
-class App extends React.Component  {
-  constructor(props){
+
+interface AppState {
+  selectedFaction: keyof typeof xwingData.factionNames;
+  modalToShow: React.ReactElement;
+  user: any;
+}
+
+class App extends React.Component<{}, AppState>  {
+  constructor(props: {}){
     super(props);
     this.state = { 
-      selectedFaction: xwingData.factionNames['Rebel Alliance'], 
+      selectedFaction: xwingData.factionNames['Rebel Alliance'] as keyof typeof xwingData.factionNames, 
       modalToShow: null,
       user: null 
     };
@@ -42,7 +49,7 @@ class App extends React.Component  {
     }
   }
 
-  setModal = ( modalConfig ) => {
+  setModal = ( modalConfig: any ) => {
     const modalToShow = modalConfig ? <ModalContainer handleClose={() => this.setModal(null)} headerTitle={modalConfig.title}>
         {modalConfig.children}
       </ModalContainer> : null;
@@ -52,14 +59,14 @@ class App extends React.Component  {
     }
   }
 
-  setSelectedFaction = (faction) => {
+  setSelectedFaction = (faction: keyof typeof xwingData.factionNames) => {
     this.setState( {selectedFaction: faction} );
   }
 
   render() {
     const userContextBundle = {
       user: this.state.user,
-      login: (userObj) => {
+      login: (userObj: any) => {
         userObj.loginTime = Date.now();
         this.setState({user: userObj});
         localStorage.setItem("user", JSON.stringify(userObj));
