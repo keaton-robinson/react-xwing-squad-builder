@@ -1,6 +1,6 @@
-const React = require('react');
+import React from 'react';
 
-class SaveAsModal extends React.Component {
+export default class SaveAsModal extends React.Component {
     
     constructor(props) {
         super(props);
@@ -31,5 +31,3 @@ class SaveAsModal extends React.Component {
         );
     }
 }
-
-module.exports = SaveAsModal;
