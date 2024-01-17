@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {	
-	entry: './src/reactEntryPoint.jsx',
+	entry: './src/reactEntryPoint.tsx',
 	output : {
 		path: path.resolve(__dirname, 'dist'),
 		filename: 'main.js'  //this is the default value, but setting it explicitly as a reminder
