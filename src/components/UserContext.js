@@ -1,6 +1,4 @@
-const React = require('react');
+import React from 'react';
 
-const UserContext = React.createContext(null);
+export const UserContext = React.createContext(null);
 UserContext.displayName = "UserContext";
-
-module.exports.UserContext = UserContext;

@@ -1,10 +1,10 @@
-const React = require('react');
-const InfoPanelShipCpt = require('./InfoPanelShipCpt.js');
-const InfoPanelUpgradeCpt = require('./InfoPanelUpgradeCpt.js');
-const InfoPanelPilotCpt = require('./InfoPanelPilotCpt.js');
-const xwingUtils = require('../data/xwing_utils.js');
+import React from 'react';
+import InfoPanelShipCpt from './InfoPanelShipCpt.js';
+import InfoPanelUpgradeCpt from './InfoPanelUpgradeCpt.js';
+import InfoPanelPilotCpt from './InfoPanelPilotCpt.js';
+import * as xwingUtils from '../data/xwing_utils.js';
 
-class InfoPanelCpt extends React.Component {
+export default class InfoPanelCpt extends React.Component {
     
     constructor(props) {
         super(props);
@@ -38,4 +38,3 @@ class InfoPanelCpt extends React.Component {
     }
 }
 
-module.exports = InfoPanelCpt;

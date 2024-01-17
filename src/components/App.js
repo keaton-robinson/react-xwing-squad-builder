@@ -1,11 +1,10 @@
-const React = require('react');
-const HeaderComponent = require('./HeaderComponent.js');
-const SquadBuilderCpt = require('./SquadBuilderCpt.js');
-const ModalContainer = require('./modals/ModalContainer.js');
-const ms = require('ms');
-const xwingData = require('../data/xwing_data.js');
-const { UserContext } = require('./UserContext.js');
-
+import React from 'react';
+import HeaderComponent from './HeaderComponent.js';
+import SquadBuilderCpt from './SquadBuilderCpt.js';
+import ModalContainer from './modals/ModalContainer.js';
+import ms from 'ms';
+import * as xwingData from '../data/xwing_data.js';
+import { UserContext } from './UserContext.js';
 
 const factionsOrdered = [
   xwingData.factionNames["Rebel Alliance"],
@@ -18,7 +17,7 @@ const factionsOrdered = [
   //,"MultiFaction"
 ];
 
-class App extends React.Component  {
+export default class App extends React.Component  {
   constructor(props){
     super(props);
     this.state = { 
@@ -93,4 +92,4 @@ class App extends React.Component  {
   }
 }
 
-module.exports = App;
+
