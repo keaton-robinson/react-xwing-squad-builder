@@ -32,6 +32,7 @@ export default function RegisterModal(props) {
       })}
       onSubmit={(values, { setSubmitting }) => { 
         // eslint-disable-next-line no-undef
+        // @ts-ignore  (environment variable)
         fetch(XWING_API_ENDPOINT + '/users/register', {
           method: "POST",
           headers: {

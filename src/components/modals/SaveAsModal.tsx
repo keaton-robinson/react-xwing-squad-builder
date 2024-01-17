@@ -1,6 +1,15 @@
 import React from 'react';
 
-export default class SaveAsModal extends React.Component {
+
+interface SaveAsModalProps {
+    squadName: string
+    saveSquad: (string) => any;
+}
+
+interface SaveAsModalState {
+    squadName: string
+}
+export default class SaveAsModal extends React.Component<SaveAsModalProps, SaveAsModalState> {
     
     constructor(props) {
         super(props);

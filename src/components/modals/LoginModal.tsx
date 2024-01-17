@@ -32,6 +32,7 @@ export default function LoginModal(props) {
                     })}
                     onSubmit={(values, { setSubmitting }) => {
                         // eslint-disable-next-line no-undef
+                        // @ts-ignore (environment variable)
                         fetch(XWING_API_ENDPOINT + '/users/login', {
                             method: "POST",
                             headers: {

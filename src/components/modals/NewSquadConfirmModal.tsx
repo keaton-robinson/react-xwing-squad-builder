@@ -1,6 +1,11 @@
 import React from 'react';
 
-export default class NewSquadConfirmModal extends React.Component {
+interface NewSquadConfirmModalProps {
+    cancel: () => any;
+    createNewSquad: () => any;
+}
+
+export default class NewSquadConfirmModal extends React.Component<NewSquadConfirmModalProps> {
     
     constructor(props) {
         super(props);

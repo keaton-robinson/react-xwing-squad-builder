@@ -191,7 +191,7 @@ function isUpgradeAllowed(selectedUpgradeSlot, upgrade, pilot, squad, upgradesDa
             message: "selectedUpgradeSlot, upgrade, pilot, and squad arguments are required for isUpgradeAllowed function",
             selectedUpgradeSlotVal: selectedUpgradeSlot,
             upgradeVal: upgrade,
-            pilotVal: effectivePilot,
+            pilotVal: pilot,
             squadVal: squad
         };
     }
