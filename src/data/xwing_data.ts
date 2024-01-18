@@ -1543,11 +1543,13 @@ const ships = createShips({
     }
 });
 
+type ShipName = keyof typeof ships;
+
 interface Pilot {
     name: string;
     id: number;
     faction: Faction;
-    ship: string;
+    ship: ShipName;
     keyword?: string[];
     skill: number | string;
     points: number;
@@ -7861,7 +7863,7 @@ interface Upgrade {
     attackt?: number;
     attackdt?: number;
     range?: any;
-    ship?: keyof typeof ships | (keyof typeof ships)[];
+    ship?: ShipName | ShipName[];
     validation_func?: Function;
     also_occupies_upgrades?: string[];
     rangebonus?: boolean;
@@ -13214,4 +13216,4 @@ const bearings = {
 // names like "Luke Skywalker" and "Darth Vader" have pilot and crew cards...
 
 export { factionNames, ships, pilots, pilotRules, slots, sloticon, upgrades, upgradeRules, difficulties, bearings,
-     Faction, Ship, Pilot, PilotRulesText, Upgrade, UpgradeRulesText, Slots };
+     Faction, Ship, ShipName, Pilot, PilotRulesText, Upgrade, UpgradeRulesText, Slots };
