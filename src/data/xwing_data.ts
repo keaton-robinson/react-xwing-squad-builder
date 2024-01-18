@@ -24,7 +24,7 @@ interface Ship {
     name: string;
     canonical_name?: string,
     xws: string;
-    factions: string[];
+    factions: Faction[];
     attack?: number;
     attackf?: number;
     attackb?: number;
@@ -49,7 +49,11 @@ interface Ship {
     energyrecurr?: number;
 }
 
-const ships: Record<string, Ship> = {
+function createShips<ShipsObjLiteral extends Record<string, Ship>>(shipsObjLiteral: ShipsObjLiteral): ShipsObjLiteral {
+    return shipsObjLiteral;
+}
+
+const ships = createShips({
     "X-Wing": {
         name: "X-Wing",
         xws: "T-65 X-wing",
@@ -1537,9 +1541,32 @@ const ships: Record<string, Ship> = {
             [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
     }
-}
+});
 
-const pilots = [{
+interface Pilot {
+    name: string;
+    id: number;
+    faction: Faction;
+    ship: string;
+    keyword?: string[];
+    skill: number | string;
+    points: number;
+    slots: string[];
+    unique?: boolean;
+    force?: number;
+    canonical_name?: string;
+    xws?: string;
+    applies_condition?: string | string[];
+    charge?: number;
+    recurring?: number;
+    restrictions?: string[][];
+    restriction_func?: (a: any) => any;
+    max_per_squad?: number;
+    ship_override?: { actions: string[] }
+    engagement?: number;
+};
+
+const pilots: Pilot[] = [{
     name: "Cavern Angels Zealot",
     id: 0,
     faction: "Rebel Alliance",
@@ -1643,10 +1670,6 @@ const pilots = [{
     keyword: ["Partisan"],
     slots: ["Illicit", "Talent", "Torpedo", "Astromech", "Modification", "Configuration"]
 }, {
-    name: "whoops",
-    id: 11,
-    skip: !0
-}, {
     name: "Kullbee Sperado",
     id: 12,
     unique: !0,
@@ -1722,10 +1745,6 @@ const pilots = [{
     skill: 3,
     points: 44,
     slots: ["Torpedo", "Missile", "Missile", "Gunner", "Crew", "Device", "Device", "Modification"]
-}, {
-    name: "empty",
-    id: 19,
-    skip: !0
 }, {
     name: "Warden Squadron Pilot",
     id: 20,
@@ -3693,9 +3712,6 @@ const pilots = [{
     recurring: 1,
     slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"]
 }, {
-    id: 232,
-    skip: !0
-}, {
     name: '"Midnight"',
     id: 233,
     unique: !0,
@@ -3703,16 +3719,6 @@ const pilots = [{
     ship: "TIE/FO Fighter",
     skill: 6,
     points: 42,
-    slots: ["Talent", "Tech", "Modification"]
-}, {
-    name: '"Longshot"',
-    id: 234,
-    skip: !0,
-    unique: !0,
-    faction: "First Order",
-    ship: "TIE/FO Fighter",
-    skill: 3,
-    points: 32,
     slots: ["Talent", "Tech", "Modification"]
 }, {
     name: '"Muse"',
@@ -3773,10 +3779,6 @@ const pilots = [{
     recurring: 1,
     points: 37,
     slots: ["Talent", "Talent", "Missile", "Tech"]
-}, {
-    name: "blanks",
-    id: 241,
-    skip: !0
 }, {
     name: '"Backdraft"',
     id: 242,
@@ -6057,7 +6059,12 @@ const pilots = [{
     slots: ["Command", "Torpedo", "Hardpoint", "Hardpoint", "Crew", "Crew", "Gunner", "Team", "Cargo", "Title"]
 }];
 
-const pilotRules = {
+interface PilotRulesText {
+    display_name?: string;
+    text: string;
+}
+
+const pilotRules: Record<string, PilotRulesText> = {
     "0-66": {
         display_name: "0-66",
         text: "After you defend, you may spend 1 calculate token to perform an action."
@@ -7828,7 +7835,47 @@ const pilotRules = {
     }
 }
 
-const upgrades = [{
+interface Upgrade {
+    name: string;
+    xws?: string;
+    id: number;
+    slot: keyof typeof slots;
+    canonical_name?: string;
+    points?: number;
+    pointsarray?: number[];
+    unique?: boolean;
+    faction?: Faction | Faction[];
+    variableagility?: boolean;
+    variablebase?: boolean;
+    variableinit?: boolean;
+    force?: number;
+    charge?: number;
+    restrictions?: [string, any][];
+    modifier_func?: (a: any) => any;
+    attack?: number;
+    attackf?: number;
+    attackb?: number;
+    attackl?: number;
+    attackr?: number;
+    attackbull?: number;
+    attackt?: number;
+    attackdt?: number;
+    range?: any;
+    ship?: keyof typeof ships | (keyof typeof ships)[];
+    validation_func?: Function;
+    also_occupies_upgrades?: string[];
+    rangebonus?: boolean;
+    standardized?: boolean;
+    recurring?: number;
+    applies_condition?: string | string[];
+    solitary?: boolean;
+    max_per_squad?: number;
+    confersAddons?: { type: string, slot: string}[];
+    unequips_upgrades?: string[];
+    keyword?: string[]
+};
+
+const upgrades: Upgrade[] = [{
     name: '"Chopper" (Astromech)',
     id: 0,
     slot: "Astromech",
@@ -8980,11 +9027,6 @@ const upgrades = [{
     slot: "Configuration",
     ship: "U-Wing"
 }, {
-    name: "Pivot Wing (Open)",
-    id: 141,
-    points: 0,
-    skip: !0
-}, {
     name: "Servomotor S-Foils",
     id: 142,
     points: 0,
@@ -8993,10 +9035,6 @@ const upgrades = [{
     modifier_func: function(a) {
         return a.actions.push("Boost"), a.actions.push("*Focus"), a.actions.push("R-> Boost")
     }
-}, {
-    name: "Blank",
-    id: 143,
-    skip: !0
 }, {
     name: "Xg-1 Assault Configuration",
     id: 144,
@@ -9007,13 +9045,6 @@ const upgrades = [{
         type: "Upgrade",
         slot: "Cannon"
     }]
-}, {
-    name: "L3-37's Programming",
-    id: 145,
-    skip: !0,
-    points: 0,
-    slot: "Configuration",
-    faction: "Scum and Villainy"
 }, {
     name: "Andrasta",
     id: 146,
@@ -9143,9 +9174,6 @@ const upgrades = [{
     faction: "Rebel Alliance",
     ship: "YT-2400"
 }, {
-    id: 158,
-    skip: !0
-}, {
     name: "Punishing One",
     id: 159,
     slot: "Title",
@@ -9236,15 +9264,6 @@ const upgrades = [{
     faction: "Rebel Alliance",
     ship: ["Attack Shuttle", "Sheathipede-Class Shuttle"]
 }, {
-    id: 168,
-    skip: !0
-}, {
-    id: 169,
-    skip: !0
-}, {
-    id: 170,
-    skip: !0
-}, {
     name: "Black One",
     id: 171,
     slot: "Title",
@@ -9286,10 +9305,6 @@ const upgrades = [{
     modifier_func: function(a) {
         return a.actions.push("Barrel Roll"), a.actions.push("*Focus"), a.actions.push("R-> Barrel Roll")
     }
-}, {
-    name: "Integrated S-Foils (Open)",
-    id: 176,
-    skip: !0
 }, {
     name: "Targeting Synchronizer",
     id: 177,
@@ -10292,9 +10307,6 @@ const upgrades = [{
     id: 283,
     slot: "Cargo",
     points: 8
-}, {
-    id: 284,
-    skip: !0
 }, {
     name: "Tibanna Reserves",
     id: 285,
@@ -11585,7 +11597,12 @@ const upgrades = [{
     ]
 }];
 
-const upgradeRules = {
+interface UpgradeRulesText {
+    display_name?: string;
+    text: string;
+}
+
+const upgradeRules: Record<string, UpgradeRulesText> = {
     "0-0-0": {
         display_name: "0-0-0",
         text: "At the start of the Engagement Phase, you may choose 1 enemy ship at range 0-1. If you do, you gain 1 calculate token unless that ship chooses to gain 1 stress token."
@@ -13107,7 +13124,11 @@ const upgradeRules = {
     }
 }
 
-const slots = {
+function createSlots<SlotsObjLiteral extends Record<string, { key: string, displayName: string}>>(slotsLiteral: SlotsObjLiteral): SlotsObjLiteral {
+    return slotsLiteral;
+}
+
+const slots = createSlots({
     Astromech: { key: "Astromech", displayName: "Astromech" }, 
     Force: { key: "Force", displayName: "Force" },
     Bomb: { key: "Bomb", displayName: "Bomb" } ,
@@ -13132,9 +13153,11 @@ const slots = {
     Hyperdrive: { key: "Hyperdrive", displayName: "Hyperdrive" },
     Team: { key: "Team", displayName: "Team" },
     Cargo: { key: "Cargo", displayName: "Cargo" }
-};
+});
 
-const sloticon = {
+type Slots = keyof typeof slots;
+
+const sloticon: Partial<Record<Slots, string>> = {
     Astromech: '<i class="xwing-miniatures-font xwing-miniatures-font-astromech"></i>',
     Force: '<i class="xwing-miniatures-font xwing-miniatures-font-forcepower"></i>',
     Bomb: '<i class="xwing-miniatures-font xwing-miniatures-font-bomb"></i>',
@@ -13190,4 +13213,5 @@ const bearings = {
 // but it may be worth spreading the various upgrade card types out
 // names like "Luke Skywalker" and "Darth Vader" have pilot and crew cards...
 
-export { factionNames, ships, pilots, pilotRules, slots, sloticon, upgrades, upgradeRules, difficulties, bearings, Faction, Ship };
+export { factionNames, ships, pilots, pilotRules, slots, sloticon, upgrades, upgradeRules, difficulties, bearings,
+     Faction, Ship, Pilot, PilotRulesText, Upgrade, UpgradeRulesText, Slots };
