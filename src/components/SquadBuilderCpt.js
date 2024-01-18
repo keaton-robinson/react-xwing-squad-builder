@@ -190,7 +190,7 @@ export default class SquadBuilderCpt extends React.Component {
             if(selectedShip.autoequip){
                 for(const autoEquipUpgrade of selectedShip.autoequip){
                     const configSelUpgradeSlot = appReadyNewPilot.selectedUpgrades.find(selUpgrade => selUpgrade.slot == xwingData.slots.Configuration.key);
-                    configSelUpgradeSlot.selectedUpgradeId = xwingData.upgrades.find(upgrade => upgrade.name == autoEquipUpgrade).id;
+                    configSelUpgradeSlot.selectedUpgradeId = xwingData.upgrades.find(upgrade => upgrade.name == autoEquipUpgrade).id; // TODO: directly mutated state?
                 }
             }
         }

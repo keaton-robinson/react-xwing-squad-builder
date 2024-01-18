@@ -444,31 +444,8 @@ function addUpgrades(newPilot: SelectedPilot, upgradesToAdd: SelectedUpgrade[], 
     });  
 }
 
-//sets all optional values to zero if they aren't already set
-const setInitialValuesForAppReadyPilot = (pilot: SelectedPilot): void => {
-    pilot.force = pilot.force || 0;
-    pilot.charge = pilot.charge || 0;
-    
-    const ship = pilot.pilotShip;
-    ship.attack = ship.attack || 0;
-    ship.attackf = ship.attackf || 0;
-    ship.attackb = ship.attackb || 0;
-    ship.attackl = ship.attackl || 0;
-    ship.attackr = ship.attackr || 0;
-    ship.attackt = ship.attackt || 0;
-    ship.attackdt = ship.attackdt || 0;
-    ship.attackbull = ship.attackbull || 0;
-    ship.shields = ship.shields || 0;
-    ship.force = ship.force || 0;
-    ship.charge = ship.charge || 0;
-}
-
 function getAppReadyPilot(pilot: Pilot, shipsData: Ship[]): SelectedPilot {
-    //makes a deep copy of the pilot so I don't have side effects on my "data repo"    
-    const pilotCopy = JSON.parse(JSON.stringify(pilot));
-    
-    //attach ship
-    
+    //makes deep copies so I don't have side effects on my "data repo"
     const shipForPilot = shipsData[pilot.ship]; 
     if(!shipForPilot)
     {
@@ -479,11 +456,25 @@ function getAppReadyPilot(pilot: Pilot, shipsData: Ship[]): SelectedPilot {
     }
     //make deep copy of ship to attach
     const shipCopy =  JSON.parse(JSON.stringify(shipForPilot));
+    const pilotCopy = JSON.parse(JSON.stringify(pilot));    
     pilotCopy.pilotShip = shipCopy;
 
     //set all of the non-set optional values to zero for ease of incrementing them or displaying zero later
     // (mostly for StatBlockCpt)
-    setInitialValuesForAppReadyPilot(pilotCopy);
+    pilot.force = pilot.force || 0;
+    pilot.charge = pilot.charge || 0;
+    
+    shipCopy.attack = shipCopy.attack || 0;
+    shipCopy.attackf = shipCopy.attackf || 0;
+    shipCopy.attackb = shipCopy.attackb || 0;
+    shipCopy.attackl = shipCopy.attackl || 0;
+    shipCopy.attackr = shipCopy.attackr || 0;
+    shipCopy.attackt = shipCopy.attackt || 0;
+    shipCopy.attackdt = shipCopy.attackdt || 0;
+    shipCopy.attackbull = shipCopy.attackbull || 0;
+    shipCopy.shields = shipCopy.shields || 0;
+    shipCopy.force = shipCopy.force || 0;
+    shipCopy.charge = shipCopy.charge || 0
     
     //add upgrades
     pilotCopy.selectedUpgrades = [];
@@ -502,6 +493,7 @@ function getAppReadyPilot(pilot: Pilot, shipsData: Ship[]): SelectedPilot {
     return pilotCopy;
 }
 
+// TODO: returns void so might be mutating state...
 function setSelectedUpgradeKeys(selectedUpgrades: SelectedUpgrade[]): void{
     let slotNameUsedTracker = {};
 
