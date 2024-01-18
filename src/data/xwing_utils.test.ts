@@ -1,4 +1,4 @@
-const xwing_utils = require('./xwing_utils.js');
+import * as xwing_utils from './xwing_utils';
 
 describe('isNotNullOrUndefined', () => {
     it.each([
@@ -35,13 +35,13 @@ describe('getUpgradeCost', () => {
     it('when no point cost or points array, throws exception', () => {
         const upgradeWithNoPointCostAtAll = { points: undefined, pointsarray: undefined };
 
-        expect(() => xwing_utils.getUpgradeCost(upgradeWithNoPointCostAtAll)).toThrow('Error calculating points on upgrade');
+        expect(() => xwing_utils.getUpgradeCost(upgradeWithNoPointCostAtAll, null)).toThrow('Error calculating points on upgrade');
     })
     it('when static point cost defined, returns static point cost', () => {
         const upgradeWithStaticPointCost = { points:  8 }
         const expectedReturnValue = 8;
 
-        expect(xwing_utils.getUpgradeCost(upgradeWithStaticPointCost)).toBe(expectedReturnValue);
+        expect(xwing_utils.getUpgradeCost(upgradeWithStaticPointCost, null)).toBe(expectedReturnValue);
     })
     describe('variable point cost based on pilot skill', () => {
         const upgradeWithVariableInitPoints = {
