@@ -1,29 +1,26 @@
+import { Faction, Ship, Pilot, PilotRulesText, Upgrade, UpgradeRulesText, Slots } from './xwing_data';
+
 //intended to be used for checking if an id is selected
 function isNotNullOrUndefined(value) {
     return value !== null && value !== undefined;
 }
 
 
-const shipBaseSizes = {
-    Small: "Small",
-    Medium: "Medium",
-    Large: "Large",
-    Huge: "Huge"
-}
+type ShipBaseSize = "Small" | "Medium" | "Large" | "Huge";
 
-const getShipBaseSize = (ship) => {
+const getShipBaseSize = (ship: Ship): ShipBaseSize => {
     if(ship.huge){
-        return shipBaseSizes.Huge;
+        return 'Huge';
     } else if(ship.large){
-        return shipBaseSizes.Large;
+        return 'Large';
     } else if(ship.medium){
-        return shipBaseSizes.Medium;
+        return 'Medium';
     } else {
-        return shipBaseSizes.Small;
+        return 'Small';
     }
 }
 
-function getUpgradeCost(upgrade, pilot){
+function getUpgradeCost(upgrade: Upgrade, pilot: SelectedPilot){
     if(isNotNullOrUndefined(upgrade.points)){
         return upgrade.points; 
     }
@@ -452,6 +449,17 @@ const setInitialValuesForAppReadyPilot = (pilot) => {
     ship.charge = ship.charge || 0;
 }
 
+interface SelectedUpgrade {
+    slot: string;
+    key: string;
+    selectedUpgradeId: number;
+}
+interface SelectedPilot extends Pilot {
+    pilotShip: Ship;
+    selectedUpgrades: SelectedUpgrade[];
+
+}
+
 function getAppReadyPilot(pilot, shipsData) {
     //makes a deep copy of the pilot so I don't have side effects on my "data repo"    
     const pilotCopy = JSON.parse(JSON.stringify(pilot));
@@ -805,4 +813,6 @@ const fixIcons = (text) => {
 
 export { isNotNullOrUndefined, getUpgradeCost, getPilotCost, getSquadCost, getPilotEffectiveStats, maxPilotOrUpgradeReached, isUpgradeAllowed, 
     addUpgrades, getAppReadyPilot, getCheapestAvailablePilotForShip, removeInvalidUpgrades, upgradeSquadShip, squadContainsAnotherSolitaryCardForThisSlot,
-    InfoPanelCardTypes, shipBaseSizes, getShipBaseSize, fixIcons, makeid }
+    InfoPanelCardTypes, getShipBaseSize, fixIcons, makeid,
+    ShipBaseSize, SelectedUpgrade, SelectedPilot
+}
