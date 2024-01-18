@@ -20,7 +20,7 @@ const getShipBaseSize = (ship: Ship): ShipBaseSize => {
     }
 }
 
-function getUpgradeCost(upgrade: Upgrade, pilot: SelectedPilot){
+function getUpgradeCost(upgrade: Upgrade, pilot: SelectedPilot): number {
     if(isNotNullOrUndefined(upgrade.points)){
         return upgrade.points; 
     }
@@ -49,7 +49,7 @@ function getUpgradeCost(upgrade: Upgrade, pilot: SelectedPilot){
     }
 }
 
-function getPilotCost(pilot, upgradesData) {
+function getPilotCost(pilot: SelectedPilot, upgradesData: Upgrade[]): number {
     return pilot.points +  pilot.selectedUpgrades.reduce((prevPointsSum, selectedUpgrade) => {
         if(isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)){  
             const upgrade = upgradesData.find(upgradeFromData=> upgradeFromData.id === selectedUpgrade.selectedUpgradeId)
@@ -63,13 +63,13 @@ function getPilotCost(pilot, upgradesData) {
 }
 
 
-function getSquadCost(squad, upgradesData) {
+function getSquadCost(squad: SelectedPilot[], upgradesData: Upgrade[]): number {
     return squad.reduce((prevPointsSum, pilot) => {
         return prevPointsSum + getPilotCost(pilot, upgradesData);
     }, 0);
 }
 
-function getPilotEffectiveStats(pilot, upgradesData) {
+function getPilotEffectiveStats(pilot: SelectedPilot, upgradesData: Upgrade[]): SelectedPilot {
     
     if(!pilot){
         throw {
@@ -811,8 +811,8 @@ const fixIcons = (text) => {
     } 
 }
 
-export { isNotNullOrUndefined, getUpgradeCost, getPilotCost, getSquadCost, getPilotEffectiveStats, maxPilotOrUpgradeReached, isUpgradeAllowed, 
+export { 
+    isNotNullOrUndefined, getUpgradeCost, getPilotCost, getSquadCost, getPilotEffectiveStats, maxPilotOrUpgradeReached, isUpgradeAllowed, 
     addUpgrades, getAppReadyPilot, getCheapestAvailablePilotForShip, removeInvalidUpgrades, upgradeSquadShip, squadContainsAnotherSolitaryCardForThisSlot,
-    InfoPanelCardTypes, getShipBaseSize, fixIcons, makeid,
-    ShipBaseSize, SelectedUpgrade, SelectedPilot
+    InfoPanelCardTypes, getShipBaseSize, fixIcons, makeid, ShipBaseSize, SelectedUpgrade, SelectedPilot
 }
