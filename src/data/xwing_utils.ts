@@ -488,37 +488,31 @@ function getAppReadyPilot(pilot: Pilot, shipsData: Ship[]): SelectedPilot {
     });
 
     //sets UI keys for upgrades...doesn't actually 'select' any upgrades
-    setSelectedUpgradeKeys(pilotCopy.selectedUpgrades);
+    pilotCopy.selectedUpgrades = getSelectedUpgradesWithKeys(pilotCopy.selectedUpgrades);
     
     return pilotCopy;
 }
 
-// TODO: returns void so might be mutating state...
-function setSelectedUpgradeKeys(selectedUpgrades: SelectedUpgrade[]): void{
+function getSelectedUpgradesWithKeys(selectedUpgrades: SelectedUpgrade[]): SelectedUpgrade[] {
     let slotNameUsedTracker = {};
+    let newSelectedUpgrades = selectedUpgrades.map(selectedUpgrade => {
+        // Create a deep copy of the selectedUpgrade to avoid mutating the original object
+        let newSelectedUpgrade = {...selectedUpgrade};
 
-    for(const selectedUpgrade of selectedUpgrades){
-        if(!slotNameUsedTracker[selectedUpgrade.slot]){
-            slotNameUsedTracker[selectedUpgrade.slot] = 1;
+        // Increment or initialize the count for the slot
+        if (!slotNameUsedTracker[newSelectedUpgrade.slot]) {
+            slotNameUsedTracker[newSelectedUpgrade.slot] = 1;
         } else {
-            slotNameUsedTracker[selectedUpgrade.slot]++;
+            slotNameUsedTracker[newSelectedUpgrade.slot]++;
         }
 
-        const keyToSet =  selectedUpgrade.slot + slotNameUsedTracker[selectedUpgrade.slot];
-        if(!selectedUpgrade.key){
-            selectedUpgrade.key = keyToSet; 
-        } else {
-            if(selectedUpgrade.key != keyToSet) {
-                const error = new Error();
-                throw {
-                    message: "A selectedUpgrade had a different key than expected. This will probably lead to many errors. Investigate this.",
-                    error: error,
-                    selectedUpgradesVal: selectedUpgrades,
-                    slotNameUsedTrackerVal: slotNameUsedTracker
-                };
-            }
-        }
-    }
+        // Set the key on the new object
+        newSelectedUpgrade.key = newSelectedUpgrade.slot + slotNameUsedTracker[newSelectedUpgrade.slot];
+
+        return newSelectedUpgrade;
+    });
+
+    return newSelectedUpgrades;
 }
 
 //returns cheapest pilot in-faction that hasn't been selected max-times or selected elsewhere with uniqueness
@@ -692,7 +686,7 @@ function setUpgrade(upgradeSlot: SelectedUpgrade, newlySelectedUpgrade: Upgrade,
                     selectedUpgradeId: null
                 });
             }
-            setSelectedUpgradeKeys(pilot.selectedUpgrades);
+            pilot.selectedUpgrades = getSelectedUpgradesWithKeys(pilot.selectedUpgrades);
         }
     }
 }
