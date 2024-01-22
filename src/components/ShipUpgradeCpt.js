@@ -6,8 +6,10 @@ import { DropDownStyles } from '../styleData/styleData';
 
 export default class ShipUpgradeCpt extends React.Component {
 
+
     constructor(props) {
         super(props);
+        this.ddlSelectedUpgradeRef = React.createRef();
     }
 
     upgradeAlreadySelectedOnADifferentSlot = (upgrade) =>{
@@ -51,6 +53,15 @@ export default class ShipUpgradeCpt extends React.Component {
         }
     }
 
+    componentDidUpdate = (prevProps) => {
+        // TODO: fix the custom drop downs so I don't have to directly modify a child component like this
+        //the custom dropdowns don't automatically update their selected item or "title" on re-renders, sadly
+        let current = this.ddlSelectedUpgradeRef.current;
+        if(current.state.selectedItem && current.state.selectedItem.value != this.props.upgradeSlot.selectedUpgradeId){
+            current.selectSingleItem({value: this.props.upgradeSlot.selectedUpgradeId});
+        }
+    }
+
     render() {
         const squadContainsAnotherSolitaryCardForThisSlot = xwingUtils.squadContainsAnotherSolitaryCardForThisSlot(this.props.upgradeSlot,this.props.squad, xwingData.upgrades);
         const availableUpgrades = this.getAvailableUpgrades(squadContainsAnotherSolitaryCardForThisSlot)
@@ -61,6 +72,7 @@ export default class ShipUpgradeCpt extends React.Component {
             <Dropdown 
                 name="selectUpgrade"
                 titleSingular="Upgrade"
+                ref={this.ddlSelectedUpgradeRef}
                 title={upgradesForCustomDropdown[0].label}
                 list={upgradesForCustomDropdown}
                 onChange={this.handleUpgradeSelection}
