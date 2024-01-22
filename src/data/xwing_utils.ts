@@ -538,9 +538,7 @@ function getCheapestAvailablePilotForShip(ship: ShipName, faction: Faction, squa
     return cheapestPilotForShip;
 }
 
-// TODO: I don't think this works properly...investigate and verify / fix
-// Maul didn't get removed from a squad after removing Ezra
-// ...wait...does it return a new array? It doesnt?! Am I just being a derp and mutating state directly rather than generating new state?
+// TODO: mutating state in place. Fix
 function removeInvalidUpgrades(squad: SelectedPilot[], upgradesData: Upgrade[]): SelectedPilot[] {
     let needToSearchForInvalidUpgrades = true;
 
@@ -561,7 +559,7 @@ function removeInvalidUpgrades(squad: SelectedPilot[], upgradesData: Upgrade[]):
     return squad;
 }
 
-// TODO: check if this mutates state in place...
+// TODO: mutating state in place: fix
 function removeUpgrade(selectedUpgradeSlot: SelectedUpgrade, pilot: SelectedPilot, upgradesData: Upgrade[]) {
     if(isNotNullOrUndefined(selectedUpgradeSlot.selectedUpgradeId)){
         const upgradeRecord = upgradesData.find(upgrade => upgrade.id == selectedUpgradeSlot.selectedUpgradeId);
@@ -586,7 +584,7 @@ function removeUpgrade(selectedUpgradeSlot: SelectedUpgrade, pilot: SelectedPilo
     }
 }
 
-// TODO: mutating state in place? Maybe?
+// TODO: mutating state in place. Fix.
 function upgradeSquadShip(upgradeSlot: SelectedUpgrade, newlySelectedUpgrade: Upgrade, pilot: SelectedPilot, squad: SelectedPilot[], upgradesData: Upgrade[]): void{
     const prevUpgradeRecord = upgradesData.find(upgrade => upgrade.id == upgradeSlot.selectedUpgradeId);
     const shipType = pilot.pilotShip.name;
@@ -609,7 +607,7 @@ function upgradeSquadShip(upgradeSlot: SelectedUpgrade, newlySelectedUpgrade: Up
     }
 }
 
-// TODO: mutating state in place...maybe?
+// TODO: mutating state in place. Fix
 function setUpgrade(upgradeSlot: SelectedUpgrade, newlySelectedUpgrade: Upgrade, pilot: SelectedPilot, upgradesData: Upgrade[]): void {
     if(!upgradeSlot || !pilot) {
         const error = new Error();
