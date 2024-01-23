@@ -1,4 +1,5 @@
-const xwing_utils = require('./xwing_utils.js');
+import { Faction, Ship, Pilot, PilotRulesText, Upgrade, UpgradeRulesText, Slots } from './xwing_data';
+import { isNotNullOrUndefined, ShipBaseSize, getShipBaseSize, getUpgradeCost, SelectedPilot, getPilotCost, getSquadCost, getPilotEffectiveStats } from './xwing_utils';
 
 describe('isNotNullOrUndefined', () => {
     it.each([
@@ -9,62 +10,63 @@ describe('isNotNullOrUndefined', () => {
         ["", true],
         [false, true]
     ])("when input is `%s`, expect `%s`", (input, expected) => {
-        expect(xwing_utils.isNotNullOrUndefined(input)).toBe(expected);
+        expect(isNotNullOrUndefined(input)).toBe(expected);
     })
 })
 
 describe('getShipBaseSize', () => {
-    const hugeShip = { huge: !0, large: 0, medium: 0 }
-    const largeShip = { huge: 0, large: !0, medium: 0 }
-    const mediumShip = { huge: 0, large: 0, medium: !0 }
-    const smallShip = { huge: 0, large: 0, medium: 0 };
-    const dumbShipWithHugeAndLargeMarkedTrue = { huge: !0, large: !0, medium: 0 }
+    const hugeShip: Partial<Ship> = { huge: true, large: false, medium: false };
+    const largeShip: Partial<Ship> = { huge: false, large: true, medium: false };
+    const mediumShip: Partial<Ship> = { huge: false, large: false, medium: true };
+    const smallShip: Partial<Ship> = { huge: false, large: false, medium: false };
+    const dumbShipWithHugeAndLargeMarkedTrue: Partial<Ship> = { huge: true, large: true, medium: false };
 
-    it.each([
-        [hugeShip, xwing_utils.shipBaseSizes.Huge], // data uses !0 rather than true to represent ship size
-        [largeShip, xwing_utils.shipBaseSizes.Large],
-        [mediumShip, xwing_utils.shipBaseSizes.Medium],
-        [smallShip, xwing_utils.shipBaseSizes.Small],
-        [dumbShipWithHugeAndLargeMarkedTrue, xwing_utils.shipBaseSizes.Huge] // not a huge fan of this behavior, but that's what it does right now. I don't think anything really expects this
+    it.each<[Partial<Ship>, ShipBaseSize]>([
+        [hugeShip, 'Huge'],
+        [largeShip, 'Large'],
+        [mediumShip, 'Medium'],
+        [smallShip, 'Small'],
+        [dumbShipWithHugeAndLargeMarkedTrue, 'Huge']
     ])("when ship is `%s`, expect `%s`", (ship, expectedResult) => {
-        expect(xwing_utils.getShipBaseSize(ship)).toBe(expectedResult)
+        expect(getShipBaseSize(ship as Ship)).toBe(expectedResult);
     });
-})
+});
+
 
 describe('getUpgradeCost', () => {
     it('when no point cost or points array, throws exception', () => {
         const upgradeWithNoPointCostAtAll = { points: undefined, pointsarray: undefined };
 
-        expect(() => xwing_utils.getUpgradeCost(upgradeWithNoPointCostAtAll)).toThrow('Error calculating points on upgrade');
+        expect(() => getUpgradeCost(upgradeWithNoPointCostAtAll as Upgrade, null)).toThrow('Error calculating points on upgrade');
     })
     it('when static point cost defined, returns static point cost', () => {
         const upgradeWithStaticPointCost = { points:  8 }
         const expectedReturnValue = 8;
 
-        expect(xwing_utils.getUpgradeCost(upgradeWithStaticPointCost)).toBe(expectedReturnValue);
+        expect(getUpgradeCost(upgradeWithStaticPointCost as Upgrade, null)).toBe(expectedReturnValue);
     })
     describe('variable point cost based on pilot skill', () => {
         const upgradeWithVariableInitPoints = {
             variableinit: !0,
             pointsarray: [0,1,2,3,4,5,6,7,8,9,10]
         };
-        const pilotWithSkill0 = { skill: 0};
-        const pilotWithSkill1 = { skill: 1};
-        const pilotWithSkill2 = { skill: 2}
-        const pilotWithSkill3 = { skill: 3}
-        const pilotWithSkill4 = { skill: 4}
-        const pilotWithSkill5 = { skill: 5}
-        const pilotWithSkill6 = { skill: 6}
-        const pilotWithSkillTen = { skill: 10 };
+        const pilotWithSkill0: Partial<Pilot> = { skill: 0};
+        const pilotWithSkill1: Partial<Pilot> = { skill: 1};
+        const pilotWithSkill2: Partial<Pilot> = { skill: 2}
+        const pilotWithSkill3: Partial<Pilot> = { skill: 3}
+        const pilotWithSkill4: Partial<Pilot> = { skill: 4}
+        const pilotWithSkill5: Partial<Pilot> = { skill: 5}
+        const pilotWithSkill6: Partial<Pilot> = { skill: 6}
+        const pilotWithSkillTen: Partial<Pilot> = { skill: 10 };
 
 
-        it.each([
+        it.each<[Partial<Pilot>, number]>([
             [pilotWithSkill0, 0],
             [pilotWithSkill1, 1],
             [pilotWithSkill6, 6],
             [pilotWithSkillTen, 10]
         ])("when pilot is %s, return point cost from index %s", (pilot, returnValue) => {
-            expect(xwing_utils.getUpgradeCost(upgradeWithVariableInitPoints, pilot)).toBe(returnValue);
+            expect(getUpgradeCost(upgradeWithVariableInitPoints as Upgrade, pilot as SelectedPilot)).toBe(returnValue);
         });
     })
     describe('variable point cost based on ship base size', () => {
@@ -86,7 +88,7 @@ describe('getUpgradeCost', () => {
             [pilotWithMediumShip, 6],
             [pilotWithSmallShip, 4]
         ])("when pilot has %s ship, returns point cost %s", (pilot, returnValue) => {
-            expect(xwing_utils.getUpgradeCost(upgradeWithVariableBasePoints, pilot)).toBe(returnValue);
+            expect(getUpgradeCost(upgradeWithVariableBasePoints as Upgrade, pilot as SelectedPilot)).toBe(returnValue);
         });
     });
     
@@ -106,7 +108,7 @@ describe('getUpgradeCost', () => {
             [pilotWithAgility2, 6],
             [pilotWithAgility3, 9]
         ])("when pilot's ship has agility %s, returns point cost %s", (pilot, returnValue) => {
-            expect(xwing_utils.getUpgradeCost(upgradeWithVariableAgilityPoints, pilot)).toBe(returnValue);
+            expect(getUpgradeCost(upgradeWithVariableAgilityPoints as Upgrade, pilot as SelectedPilot)).toBe(returnValue);
         });
     });
     
@@ -120,7 +122,7 @@ describe('getPilotCost', () => {
 
     it('throws exception for invalid upgrade IDs', () => {
         const pilotWithInvalidUpgrade = { points: 100, selectedUpgrades: [{ selectedUpgradeId: 99 }] }; // 99 is an invalid ID
-        expect(() => xwing_utils.getPilotCost(pilotWithInvalidUpgrade, stubUpgradesData)).toThrow('Invalid upgrade');
+        expect(() => getPilotCost(pilotWithInvalidUpgrade as SelectedPilot, stubUpgradesData as Upgrade[])).toThrow('Invalid upgrade');
     });
 
     it.each([
@@ -130,15 +132,15 @@ describe('getPilotCost', () => {
         ['with null selectedUpgradeId, returns pilot cost alone', { points: 100, selectedUpgrades: [{ selectedUpgradeId: null }] }, 100],
         ['with undefined selectedUpgradeId, returns pilot cost alone', { points: 100, selectedUpgrades: [{ selectedUpgradeId: undefined }] }, 100],
     ])('%s', (description, pilot, expectedCost) => {
-        const cost = xwing_utils.getPilotCost(pilot, stubUpgradesData);
+        const cost = getPilotCost(pilot as SelectedPilot, stubUpgradesData as Upgrade[]);
         expect(cost).toBe(expectedCost);
     });
 });
 
 describe('getSquadCost', () => {
     const emptyDummyUpgradeData = [];
-    const fiftyPointPilot = { points: 50, selectedUpgrades: [] };
-    const fortyFivePointPilot = { points: 45, selectedUpgrades: [] };
+    const fiftyPointPilot = { points: 50, selectedUpgrades: [] } as SelectedPilot;
+    const fortyFivePointPilot = { points: 45, selectedUpgrades: [] } as SelectedPilot;
 
     it.each([
         ['empty squad costs zero', [], 0],
@@ -146,44 +148,66 @@ describe('getSquadCost', () => {
         ['50 point pilot + 45 point pilot costs 95', [fiftyPointPilot, fortyFivePointPilot], 95],
         // Add more test cases here if needed
     ])('%s', (testName, squad, expectedCost) => {
-        const cost = xwing_utils.getSquadCost(squad, emptyDummyUpgradeData);
+        const cost = getSquadCost(squad, emptyDummyUpgradeData);
         expect(cost).toBe(expectedCost);
     });
 });
 
 describe('getPilotEffectiveStats', () => {
     const stubUpgradesData = [
-        { id: 1, modifier_func: (pilotShip) => { pilotShip.statToChange = 'modified'; } }, // upgrade with modifier function
+        { id: 1, modifier_func: (pilotShip) => { pilotShip.shields = pilotShip.shields + 1; } }, // upgrade with modifier function  (basically shield upgrade card)
         { id: 2 }, // no modifier function in this upgrade        
     ];
 
     it('throws an error if no pilot is provided', () => {
-        expect(() => xwing_utils.getPilotEffectiveStats(null, stubUpgradesData)).toThrow('pilot required for getPilotEffectiveStats');
+        expect(() => getPilotEffectiveStats(null, stubUpgradesData as Upgrade[])).toThrow('pilot required for getPilotEffectiveStats');
     });
 
     it('throws an error if upgrade data is missing for an upgrade ID', () => {
         const pilotWithInvalidUpgrade = {
             selectedUpgrades: [{ selectedUpgradeId: 99 }]
         };
-        expect(() => xwing_utils.getPilotEffectiveStats(pilotWithInvalidUpgrade, stubUpgradesData))
+        expect(() => getPilotEffectiveStats(pilotWithInvalidUpgrade as SelectedPilot, stubUpgradesData as Upgrade[]))
             .toThrow('Failed to find upgrade record for upgrade record id: 99');
     });
 
     it('with upgrade that modifies pilot ship, applies modifications to pilot ship', () => {
-        const pilot = { selectedUpgrades: [{ selectedUpgradeId: 1 }], pilotShip: { statToChange: "initial value" } };
-        const expectedModifiedStat = 'modified';
+        const initialShieldValue = 2;
+        const pilot: Partial<SelectedPilot> = { selectedUpgrades: [{ selectedUpgradeId: 1, key: null, slot: null }], pilotShip: {
+            agility: 2,
+            name: '',
+            xws: '',
+            factions: [],
+            hull: 0,
+            shields: initialShieldValue,
+            actions: [],
+            maneuvers: []
+        } };
+        const expectedModifiedShieldValue = 3;
 
-        const result = xwing_utils.getPilotEffectiveStats(pilot, stubUpgradesData);
+        const result = getPilotEffectiveStats(pilot as SelectedPilot, stubUpgradesData as Upgrade[]);
         
-        expect(result.pilotShip.statToChange).toBe(expectedModifiedStat);
+        expect(result.pilotShip.shields).toBe(expectedModifiedShieldValue);
 
     });
 
     it('with upgrade that does not modify pilot ship, does not make modifications to pilot ship', () => {
-        const pilot = { selectedUpgrades: [{ selectedUpgradeId: 2 }], pilotShip: { statToChange: "initial value" } }
+        const initialShieldValue = 2;
+        const pilot: Partial<SelectedPilot> = { selectedUpgrades: [{ selectedUpgradeId: 2, key: null, slot: null }], pilotShip: {
+            agility: 2,
+            name: '',
+            xws: '',
+            factions: [],
+            hull: 0,
+            shields: initialShieldValue,
+            actions: [],
+            maneuvers: []
+        } };
 
-        const result = xwing_utils.getPilotEffectiveStats(pilot, stubUpgradesData);
+        const result = getPilotEffectiveStats(pilot as SelectedPilot, stubUpgradesData as Upgrade[]);
         
         expect(JSON.stringify(pilot)).toBe(JSON.stringify(result));
     });
 });
+
+// TODO: Could add more unit tests, but I think I've done enough for learning purposes for the moment. 

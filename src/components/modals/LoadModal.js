@@ -1,9 +1,7 @@
-const React = require('react');
-const { useState, useEffect, useContext, useRef } = React;
-const { UserContext } = require('../UserContext.js');
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { UserContext } from '../UserContext.js';
 
-
-function LoadModal(props) {
+export default function LoadModal(props) {
     const mounted = useRef(false);
     const userContextBundle = useContext(UserContext);
     const [squads, setSquads] = useState([]);
@@ -57,6 +55,7 @@ function LoadModal(props) {
             if(deleteConfirmed){
                 //delete the squad
                 // eslint-disable-next-line no-undef
+                // @ts-ignore (environment variable)
                 fetch(XWING_API_ENDPOINT + `/squads/${selectedSquad._id}`, {
                     method: "DELETE", signal, headers: { Authorization: userContextBundle.user.token }
                 })
@@ -112,5 +111,3 @@ function LoadModal(props) {
         </div>
     );
 }
-
-module.exports = LoadModal;

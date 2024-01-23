@@ -1,29 +1,42 @@
+import { Faction, Ship, ShipName, Pilot, PilotRulesText, Upgrade, UpgradeRulesText, Slots } from './xwing_data';
+
 //intended to be used for checking if an id is selected
 function isNotNullOrUndefined(value) {
     return value !== null && value !== undefined;
 }
 
-
-const shipBaseSizes = {
-    Small: "Small",
-    Medium: "Medium",
-    Large: "Large",
-    Huge: "Huge"
+interface PilotShip extends Ship {
+    force?: number;
+    charge?: number;
 }
 
-const getShipBaseSize = (ship) => {
+interface SelectedUpgrade {
+    slot: string;
+    key: string;
+    parentUpgradeSlotKey?: string;
+    selectedUpgradeId: number;
+}
+interface SelectedPilot extends Pilot {
+    pilotShip: PilotShip;
+    selectedUpgrades: SelectedUpgrade[];
+
+}
+
+type ShipBaseSize = "Small" | "Medium" | "Large" | "Huge";
+
+const getShipBaseSize = (ship: Ship): ShipBaseSize => {
     if(ship.huge){
-        return shipBaseSizes.Huge;
+        return 'Huge';
     } else if(ship.large){
-        return shipBaseSizes.Large;
+        return 'Large';
     } else if(ship.medium){
-        return shipBaseSizes.Medium;
+        return 'Medium';
     } else {
-        return shipBaseSizes.Small;
+        return 'Small';
     }
 }
 
-function getUpgradeCost(upgrade, pilot){
+function getUpgradeCost(upgrade: Upgrade, pilot: SelectedPilot): number {
     if(isNotNullOrUndefined(upgrade.points)){
         return upgrade.points; 
     }
@@ -52,7 +65,7 @@ function getUpgradeCost(upgrade, pilot){
     }
 }
 
-function getPilotCost(pilot, upgradesData) {
+function getPilotCost(pilot: SelectedPilot, upgradesData: Upgrade[]): number {
     return pilot.points +  pilot.selectedUpgrades.reduce((prevPointsSum, selectedUpgrade) => {
         if(isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)){  
             const upgrade = upgradesData.find(upgradeFromData=> upgradeFromData.id === selectedUpgrade.selectedUpgradeId)
@@ -66,13 +79,13 @@ function getPilotCost(pilot, upgradesData) {
 }
 
 
-function getSquadCost(squad, upgradesData) {
+function getSquadCost(squad: SelectedPilot[], upgradesData: Upgrade[]): number {
     return squad.reduce((prevPointsSum, pilot) => {
         return prevPointsSum + getPilotCost(pilot, upgradesData);
     }, 0);
 }
 
-function getPilotEffectiveStats(pilot, upgradesData) {
+function getPilotEffectiveStats(pilot: SelectedPilot, upgradesData: Upgrade[]): SelectedPilot {
     
     if(!pilot){
         throw {
@@ -103,24 +116,9 @@ function getPilotEffectiveStats(pilot, upgradesData) {
 }
 
 //returns true if unique or max_per_squad pilot has already been selected max_times in the squad already
-function maxPilotOrUpgradeReached(cardToCheck, squad, upgradesData){
-
+function maxPilotOrUpgradeReached(cardToCheck: Pilot | Upgrade, squad, upgradesData): boolean {
     if(cardToCheck.max_per_squad){
-        if(!cardToCheck.slot){
-            //we're looking at a pilot card
-            let numberOfPilotInSquad = squad.filter(squadPilot => squadPilot.id == cardToCheck.id).length;
-            if(numberOfPilotInSquad == cardToCheck.max_per_squad){
-                return true;
-            } else if(numberOfPilotInSquad > cardToCheck.max_per_squad){
-                const error = new Error();
-                throw {
-                    message: "Somehow got more than " + cardToCheck.max_per_squad + " instances of " + cardToCheck.name + " id: " + cardToCheck.id + " in squad. Investigate.",
-                    pilotToCheckVal: cardToCheck,
-                    squadVal: squad,
-                    error: error
-                };
-            }
-        } else {
+        if('slot' in cardToCheck){
             //we're looking at an upgrade card
             let numberOfUpgradeInSquad = 0;
             for(const squadPilot of squad){
@@ -142,7 +140,20 @@ function maxPilotOrUpgradeReached(cardToCheck, squad, upgradesData){
                     error: error
                 };
             }
-    
+        } else {
+            //we're looking at a pilot card
+            let numberOfPilotInSquad = squad.filter(squadPilot => squadPilot.id == cardToCheck.id).length;
+            if(numberOfPilotInSquad == cardToCheck.max_per_squad){
+                return true;
+            } else if(numberOfPilotInSquad > cardToCheck.max_per_squad){
+                const error = new Error();
+                throw {
+                    message: "Somehow got more than " + cardToCheck.max_per_squad + " instances of " + cardToCheck.name + " id: " + cardToCheck.id + " in squad. Investigate.",
+                    pilotToCheckVal: cardToCheck,
+                    squadVal: squad,
+                    error: error
+                };
+            }
         }
     }
     
@@ -156,7 +167,7 @@ function maxPilotOrUpgradeReached(cardToCheck, squad, upgradesData){
 }
 
 
-function isUniqueInSquad(uniqueCanonName,squad, upgradesData){
+function isUniqueInSquad(uniqueCanonName: string, squad: SelectedPilot[], upgradesData: Upgrade[]): boolean {
     //if there's "uniqueName" pilot or upgrade in the squad, they are in.
     let uniqueFound = false;
                 
@@ -185,13 +196,13 @@ function isUniqueInSquad(uniqueCanonName,squad, upgradesData){
 }
 
 //upgrade should be data-repo upgrade, not "selected" upgrade
-function isUpgradeAllowed(selectedUpgradeSlot, upgrade, pilot, squad, upgradesData){
+function isUpgradeAllowed(selectedUpgradeSlot: SelectedUpgrade, upgrade: Upgrade, pilot: SelectedPilot, squad: SelectedPilot[], upgradesData: Upgrade[]): boolean {
     if(!selectedUpgradeSlot || !upgrade || !pilot || !squad){
         throw {
             message: "selectedUpgradeSlot, upgrade, pilot, and squad arguments are required for isUpgradeAllowed function",
             selectedUpgradeSlotVal: selectedUpgradeSlot,
             upgradeVal: upgrade,
-            pilotVal: effectivePilot,
+            pilotVal: pilot,
             squadVal: squad
         };
     }
@@ -231,7 +242,7 @@ function isUpgradeAllowed(selectedUpgradeSlot, upgrade, pilot, squad, upgradesDa
     return true;
 }
 
-function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgrade, pilot, squad, upgradesData){
+function isUpgradeAllowedByRestrictions(selectedUpgradeSlot: SelectedUpgrade, restrictions: [string, any][], upgrade: Upgrade, pilot: SelectedPilot, squad: SelectedPilot[], upgradesData: Upgrade[]): boolean {
 
     if(!selectedUpgradeSlot || !restrictions || !upgrade || !pilot || !squad){
         throw {
@@ -411,7 +422,7 @@ function isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgra
 }
 
 //copies selected upgrades from prevPilot to new pilot (in place). Ignores upgrade slots that aren't available on new pilot
-function addUpgrades(newPilot, upgradesToAdd, squad, upgradesData){
+function addUpgrades(newPilot: SelectedPilot, upgradesToAdd: SelectedUpgrade[], squad: SelectedPilot[], upgradesData: Upgrade[]): void {
     if(!newPilot || !upgradesToAdd || !squad){
         throw {
             message: "newPilot, upgradesToAdd, and squad must be provided to addUpgrades function",
@@ -433,31 +444,8 @@ function addUpgrades(newPilot, upgradesToAdd, squad, upgradesData){
     });  
 }
 
-//sets all optional values to zero if they aren't already set
-const setInitialValuesForAppReadyPilot = (pilot) => {
-    pilot.force = pilot.force || 0;
-    pilot.charge = pilot.charge || 0;
-    
-    const ship = pilot.pilotShip;
-    ship.attack = ship.attack || 0;
-    ship.attackf = ship.attackf || 0;
-    ship.attackb = ship.attackb || 0;
-    ship.attackl = ship.attackl || 0;
-    ship.attackr = ship.attackr || 0;
-    ship.attackt = ship.attackt || 0;
-    ship.attackdt = ship.attackdt || 0;
-    ship.attackbull = ship.attackbull || 0;
-    ship.shields = ship.shields || 0;
-    ship.force = ship.force || 0;
-    ship.charge = ship.charge || 0;
-}
-
-function getAppReadyPilot(pilot, shipsData) {
-    //makes a deep copy of the pilot so I don't have side effects on my "data repo"    
-    const pilotCopy = JSON.parse(JSON.stringify(pilot));
-    
-    //attach ship
-    
+function getAppReadyPilot(pilot: Pilot, shipsData: Ship[]): SelectedPilot {
+    //makes deep copies so I don't have side effects on my "data repo"
     const shipForPilot = shipsData[pilot.ship]; 
     if(!shipForPilot)
     {
@@ -468,11 +456,25 @@ function getAppReadyPilot(pilot, shipsData) {
     }
     //make deep copy of ship to attach
     const shipCopy =  JSON.parse(JSON.stringify(shipForPilot));
+    const pilotCopy = JSON.parse(JSON.stringify(pilot));    
     pilotCopy.pilotShip = shipCopy;
 
     //set all of the non-set optional values to zero for ease of incrementing them or displaying zero later
     // (mostly for StatBlockCpt)
-    setInitialValuesForAppReadyPilot(pilotCopy);
+    pilot.force = pilot.force || 0;
+    pilot.charge = pilot.charge || 0;
+    
+    shipCopy.attack = shipCopy.attack || 0;
+    shipCopy.attackf = shipCopy.attackf || 0;
+    shipCopy.attackb = shipCopy.attackb || 0;
+    shipCopy.attackl = shipCopy.attackl || 0;
+    shipCopy.attackr = shipCopy.attackr || 0;
+    shipCopy.attackt = shipCopy.attackt || 0;
+    shipCopy.attackdt = shipCopy.attackdt || 0;
+    shipCopy.attackbull = shipCopy.attackbull || 0;
+    shipCopy.shields = shipCopy.shields || 0;
+    shipCopy.force = shipCopy.force || 0;
+    shipCopy.charge = shipCopy.charge || 0
     
     //add upgrades
     pilotCopy.selectedUpgrades = [];
@@ -486,40 +488,35 @@ function getAppReadyPilot(pilot, shipsData) {
     });
 
     //sets UI keys for upgrades...doesn't actually 'select' any upgrades
-    setSelectedUpgradeKeys(pilotCopy.selectedUpgrades);
+    pilotCopy.selectedUpgrades = getSelectedUpgradesWithKeys(pilotCopy.selectedUpgrades);
     
     return pilotCopy;
 }
 
-function setSelectedUpgradeKeys(selectedUpgrades){
+function getSelectedUpgradesWithKeys(selectedUpgrades: SelectedUpgrade[]): SelectedUpgrade[] {
     let slotNameUsedTracker = {};
+    let newSelectedUpgrades = selectedUpgrades.map(selectedUpgrade => {
+        // Create a deep copy of the selectedUpgrade to avoid mutating the original object
+        let newSelectedUpgrade = {...selectedUpgrade};
 
-    for(const selectedUpgrade of selectedUpgrades){
-        if(!slotNameUsedTracker[selectedUpgrade.slot]){
-            slotNameUsedTracker[selectedUpgrade.slot] = 1;
+        // Increment or initialize the count for the slot
+        if (!slotNameUsedTracker[newSelectedUpgrade.slot]) {
+            slotNameUsedTracker[newSelectedUpgrade.slot] = 1;
         } else {
-            slotNameUsedTracker[selectedUpgrade.slot]++;
+            slotNameUsedTracker[newSelectedUpgrade.slot]++;
         }
 
-        const keyToSet =  selectedUpgrade.slot + slotNameUsedTracker[selectedUpgrade.slot];
-        if(!selectedUpgrade.key){
-            selectedUpgrade.key = keyToSet; 
-        } else {
-            if(selectedUpgrade.key != keyToSet) {
-                const error = new Error();
-                throw {
-                    message: "A selectedUpgrade had a different key than expected. This will probably lead to many errors. Investigate this.",
-                    error: error,
-                    selectedUpgradesVal: selectedUpgrades,
-                    slotNameUsedTrackerVal: slotNameUsedTracker
-                };
-            }
-        }
-    }
+        // Set the key on the new object
+        newSelectedUpgrade.key = newSelectedUpgrade.slot + slotNameUsedTracker[newSelectedUpgrade.slot];
+
+        return newSelectedUpgrade;
+    });
+
+    return newSelectedUpgrades;
 }
 
 //returns cheapest pilot in-faction that hasn't been selected max-times or selected elsewhere with uniqueness
-function getCheapestAvailablePilotForShip(ship, faction, squad, upgradesData, pilotsData) {
+function getCheapestAvailablePilotForShip(ship: ShipName, faction: Faction, squad: SelectedPilot[], upgradesData: Upgrade[], pilotsData: Pilot[]): Pilot {
  
     if(!ship || !faction || !squad){
         throw {
@@ -541,7 +538,8 @@ function getCheapestAvailablePilotForShip(ship, faction, squad, upgradesData, pi
     return cheapestPilotForShip;
 }
 
-function removeInvalidUpgrades(squad, upgradesData) {
+// TODO: mutating state in place. Fix
+function removeInvalidUpgrades(squad: SelectedPilot[], upgradesData: Upgrade[]): SelectedPilot[] {
     let needToSearchForInvalidUpgrades = true;
 
     while(needToSearchForInvalidUpgrades){
@@ -561,7 +559,8 @@ function removeInvalidUpgrades(squad, upgradesData) {
     return squad;
 }
 
-function removeUpgrade(selectedUpgradeSlot, pilot, upgradesData) {
+// TODO: mutating state in place: fix
+function removeUpgrade(selectedUpgradeSlot: SelectedUpgrade, pilot: SelectedPilot, upgradesData: Upgrade[]) {
     if(isNotNullOrUndefined(selectedUpgradeSlot.selectedUpgradeId)){
         const upgradeRecord = upgradesData.find(upgrade => upgrade.id == selectedUpgradeSlot.selectedUpgradeId);
         selectedUpgradeSlot.selectedUpgradeId = null;
@@ -569,7 +568,7 @@ function removeUpgrade(selectedUpgradeSlot, pilot, upgradesData) {
         if(upgradeRecord.confersAddons){
             //remove last matching slot
             for(const addon of upgradeRecord.confersAddons){
-                const lastIndexOfMatchingAddon = [...pilot.selectedUpgrades].reverse().findIndex(selUpgrade => selUpgrade.slot == addon); 
+                const lastIndexOfMatchingAddon = [...pilot.selectedUpgrades].reverse().findIndex(selUpgrade => selUpgrade.slot == addon.slot); 
                 pilot.selectedUpgrades.splice(lastIndexOfMatchingAddon, 1);
             }
         }
@@ -585,7 +584,8 @@ function removeUpgrade(selectedUpgradeSlot, pilot, upgradesData) {
     }
 }
 
-function upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, squad, upgradesData){
+// TODO: mutating state in place. Fix.
+function upgradeSquadShip(upgradeSlot: SelectedUpgrade, newlySelectedUpgrade: Upgrade, pilot: SelectedPilot, squad: SelectedPilot[], upgradesData: Upgrade[]): void{
     const prevUpgradeRecord = upgradesData.find(upgrade => upgrade.id == upgradeSlot.selectedUpgradeId);
     const shipType = pilot.pilotShip.name;
     const shipsOfSameType = squad.filter(squadPilot => squadPilot.pilotShip.name == shipType);
@@ -607,7 +607,8 @@ function upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, squad, upgra
     }
 }
 
-function setUpgrade(upgradeSlot, newlySelectedUpgrade, pilot, upgradesData){
+// TODO: mutating state in place. Fix
+function setUpgrade(upgradeSlot: SelectedUpgrade, newlySelectedUpgrade: Upgrade, pilot: SelectedPilot, upgradesData: Upgrade[]): void {
     if(!upgradeSlot || !pilot) {
         const error = new Error();
         throw {
@@ -683,13 +684,13 @@ function setUpgrade(upgradeSlot, newlySelectedUpgrade, pilot, upgradesData){
                     selectedUpgradeId: null
                 });
             }
-            setSelectedUpgradeKeys(pilot.selectedUpgrades);
+            pilot.selectedUpgrades = getSelectedUpgradesWithKeys(pilot.selectedUpgrades);
         }
     }
 }
 
 //returns true if there is a solitary upgrade card equiped to another slot of the same type within the squad
-function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot, squad, upgradesData){
+function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot: SelectedUpgrade, squad: SelectedPilot[], upgradesData: Upgrade[]){
     for(const squadPilot of squad){
         for(const squadPilotUpgrade of squadPilot.selectedUpgrades){
             if(squadPilotUpgrade != upgradeSlot  && squadPilotUpgrade.slot == upgradeSlot.slot && isNotNullOrUndefined(squadPilotUpgrade.selectedUpgradeId)){
@@ -703,7 +704,7 @@ function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot, squad, upgrade
     return false;
 }
 
-function makeid(length) {
+function makeid(length: number): string {
     var result           = '';
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
@@ -803,6 +804,8 @@ const fixIcons = (text) => {
     } 
 }
 
-module.exports  = { isNotNullOrUndefined, getUpgradeCost, getPilotCost, getSquadCost, getPilotEffectiveStats, maxPilotOrUpgradeReached, isUpgradeAllowed, 
+export { 
+    isNotNullOrUndefined, getUpgradeCost, getPilotCost, getSquadCost, getPilotEffectiveStats, maxPilotOrUpgradeReached, isUpgradeAllowed, 
     addUpgrades, getAppReadyPilot, getCheapestAvailablePilotForShip, removeInvalidUpgrades, upgradeSquadShip, squadContainsAnotherSolitaryCardForThisSlot,
-    InfoPanelCardTypes, shipBaseSizes, getShipBaseSize, fixIcons, makeid }
+    InfoPanelCardTypes, getShipBaseSize, fixIcons, makeid, ShipBaseSize, SelectedUpgrade, SelectedPilot
+}

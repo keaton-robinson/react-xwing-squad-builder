@@ -8,7 +8,9 @@ const __indexOf = [].indexOf || function(a) {
 
 
 
-const factionNames = {
+type Faction = 'Rebel Alliance' | 'Galactic Empire' | 'Scum and Villainy' | 'Resistance' | 'First Order' | 'Galactic Republic' | 'Separatist Alliance';
+
+const factionNames: Record<Faction, Faction> = {
     "Rebel Alliance": "Rebel Alliance",
     "Galactic Empire": "Galactic Empire",
     "Scum and Villainy": "Scum and Villainy",
@@ -16,9 +18,42 @@ const factionNames = {
     "First Order": "First Order",
     "Galactic Republic": "Galactic Republic",
     "Separatist Alliance": "Separatist Alliance"
+};
+
+interface Ship {
+    name: string;
+    canonical_name?: string,
+    xws: string;
+    factions: Faction[];
+    attack?: number;
+    attackf?: number;
+    attackb?: number;
+    attackl?: number;
+    attackr?: number;
+    attackbull?: number;
+    attackt?: number;
+    attackdt?: number;
+    agility: number;
+    hull: number;
+    shields: number;
+    actions: string[];
+    maneuvers: number[][];
+    autoequip?: string[]; // Optional property
+    keyword?: string[];
+    huge?: boolean;
+    large?: boolean;
+    medium?: boolean;
+    icon?: string;
+    shieldrecurr?: number;
+    energy?: number;
+    energyrecurr?: number;
 }
 
-const ships = {
+function createShips<ShipsObjLiteral extends Record<string, Ship>>(shipsObjLiteral: ShipsObjLiteral): ShipsObjLiteral {
+    return shipsObjLiteral;
+}
+
+const ships = createShips({
     "X-Wing": {
         name: "X-Wing",
         xws: "T-65 X-wing",
@@ -1506,9 +1541,34 @@ const ships = {
             [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
     }
-}
+});
 
-const pilots = [{
+type ShipName = keyof typeof ships;
+
+interface Pilot {
+    name: string;
+    id: number;
+    faction: Faction;
+    ship: ShipName;
+    keyword?: string[];
+    skill: number | string;
+    points: number;
+    slots: string[];
+    unique?: boolean;
+    force?: number;
+    canonical_name?: string;
+    xws?: string;
+    applies_condition?: string | string[];
+    charge?: number;
+    recurring?: number;
+    restrictions?: string[][];
+    restriction_func?: (a: any) => any;
+    max_per_squad?: number;
+    ship_override?: { actions: string[] }
+    engagement?: number;
+};
+
+const pilots: Pilot[] = [{
     name: "Cavern Angels Zealot",
     id: 0,
     faction: "Rebel Alliance",
@@ -1612,10 +1672,6 @@ const pilots = [{
     keyword: ["Partisan"],
     slots: ["Illicit", "Talent", "Torpedo", "Astromech", "Modification", "Configuration"]
 }, {
-    name: "whoops",
-    id: 11,
-    skip: !0
-}, {
     name: "Kullbee Sperado",
     id: 12,
     unique: !0,
@@ -1646,7 +1702,6 @@ const pilots = [{
     faction: "Rebel Alliance",
     ship: "TIE Fighter",
     skill: 3,
-    keyword: ["Light Side"],
     force: 1,
     points: 28,
     keyword: ["Light Side", "Spectre"],
@@ -1692,10 +1747,6 @@ const pilots = [{
     skill: 3,
     points: 44,
     slots: ["Torpedo", "Missile", "Missile", "Gunner", "Crew", "Device", "Device", "Modification"]
-}, {
-    name: "empty",
-    id: 19,
-    skip: !0
 }, {
     name: "Warden Squadron Pilot",
     id: 20,
@@ -3663,9 +3714,6 @@ const pilots = [{
     recurring: 1,
     slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"]
 }, {
-    id: 232,
-    skip: !0
-}, {
     name: '"Midnight"',
     id: 233,
     unique: !0,
@@ -3673,16 +3721,6 @@ const pilots = [{
     ship: "TIE/FO Fighter",
     skill: 6,
     points: 42,
-    slots: ["Talent", "Tech", "Modification"]
-}, {
-    name: '"Longshot"',
-    id: 234,
-    skip: !0,
-    unique: !0,
-    faction: "First Order",
-    ship: "TIE/FO Fighter",
-    skill: 3,
-    points: 32,
     slots: ["Talent", "Tech", "Modification"]
 }, {
     name: '"Muse"',
@@ -3743,10 +3781,6 @@ const pilots = [{
     recurring: 1,
     points: 37,
     slots: ["Talent", "Talent", "Missile", "Tech"]
-}, {
-    name: "blanks",
-    id: 241,
-    skip: !0
 }, {
     name: '"Backdraft"',
     id: 242,
@@ -6027,7 +6061,12 @@ const pilots = [{
     slots: ["Command", "Torpedo", "Hardpoint", "Hardpoint", "Crew", "Crew", "Gunner", "Team", "Cargo", "Title"]
 }];
 
-const pilotRules = {
+interface PilotRulesText {
+    display_name?: string;
+    text: string;
+}
+
+const pilotRules: Record<string, PilotRulesText> = {
     "0-66": {
         display_name: "0-66",
         text: "After you defend, you may spend 1 calculate token to perform an action."
@@ -6071,9 +6110,6 @@ const pilotRules = {
     "Anakin Skywalker": {
         display_name: "Anakin Skywalker",
         text: "After you fully execute a maneuver, if there is an enemy ship in your %FRONTARC% at range&nbsp;0-1 or in your %BULLSEYEARC%, you may spend 1 %FORCE% to remove 1&nbsp;stress token.%LINEBREAK%<strong>Fine-tuned Controls:</strong> After you fully execute a maneuver, you may spend 1&nbsp;%FORCE% to perform a %BOOST% or %BARRELROLL% action."
-    },
-    "Anakin Skywalker (N-1 Starfighter)": {
-        text: "Before you reveal your maneuver, you may spend 1 %FORCE% to barrel roll (this is not an action): %LINEBREAK%<strong>Full Throttle:</strong> After you fully execute a speed 3-5 maneuver, you may perform an %EVADE% action."
     },
     "Arvel Crynyd": {
         display_name: "Arvel Crynyd",
@@ -6130,10 +6166,6 @@ const pilotRules = {
     "Black Squadron Ace (T-70)": {
         display_name: "Black Squadron Ace",
         text: "<i class = flavor_text>During the Cold War, Poe Dameron’s Black Squadron conducted daring covert operations against the First Order in defiance of treaties ratified by the New Republic Senate.</i>%LINEBREAK%<strong>Weapon Hardpoint:</strong> You can equip 1&nbsp;%CANNON%, %TORPEDO%, or %MISSILE% upgrade."
-    },
-    "Black Squadron Scout": {
-        display_name: "Black Squadron Scout",
-        text: "<i class = flavor_text>These heavily armed atmospheric craft employ their specialized moveable wings to gain additional speed and maneuverability.</i>%LINEBREAK% <strong>Adaptive Ailerons:</strong> Before you reveal your dial, if you are not stressed, you <b>must</b> execute a white [1&nbsp;%BANKLEFT%], [1&nbsp;%STRAIGHT%], or [1&nbsp;%BANKRIGHT%] maneuver."
     },
     "Black Sun Ace": {
         display_name: "Black Sun Ace",
@@ -6667,10 +6699,6 @@ const pilotRules = {
         display_name: "Kyle Katarn",
         text: "At the start of the Engagement Phase, you may transfer 1 of your focus tokens to a friendly ship in your firing arc."
     },
-    "Kylo Ren": {
-        display_name: "Kylo Ren",
-        text: "After you defend, you may spend 1&nbsp;%FORCE% to assign the <strong>I’ll Show You the Dark Side</strong> condition to the attacker.%LINEBREAK%<strong>Autothrusters:</strong> After you perform an action, you may perform a red %BARRELROLL% or red %BOOST% action."
-    },
     "L3-37": {
         display_name: "L3-37",
         text: "If you are not shielded, decrease the difficulty of your bank (%BANKLEFT% and %BANKRIGHT%) maneuvers."
@@ -6871,16 +6899,9 @@ const pilotRules = {
         display_name: "Overseer Yushyn",
         text: "Before a friendly ship at range 1 would gain a disarm token, if that ship is not stressed, you may spend 1&nbsp;%CHARGE%. If you do, that ship gains 1 stress token instead.%LINEBREAK%<strong>Notched Stabilizers:</strong> While you move, you ignore asteroids."
     },
-    "Padmé Amidala": {
-        display_name: "Padmé Amidala",
-        text: "While an enemy ship in your %FRONTARC% defends or performs an attack that ship can modify only 1 %EVADE% result (other results can still be modified). %LINEBREAK%<strong>Full Throttle:</strong> After you fully execute a speed 3-5 maneuver, you may perform an %EVADE% action."
-    },
     "Palob Godalhi": {
         display_name: "Palob Godalhi",
         text: "At the start of the Engagement Phase, you may choose 1 enemy ship in your firing arc at range 0-2. If you do, transfer 1 focus or evade token from that ship to yourself."
-    },
-    "Pammich Nerro Goode": {
-        text: "While you have 2 or fewer stress tokens, you may execute red maneuvers even while stressed"
     },
     "Partisan Renegade": {
         display_name: "Partisan Renegade",
@@ -6957,9 +6978,6 @@ const pilotRules = {
     "Rogue Squadron Escort": {
         display_name: "Rogue Squadron Escort",
         text: "<i class = flavor_text>The elite pilots of Rogue Squadron are among the Rebellion’s very best.</i> %LINEBREAK% <strong>Experimental Scanners:</strong> You can acquire locks beyond range 3. You cannot acquire locks at range 1."
-    },
-    "Rose Tico": {
-        text: "While you defend or perform an attack, you may reroll up to 1 of your results for each other friendly ship in the attack arc."
     },
     "Saber Squadron Ace": {
         display_name: "Saber Squadron Ace",
@@ -7687,15 +7705,8 @@ const pilotRules = {
         display_name: "“Odd Ball”",
         text: 'After you fully execute a red maneuver or perform a red action, if there is an enemy ship in your %BULLSEYEARC%, you may acquire a lock on that ship. %LINEBREAK%<strong>Twin Ion Engines:</strong> Ignore the "TIE" ship restriction on upgrade cards.'
     },
-    "Boba Fett (Separatist)": {
-        display_name: "Boba Fett",
-        text: "While you defend, if there are no other friendly ships at range 0-2, you may change 1 of your blank results to a %FOCUS% result."
-    },
     "Zam Wesell": {
         text: "<strong>Setup:</strong> Lose 2 %CHARGE%. %LINEBREAK% During the System Phase, you may assign 1 of your secret conditions to yourself facedown: <strong> %LINEBREAK% You Should Thank Me %LINEBREAK% You'd Better Mean Business. </strong>"
-    },
-    "Jango Fett": {
-        text: "While you defend or perform a primary attack, if the difficulty of your revealed maneuver is less than that of the enemy ship's, you may change 1 of the enemy ship's %FOCUS% results to a blank result."
     },
     "Hera Syndulla (B-Wing)": {
         display_name: "Hera Syndulla",
@@ -7826,7 +7837,47 @@ const pilotRules = {
     }
 }
 
-const upgrades = [{
+interface Upgrade {
+    name: string;
+    xws?: string;
+    id: number;
+    slot: keyof typeof slots;
+    canonical_name?: string;
+    points?: number;
+    pointsarray?: number[];
+    unique?: boolean;
+    faction?: Faction | Faction[];
+    variableagility?: boolean;
+    variablebase?: boolean;
+    variableinit?: boolean;
+    force?: number;
+    charge?: number;
+    restrictions?: [string, any][];
+    modifier_func?: (a: any) => any;
+    attack?: number;
+    attackf?: number;
+    attackb?: number;
+    attackl?: number;
+    attackr?: number;
+    attackbull?: number;
+    attackt?: number;
+    attackdt?: number;
+    range?: any;
+    ship?: ShipName | ShipName[];
+    validation_func?: Function;
+    also_occupies_upgrades?: string[];
+    rangebonus?: boolean;
+    standardized?: boolean;
+    recurring?: number;
+    applies_condition?: string | string[];
+    solitary?: boolean;
+    max_per_squad?: number;
+    confersAddons?: { type: string, slot: string}[];
+    unequips_upgrades?: string[];
+    keyword?: string[]
+};
+
+const upgrades: Upgrade[] = [{
     name: '"Chopper" (Astromech)',
     id: 0,
     slot: "Astromech",
@@ -8978,11 +9029,6 @@ const upgrades = [{
     slot: "Configuration",
     ship: "U-Wing"
 }, {
-    name: "Pivot Wing (Open)",
-    id: 141,
-    points: 0,
-    skip: !0
-}, {
     name: "Servomotor S-Foils",
     id: 142,
     points: 0,
@@ -8991,10 +9037,6 @@ const upgrades = [{
     modifier_func: function(a) {
         return a.actions.push("Boost"), a.actions.push("*Focus"), a.actions.push("R-> Boost")
     }
-}, {
-    name: "Blank",
-    id: 143,
-    skip: !0
 }, {
     name: "Xg-1 Assault Configuration",
     id: 144,
@@ -9005,13 +9047,6 @@ const upgrades = [{
         type: "Upgrade",
         slot: "Cannon"
     }]
-}, {
-    name: "L3-37's Programming",
-    id: 145,
-    skip: !0,
-    points: 0,
-    slot: "Configuration",
-    faction: "Scum and Villainy"
 }, {
     name: "Andrasta",
     id: 146,
@@ -9141,9 +9176,6 @@ const upgrades = [{
     faction: "Rebel Alliance",
     ship: "YT-2400"
 }, {
-    id: 158,
-    skip: !0
-}, {
     name: "Punishing One",
     id: 159,
     slot: "Title",
@@ -9234,15 +9266,6 @@ const upgrades = [{
     faction: "Rebel Alliance",
     ship: ["Attack Shuttle", "Sheathipede-Class Shuttle"]
 }, {
-    id: 168,
-    skip: !0
-}, {
-    id: 169,
-    skip: !0
-}, {
-    id: 170,
-    skip: !0
-}, {
     name: "Black One",
     id: 171,
     slot: "Title",
@@ -9284,10 +9307,6 @@ const upgrades = [{
     modifier_func: function(a) {
         return a.actions.push("Barrel Roll"), a.actions.push("*Focus"), a.actions.push("R-> Barrel Roll")
     }
-}, {
-    name: "Integrated S-Foils (Open)",
-    id: 176,
-    skip: !0
 }, {
     name: "Targeting Synchronizer",
     id: 177,
@@ -10290,9 +10309,6 @@ const upgrades = [{
     id: 283,
     slot: "Cargo",
     points: 8
-}, {
-    id: 284,
-    skip: !0
 }, {
     name: "Tibanna Reserves",
     id: 285,
@@ -11583,7 +11599,12 @@ const upgrades = [{
     ]
 }];
 
-const upgradeRules = {
+interface UpgradeRulesText {
+    display_name?: string;
+    text: string;
+}
+
+const upgradeRules: Record<string, UpgradeRulesText> = {
     "0-0-0": {
         display_name: "0-0-0",
         text: "At the start of the Engagement Phase, you may choose 1 enemy ship at range 0-1. If you do, you gain 1 calculate token unless that ship chooses to gain 1 stress token."
@@ -11707,9 +11728,6 @@ const upgradeRules = {
     "Agile Gunner": {
         display_name: "Agile Gunner",
         text: "During the End Phase, you may rotate your %SINGLETURRETARC% indicator."
-    },
-    Autoblasters: {
-        text: "<strong>Attack:</strong>If the defender is in your %BULLSEYEARC%, roll 1 additional die. During the Neutralize Results step, if you are not in the defenders %FRONTARC%, %EVADE% results do not cancel %CRIT% results."
     },
     "BB Astromech": {
         display_name: "BB Astromech",
@@ -12117,9 +12135,6 @@ const upgradeRules = {
         display_name: "K2-B4",
         text: "While a friendly ship at range&nbsp;0-3 defends, it may spend 1 calculate token. If it does, add 1 %EVADE% result unless the attacker chooses to gain 1&nbsp;strain token."
     },
-    "Kaydel Connix": {
-        text: "After you reveal your dial, you may set your dial to a basic maneuver of the next higher speed. While you execute that maneuver, increase its difficulty"
-    },
     "Kanan Jarrus": {
         display_name: "Kanan Jarrus",
         text: "After a friendly ship at range 0-2 fully executes a white maneuver, you may spend 1&nbsp;%FORCE% to remove 1 stress token from that ship."
@@ -12131,10 +12146,6 @@ const upgradeRules = {
     Kraken: {
         display_name: "Kraken",
         text: "During the End Phase, you may choose up to 3&nbsp;friendly ships at range&nbsp;0-3. If you do, each of these ships does not remove 1&nbsp;calculate token."
-    },
-    "Kylo Ren": {
-        display_name: "Kylo Ren",
-        text: "<strong>Action:</strong> Choose 1 enemy ship at range 1-3. If you do, spend 1&nbsp;%FORCE% to assign the <strong>I’ll Show You the Dark Side</strong> condition to that ship."
     },
     "L3-37": {
         display_name: "L3-37",
@@ -12279,9 +12290,6 @@ const upgradeRules = {
     "R2 Astromech": {
         display_name: "R2 Astromech",
         text: "After you reveal your dial, you may spend 1&nbsp;%CHARGE% and gain 1 disarm token to recover 1 shield."
-    },
-    "R2-C4": {
-        text: "While you perform an attack, you may spend 1 evade token to change 1 %FOCUS% result to a %HIT% result."
     },
     "R2-D2 (Crew)": {
         display_name: "R2-D2",
@@ -12679,9 +12687,6 @@ const upgradeRules = {
     },
     "Hondo Ohnaka": {
         text: "<strong>Action:</strong> Choose 2 ships at range 1-3 of you that are friendly to each other. Coordinate one of the chosen ships, then jam the other, ignoring range restrictions."
-    },
-    "Boba Fett (Separatist)": {
-        text: "While you perform an attack, if there are no other ships in the attack arc, you may change 1 of your %FOCUS% results to a %HIT% result."
     },
     "R2-D2 (Republic)": {
         text: "After you activate, you may spend 1 %CHARGE% and gain 1 deplete token to repair 1 damage card, recover 1 shield or remove 1 device at range 0-1."
@@ -13121,7 +13126,11 @@ const upgradeRules = {
     }
 }
 
-const slots = {
+function createSlots<SlotsObjLiteral extends Record<string, { key: string, displayName: string}>>(slotsLiteral: SlotsObjLiteral): SlotsObjLiteral {
+    return slotsLiteral;
+}
+
+const slots = createSlots({
     Astromech: { key: "Astromech", displayName: "Astromech" }, 
     Force: { key: "Force", displayName: "Force" },
     Bomb: { key: "Bomb", displayName: "Bomb" } ,
@@ -13146,9 +13155,11 @@ const slots = {
     Hyperdrive: { key: "Hyperdrive", displayName: "Hyperdrive" },
     Team: { key: "Team", displayName: "Team" },
     Cargo: { key: "Cargo", displayName: "Cargo" }
-};
+});
 
-const sloticon = {
+type Slots = keyof typeof slots;
+
+const sloticon: Partial<Record<Slots, string>> = {
     Astromech: '<i class="xwing-miniatures-font xwing-miniatures-font-astromech"></i>',
     Force: '<i class="xwing-miniatures-font xwing-miniatures-font-forcepower"></i>',
     Bomb: '<i class="xwing-miniatures-font xwing-miniatures-font-bomb"></i>',
@@ -13204,6 +13215,5 @@ const bearings = {
 // but it may be worth spreading the various upgrade card types out
 // names like "Luke Skywalker" and "Darth Vader" have pilot and crew cards...
 
-const xwingData = { factionNames, ships, pilots, pilotRules, slots, sloticon, upgrades, upgradeRules, difficulties, bearings };
-
-module.exports = xwingData;
+export { factionNames, ships, pilots, pilotRules, slots, sloticon, upgrades, upgradeRules, difficulties, bearings,
+     Faction, Ship, ShipName, Pilot, PilotRulesText, Upgrade, UpgradeRulesText, Slots };

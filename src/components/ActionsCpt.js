@@ -1,6 +1,6 @@
-const React = require('react');
+import React from 'react';
 
-class ActionsCpt extends React.Component {
+export default class ActionsCpt extends React.Component {
 
     constructor(props){
         super(props);
@@ -74,5 +74,3 @@ class ActionsCpt extends React.Component {
         return ( <span>{spans}</span> );
     }
 }
-
-module.exports = ActionsCpt;

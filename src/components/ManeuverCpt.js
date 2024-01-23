@@ -1,7 +1,7 @@
-const React =  require('react');
-const xwingData = require('../data/xwing_data.js');
+import React from 'react';
+import * as xwingData from '../data/xwing_data';
 
-class ManeuverCpt extends React.Component {
+export default class ManeuverCpt extends React.Component {
     
     constructor(props) {
         super(props);
@@ -143,5 +143,3 @@ class ManeuverCpt extends React.Component {
         
     }
 }
-
-module.exports = ManeuverCpt;

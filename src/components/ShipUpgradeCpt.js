@@ -1,13 +1,15 @@
-const React = require('react');
-const xwingData = require('../data/xwing_data.js');
-const xwingUtils = require('../data/xwing_utils.js');
-const { Dropdown } = require('@keatonr06/reactjs-dropdown-component');
-const { DropDownStyles } = require('../styleData/styleData.js');
+import React from 'react';
+import * as xwingData from '../data/xwing_data';
+import * as xwingUtils from '../data/xwing_utils';
+import { Dropdown } from '@keatonr06/reactjs-dropdown-component';
+import { DropDownStyles } from '../styleData/styleData';
 
-class ShipUpgradeCpt extends React.Component {
+export default class ShipUpgradeCpt extends React.Component {
+
 
     constructor(props) {
         super(props);
+        this.ddlSelectedUpgradeRef = React.createRef();
     }
 
     upgradeAlreadySelectedOnADifferentSlot = (upgrade) =>{
@@ -51,6 +53,15 @@ class ShipUpgradeCpt extends React.Component {
         }
     }
 
+    componentDidUpdate = (prevProps) => {
+        // TODO: fix the custom drop downs so I don't have to directly modify a child component like this
+        //the custom dropdowns don't automatically update their selected item or "title" on re-renders, sadly
+        let current = this.ddlSelectedUpgradeRef.current;
+        if(current.state.selectedItem && current.state.selectedItem.value != this.props.upgradeSlot.selectedUpgradeId){
+            current.selectSingleItem({value: this.props.upgradeSlot.selectedUpgradeId});
+        }
+    }
+
     render() {
         const squadContainsAnotherSolitaryCardForThisSlot = xwingUtils.squadContainsAnotherSolitaryCardForThisSlot(this.props.upgradeSlot,this.props.squad, xwingData.upgrades);
         const availableUpgrades = this.getAvailableUpgrades(squadContainsAnotherSolitaryCardForThisSlot)
@@ -61,6 +72,7 @@ class ShipUpgradeCpt extends React.Component {
             <Dropdown 
                 name="selectUpgrade"
                 titleSingular="Upgrade"
+                ref={this.ddlSelectedUpgradeRef}
                 title={upgradesForCustomDropdown[0].label}
                 list={upgradesForCustomDropdown}
                 onChange={this.handleUpgradeSelection}
@@ -73,4 +85,3 @@ class ShipUpgradeCpt extends React.Component {
     }
 }
 
-module.exports = ShipUpgradeCpt;

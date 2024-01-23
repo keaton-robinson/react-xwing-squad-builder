@@ -1,11 +1,9 @@
-const React = require('react');
-const { useState } = React;
-const yup = require('yup');
-const { Formik } = require('formik');
-const { XwingTextInput, XwingFormSubmitButton, XwingForm } = require('../CustomFormikControls/XwingFormikCustomControls.js');
+import React, {useState} from 'react';
+import * as yup from 'yup';
+import { Formik } from 'formik';
+import { XwingTextInput, XwingFormSubmitButton, XwingForm } from '../CustomFormikControls/XwingFormikCustomControls';
 
-
-function RegisterModal(props) {
+export default function RegisterModal(props) {
 
   const [usernameMin, usernameMax] = [6, 30];
   const [passwordMin, passwordMax] = [6, 50];
@@ -34,6 +32,7 @@ function RegisterModal(props) {
       })}
       onSubmit={(values, { setSubmitting }) => { 
         // eslint-disable-next-line no-undef
+        // @ts-ignore  (environment variable)
         fetch(XWING_API_ENDPOINT + '/users/register', {
           method: "POST",
           headers: {
@@ -82,4 +81,4 @@ function RegisterModal(props) {
   );
 }
 
-module.exports = RegisterModal;
+
