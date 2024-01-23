@@ -210,14 +210,4 @@ describe('getPilotEffectiveStats', () => {
     });
 });
 
-describe('removeInvalidUpgrades', () =>{
-    // figure out why Maul isn't getting removed from a crew slot after removing Ezra
-}); 
-
-describe('removeUpgrade',() => {
-    // make sure it doesn't mutate state in place
-})
-
-describe('upgradeSquadShip', () => {
-    // again with the mutating state in place thing...
-})
+// TODO: Could add more unit tests, but I think I've done enough for learning purposes for the moment. 
