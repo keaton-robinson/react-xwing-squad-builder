@@ -1,15 +1,14 @@
-const React = require('react');
-const InfoPanelCpt = require('./InfoPanelCpt.js');
-const PilotRowCpt = require('./PilotRowCpt.js');
-const AddShipCpt = require('./AddShipCpt.js');
-const PrintSquadModal = require('./modals/PrintSquadModal.js');
-const NewSquadConfirmModal = require('./modals/NewSquadConfirmModal.js');
-const SaveAsModal = require('./modals/SaveAsModal.js');
-const LoadModal = require('./modals/LoadModal.js');
-const xwingData = require('../data/xwing_data.js');
-const xwingUtils = require('../data/xwing_utils.js');
-const { UserContext } = require('./UserContext.js');
-
+import React from 'react';
+import InfoPanelCpt from './InfoPanelCpt';
+import PilotRowCpt from './PilotRowCpt';
+import AddShipCpt from './AddShipCpt';
+import PrintSquadModal from './modals/PrintSquadModal';
+import NewSquadConfirmModal from './modals/NewSquadConfirmModal';
+import SaveAsModal from './modals/SaveAsModal';
+import LoadModal from './modals/LoadModal';
+import * as xwingData from '../data/xwing_data';
+import * as xwingUtils from '../data/xwing_utils';
+import { UserContext } from './UserContext.js'; 
 
 const saveStatusMessages = {
     saving: "saving...",
@@ -17,7 +16,7 @@ const saveStatusMessages = {
     error: "error saving...please try again"
 };
 
-class SquadBuilderCpt extends React.Component {    	
+export default class SquadBuilderCpt extends React.Component {    	
 	constructor(props) {
         super(props);
 
@@ -191,7 +190,7 @@ class SquadBuilderCpt extends React.Component {
             if(selectedShip.autoequip){
                 for(const autoEquipUpgrade of selectedShip.autoequip){
                     const configSelUpgradeSlot = appReadyNewPilot.selectedUpgrades.find(selUpgrade => selUpgrade.slot == xwingData.slots.Configuration.key);
-                    configSelUpgradeSlot.selectedUpgradeId = xwingData.upgrades.find(upgrade => upgrade.name == autoEquipUpgrade).id;
+                    configSelUpgradeSlot.selectedUpgradeId = xwingData.upgrades.find(upgrade => upgrade.name == autoEquipUpgrade).id; // TODO: directly mutated state?
                 }
             }
         }
@@ -352,5 +351,3 @@ class SquadBuilderCpt extends React.Component {
 }
 
 SquadBuilderCpt.contextType = UserContext;
-
-module.exports = SquadBuilderCpt;

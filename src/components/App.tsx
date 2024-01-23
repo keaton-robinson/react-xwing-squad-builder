@@ -1,11 +1,10 @@
-const React = require('react');
-const HeaderComponent = require('./HeaderComponent.js');
-const SquadBuilderCpt = require('./SquadBuilderCpt.js');
-const ModalContainer = require('./modals/ModalContainer.js');
+import React from 'react';
+import HeaderComponent from './HeaderComponent';
+import SquadBuilderCpt from './SquadBuilderCpt';
+import ModalContainer from './modals/ModalContainer';
 const ms = require('ms');
-const xwingData = require('../data/xwing_data.js');
-const { UserContext } = require('./UserContext.js');
-
+import * as xwingData from '../data/xwing_data';
+import { UserContext } from './UserContext';
 
 const factionsOrdered = [
   xwingData.factionNames["Rebel Alliance"],
@@ -18,11 +17,18 @@ const factionsOrdered = [
   //,"MultiFaction"
 ];
 
-class App extends React.Component  {
-  constructor(props){
+
+interface AppState {
+  selectedFaction: keyof typeof xwingData.factionNames;
+  modalToShow: React.ReactElement;
+  user: any;
+}
+
+class App extends React.Component<{}, AppState>  {
+  constructor(props: {}){
     super(props);
     this.state = { 
-      selectedFaction: xwingData.factionNames['Rebel Alliance'], 
+      selectedFaction: xwingData.factionNames['Rebel Alliance'] as keyof typeof xwingData.factionNames, 
       modalToShow: null,
       user: null 
     };
@@ -42,7 +48,7 @@ class App extends React.Component  {
     }
   }
 
-  setModal = ( modalConfig ) => {
+  setModal = ( modalConfig: any ) => {
     const modalToShow = modalConfig ? <ModalContainer handleClose={() => this.setModal(null)} headerTitle={modalConfig.title}>
         {modalConfig.children}
       </ModalContainer> : null;
@@ -52,14 +58,14 @@ class App extends React.Component  {
     }
   }
 
-  setSelectedFaction = (faction) => {
+  setSelectedFaction = (faction: keyof typeof xwingData.factionNames) => {
     this.setState( {selectedFaction: faction} );
   }
 
   render() {
     const userContextBundle = {
       user: this.state.user,
-      login: (userObj) => {
+      login: (userObj: any) => {
         userObj.loginTime = Date.now();
         this.setState({user: userObj});
         localStorage.setItem("user", JSON.stringify(userObj));
@@ -93,4 +99,5 @@ class App extends React.Component  {
   }
 }
 
-module.exports = App;
+
+export default App;

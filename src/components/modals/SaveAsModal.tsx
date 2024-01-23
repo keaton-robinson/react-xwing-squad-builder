@@ -1,6 +1,15 @@
-const React = require('react');
+import React from 'react';
 
-class SaveAsModal extends React.Component {
+
+interface SaveAsModalProps {
+    squadName: string
+    saveSquad: (string) => any;
+}
+
+interface SaveAsModalState {
+    squadName: string
+}
+export default class SaveAsModal extends React.Component<SaveAsModalProps, SaveAsModalState> {
     
     constructor(props) {
         super(props);
@@ -31,5 +40,3 @@ class SaveAsModal extends React.Component {
         );
     }
 }
-
-module.exports = SaveAsModal;

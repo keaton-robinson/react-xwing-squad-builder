@@ -1,12 +1,12 @@
-const React = require('react');
-const xwingData = require('../data/xwing_data.js');
-const xwingUtils = require('../data/xwing_utils.js');
-const ActionsCpt = require('./ActionsCpt.js');
-const ManeuversCpt = require('./ManeuversCpt.js');
-const StatBlockCpt = require('./StatBlockCpt.js');
-const UpgradesCpt = require('./UpgradesCpt.js');
+import React from 'react';
+import * as xwingData from '../data/xwing_data';
+import * as xwingUtils from '../data/xwing_utils';
+import ActionsCpt from './ActionsCpt';
+import ManeuversCpt from './ManeuversCpt';
+import StatBlockCpt from './StatBlockCpt';
+import UpgradesCpt from './UpgradesCpt';
 
-class InfoPanelPilotCpt extends React.Component {
+export default class InfoPanelPilotCpt extends React.Component {
 
     constructor(props){
         super(props);
@@ -51,5 +51,3 @@ class InfoPanelPilotCpt extends React.Component {
     }
 
 }
-
-module.exports = InfoPanelPilotCpt;
