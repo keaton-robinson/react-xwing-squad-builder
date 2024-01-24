@@ -17,9 +17,10 @@ If I were writing this again in 2024, here's some changes I would make:
    - probably use a context / provider to avoid some prop drilling.
    - look for opportunities to use useMemo rather than useState for derived state (thinking of filtered dropdowns in particular) 
 - Use TypeScript from the very beginning. I did add TypeScript and start adding type annotations to some things here though.
-- include unit tests from the beginning. I did add a few unit tests here already
+- include unit tests from the beginning. I added a few unit tests here as an exercise.
+   - and avoid direct dependencies. Use dependency injection so that faking test dependencies is possible without fancy Jest tricks
 - I suppose the data layer is a bit trivial still, since I just bundle the data with the application code at the moment. I might consider separating that out to practice a more realistic scenario.
-- would go fix my custom drop down components to respect a change to their props and re-render with the selected item showing. The app currently has to do that from the parent component 
+- improve the custom drop down component used. Currently, the containing component has to manage it more than is appropriate. 
 
 
 I borrowed a few aeshetic things and a dataset from YASB so that I could focus on the engineering aspects of this project.   
