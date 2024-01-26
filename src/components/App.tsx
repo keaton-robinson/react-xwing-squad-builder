@@ -4,7 +4,7 @@ import SquadBuilderCpt from './SquadBuilderCpt';
 import ModalContainer from './modals/ModalContainer';
 const ms = require('ms');
 import * as xwingData from '../data/xwing_data';
-import { UserContext } from './UserContext';
+import { UserContext, UserContextBundle } from './UserContext';
 
 const factionsOrdered = [
   xwingData.factionNames["Rebel Alliance"],
@@ -17,7 +17,6 @@ const factionsOrdered = [
   //,"MultiFaction"
 ];
 
-
 interface AppState {
   selectedFaction: keyof typeof xwingData.factionNames;
   modalToShow: React.ReactElement;
@@ -28,7 +27,7 @@ class App extends React.Component<{}, AppState>  {
   constructor(props: {}){
     super(props);
     this.state = { 
-      selectedFaction: xwingData.factionNames['Rebel Alliance'] as keyof typeof xwingData.factionNames, 
+      selectedFaction: xwingData.factionNames['Rebel Alliance'] as xwingData.Faction, 
       modalToShow: null,
       user: null 
     };
@@ -63,7 +62,7 @@ class App extends React.Component<{}, AppState>  {
   }
 
   render() {
-    const userContextBundle = {
+    const userContextBundle: UserContextBundle = {
       user: this.state.user,
       login: (userObj: any) => {
         userObj.loginTime = Date.now();
@@ -86,14 +85,14 @@ class App extends React.Component<{}, AppState>  {
         />
         <main>
           {factionsOrdered.map(faction=> (
-            <SquadBuilderCpt
-            selectedFaction={this.state.selectedFaction} 
-            key={faction} 
-            faction={faction}
-            setModal={this.setModal} />
+            <SquadBuilderCpt key={faction} 
+              selectedFaction={this.state.selectedFaction} 
+              faction={faction}
+              setModal={this.setModal} 
+            />
           ))}
         </main>
-        { this.state.modalToShow && this.state.modalToShow }
+        { this.state.modalToShow }
       </UserContext.Provider>
     );
   }
