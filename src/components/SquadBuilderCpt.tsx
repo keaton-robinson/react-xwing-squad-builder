@@ -9,7 +9,7 @@ import LoadModal from './modals/LoadModal';
 import * as xwingData from '../data/xwing_data';
 import { Faction, ShipName } from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
-import { UserContext, UserContextBundle } from './UserContext.js'; 
+import { UserContext, UserContextBundle } from './UserContext'; 
 import { SelectedPilot } from '../data/xwing_utils';
 
 

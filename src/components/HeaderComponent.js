@@ -2,7 +2,7 @@ import React from 'react';
 import FactionCpt from './FactionCpt';
 import LoginModal from './modals/LoginModal';
 import RegisterModal from './modals/RegisterModal';
-import { UserContext } from './UserContext.js'
+import { UserContext } from './UserContext'
 
 export default function HeaderComponent(props)  {
   const showLogin = () => {
