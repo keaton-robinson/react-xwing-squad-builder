@@ -54,17 +54,6 @@ export default class PilotRowCpt extends React.Component {
     cloneBtnPressed = (e) => {
         this.props.clonePilot(this.props.selectedPilot);
     }
-
-    // leaving this lint error in place for now because I don't fully recall why I needed this code in the first place
-    // and componentDidUpdate usually checks previous props...but I didn't
-    componentDidUpdate = (prevProps) => {
-        //the custom dropdowns don't automatically update their selected item or "title" on re-renders, sadly
-        let current = this.ddlSelectPilotRef.current;
-        if(current.state.selectedItem.value != this.props.selectedPilot.id){
-            current.selectSingleItem({value: this.props.selectedPilot.id});
-        }
-    }
-
     
     render() {
         const shipsForCustomDropdown = this.props.factionShips.map(ship => ({ label: ship, value: ship}));

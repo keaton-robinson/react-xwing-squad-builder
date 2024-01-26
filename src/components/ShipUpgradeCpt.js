@@ -53,14 +53,14 @@ export default class ShipUpgradeCpt extends React.Component {
         }
     }
 
-    componentDidUpdate = (prevProps) => {
-        // TODO: fix the custom drop downs so I don't have to directly modify a child component like this
-        //the custom dropdowns don't automatically update their selected item or "title" on re-renders, sadly
-        let current = this.ddlSelectedUpgradeRef.current;
-        if(current.state.selectedItem && current.state.selectedItem.value != this.props.upgradeSlot.selectedUpgradeId){
-            current.selectSingleItem({value: this.props.upgradeSlot.selectedUpgradeId});
-        }
-    }
+    // componentDidUpdate = (prevProps) => {
+    //     // TODO: fix the custom drop downs so I don't have to directly modify a child component like this
+    //     //the custom dropdowns don't automatically update their selected item or "title" on re-renders, sadly
+    //     let current = this.ddlSelectedUpgradeRef.current;
+    //     if(current.state.selectedItem && current.state.selectedItem.value != this.props.upgradeSlot.selectedUpgradeId){
+    //         current.selectSingleItem({value: this.props.upgradeSlot.selectedUpgradeId});
+    //     }
+    // }
 
     render() {
         const squadContainsAnotherSolitaryCardForThisSlot = xwingUtils.squadContainsAnotherSolitaryCardForThisSlot(this.props.upgradeSlot,this.props.squad, xwingData.upgrades);
@@ -79,7 +79,7 @@ export default class ShipUpgradeCpt extends React.Component {
                 styles={DropDownStyles}
                 onMouseEnter={this.handleMouseEnter}
                 immutable={this.props.upgradeSlot.parentUpgradeSlotKey || squadContainsAnotherSolitaryCardForThisSlot}
-                select={this.props.upgradeSlot.selectedUpgradeId ? {value: this.props.upgradeSlot.selectedUpgradeId} : null}
+                select={{value: this.props.upgradeSlot.selectedUpgradeId}}
             />
         ); 
     }
