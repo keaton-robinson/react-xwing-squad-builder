@@ -1,11 +1,7 @@
 import React, { StrictMode } from 'react';
-import ReactDOM from 'react-dom';
-
+import { createRoot } from 'react-dom/client';
 import App from './components/App';
 
-ReactDOM.render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-  document.getElementById('mountNode'),
-);
+const container = document.getElementById('mountNode');
+const root = createRoot(container);
+root.render(<StrictMode><App /></StrictMode>);
