@@ -96,13 +96,15 @@ export default class PilotRowCpt extends React.Component {
                 </div>
                 <div className="shipUpgrades">
                     { this.props.selectedPilot.selectedUpgrades.map(selectedUpgrade => (
-                        <ShipUpgradeCpt key={ selectedUpgrade.key }
-                            upgradeSlot= {selectedUpgrade}
-                            changeUpgrade= {this.props.changeUpgrade}
-                            pilot= {this.props.selectedPilot}
-                            squad= {this.props.squad}
-                            onRecordMouseEnter= {this.handleUpgradeMouseEnter}
-                        />
+                        <span key={selectedUpgrade.key} data-upgrade-slot={selectedUpgrade.key} >
+                            <ShipUpgradeCpt 
+                                upgradeSlot= {selectedUpgrade}
+                                changeUpgrade= {this.props.changeUpgrade}
+                                pilot= {this.props.selectedPilot}
+                                squad= {this.props.squad}
+                                onRecordMouseEnter= {this.handleUpgradeMouseEnter}
+                            />
+                        </span>
                     )) }
                 </div> 
                 <div className="deleteOrCopyShip" style={{marginTop:"5px"}}>
