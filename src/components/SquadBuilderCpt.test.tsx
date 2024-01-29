@@ -22,20 +22,24 @@ test('after removing prerequsite upgrade, automatically removes upgrade that dep
   const { container } =  render(<SquadBuilderCpt selectedFaction={'Rebel Alliance'} faction={'Rebel Alliance'} setModal={function (modalConfig: any): void {
       throw new Error('Function not implemented.');
   } } />);
+
+  const selectUpgrade = async (key, originalText, textToSelect) => {
+    const upgradeSlot = container.querySelector(`[data-upgrade-slot="${key}"]`);
+    const currentMatcher = new RegExp(originalText, 'i');
+    // @ts-ignore
+    await userEvent.click(within(upgradeSlot).getByText(currentMatcher));
+    const selectionMatcher = new RegExp(textToSelect, 'i'); // 'i' flag for case-insensitive match
+    const upgradeToSelect = screen.getByText(selectionMatcher); 
+    await userEvent.click(upgradeToSelect);  
+  }
+
   const newShipElement = screen.getByText(/Add a ship/i);
   await userEvent.click(newShipElement);
   const VCXElement = screen.getByText(/VCX-100/i);
   await userEvent.click(VCXElement)
-  const gunnerUpgradeSlot = container.querySelector('[data-upgrade-slot="Gunner1"]');
-  // @ts-ignore
-  await userEvent.click(within(gunnerUpgradeSlot).getByText(/No Gunner Upgrade/i));
-  const ezraGunner = screen.getByText(/Ezra Bridger/i);
-  await userEvent.click(ezraGunner);
-  let crewUpgradeSlot = container.querySelector('[data-upgrade-slot="Crew1"]');
-  // @ts-ignore
-  await userEvent.click(within(crewUpgradeSlot).getByText(/No Crew Upgrade/i));
-  const maulCrew = screen.getByText(/Maul/i);
-  await userEvent.click(maulCrew);
+
+  await selectUpgrade("Gunner1", "No Gunner Upgrade", "Ezra Bridger");
+  await selectUpgrade("Crew1", "No Crew Upgrade", "Maul");
   
   let elements = container.querySelectorAll('.dd-header-title');
   let maulElement = Array.from(elements).find(el => el.textContent === "Maul (10)");
@@ -44,10 +48,10 @@ test('after removing prerequsite upgrade, automatically removes upgrade that dep
       // Handle the case where the element is not found
       throw new Error('Element with the class "dd-header-title" and text "Maul (10)" not found after selecting Maul');
   }
-  // @ts-ignore
-  await userEvent.click(within(container.querySelector('[data-upgrade-slot="Gunner1"]')).getByText(/Ezra Bridger/i))
-  await userEvent.click(screen.getByText(/No Gunner Upgrade/i));
 
+  await selectUpgrade("Gunner1", "Ezra Bridger", "No Gunner Upgrade");
+
+  let crewUpgradeSlot = container.querySelector('[data-upgrade-slot="Crew1"]');
   // @ts-ignore
   const noCrew = within(crewUpgradeSlot).getByText(/No Crew Upgrade/i);
   expect(noCrew).toBeInTheDocument();
