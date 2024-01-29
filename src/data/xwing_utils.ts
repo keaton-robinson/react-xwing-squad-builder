@@ -19,7 +19,7 @@ interface SelectedUpgrade {
 interface SelectedPilot extends Pilot {
     pilotShip: PilotShip;
     selectedUpgrades: SelectedUpgrade[];
-
+    uiKey?: string;
 }
 
 type ShipBaseSize = "Small" | "Medium" | "Large" | "Huge";
@@ -444,7 +444,7 @@ function addUpgrades(newPilot: SelectedPilot, upgradesToAdd: SelectedUpgrade[], 
     });  
 }
 
-function getAppReadyPilot(pilot: Pilot, shipsData: Ship[]): SelectedPilot {
+function getAppReadyPilot(pilot: Pilot, shipsData: Record<string,Ship>): SelectedPilot {
     //makes deep copies so I don't have side effects on my "data repo"
     const shipForPilot = shipsData[pilot.ship]; 
     if(!shipForPilot)
