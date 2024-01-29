@@ -4,7 +4,7 @@ import * as xwingData from '../data/xwing_data';
 import ActionsCpt from './ActionsCpt';
 import ManeuversCpt from './ManeuversCpt';
 import UpgradesCpt from './UpgradesCpt';
-import StatBlockCpt from './StatBlockCpt.js';
+import StatBlockCpt from './StatBlockCpt';
 
 export default class InfoPanelShipCpt extends React.Component {
 

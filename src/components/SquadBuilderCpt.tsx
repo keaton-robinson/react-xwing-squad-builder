@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Context } from 'react';
 import InfoPanelCpt from './InfoPanelCpt';
 import PilotRowCpt from './PilotRowCpt';
 import AddShipCpt from './AddShipCpt';
@@ -7,8 +7,11 @@ import NewSquadConfirmModal from './modals/NewSquadConfirmModal';
 import SaveAsModal from './modals/SaveAsModal';
 import LoadModal from './modals/LoadModal';
 import * as xwingData from '../data/xwing_data';
+import { Faction, ShipName } from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
-import { UserContext } from './UserContext.js'; 
+import { UserContext, UserContextBundle } from './UserContext'; 
+import { SelectedPilot } from '../data/xwing_utils';
+
 
 const saveStatusMessages = {
     saving: "saving...",
@@ -16,11 +19,35 @@ const saveStatusMessages = {
     error: "error saving...please try again"
 };
 
-export default class SquadBuilderCpt extends React.Component {    	
+interface SquadBuilderCptProps {
+    selectedFaction: Faction;
+    faction: Faction;
+    setModal: (modalConfig: any) => void;
+}
+
+interface SquadBuilderCptState {
+    squadId: string;
+    squad: SelectedPilot[];
+    squadName: string;
+    modalToShow: any,
+    infoPanelCardToShow: { type: any, cardData: any}
+    saveStatusMessage: string,
+    editingSquadName: boolean,
+}
+
+export default class SquadBuilderCpt extends React.Component<SquadBuilderCptProps, SquadBuilderCptState> {
+    factionShips: ShipName[];
+    initialState: SquadBuilderCptState;
+    fetchAbortController: AbortController;
+    loggedInUserOnPreviousRender: boolean;
+    context: UserContextBundle;
+    willUnmount: boolean;
+
+    
 	constructor(props) {
         super(props);
 
-        this.factionShips = Object.keys(xwingData.ships).filter(ship => xwingData.ships[ship].factions.includes(props.faction)).sort();
+        this.factionShips = Object.keys(xwingData.ships).filter(ship => xwingData.ships[ship].factions.includes(props.faction)).sort() as ShipName[];
 
         //initial state useful for reverting to defaults for "new squad" button
         this.initialState = {
@@ -28,16 +55,16 @@ export default class SquadBuilderCpt extends React.Component {
             squad: [],
             squadName: `${this.props.faction} Squadron`,
             modalToShow: null,
-            infoPanelCardToShow: null, // will expect an object of format { type: ("Ship"/"Pilot"/"Upgrade"), key: (string, number, number) }
+            infoPanelCardToShow: null,
             saveStatusMessage: null,
-            editingSquadName: false
+            editingSquadName: false,
         };
         this.state = this.initialState;
     }
 
     componentDidMount() {
 			this.fetchAbortController = new AbortController();
-			this.loggedInUserOnPreviousRender = this.context.user?.username;
+			this.loggedInUserOnPreviousRender = this.context?.user?.username;
     }
 
 	componentDidUpdate() {
@@ -45,11 +72,11 @@ export default class SquadBuilderCpt extends React.Component {
 		// a probably improper way of clearing the squad builder if the user logs out. 
 		// part of the reason to clear squad builder is to avoid a loaded squad's _id mongo property attempting to copy to a new user's squads
 		// could just remove that property from the squad instead, but clearing the squad builder is probably expected behavior for my audience (software dev interviewers)
-		if(this.loggedInUserOnPreviousRender && !(this.context.user?.username)){
+		if(this.loggedInUserOnPreviousRender && !(this.context?.user?.username)){
 			this.setState( this.initialState );
 		}
 
-		this.loggedInUserOnPreviousRender = this.context.user?.username;
+		this.loggedInUserOnPreviousRender = this.context?.user?.username;
 	}
 
     componentWillUnmount() {
@@ -63,6 +90,7 @@ export default class SquadBuilderCpt extends React.Component {
         if(this.state.squadId) {
             // do a put request to update squad
             // eslint-disable-next-line no-undef
+            // @ts-ignore
             fetch(XWING_API_ENDPOINT + `/squads/${this.state.squadId}`, {
                 method: "PATCH",
                 headers: {
@@ -100,6 +128,7 @@ export default class SquadBuilderCpt extends React.Component {
     saveSquadAs = (newSquadTitle) => {
         //need to include user token here
         // eslint-disable-next-line no-undef
+        // @ts-ignore
         fetch(XWING_API_ENDPOINT + '/squads', {
             method: "POST",
             headers: {
@@ -313,11 +342,11 @@ export default class SquadBuilderCpt extends React.Component {
                     </div>
                 </div>
                 <div className="squad-save-import-row">
-                    { this.context.user && <button className="btn-primary" onClick={this.saveClicked}><i className="fa-solid fa-save" style={{marginRight:"5px"}}></i>Save</button> }
-                    { this.context.user && <button className="btn-primary" onClick={this.showSaveAsModal}><i className="fa-solid fa-file" style={{marginRight:"5px"}}></i>Save As</button> }
-                    { this.context.user && <button className="btn-info" onClick={this.showLoadModal}>Load Squad</button> }
+                    { this.context?.user && <button className="btn-primary" onClick={this.saveClicked}><i className="fa-solid fa-save" style={{marginRight:"5px"}}></i>Save</button> }
+                    { this.context?.user && <button className="btn-primary" onClick={this.showSaveAsModal}><i className="fa-solid fa-file" style={{marginRight:"5px"}}></i>Save As</button> }
+                    { this.context?.user && <button className="btn-info" onClick={this.showLoadModal}>Load Squad</button> }
                     <button className="btn-danger" style={{margin: "5px"}} onClick={this.showNewSquadConfirmModal}>New Squad</button>
-                    { this.context.user && <span style={{visibility: this.state.saveStatusMessage ? "visible" : "hidden"}}>{this.state.saveStatusMessage}</span> }
+                    { this.context?.user && <span style={{visibility: this.state.saveStatusMessage ? "visible" : "hidden"}}>{this.state.saveStatusMessage}</span> }
                 </div>
                 <div className="shipAndInfoContainer">
                     <div className="shipAndObstacleSelectors">
