@@ -3,15 +3,20 @@ import { UserContext } from '../UserContext';
 
 export default function LoadModal(props) {
     const mounted = useRef(false);
+    const fetchAbortController = useRef(null); 
     const userContextBundle = useContext(UserContext);
     const [squads, setSquads] = useState([]);
     const [statusMessage, setStatusMessage] = useState("Fetching squads...");
     const [selectedSquad, setSelectedSquad] = useState(null);
 
-    const fetchAbortController = new AbortController();
+    
     useEffect(() => {
         mounted.current = true;
-        const signal = fetchAbortController.signal;
+        if(fetchAbortController.current){
+            fetchAbortController.current.abort();
+        }
+        fetchAbortController.current = new AbortController();
+        const signal = fetchAbortController.current.signal;
 
         // eslint-disable-next-line no-undef
         fetch(XWING_API_ENDPOINT + '/squads/' + props.faction, 
@@ -36,8 +41,10 @@ export default function LoadModal(props) {
         });
 
         return () => {
-            mounted.current = false; 
-            fetchAbortController.abort(); 
+            mounted.current = false;
+            if(fetchAbortController.current){
+                fetchAbortController.current.abort();
+            } 
         };
     }, []);
 
@@ -50,7 +57,7 @@ export default function LoadModal(props) {
     const deleteClicked = () => {
         if(selectedSquad){
             let deleteConfirmed = confirm(`Delete ${selectedSquad.name}?`);
-            const signal = fetchAbortController.signal;
+            const signal = fetchAbortController.current.signal;
 
             if(deleteConfirmed){
                 //delete the squad
