@@ -7,7 +7,7 @@
     "test": "jest",
     "test:watch": "jest --watchAll",
     "dev:server": "nodemon src/server/server.mjs --ignore dist/",
-    "dev:bundler": "webpack -w --mode=development --config webpack.base_config.js",
+    "dev:bundler": "webpack -w --mode=development --config webpack.config-dev.js",
     "start": "node src/server/server.mjs",
     "build": "webpack --mode=production --config webpack.config-prod.js"
   },

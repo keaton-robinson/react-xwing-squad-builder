@@ -6,15 +6,17 @@ import { UserContext } from '../UserContext'
 
 export default function LoginModal(props) {
     const mounted = useRef(false);
+    const fetchAbortController = useRef(null); 
     const [statusMessage, setStatusMessage] = useState('');
     const [successfullyLoggedIn, setSuccessfullyLoggedIn] = useState(false);
 
-    const fetchAbortController = new AbortController();
     useEffect(() => {
         mounted.current = true;
         return () => { 
             mounted.current = false;
-            fetchAbortController.abort(); 
+            if(fetchAbortController.current) {
+                fetchAbortController.current.abort();
+            } 
         };
     }, []);
 
@@ -31,6 +33,11 @@ export default function LoginModal(props) {
                         password: yup.string().required('Required')
                     })}
                     onSubmit={(values, { setSubmitting }) => {
+                        if (fetchAbortController.current) {
+                            fetchAbortController.current.abort(); // Abort previous request if still ongoing
+                        }
+                        fetchAbortController.current = new AbortController(); // Create a new controller for the new request
+                        
                         // eslint-disable-next-line no-undef
                         // @ts-ignore (environment variable)
                         fetch(XWING_API_ENDPOINT + '/users/login', {
@@ -42,7 +49,7 @@ export default function LoginModal(props) {
                                 username: values.username,
                                 password: values.password
                             }),
-                            signal: fetchAbortController.signal
+                            signal: fetchAbortController.current.signal
                         })
                         .then((response) => {
                             return response.json()
@@ -56,7 +63,7 @@ export default function LoginModal(props) {
                                 setStatusMessage(responseData.message);
                             }
                         })
-                        .catch(() => {
+                        .catch((err) => {
                             if(mounted.current){
                                 setStatusMessage("Sorry, there was an error while trying to login.");
                             }
