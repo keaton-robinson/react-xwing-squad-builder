@@ -80,7 +80,7 @@ nav ul li {
 .squad-name-and-points-row {
     display: flex;
     justify-content: space-between;
-    background-color: #161616;
+    /* background-color: #161616; */
 }
 
 .squad-name-and-points-row h3 {
