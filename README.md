@@ -1,5 +1,5 @@
 # 
-This is my reimplementation of a clone of an existing tool that I love, "Yet Another Squad Builder", or YASB. 
+This is a clone of an existing tool that I love, "Yet Another Squad Builder", or YASB. 
 YASB is a "squad builder" for the X-Wing miniatures game by Atomic Mass Games. You can see YASB live here: https://raithos.github.io/ and you can visit its GitHub repository here: https://github.com/raithos/xwing.
 
 This is the front-end's git repository. To see the backend api's codebase , see this repo: https://github.com/keaton-robinson/react-xwing-backend.
@@ -10,8 +10,8 @@ This was my first attempt at a non-trivial functioning React application. I made
 
 If I were writing this again, here's some changes I would make:
 - don't use React class component at all. Use only functional components
-- redesign how state is managed to ensure avoiding any direct state mutation
-- consider using a React context to share avoid some prop drilling. 
+- redesign how state is managed to avoid any direct state mutation
+- consider using a React context to avoid some prop drilling. 
 - Use TypeScript from the very beginning
 - include unit tests from the beginning. I added a few unit tests here as an exercise, but ran into problems once I started finding direct state mutations.
 - focus on having easy dependency injection so that faking test dependencies is possible without fancy Jest tricks
