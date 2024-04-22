@@ -29,7 +29,6 @@ interface SquadBuilderCptState {
     squadId: string;
     squad: SelectedPilot[];
     squadName: string;
-    modalToShow: any,
     infoPanelCardToShow: { type: any, cardData: any}
     saveStatusMessage: string,
     editingSquadName: boolean,
@@ -54,7 +53,6 @@ export default class SquadBuilderCpt extends React.Component<SquadBuilderCptProp
             squadId: null,
             squad: [],
             squadName: `${this.props.faction} Squadron`,
-            modalToShow: null,
             infoPanelCardToShow: null,
             saveStatusMessage: null,
             editingSquadName: false,
