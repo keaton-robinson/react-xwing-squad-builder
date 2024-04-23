@@ -9,7 +9,7 @@ import { Faction } from '../data/xwing_data';
 interface HeaderProps {
   factions: Faction[];
   selectedFaction: Faction;
-  onClick: (any) => void;
+  onClick: (faction: Faction) => void;
 }
 
 const HeaderComponent: React.FC<HeaderProps> = (props) =>  {

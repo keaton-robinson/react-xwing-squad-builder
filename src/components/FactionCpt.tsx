@@ -22,7 +22,7 @@ const getFontClassName = (factionName) => {
     }
 }
 
-const FactionCpt: React.FC<{faction: Faction, selectedFaction: Faction, onClick: (any) => void }> = (props) => {
+const FactionCpt: React.FC<{faction: Faction, selectedFaction: Faction, onClick: (faction: Faction) => void }> = (props) => {
     return (
         <li title={props.faction} style={ props.faction === props.selectedFaction ? { color: 'white', backgroundColor: "#337ab7"} : {} }
             onClick={() => { props.onClick(props.faction) }}
