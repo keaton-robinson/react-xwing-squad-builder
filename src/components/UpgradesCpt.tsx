@@ -2,7 +2,7 @@ import React from 'react';
 
 import * as xwingData from '../data/xwing_data';
 
-export default class UpgradesCpt extends React.Component{
+export default class UpgradesCpt extends React.Component<{pilots: any}>{
 
     constructor(props){
         super(props);
