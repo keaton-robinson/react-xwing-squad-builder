@@ -2,8 +2,8 @@ import React from 'react';
 import FactionCpt from './FactionCpt';
 import LoginModal from './modals/LoginModal';
 import RegisterModal from './modals/RegisterModal';
-import { UserContext } from './UserContext'
-import { useModalSetter } from './modals/ModalContext';
+import { UserContext } from '../contexts/UserContext'
+import { useModalSetter } from '../contexts/ModalContext';
 
 export default function HeaderComponent(props)  {
   const setModal = useModalSetter();
