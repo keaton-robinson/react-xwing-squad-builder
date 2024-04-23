@@ -2,10 +2,17 @@ import React from 'react';
 import FactionCpt from './FactionCpt';
 import LoginModal from './modals/LoginModal';
 import RegisterModal from './modals/RegisterModal';
-import { UserContext, useUserContext } from '../contexts/UserContext'
+import { useUserContext } from '../contexts/UserContext'
 import { useModalSetter } from '../contexts/ModalContext';
+import { Faction } from '../data/xwing_data';
 
-export default function HeaderComponent(props)  {
+interface HeaderProps {
+  factions: Faction[];
+  selectedFaction: Faction;
+  onClick: (any) => void;
+}
+
+const HeaderComponent: React.FC<HeaderProps> = (props) =>  {
   const setModal = useModalSetter();
   const userContext = useUserContext();
 
@@ -46,3 +53,5 @@ export default function HeaderComponent(props)  {
     </nav>
   </header>
 }
+
+export default HeaderComponent;
