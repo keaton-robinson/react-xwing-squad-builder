@@ -87,6 +87,7 @@ export default function LoginModal(props) {
                         </XwingForm>
                     : 
                         <div>
+                            {/* todo: make sure this works */}
                             <button className="btn-primary loginRegisterBtn" onClick={props.close}>Ok</button> 
                         </div>
                     }

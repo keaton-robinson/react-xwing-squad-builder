@@ -20,13 +20,12 @@ const ModalProvider: React.FC<{children}> = (props) => {
     const [modalToShow, setModalToShow] = useState<ReactElement | null>(null);
 
     const setModal = (modalConfig: ModalConfig) => {
-        const newModalToShow = modalConfig ? <ModalContainer handleClose={() => setModalToShow(null)} headerTitle={modalConfig.title}>
-            {modalConfig.children}
-        </ModalContainer> : null;
+        const newModalToShow = !modalConfig ? null :
+            <ModalContainer handleClose={() => setModalToShow(null)} headerTitle={modalConfig.title}>
+                {modalConfig.children}
+            </ModalContainer>;
 
-        if (modalToShow !== newModalToShow) {
-            setModalToShow(newModalToShow);
-        }
+        setModalToShow(newModalToShow);
     };
 
     return <SetModalContext.Provider value={setModal}>
