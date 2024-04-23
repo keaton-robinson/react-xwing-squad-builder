@@ -1,7 +1,7 @@
 import React from 'react';
 import FactionSelector from './FactionSelector';
-import ModalProvider from './modals/ModalContext';
-import { UserProvider } from './UserContext';
+import ModalProvider from '../contexts/ModalContext';
+import { UserProvider } from '../contexts/UserContext';
 
 const App: React.FC = () => {
 

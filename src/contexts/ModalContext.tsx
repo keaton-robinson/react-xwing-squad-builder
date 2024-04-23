@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, createContext, useContext }  from 'react';
-import ModalContainer from './ModalContainer';
+import ModalContainer from '../components/modals/ModalContainer';
 
  
 interface ModalConfig {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { UserContext } from '../UserContext';
+import { UserContext } from '../../contexts/UserContext';
 
 export default function LoadModal(props) {
     const mounted = useRef(false);

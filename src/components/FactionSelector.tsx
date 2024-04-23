@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import * as xwingData from '../data/xwing_data';
 import HeaderComponent from './HeaderComponent';
 import SquadBuilderCpt from './SquadBuilderCpt';
-import { useModalSetter } from './modals/ModalContext';
+import { useModalSetter } from '../contexts/ModalContext';
 
 const factionsOrdered: xwingData.Faction[] = [
     xwingData.factionNames["Rebel Alliance"],
