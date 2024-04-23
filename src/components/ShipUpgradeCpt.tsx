@@ -4,8 +4,9 @@ import * as xwingUtils from '../data/xwing_utils';
 import { Dropdown } from '@keatonr06/reactjs-dropdown-component';
 import { DropDownStyles } from '../styleData/styleData';
 
-export default class ShipUpgradeCpt extends React.Component {
+export default class ShipUpgradeCpt extends React.Component<any> {
 
+    private ddlSelectedUpgradeRef;
 
     constructor(props) {
         super(props);
@@ -66,7 +67,7 @@ export default class ShipUpgradeCpt extends React.Component {
         const squadContainsAnotherSolitaryCardForThisSlot = xwingUtils.squadContainsAnotherSolitaryCardForThisSlot(this.props.upgradeSlot,this.props.squad, xwingData.upgrades);
         const availableUpgrades = this.getAvailableUpgrades(squadContainsAnotherSolitaryCardForThisSlot)
                 .sort((upgrade1, upgrade2 )=> (xwingUtils.getUpgradeCost(upgrade1, this.props.pilot) - xwingUtils.getUpgradeCost(upgrade2, this.props.pilot))) 
-        const upgradesForCustomDropdown = availableUpgrades.map(availUpgrade => ({ label: availUpgrade.name + " (" + xwingUtils.getUpgradeCost(availUpgrade, this.props.pilot) + ")", value: availUpgrade.id, upgradeRecord: availUpgrade}));
+        const upgradesForCustomDropdown:{value: number, label: string, upgradeRecord?: xwingData.Upgrade }[] = availableUpgrades.map(availUpgrade => ({ label: availUpgrade.name + " (" + xwingUtils.getUpgradeCost(availUpgrade, this.props.pilot) + ")", value: availUpgrade.id, upgradeRecord: availUpgrade}));
         upgradesForCustomDropdown.unshift({ value: null , label: `No ${xwingData.slots[this.props.upgradeSlot.slot].displayName} Upgrade` }) // needed so that people can remove upgrades
         return (
             <Dropdown 
