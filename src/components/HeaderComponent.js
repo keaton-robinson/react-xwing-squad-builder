@@ -3,17 +3,20 @@ import FactionCpt from './FactionCpt';
 import LoginModal from './modals/LoginModal';
 import RegisterModal from './modals/RegisterModal';
 import { UserContext } from './UserContext'
+import { useModalSetter } from './modals/ModalContext';
 
 export default function HeaderComponent(props)  {
+  const setModal = useModalSetter();
+
   const showLogin = () => {
-    props.setModal({
+    setModal({
       title: "Login",
-      children: <LoginModal switchToRegister={showRegister} close={() => props.setModal(null)}/>
+      children: <LoginModal switchToRegister={showRegister} close={() => setModal(null)}/>
     })
   } 
 
   const showRegister = () => {
-    props.setModal({
+    setModal({
       title: "Register",
       children: <RegisterModal switchToLogin={showLogin}/>
     })

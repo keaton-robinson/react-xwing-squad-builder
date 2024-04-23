@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+const ms = require('ms');
 
 export interface UserContextBundle {
     user: any;
