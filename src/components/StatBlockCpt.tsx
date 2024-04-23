@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class StatBlockCpt extends React.Component {
+export default class StatBlockCpt extends React.Component<{pilot, ship, upgrade, pilotAfterUpgrades}> {
     
     constructor(props) {
         super(props);
