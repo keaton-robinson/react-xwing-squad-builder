@@ -3,21 +3,12 @@ import InfoPanelCpt from './InfoPanelCpt';
 import PilotRowCpt from './PilotRowCpt';
 import AddShipCpt from './AddShipCpt';
 import PrintSquadModal from './modals/PrintSquadModal';
-import NewSquadConfirmModal from './modals/NewSquadConfirmModal';
-import SaveAsModal from './modals/SaveAsModal';
-import LoadModal from './modals/LoadModal';
+import SaveLoadNew from './SaveLoadNewCpt';
 import * as xwingData from '../data/xwing_data';
 import { Faction, ShipName } from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
 import { UserContext, UserContextBundle } from '../contexts/UserContext'; 
 import { SelectedPilot } from '../data/xwing_utils';
-
-
-const saveStatusMessages = {
-    saving: "saving...",
-    success: "successfully saved!",
-    error: "error saving...please try again"
-};
 
 interface SquadBuilderCptProps {
     selectedFaction: Faction;
@@ -25,7 +16,7 @@ interface SquadBuilderCptProps {
     setModal: (modalConfig: any) => void;
 }
 
-interface SquadBuilderCptState {
+export interface SquadBuilderCptState {
     squadId: string;
     squad: SelectedPilot[];
     squadName: string;
@@ -82,115 +73,6 @@ export default class SquadBuilderCpt extends React.Component<SquadBuilderCptProp
 			this.willUnmount = true;
     }
 
-    // eslint-disable-next-line
-    saveClicked = (event) => {  // I want to be reminded this variable is available
-        //need to include user token here
-        if(this.state.squadId) {
-            // do a put request to update squad
-            // eslint-disable-next-line no-undef
-            // @ts-ignore
-            fetch(XWING_API_ENDPOINT + `/squads/${this.state.squadId}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8",
-                    Authorization: this.context.user.token
-                },
-                body: JSON.stringify({
-                    name: this.state.squadName,
-                    points: xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades),
-                    pilots: this.state.squad
-                })
-            })
-            .then(response => response.json())
-            .then(responseData => {
-                if(responseData.success){
-                    this.setState({ squadId: responseData.savedSquad._id, saveStatusMessage: saveStatusMessages.success });
-                } else {
-                    this.setState({saveStatusMessage: saveStatusMessages.error});
-                }
-            }) // eslint-disable-next-line  
-            .catch(error => { //I want to be reminded this variable is available
-                if(!this.willUnmount){
-                    this.setState({ saveStatusMessage: saveStatusMessages.error});
-                }
-            }); 
-
-            this.setState({ saveStatusMessage: saveStatusMessages.saving});
-            
-        } else {
-            // do a post request to create new squad
-            this.saveSquadAs(this.state.squadName)
-        }
-    }
-
-    saveSquadAs = (newSquadTitle) => {
-        //need to include user token here
-        // eslint-disable-next-line no-undef
-        // @ts-ignore
-        fetch(XWING_API_ENDPOINT + '/squads', {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                Authorization: this.context.user.token
-            },
-            body: JSON.stringify({
-                faction: this.props.selectedFaction,
-                name: newSquadTitle,
-                points: xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades),
-                pilots: this.state.squad
-            })
-        })
-        .then(response => response.json())
-        .then(responseData => {
-            if(responseData.success){
-                this.setState({ squadId: responseData.savedSquad._id ,saveStatusMessage: saveStatusMessages.success});
-            } else {
-                this.setState({ saveStatusMessage: saveStatusMessages.error });
-            }
-        })
-        // eslint-disable-next-line
-        .catch(error => { // I want to be reminded this variable is available
-            if(!this.willUnmount){
-                this.setState({ saveStatusMessage: saveStatusMessages.error });
-            }
-        }); 
-        
-        this.setState({ squadName: newSquadTitle, saveStatusMessage: saveStatusMessages.saving});
-        this.props.setModal(null);
-        
-    }
-
-    loadSquad = (selectedSquad) => {
-        const initialState = this.initialState;
-        this.setState({...initialState, squadId: selectedSquad._id, squad: selectedSquad.pilots, squadName: selectedSquad.name});
-        this.props.setModal(null);
-    }
-
-    showSaveAsModal = () => {
-        this.props.setModal({ 
-            title: 'Save squad', 
-            children: <SaveAsModal saveSquad={this.saveSquadAs} squadName={this.state.squadName}/> 
-        });
-    }
-
-    showLoadModal = () => {
-        this.props.setModal({ 
-            title: `Load ${this.props.faction} squad`, 
-            children: <LoadModal faction={this.props.faction} loadSquad={this.loadSquad} /> 
-        });
-    }
-
-    createNewSquad = () => {
-        this.setState(this.initialState);
-        this.props.setModal(null);
-    }
-
-    showNewSquadConfirmModal = () => {
-        this.props.setModal({ 
-            title: `Create new squad?`, 
-            children: <NewSquadConfirmModal cancel={() => this.props.setModal(null)} createNewSquad={this.createNewSquad} /> 
-        });
-    }
 
     showPrintModal = () => {
         this.props.setModal({ 
@@ -339,13 +221,8 @@ export default class SquadBuilderCpt extends React.Component<SquadBuilderCptProp
                         <button className="btn-info" style={{margin:"5px"}} onClick={this.showPrintModal}>Print</button>
                     </div>
                 </div>
-                <div className="squad-save-import-row">
-                    { this.context?.user && <button className="btn-primary" onClick={this.saveClicked}><i className="fa-solid fa-save" style={{marginRight:"5px"}}></i>Save</button> }
-                    { this.context?.user && <button className="btn-primary" onClick={this.showSaveAsModal}><i className="fa-solid fa-file" style={{marginRight:"5px"}}></i>Save As</button> }
-                    { this.context?.user && <button className="btn-info" onClick={this.showLoadModal}>Load Squad</button> }
-                    <button className="btn-danger" style={{margin: "5px"}} onClick={this.showNewSquadConfirmModal}>New Squad</button>
-                    { this.context?.user && <span style={{visibility: this.state.saveStatusMessage ? "visible" : "hidden"}}>{this.state.saveStatusMessage}</span> }
-                </div>
+                <SaveLoadNew faction={this.props.faction} squad={this.state.squad} squadName={this.state.squadName} 
+                    setSquadBuilderState={this.setState.bind(this)} initialSquadBuilderState={this.initialState} />
                 <div className="shipAndInfoContainer">
                     <div className="shipAndObstacleSelectors">
                         {this.state.squad.map(squadPilot => (
