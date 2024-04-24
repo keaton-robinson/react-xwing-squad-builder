@@ -222,7 +222,16 @@ export default class SquadBuilderCpt extends React.Component<SquadBuilderCptProp
                     </div>
                 </div>
                 <SaveLoadNew faction={this.props.faction} squad={this.state.squad} squadName={this.state.squadName} 
-                    setSquadBuilderState={this.setState.bind(this)} initialSquadBuilderState={this.initialState} />
+                    onSquadSaved={ (newSquadId: string): void =>  {
+                        this.setState({ squadId: newSquadId });
+                    } } onSquadNameChanged={(newName: string): void => {
+                        this.setState({ squadName: newName});
+                    } } onSquadLoaded={(loadedSquad: {_id: string, name: string, pilots: SelectedPilot[]}): void => {
+                        this.setState({...this.initialState, squadId: loadedSquad._id, squad: loadedSquad.pilots, squadName: loadedSquad.name});
+                    } } onNewSquadStarted={(): void => {
+                        this.setState(this.initialState);
+                    } }
+                />
                 <div className="shipAndInfoContainer">
                     <div className="shipAndObstacleSelectors">
                         {this.state.squad.map(squadPilot => (

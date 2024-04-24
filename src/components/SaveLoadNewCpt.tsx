@@ -21,8 +21,10 @@ interface SaveLoadNewProps {
     squad: SelectedPilot[];
     squadName: string;
     faction: Faction;
-    setSquadBuilderState: (any) => void // squad builder component state setter. // TODO: redo this
-    initialSquadBuilderState: SquadBuilderCptState
+    onSquadSaved: (squadId: string) => void;
+    onSquadNameChanged: (newName: string) => void;
+    onSquadLoaded: (loadedSquad: {_id: string, name: string, pilots: SelectedPilot[]}) => void;
+    onNewSquadStarted: () => void;
 }
 
 const SaveLoadNew: React.FC<SaveLoadNewProps> = (props) => {
@@ -65,7 +67,7 @@ const SaveLoadNew: React.FC<SaveLoadNewProps> = (props) => {
             const responseData = await response.json();
             if(isMounted.current) {
                 if(responseData.success){
-                    props.setSquadBuilderState({ squadId: responseData.savedSquad._id });
+                    props.onSquadSaved(responseData.savedSquad._id);
                     setSaveStatusMessage(saveStatusMessages.success);
                 } else {
                     setSaveStatusMessage(saveStatusMessages.error);
@@ -79,7 +81,7 @@ const SaveLoadNew: React.FC<SaveLoadNewProps> = (props) => {
     }
 
     const saveSquadAs = async (newSquadTitle) => {
-        props.setSquadBuilderState({ squadName: newSquadTitle});
+        props.onSquadNameChanged(newSquadTitle);
         setSaveStatusMessage(saveStatusMessages.saving);
         setModal(null);
 
@@ -102,7 +104,7 @@ const SaveLoadNew: React.FC<SaveLoadNewProps> = (props) => {
             const responseData = await response.json();
             if(isMounted.current) {
                 if(responseData.success){
-                    props.setSquadBuilderState({ squadId: responseData.savedSquad._id });
+                    props.onSquadSaved(responseData.savedSquad._id);
                     setSaveStatusMessage(saveStatusMessages.success);
                 } else {
                     setSaveStatusMessage(saveStatusMessages.error);
@@ -117,7 +119,8 @@ const SaveLoadNew: React.FC<SaveLoadNewProps> = (props) => {
 
     const loadSquad = (selectedSquad) => {
         // reducer would make better encapsulated
-        props.setSquadBuilderState({...props.initialSquadBuilderState, squadId: selectedSquad._id, squad: selectedSquad.pilots, squadName: selectedSquad.name});
+        
+        props.onSquadLoaded(selectedSquad);
         setModal(null);
     }
 
@@ -136,7 +139,7 @@ const SaveLoadNew: React.FC<SaveLoadNewProps> = (props) => {
     }
 
     const createNewSquad = () => {
-        props.setSquadBuilderState(props.initialSquadBuilderState);
+        props.onNewSquadStarted();
         setModal(null);
     }
 
