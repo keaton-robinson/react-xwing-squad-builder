@@ -21,17 +21,13 @@ export interface SquadBuilderCptState {
     squad: SelectedPilot[];
     squadName: string;
     infoPanelCardToShow: { type: any, cardData: any}
-    saveStatusMessage: string,
-    editingSquadName: boolean,
 }
 
 export default class SquadBuilderCpt extends React.Component<SquadBuilderCptProps, SquadBuilderCptState> {
     factionShips: ShipName[];
     initialState: SquadBuilderCptState;
-    fetchAbortController: AbortController;
     loggedInUserOnPreviousRender: boolean;
     context: UserContextBundle;
-    willUnmount: boolean;
 
     
 	constructor(props) {
@@ -45,14 +41,11 @@ export default class SquadBuilderCpt extends React.Component<SquadBuilderCptProp
             squad: [],
             squadName: `${this.props.faction} Squadron`,
             infoPanelCardToShow: null,
-            saveStatusMessage: null,
-            editingSquadName: false,
         };
         this.state = this.initialState;
     }
 
     componentDidMount() {
-			this.fetchAbortController = new AbortController();
 			this.loggedInUserOnPreviousRender = this.context?.user?.username;
     }
 
@@ -61,18 +54,18 @@ export default class SquadBuilderCpt extends React.Component<SquadBuilderCptProp
 		// a probably improper way of clearing the squad builder if the user logs out. 
 		// part of the reason to clear squad builder is to avoid a loaded squad's _id mongo property attempting to copy to a new user's squads
 		// could just remove that property from the squad instead, but clearing the squad builder is probably expected behavior for my audience (software dev interviewers)
+
+
+
+        // this definitely looks flawed...maybe need an event to subscribe to
+        // wait...am I implenting useEFfect inside a class component?
+
 		if(this.loggedInUserOnPreviousRender && !(this.context?.user?.username)){
 			this.setState( this.initialState );
 		}
 
 		this.loggedInUserOnPreviousRender = this.context?.user?.username;
 	}
-
-    componentWillUnmount() {
-			this.fetchAbortController.abort();
-			this.willUnmount = true;
-    }
-
 
     showInfoPanelCard = (shipPilotOrUpgradeToShow, cardType) => {
         this.setState({ infoPanelCardToShow: {type: cardType, cardData: shipPilotOrUpgradeToShow} });
