@@ -1,4 +1,4 @@
-import React, { Context } from 'react';
+import React, { useEffect, useState } from 'react';
 import InfoPanelCpt from './InfoPanelCpt';
 import PilotRowCpt from './PilotRowCpt';
 import AddShipCpt from './AddShipCpt';
@@ -7,7 +7,7 @@ import SaveLoadNew from './SaveLoadNewCpt';
 import * as xwingData from '../data/xwing_data';
 import { Faction, ShipName } from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
-import { UserContext, UserContextBundle } from '../contexts/UserContext'; 
+import { useUserContext } from '../contexts/UserContext'; 
 import { SelectedPilot } from '../data/xwing_utils';
 
 interface SquadBuilderCptProps {
@@ -23,60 +23,34 @@ export interface SquadBuilderCptState {
     infoPanelCardToShow: { type: any, cardData: any}
 }
 
-export default class SquadBuilderCpt extends React.Component<SquadBuilderCptProps, SquadBuilderCptState> {
-    factionShips: ShipName[];
-    initialState: SquadBuilderCptState;
-    loggedInUserOnPreviousRender: boolean;
-    context: UserContextBundle;
+const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
+    const factionShips = Object.keys(xwingData.ships).filter(ship => xwingData.ships[ship].factions.includes(props.faction)).sort() as ShipName[];
+    const initialState = {
+        squadId: null,
+        squad: [],
+        squadName: `${props.faction} Squadron`,
+        infoPanelCardToShow: null,
+    };
+    const userContext = useUserContext();
+    const [state, setState] = useState<SquadBuilderCptState>(initialState);
 
-    
-	constructor(props) {
-        super(props);
+    // reset state if a logged in user logs out
+    useEffect(() => {
+        if(!userContext.user) {
+            setState(initialState);
+        }
+    },[userContext.user])
 
-        this.factionShips = Object.keys(xwingData.ships).filter(ship => xwingData.ships[ship].factions.includes(props.faction)).sort() as ShipName[];
-
-        //initial state useful for reverting to defaults for "new squad" button
-        this.initialState = {
-            squadId: null,
-            squad: [],
-            squadName: `${this.props.faction} Squadron`,
-            infoPanelCardToShow: null,
-        };
-        this.state = this.initialState;
+    const showInfoPanelCard = (shipPilotOrUpgradeToShow, cardType) => {
+        setState({...state,  infoPanelCardToShow: {type: cardType, cardData: shipPilotOrUpgradeToShow} });
     }
 
-    componentDidMount() {
-			this.loggedInUserOnPreviousRender = this.context?.user?.username;
-    }
-
-	componentDidUpdate() {
-		// TODO: research better ways of doing this
-		// a probably improper way of clearing the squad builder if the user logs out. 
-		// part of the reason to clear squad builder is to avoid a loaded squad's _id mongo property attempting to copy to a new user's squads
-		// could just remove that property from the squad instead, but clearing the squad builder is probably expected behavior for my audience (software dev interviewers)
-
-
-
-        // this definitely looks flawed...maybe need an event to subscribe to
-        // wait...am I implenting useEFfect inside a class component?
-
-		if(this.loggedInUserOnPreviousRender && !(this.context?.user?.username)){
-			this.setState( this.initialState );
-		}
-
-		this.loggedInUserOnPreviousRender = this.context?.user?.username;
-	}
-
-    showInfoPanelCard = (shipPilotOrUpgradeToShow, cardType) => {
-        this.setState({ infoPanelCardToShow: {type: cardType, cardData: shipPilotOrUpgradeToShow} });
-    }
-
-    removeInvalidUpgradesAndSetState= (updatedSquad) => {
+    const removeInvalidUpgradesAndSetState= (updatedSquad) => {
         xwingUtils.removeInvalidUpgrades(updatedSquad, xwingData.upgrades);
-        this.setState({ squad: updatedSquad });
+        setState({...state, squad: updatedSquad });
     }
 
-    setUpgradesOnNewPilot = (appReadyNewPilot, upgradesToApply, squadIncludingNewPilot) => {
+    const setUpgradesOnNewPilot = (appReadyNewPilot, upgradesToApply, squadIncludingNewPilot) => {
         if(upgradesToApply){
             xwingUtils.addUpgrades(appReadyNewPilot, upgradesToApply, squadIncludingNewPilot, xwingData.upgrades);
         } else {
@@ -91,129 +65,127 @@ export default class SquadBuilderCpt extends React.Component<SquadBuilderCptProp
         }
     }
 
-    addPilot = (pilotToAdd, upgradesToApply) => {
+    const addPilot = (pilotToAdd, upgradesToApply) => {
         const appReadyNewPilot = xwingUtils.getAppReadyPilot(pilotToAdd, xwingData.ships);
         appReadyNewPilot.uiKey =  xwingUtils.makeid(25);
-        const newSquadAfterAddition = [...this.state.squad, appReadyNewPilot];
+        const newSquadAfterAddition = [...state.squad, appReadyNewPilot];
 
-        this.setUpgradesOnNewPilot(appReadyNewPilot, upgradesToApply, newSquadAfterAddition);
-        this.removeInvalidUpgradesAndSetState(newSquadAfterAddition);
+        setUpgradesOnNewPilot(appReadyNewPilot, upgradesToApply, newSquadAfterAddition);
+        removeInvalidUpgradesAndSetState(newSquadAfterAddition);
     }
 
-    changePilot = (prevSelectedPilot, newPilot, copyUpgrades = true) => {
+    const changePilot = (prevSelectedPilot, newPilot, copyUpgrades = true) => {
         const appReadyNewPilot = xwingUtils.getAppReadyPilot(newPilot, xwingData.ships);
         //transfer the existing UI key to the new pilot object so react rcognizes it as the previous one
         appReadyNewPilot.uiKey = prevSelectedPilot.uiKey;  
 
         //get a copy of selected pilots and splice the new pilot into the position that the prev pilot was at
-        const squadCopy = [...this.state.squad];
+        const squadCopy = [...state.squad];
         const indexOfPilotToChange = squadCopy.findIndex(pilot => pilot.uiKey === prevSelectedPilot.uiKey);
         squadCopy.splice(indexOfPilotToChange, 1, appReadyNewPilot);
 
 
         if(copyUpgrades) {
-            this.setUpgradesOnNewPilot(appReadyNewPilot, prevSelectedPilot.selectedUpgrades, squadCopy);
+            setUpgradesOnNewPilot(appReadyNewPilot, prevSelectedPilot.selectedUpgrades, squadCopy);
         } else {
-            this.setUpgradesOnNewPilot(appReadyNewPilot, null, squadCopy);
+            setUpgradesOnNewPilot(appReadyNewPilot, null, squadCopy);
         }
 
-        this.removeInvalidUpgradesAndSetState(squadCopy);
+        removeInvalidUpgradesAndSetState(squadCopy);
     }
 
-    removePilot = (pilotToRemove) => {
-        const squadCopy = [...this.state.squad];
+    const removePilot = (pilotToRemove) => {
+        const squadCopy = [...state.squad];
         const indexOfPilotToChange = squadCopy.findIndex(pilot => pilot.uiKey === pilotToRemove.uiKey);
         squadCopy.splice(indexOfPilotToChange, 1);
 
-        this.removeInvalidUpgradesAndSetState(squadCopy);       
+        removeInvalidUpgradesAndSetState(squadCopy);       
     }
     
 
-    addCheapestAvailablePilotForShip = (ship, upgradesToInclude) => {
-        const cheapestAvailablePilot = xwingUtils.getCheapestAvailablePilotForShip(ship, this.props.faction, this.state.squad, xwingData.upgrades, xwingData.pilots);
+    const addCheapestAvailablePilotForShip = (ship, upgradesToInclude) => {
+        const cheapestAvailablePilot = xwingUtils.getCheapestAvailablePilotForShip(ship, props.faction, state.squad, xwingData.upgrades, xwingData.pilots);
         if(cheapestAvailablePilot){
-            this.addPilot(cheapestAvailablePilot, upgradesToInclude);
+            addPilot(cheapestAvailablePilot, upgradesToInclude);
         } else {
             alert("No more pilots available for " + ship);
         }
     }
 
-    changeShip = (shipToChangeTo, prevSelectedPilot) => {
-        const cheapestAvailablePilotForShip = xwingUtils.getCheapestAvailablePilotForShip(shipToChangeTo, this.props.faction, this.state.squad, xwingData.upgrades, xwingData.pilots);
+    const changeShip = (shipToChangeTo, prevSelectedPilot) => {
+        const cheapestAvailablePilotForShip = xwingUtils.getCheapestAvailablePilotForShip(shipToChangeTo, props.faction, state.squad, xwingData.upgrades, xwingData.pilots);
         if(cheapestAvailablePilotForShip){
-            this.changePilot(prevSelectedPilot, cheapestAvailablePilotForShip, false);
+            changePilot(prevSelectedPilot, cheapestAvailablePilotForShip, false);
         } else {
             alert("No more pilots available for " + shipToChangeTo);
         }
     }
 
 
-    clonePilot = (pilot) => {
-        if(xwingUtils.maxPilotOrUpgradeReached(pilot, this.state.squad, xwingData.upgrades)) {
-            this.addCheapestAvailablePilotForShip(pilot.ship, pilot.selectedUpgrades);
+    const clonePilot = (pilot) => {
+        if(xwingUtils.maxPilotOrUpgradeReached(pilot, state.squad, xwingData.upgrades)) {
+            addCheapestAvailablePilotForShip(pilot.ship, pilot.selectedUpgrades);
         } else {
-            this.addPilot(pilot, pilot.selectedUpgrades);
+            addPilot(pilot, pilot.selectedUpgrades);
         }
     }
 
-    changeUpgrade = (upgradeSlot, newlySelectedUpgrade, pilot) => {
-        if(newlySelectedUpgrade && xwingUtils.maxPilotOrUpgradeReached(newlySelectedUpgrade, this.state.squad, xwingData.upgrades)){
+    const changeUpgrade = (upgradeSlot, newlySelectedUpgrade, pilot) => {
+        if(newlySelectedUpgrade && xwingUtils.maxPilotOrUpgradeReached(newlySelectedUpgrade, state.squad, xwingData.upgrades)){
             alert("Already have max amount of " + newlySelectedUpgrade.name);
         } else {
-            xwingUtils.upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, this.state.squad, xwingData.upgrades);
+            xwingUtils.upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, state.squad, xwingData.upgrades);
         }
-        this.removeInvalidUpgradesAndSetState(this.state.squad);
+        removeInvalidUpgradesAndSetState(state.squad);
     }
 
-    onSquadNameChanged = (newName) => {
-        this.setState({ squadName: newName });
+    const onSquadNameChanged = (newName) => {
+        setState({ ...state, squadName: newName });
     }
 
-    render() {
-        return (
-            <div style={this.props.faction !== this.props.selectedFaction ? { display: 'none'} : {}}>
-                <SquadNamePointsPrint squadName={this.state.squadName} squad={this.state.squad} faction={this.props.faction}
-                    onSquadNameChanged={this.onSquadNameChanged}  />
-                <SaveLoadNew faction={this.props.faction} squad={this.state.squad} squadName={this.state.squadName} 
-                    onSquadSaved={ (newSquadId: string): void =>  {
-                        this.setState({ squadId: newSquadId });
-                    } } onSquadNameChanged={(newName: string): void => {
-                        this.setState({ squadName: newName});
-                    } } onSquadLoaded={(loadedSquad: {_id: string, name: string, pilots: SelectedPilot[]}): void => {
-                        this.setState({...this.initialState, squadId: loadedSquad._id, squad: loadedSquad.pilots, squadName: loadedSquad.name});
-                    } } onNewSquadStarted={(): void => {
-                        this.setState(this.initialState);
-                    } }
-                />
-                <div className="shipAndInfoContainer">
-                    <div className="shipAndObstacleSelectors">
-                        {this.state.squad.map(squadPilot => (
-                            <PilotRowCpt
-                                key={squadPilot.uiKey} 
-                                factionShips={this.factionShips}
-                                squad={this.state.squad}  
-                                selectedPilot={squadPilot}
-                                availablePilots={xwingData.pilots
-                                    .filter(availPilot => availPilot.ship===squadPilot.ship && availPilot.faction === this.props.faction
-                                            && (!xwingUtils.maxPilotOrUpgradeReached(availPilot, this.state.squad, xwingData.upgrades)
-                                                || availPilot.id == squadPilot.id))
-                                    .sort((first, second) => (first.points - second.points))}
-                                changePilot= {this.changePilot} 
-                                changeShip = {this.changeShip }
-                                removePilot = {this.removePilot }
-                                clonePilot = {this.clonePilot }
-                                changeUpgrade = { this.changeUpgrade }
-                                onRecordMouseEnter = { this.showInfoPanelCard } />
-                        ))}
-                        <AddShipCpt factionShips={this.factionShips} 
-                            onShipSelected={this.addCheapestAvailablePilotForShip}
-                            onRecordMouseEnter = { this.showInfoPanelCard }/>
-                    </div>
-                    {this.state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={this.state.infoPanelCardToShow} faction={this.props.faction}/> : <div style={{flex:1}}></div> }  
+    return (
+        <div style={props.faction !== props.selectedFaction ? { display: 'none'} : {}}>
+            <SquadNamePointsPrint squadName={state.squadName} squad={state.squad} faction={props.faction}
+                onSquadNameChanged={onSquadNameChanged}  />
+            <SaveLoadNew faction={props.faction} squad={state.squad} squadName={state.squadName} 
+                onSquadSaved={ (newSquadId: string): void =>  {
+                    setState({ ...state, squadId: newSquadId });
+                } } onSquadNameChanged={(newName: string): void => {
+                    setState({ ...state, squadName: newName});
+                } } onSquadLoaded={(loadedSquad: {_id: string, name: string, pilots: SelectedPilot[]}): void => {
+                    setState({...initialState, squadId: loadedSquad._id, squad: loadedSquad.pilots, squadName: loadedSquad.name});
+                } } onNewSquadStarted={(): void => {
+                    setState(initialState);
+                } }
+            />
+            <div className="shipAndInfoContainer">
+                <div className="shipAndObstacleSelectors">
+                    {state.squad.map(squadPilot => (
+                        <PilotRowCpt
+                            key={squadPilot.uiKey} 
+                            factionShips={factionShips}
+                            squad={state.squad}  
+                            selectedPilot={squadPilot}
+                            availablePilots={xwingData.pilots
+                                .filter(availPilot => availPilot.ship===squadPilot.ship && availPilot.faction === props.faction
+                                        && (!xwingUtils.maxPilotOrUpgradeReached(availPilot, state.squad, xwingData.upgrades)
+                                            || availPilot.id == squadPilot.id))
+                                .sort((first, second) => (first.points - second.points))}
+                            changePilot= {changePilot} 
+                            changeShip = {changeShip }
+                            removePilot = {removePilot }
+                            clonePilot = {clonePilot }
+                            changeUpgrade = { changeUpgrade }
+                            onRecordMouseEnter = { showInfoPanelCard } />
+                    ))}
+                    <AddShipCpt factionShips={factionShips} 
+                        onShipSelected={addCheapestAvailablePilotForShip}
+                        onRecordMouseEnter = { showInfoPanelCard }/>
                 </div>
+                {state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={state.infoPanelCardToShow} faction={props.faction}/> : <div style={{flex:1}}></div> }  
             </div>
-        );
-    }
+        </div>
+    );
 }
 
-SquadBuilderCpt.contextType = UserContext;
+export default SquadBuilderCpt;
