@@ -49,11 +49,7 @@ interface Ship {
     energyrecurr?: number;
 }
 
-function createShips<ShipsObjLiteral extends Record<string, Ship>>(shipsObjLiteral: ShipsObjLiteral): ShipsObjLiteral {
-    return shipsObjLiteral;
-}
-
-const ships = createShips({
+const ships: Record<string, Ship> = {
     "X-Wing": {
         name: "X-Wing",
         xws: "T-65 X-wing",
@@ -1541,8 +1537,7 @@ const ships = createShips({
             [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
     }
-});
-
+}
 type ShipName = keyof typeof ships;
 
 interface Pilot {
@@ -13126,11 +13121,7 @@ const upgradeRules: Record<string, UpgradeRulesText> = {
     }
 }
 
-function createSlots<SlotsObjLiteral extends Record<string, { key: string, displayName: string}>>(slotsLiteral: SlotsObjLiteral): SlotsObjLiteral {
-    return slotsLiteral;
-}
-
-const slots = createSlots({
+const slots: Record<string, { key: string, displayName: string}> = {
     Astromech: { key: "Astromech", displayName: "Astromech" }, 
     Force: { key: "Force", displayName: "Force" },
     Bomb: { key: "Bomb", displayName: "Bomb" } ,
@@ -13155,7 +13146,7 @@ const slots = createSlots({
     Hyperdrive: { key: "Hyperdrive", displayName: "Hyperdrive" },
     Team: { key: "Team", displayName: "Team" },
     Cargo: { key: "Cargo", displayName: "Cargo" }
-});
+};
 
 type Slots = keyof typeof slots;
 
