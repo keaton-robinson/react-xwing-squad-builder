@@ -2,7 +2,7 @@ import React, { Context } from 'react';
 import InfoPanelCpt from './InfoPanelCpt';
 import PilotRowCpt from './PilotRowCpt';
 import AddShipCpt from './AddShipCpt';
-import PrintSquadModal from './modals/PrintSquadModal';
+import SquadNamePointsPrint from './SquadNamePointsPrint';
 import SaveLoadNew from './SaveLoadNewCpt';
 import * as xwingData from '../data/xwing_data';
 import { Faction, ShipName } from '../data/xwing_data';
@@ -73,13 +73,6 @@ export default class SquadBuilderCpt extends React.Component<SquadBuilderCptProp
 			this.willUnmount = true;
     }
 
-
-    showPrintModal = () => {
-        this.props.setModal({ 
-            title: `${this.props.selectedFaction} Squadron (${xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades)})`, 
-            children: <PrintSquadModal squad={this.state.squad} /> 
-        });
-    }
 
     showInfoPanelCard = (shipPilotOrUpgradeToShow, cardType) => {
         this.setState({ infoPanelCardToShow: {type: cardType, cardData: shipPilotOrUpgradeToShow} });
@@ -179,48 +172,15 @@ export default class SquadBuilderCpt extends React.Component<SquadBuilderCptProp
         this.removeInvalidUpgradesAndSetState(this.state.squad);
     }
 
-    // eslint-disable-next-line 
-    editSquadClicked = (event) => { // I want to be reminded this variable is available
-        window.addEventListener("mousedown", this.editSquadCloseListener);
-
-        this.setState({ editingSquadName: true });
-    }
-
-    onSquadNameChanged = (event) => {
-        this.setState({ squadName: event.target.value });
-    }
-
-    onSquadNameEditKeyDown = (event) => {
-        if(event.keyCode == 13) { //they pressed "enter"
-            this.setState({ editingSquadName: false });
-        }
-    }
-
-    editSquadCloseListener = (event) => {
-        if(!(event.target.className == 'editSquadName')){
-            window.removeEventListener("mousedown", this.editSquadCloseListener);
-            this.setState({ editingSquadName:false });
-        }
+    onSquadNameChanged = (newName) => {
+        this.setState({ squadName: newName });
     }
 
     render() {
         return (
             <div style={this.props.faction !== this.props.selectedFaction ? { display: 'none'} : {}}>
-                <div className="squad-name-and-points-row">
-                    <div>
-                        { this.state.editingSquadName  
-                            ? <input className='editSquadName' autoFocus={true} type='text' value={this.state.squadName} onChange={this.onSquadNameChanged} onKeyDown={this.onSquadNameEditKeyDown}
-                                style={{fontSize:"1.2rem"}}/> 
-                            : <h2 style={{display: 'inline'}}>{this.state.squadName}</h2>} 
-                        <i className="far fa-edit" style={{marginLeft: "5px", fontSize: "1.2rem"}} onClick={this.editSquadClicked}></i>
-                    </div>
-                    <div className="points-display-container">
-                        <span>Points: { xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades) }/200 ({200-xwingUtils.getSquadCost(this.state.squad, xwingData.upgrades)} left)</span>
-                    </div>
-                    <div className='printBtn'>
-                        <button className="btn-info" style={{margin:"5px"}} onClick={this.showPrintModal}>Print</button>
-                    </div>
-                </div>
+                <SquadNamePointsPrint squadName={this.state.squadName} squad={this.state.squad} faction={this.props.faction}
+                    onSquadNameChanged={this.onSquadNameChanged}  />
                 <SaveLoadNew faction={this.props.faction} squad={this.state.squad} squadName={this.state.squadName} 
                     onSquadSaved={ (newSquadId: string): void =>  {
                         this.setState({ squadId: newSquadId });
