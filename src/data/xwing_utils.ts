@@ -714,7 +714,8 @@ function makeid(length: number): string {
    return result;
 }
 
-const InfoPanelCardTypes = {
+export type InfoPanelCardType = "Ship" | "Pilot" | "SelectedPilot" | "Upgrade";
+const InfoPanelCardTypes: Record<InfoPanelCardType, InfoPanelCardType> = {
     Ship: "Ship",
     Pilot: "Pilot",
     SelectedPilot: "SelectedPilot",

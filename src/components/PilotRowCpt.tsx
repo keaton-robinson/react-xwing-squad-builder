@@ -4,8 +4,25 @@ import * as xwingUtils from '../data/xwing_utils';
 import ShipUpgradeCpt from './ShipUpgradeCpt';
 import { Dropdown } from '@keatonr06/reactjs-dropdown-component';
 import { DropDownStyles } from '../styleData/styleData';
+import { InfoPanelCardType, SelectedPilot } from '../data/xwing_utils';
+import { Pilot, Ship, ShipName, Upgrade } from '../data/xwing_data';
 
-export default class PilotRowCpt extends React.Component {
+interface PilotRowCptProps {
+    factionShips: xwingData.ShipName[];
+    squad: SelectedPilot[];
+    selectedPilot: SelectedPilot;
+    availablePilots: Pilot[];
+    changePilot: (prevSelectedPilot: SelectedPilot, newPilot: Pilot, copyUpgrades?: boolean) => void;
+    changeShip: (shipToChangeTo: ShipName, prevSelectedPilot: SelectedPilot) => void;
+    removePilot: (pilotToRemove: SelectedPilot) => void;
+    clonePilot: (pilot: SelectedPilot) => void;
+    changeUpgrade: (upgradeSlot: xwingUtils.SelectedUpgrade, newlySelectedUpgrade: xwingData.Upgrade, pilot: SelectedPilot) => void;
+    onRecordMouseEnter: (shipPilotOrUpgradeToShow: Ship | Pilot | SelectedPilot | Upgrade, cardType: InfoPanelCardType) => void;
+}
+
+export default class PilotRowCpt extends React.Component<PilotRowCptProps> {
+    private ddlSelectPilotRef;
+
 
     constructor(props) {
         super(props);
@@ -45,12 +62,10 @@ export default class PilotRowCpt extends React.Component {
         this.props.onRecordMouseEnter(this.props.selectedPilot, xwingUtils.InfoPanelCardTypes.SelectedPilot);
     }
 
-    // eslint-disable-next-line no-unused-vars
     delBtnPressed = (e) => {
         this.props.removePilot(this.props.selectedPilot);
     }
 
-    // eslint-disable-next-line no-unused-vars
     cloneBtnPressed = (e) => {
         this.props.clonePilot(this.props.selectedPilot);
     }
