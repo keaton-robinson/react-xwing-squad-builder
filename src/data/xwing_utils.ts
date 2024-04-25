@@ -714,13 +714,11 @@ function makeid(length: number): string {
    return result;
 }
 
-export type InfoPanelCardType = "Ship" | "Pilot" | "SelectedPilot" | "Upgrade";
-const InfoPanelCardTypes: Record<InfoPanelCardType, InfoPanelCardType> = {
-    Ship: "Ship",
-    Pilot: "Pilot",
-    SelectedPilot: "SelectedPilot",
-    Upgrade: "Upgrade"
-}
+type InfoPanelCard = 
+    { type: "Ship", cardData: Ship } |
+    { type: "Pilot", cardData: Pilot } |
+    { type: "SelectedPilot", cardData: SelectedPilot } |
+    { type: "Upgrade", cardData: Upgrade }; 
 
 const fixIcons = (text) => {
     if (text != null){
@@ -808,5 +806,5 @@ const fixIcons = (text) => {
 export { 
     isNotNullOrUndefined, getUpgradeCost, getPilotCost, getSquadCost, getPilotEffectiveStats, maxPilotOrUpgradeReached, isUpgradeAllowed, 
     addUpgrades, getAppReadyPilot, getCheapestAvailablePilotForShip, removeInvalidUpgrades, upgradeSquadShip, squadContainsAnotherSolitaryCardForThisSlot,
-    InfoPanelCardTypes, getShipBaseSize, fixIcons, makeid, ShipBaseSize, SelectedUpgrade, SelectedPilot
+    InfoPanelCard, getShipBaseSize, fixIcons, makeid, ShipBaseSize, SelectedUpgrade, SelectedPilot
 }

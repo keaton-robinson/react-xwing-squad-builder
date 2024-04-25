@@ -8,7 +8,7 @@ import * as xwingData from '../data/xwing_data';
 import { Faction, Pilot, Ship, ShipName, Upgrade } from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
 import { useUserContext } from '../contexts/UserContext'; 
-import { InfoPanelCardType, SelectedPilot, SelectedUpgrade } from '../data/xwing_utils';
+import { InfoPanelCard, SelectedPilot, SelectedUpgrade } from '../data/xwing_utils';
 
 interface SquadBuilderCptProps {
     selectedFaction: Faction;
@@ -20,16 +20,16 @@ export interface SquadBuilderCptState {
     squadId: string;
     squad: SelectedPilot[];
     squadName: string;
-    infoPanelCardToShow: { type: any, cardData: any}
+    infoPanelCard: InfoPanelCard;
 }
 
 const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     const factionShips = Object.keys(xwingData.ships).filter(ship => xwingData.ships[ship].factions.includes(props.faction)).sort() as ShipName[];
-    const initialState = {
+    const initialState: SquadBuilderCptState = {
         squadId: null,
         squad: [],
         squadName: `${props.faction} Squadron`,
-        infoPanelCardToShow: null,
+        infoPanelCard: null,
     };
     const userContext = useUserContext();
     const [state, setState] = useState<SquadBuilderCptState>(initialState);
@@ -41,8 +41,8 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
         }
     },[userContext.user])
 
-    const showInfoPanelCard = (shipPilotOrUpgradeToShow: Ship | Pilot | SelectedPilot | Upgrade, cardType: InfoPanelCardType) => {
-        setState({...state,  infoPanelCardToShow: {type: cardType, cardData: shipPilotOrUpgradeToShow} });
+    const showInfoPanelCard = (infoPanelCard: InfoPanelCard) => {
+        setState({...state,  infoPanelCard: infoPanelCard });
     }
 
     const removeInvalidUpgradesAndSetState= (updatedSquad) => {
@@ -182,7 +182,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
                         onShipSelected={addCheapestAvailablePilotForShip}
                         onRecordMouseEnter = { showInfoPanelCard }/>
                 </div>
-                {state.infoPanelCardToShow ? <InfoPanelCpt cardToShow={state.infoPanelCardToShow} faction={props.faction}/> : <div style={{flex:1}}></div> }  
+                {state.infoPanelCard ? <InfoPanelCpt card={state.infoPanelCard} faction={props.faction}/> : <div style={{flex:1}}></div> }  
             </div>
         </div>
     );

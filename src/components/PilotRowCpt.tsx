@@ -4,8 +4,8 @@ import * as xwingUtils from '../data/xwing_utils';
 import ShipUpgradeCpt from './ShipUpgradeCpt';
 import { Dropdown } from '@keatonr06/reactjs-dropdown-component';
 import { DropDownStyles } from '../styleData/styleData';
-import { InfoPanelCardType, SelectedPilot } from '../data/xwing_utils';
-import { Pilot, Ship, ShipName, Upgrade } from '../data/xwing_data';
+import { InfoPanelCard, SelectedPilot } from '../data/xwing_utils';
+import { Pilot, ShipName, Upgrade } from '../data/xwing_data';
 
 interface PilotRowCptProps {
     factionShips: xwingData.ShipName[];
@@ -17,14 +17,14 @@ interface PilotRowCptProps {
     removePilot: (pilotToRemove: SelectedPilot) => void;
     clonePilot: (pilot: SelectedPilot) => void;
     changeUpgrade: (upgradeSlot: xwingUtils.SelectedUpgrade, newlySelectedUpgrade: xwingData.Upgrade, pilot: SelectedPilot) => void;
-    onRecordMouseEnter: (shipPilotOrUpgradeToShow: Ship | Pilot | SelectedPilot | Upgrade, cardType: InfoPanelCardType) => void;
+    onRecordMouseEnter: (infoPanelCard: InfoPanelCard) => void;
 }
 
 const PilotRowCpt:React.FC<PilotRowCptProps> = (props) => {
     const ddlSelectPilotRef = useRef(null);
 
     const shipsForCustomDropdown = props.factionShips.map(ship => ({ label: ship, value: ship}));
-    const pilotsForCustomDropDown = props.availablePilots.map(pilot => ({ label: pilot.name + " (" + pilot.points + ")", value: pilot.id, pilotRecord: pilot}));
+    const pilotsForCustomDropDown = props.availablePilots.map<{label: string, value: number, pilotRecord: Pilot}>(pilot => ({ label: pilot.name + " (" + pilot.points + ")", value: pilot.id, pilotRecord: pilot}));
 
     const handleShipSelection = (selectedShip) => {
         if(selectedShip.value != props.selectedPilot.ship){
@@ -33,30 +33,25 @@ const PilotRowCpt:React.FC<PilotRowCptProps> = (props) => {
     }
 
     const handlePilotSelection = (selectedPilot) =>  {
-        if(selectedPilot.value != props.selectedPilot.id)
-        {
+        if(selectedPilot.value != props.selectedPilot.id) {
             props.changePilot(props.selectedPilot, props.availablePilots.find(pilot => pilot.id == selectedPilot.value));
         }
     }
 
     const handleShipMouseEnter = (shipDropDownItem) => {
-        handleMouseEnter(xwingData.ships[shipDropDownItem.value], xwingUtils.InfoPanelCardTypes.Ship);
+        props.onRecordMouseEnter( { cardData:  xwingData.ships[shipDropDownItem.value], type: "Ship"   } );
     }
 
-    const handlePilotMouseEnter = (pilotDropDownItem) => {
-        handleMouseEnter(pilotDropDownItem.pilotRecord, xwingUtils.InfoPanelCardTypes.Pilot);
+    const handlePilotMouseEnter = (pilotDropDownItem: {label: string, value: number, pilotRecord: Pilot}) => {
+        props.onRecordMouseEnter({ cardData: pilotDropDownItem.pilotRecord, type: "Pilot" });
     }
 
-    const handleUpgradeMouseEnter = (upgrade) => {
-        handleMouseEnter(upgrade, xwingUtils.InfoPanelCardTypes.Upgrade);
-    }
-
-    const handleMouseEnter = (shipPilotOrUpgradeRecord, type) => {
-        props.onRecordMouseEnter(shipPilotOrUpgradeRecord, type);
+    const handleUpgradeMouseEnter = (upgrade: Upgrade) => {
+        props.onRecordMouseEnter({ cardData: upgrade, type: "Upgrade"});
     }
 
     const handlePilotHeaderMouseEnter = () => {
-        props.onRecordMouseEnter(props.selectedPilot, xwingUtils.InfoPanelCardTypes.SelectedPilot);
+        props.onRecordMouseEnter({ cardData: props.selectedPilot, type: "SelectedPilot"});
     }
 
     const delBtnPressed = (e) => {
