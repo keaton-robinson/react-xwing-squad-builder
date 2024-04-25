@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import * as xwingData from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
 import ShipUpgradeCpt from './ShipUpgradeCpt';
@@ -20,118 +20,113 @@ interface PilotRowCptProps {
     onRecordMouseEnter: (shipPilotOrUpgradeToShow: Ship | Pilot | SelectedPilot | Upgrade, cardType: InfoPanelCardType) => void;
 }
 
-export default class PilotRowCpt extends React.Component<PilotRowCptProps> {
-    private ddlSelectPilotRef;
+const PilotRowCpt:React.FC<PilotRowCptProps> = (props) => {
+    const ddlSelectPilotRef = useRef(null);
 
+    const shipsForCustomDropdown = props.factionShips.map(ship => ({ label: ship, value: ship}));
+    const pilotsForCustomDropDown = props.availablePilots.map(pilot => ({ label: pilot.name + " (" + pilot.points + ")", value: pilot.id, pilotRecord: pilot}));
 
-    constructor(props) {
-        super(props);
-        this.ddlSelectPilotRef = React.createRef();
-    }
-
-    handleShipSelection = (selectedShip) => {
-        if(selectedShip.value != this.props.selectedPilot.ship){
-            this.props.changeShip(selectedShip.value, this.props.selectedPilot);
+    const handleShipSelection = (selectedShip) => {
+        if(selectedShip.value != props.selectedPilot.ship){
+            props.changeShip(selectedShip.value, props.selectedPilot);
         }
     }
 
-    handlePilotSelection = (selectedPilot) =>  {
-        if(selectedPilot.value != this.props.selectedPilot.id)
+    const handlePilotSelection = (selectedPilot) =>  {
+        if(selectedPilot.value != props.selectedPilot.id)
         {
-            this.props.changePilot(this.props.selectedPilot, this.props.availablePilots.find(pilot => pilot.id == selectedPilot.value));
+            props.changePilot(props.selectedPilot, props.availablePilots.find(pilot => pilot.id == selectedPilot.value));
         }
     }
 
-    handleShipMouseEnter = (shipDropDownItem) => {
-        this.handleMouseEnter(xwingData.ships[shipDropDownItem.value], xwingUtils.InfoPanelCardTypes.Ship);
+    const handleShipMouseEnter = (shipDropDownItem) => {
+        handleMouseEnter(xwingData.ships[shipDropDownItem.value], xwingUtils.InfoPanelCardTypes.Ship);
     }
 
-    handlePilotMouseEnter = (pilotDropDownItem) => {
-        this.handleMouseEnter(pilotDropDownItem.pilotRecord, xwingUtils.InfoPanelCardTypes.Pilot);
+    const handlePilotMouseEnter = (pilotDropDownItem) => {
+        handleMouseEnter(pilotDropDownItem.pilotRecord, xwingUtils.InfoPanelCardTypes.Pilot);
     }
 
-    handleUpgradeMouseEnter = (upgrade) => {
-        this.handleMouseEnter(upgrade, xwingUtils.InfoPanelCardTypes.Upgrade);
+    const handleUpgradeMouseEnter = (upgrade) => {
+        handleMouseEnter(upgrade, xwingUtils.InfoPanelCardTypes.Upgrade);
     }
 
-    handleMouseEnter = (shipPilotOrUpgradeRecord, type) => {
-        this.props.onRecordMouseEnter(shipPilotOrUpgradeRecord, type);
+    const handleMouseEnter = (shipPilotOrUpgradeRecord, type) => {
+        props.onRecordMouseEnter(shipPilotOrUpgradeRecord, type);
     }
 
-    handlePilotHeaderMouseEnter = () => {
-        this.props.onRecordMouseEnter(this.props.selectedPilot, xwingUtils.InfoPanelCardTypes.SelectedPilot);
+    const handlePilotHeaderMouseEnter = () => {
+        props.onRecordMouseEnter(props.selectedPilot, xwingUtils.InfoPanelCardTypes.SelectedPilot);
     }
 
-    delBtnPressed = (e) => {
-        this.props.removePilot(this.props.selectedPilot);
+    const delBtnPressed = (e) => {
+        props.removePilot(props.selectedPilot);
     }
 
-    cloneBtnPressed = (e) => {
-        this.props.clonePilot(this.props.selectedPilot);
+    const cloneBtnPressed = (e) => {
+        props.clonePilot(props.selectedPilot);
     }
-    
-    render() {
-        const shipsForCustomDropdown = this.props.factionShips.map(ship => ({ label: ship, value: ship}));
-        const pilotsForCustomDropDown = this.props.availablePilots.map(pilot => ({ label: pilot.name + " (" + pilot.points + ")", value: pilot.id, pilotRecord: pilot}));
-        return (
-            <div className={'shipRow ship-' + getShipBackgroundStylePostFix(this.props.selectedPilot.ship)}>
-                <div className="shipAndPilotSelectorDiv">
-                    <div>
-                        <Dropdown 
-                            name="selectShip"
-                            titleSingular="Ship"
-                            title="Select a ship"
-                            list={shipsForCustomDropdown}
-                            onChange={this.handleShipSelection}
-                            select={{value: this.props.selectedPilot.ship}}
-                            styles={DropDownStyles}
-                            onMouseEnter={this.handleShipMouseEnter}
-                        />
-                    </div>
-                    <div>
-                        <Dropdown 
-                            name="selectPilot"
-                            titleSingular="Pilot"
-                            title="Select a pilot"
-                            list={pilotsForCustomDropDown}
-                            onChange={this.handlePilotSelection}
-                            select={{value: this.props.selectedPilot.id}}
-                            ref={this.ddlSelectPilotRef}
-                            styles={DropDownStyles}
-                            onHeaderMouseEnter={this.handlePilotHeaderMouseEnter}
-                            onMouseEnter={this.handlePilotMouseEnter}
-                        />
-                    </div>
+        
+    return (
+        <div className={'shipRow ship-' + getShipBackgroundStylePostFix(props.selectedPilot.ship)}>
+            <div className="shipAndPilotSelectorDiv">
+                <div>
+                    <Dropdown 
+                        name="selectShip"
+                        titleSingular="Ship"
+                        title="Select a ship"
+                        list={shipsForCustomDropdown}
+                        onChange={handleShipSelection}
+                        select={{value: props.selectedPilot.ship}}
+                        styles={DropDownStyles}
+                        onMouseEnter={handleShipMouseEnter}
+                    />
                 </div>
-                <div className="shipPointCost hideOnMobile">
-                    <span>{ xwingUtils.getPilotCost(this.props.selectedPilot, xwingData.upgrades)}</span>
-                </div>
-                <div className="onlyShowOnMobile" style={{backgroundColor: 'rgb(32,32,32, .6)', maxWidth: '300px'}}>
-                    Upgrades:
-                </div>
-                <div className="shipUpgrades">
-                    { this.props.selectedPilot.selectedUpgrades.map(selectedUpgrade => (
-                        <span key={selectedUpgrade.key} data-upgrade-slot={selectedUpgrade.key} >
-                            <ShipUpgradeCpt 
-                                upgradeSlot= {selectedUpgrade}
-                                changeUpgrade= {this.props.changeUpgrade}
-                                pilot= {this.props.selectedPilot}
-                                squad= {this.props.squad}
-                                onRecordMouseEnter= {this.handleUpgradeMouseEnter}
-                            />
-                        </span>
-                    )) }
-                </div> 
-                <div className="deleteOrCopyShip" style={{marginTop:"5px"}}>
-                    <span className="onlyShowOnMobile">{`Total ship points: ${xwingUtils.getPilotCost(this.props.selectedPilot, xwingData.upgrades)}  `}</span>
-                    <button className="btn-danger" onClick={this.delBtnPressed}>Delete</button>
-                    <button className="btn-info" onClick={this.cloneBtnPressed}>Clone</button>
+                <div>
+                    <Dropdown 
+                        name="selectPilot"
+                        titleSingular="Pilot"
+                        title="Select a pilot"
+                        list={pilotsForCustomDropDown}
+                        onChange={handlePilotSelection}
+                        select={{value: props.selectedPilot.id}}
+                        ref={ddlSelectPilotRef}
+                        styles={DropDownStyles}
+                        onHeaderMouseEnter={handlePilotHeaderMouseEnter}
+                        onMouseEnter={handlePilotMouseEnter}
+                    />
                 </div>
             </div>
-        );
-    }
-}
+            <div className="shipPointCost hideOnMobile">
+                <span>{ xwingUtils.getPilotCost(props.selectedPilot, xwingData.upgrades)}</span>
+            </div>
+            <div className="onlyShowOnMobile" style={{backgroundColor: 'rgb(32,32,32, .6)', maxWidth: '300px'}}>
+                Upgrades:
+            </div>
+            <div className="shipUpgrades">
+                { props.selectedPilot.selectedUpgrades.map(selectedUpgrade => (
+                    <span key={selectedUpgrade.key} data-upgrade-slot={selectedUpgrade.key} >
+                        <ShipUpgradeCpt 
+                            upgradeSlot= {selectedUpgrade}
+                            changeUpgrade= {props.changeUpgrade}
+                            pilot= {props.selectedPilot}
+                            squad= {props.squad}
+                            onRecordMouseEnter= {handleUpgradeMouseEnter}
+                        />
+                    </span>
+                )) }
+            </div> 
+            <div className="deleteOrCopyShip" style={{marginTop:"5px"}}>
+                <span className="onlyShowOnMobile">{`Total ship points: ${xwingUtils.getPilotCost(props.selectedPilot, xwingData.upgrades)}  `}</span>
+                <button className="btn-danger" onClick={delBtnPressed}>Delete</button>
+                <button className="btn-info" onClick={cloneBtnPressed}>Clone</button>
+            </div>
+        </div>
+    );
+};
 
+
+export default PilotRowCpt;
 
 const getShipBackgroundStylePostFix = (shipName) => {
     switch(shipName) {
