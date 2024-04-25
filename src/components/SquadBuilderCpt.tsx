@@ -5,10 +5,10 @@ import AddShipCpt from './AddShipCpt';
 import SquadNamePointsPrint from './SquadNamePointsPrint';
 import SaveLoadNew from './SaveLoadNewCpt';
 import * as xwingData from '../data/xwing_data';
-import { Faction, ShipName } from '../data/xwing_data';
+import { Faction, Pilot, Ship, ShipName, Upgrade } from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
 import { useUserContext } from '../contexts/UserContext'; 
-import { SelectedPilot } from '../data/xwing_utils';
+import { InfoPanelCardType, SelectedPilot } from '../data/xwing_utils';
 
 interface SquadBuilderCptProps {
     selectedFaction: Faction;
@@ -41,7 +41,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
         }
     },[userContext.user])
 
-    const showInfoPanelCard = (shipPilotOrUpgradeToShow, cardType) => {
+    const showInfoPanelCard = (shipPilotOrUpgradeToShow: Ship | Pilot | SelectedPilot | Upgrade, cardType: InfoPanelCardType) => {
         setState({...state,  infoPanelCardToShow: {type: cardType, cardData: shipPilotOrUpgradeToShow} });
     }
 
@@ -74,7 +74,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
         removeInvalidUpgradesAndSetState(newSquadAfterAddition);
     }
 
-    const changePilot = (prevSelectedPilot, newPilot, copyUpgrades = true) => {
+    const changePilot = (prevSelectedPilot: SelectedPilot, newPilot: Pilot, copyUpgrades: boolean = true) => {
         const appReadyNewPilot = xwingUtils.getAppReadyPilot(newPilot, xwingData.ships);
         //transfer the existing UI key to the new pilot object so react rcognizes it as the previous one
         appReadyNewPilot.uiKey = prevSelectedPilot.uiKey;  
@@ -94,7 +94,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
         removeInvalidUpgradesAndSetState(squadCopy);
     }
 
-    const removePilot = (pilotToRemove) => {
+    const removePilot = (pilotToRemove: SelectedPilot) => {
         const squadCopy = [...state.squad];
         const indexOfPilotToChange = squadCopy.findIndex(pilot => pilot.uiKey === pilotToRemove.uiKey);
         squadCopy.splice(indexOfPilotToChange, 1);
@@ -112,7 +112,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
         }
     }
 
-    const changeShip = (shipToChangeTo, prevSelectedPilot) => {
+    const changeShip = (shipToChangeTo: ShipName, prevSelectedPilot: SelectedPilot) => {
         const cheapestAvailablePilotForShip = xwingUtils.getCheapestAvailablePilotForShip(shipToChangeTo, props.faction, state.squad, xwingData.upgrades, xwingData.pilots);
         if(cheapestAvailablePilotForShip){
             changePilot(prevSelectedPilot, cheapestAvailablePilotForShip, false);
@@ -122,7 +122,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     }
 
 
-    const clonePilot = (pilot) => {
+    const clonePilot = (pilot: SelectedPilot) => {
         if(xwingUtils.maxPilotOrUpgradeReached(pilot, state.squad, xwingData.upgrades)) {
             addCheapestAvailablePilotForShip(pilot.ship, pilot.selectedUpgrades);
         } else {
@@ -130,7 +130,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
         }
     }
 
-    const changeUpgrade = (upgradeSlot, newlySelectedUpgrade, pilot) => {
+    const changeUpgrade = (upgradeSlot: xwingUtils.SelectedUpgrade, newlySelectedUpgrade: xwingData.Upgrade, pilot: SelectedPilot) => {
         if(newlySelectedUpgrade && xwingUtils.maxPilotOrUpgradeReached(newlySelectedUpgrade, state.squad, xwingData.upgrades)){
             alert("Already have max amount of " + newlySelectedUpgrade.name);
         } else {
@@ -172,7 +172,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
                                             || availPilot.id == squadPilot.id))
                                 .sort((first, second) => (first.points - second.points))}
                             changePilot= {changePilot} 
-                            changeShip = {changeShip }
+                            changeShip = {changeShip}
                             removePilot = {removePilot }
                             clonePilot = {clonePilot }
                             changeUpgrade = { changeUpgrade }
