@@ -44,9 +44,14 @@ const RegisterModal: React.FC<RegisterModalProps> = (props) => {
         }
       }
     } catch(error) {
-      setStatusMessage("Sorry, there was an error while trying to register.");
+      if(isMounted.current) {
+        setStatusMessage("Sorry, there was an error while trying to register.");
+      }
+      
     } finally {
-      setSubmitting(false);
+      if(isMounted.current) {
+        setSubmitting(false);
+      }
     } 
   }
 
