@@ -37,7 +37,7 @@ interface Ship {
     hull: number;
     shields: number;
     actions: string[];
-    maneuvers: number[][];
+    maneuvers: Difficulty[][];
     autoequip?: string[]; // Optional property
     keyword?: string[];
     huge?: boolean;
@@ -13176,15 +13176,22 @@ const sloticon: Partial<Record<Slots, string>> = {
     "Tactical Relay": '<i class="xwing-miniatures-font xwing-miniatures-font-tacticalrelay"></i>'
 }
 
-const difficulties = {
+
+type DifficultyName = "impossible" | "blue" | "white" | "red" | "purple";
+type Difficulty = 0 | 1 | 2 | 3 | 4
+const difficulties= {
     impossible: 0,
     blue: 1,
     white: 2,
     red: 3,
-    purple: 4
-};
+    purple: 4,
+};  
 
-const bearings = {
+type Bearing = "left_hard" | "left_bank" | "straight" | "right_bank" | "right_hard" |
+    "k_turn" | "left_sloop" | "right_sloop" | "left_tallion" | "right_tallion" |
+    "stationary" | "reverse_left" | "reverse_straight" | "reverse_right";
+
+const bearings: Record<Bearing, Bearing> = {
     left_hard: "left_hard",
     left_bank: "left_bank",
     straight: "straight",
@@ -13201,10 +13208,5 @@ const bearings = {
     reverse_right: "reverse_right"
 };
 
-// const cardRulesEnglish = 
-//virtually unlimited object property keys are possible
-// but it may be worth spreading the various upgrade card types out
-// names like "Luke Skywalker" and "Darth Vader" have pilot and crew cards...
-
-export { factionNames, ships, pilots, pilotRules, slots, sloticon, upgrades, upgradeRules, difficulties, bearings,
+export { factionNames, ships, pilots, pilotRules, slots, sloticon, upgrades, upgradeRules, DifficultyName, Difficulty, difficulties, Bearing, bearings,
      Faction, Ship, ShipName, Pilot, PilotRulesText, Upgrade, UpgradeRulesText, Slots };

@@ -1,12 +1,11 @@
 import React from 'react';
 
-export default class ActionsCpt extends React.Component {
+interface ActionsCptProps {
+    actions: string[];
+}
 
-    constructor(props){
-        super(props);
-    }
-
-    getActionSeparator = (action) => {
+const ActionsCpt: React.FC<ActionsCptProps> = (props) => {
+    const getActionSeparator = (action) => {
         if(action.includes("->")){
             return (
                 <i className="xwing-miniatures-font xwing-miniatures-font-linked"></i>
@@ -15,7 +14,7 @@ export default class ActionsCpt extends React.Component {
         return ", ";
     }
 
-    getActionDifficulty = (action) => {
+    const getActionDifficulty = (action) => {
         if(action.includes("R-")){
             return "red";
         }
@@ -25,7 +24,7 @@ export default class ActionsCpt extends React.Component {
         return "";
     }
 
-    getActionStyle = (action) => {
+    const getActionStyle = (action) => {
         let stylePrefix = "xwing-miniatures-font-"
 
         
@@ -57,20 +56,21 @@ export default class ActionsCpt extends React.Component {
             return stylePrefix+"slam";
     }
 
-    getActionMarkup = (action, ordinal) => {
+    const getActionMarkup = (action, ordinal) => {
         return (
             <span key={action+ordinal}>
                 {/* //first action shouldn't have a comma or > before it */}
-                {ordinal != 0 ? this.getActionSeparator(action) : null} 
-                <i className={"xwing-miniatures-font " + this.getActionStyle(action) + " " + this.getActionDifficulty(action)}></i>
+                {ordinal != 0 ? getActionSeparator(action) : null} 
+                <i className={"xwing-miniatures-font " + getActionStyle(action) + " " + getActionDifficulty(action)}></i>
             </span>);
     }
 
-    render(){
-        let spans = [];
-        for(let i=0; i < this.props.actions.length; i++){
-            spans.push(this.getActionMarkup(this.props.actions[i], i));
-        }
-        return ( <span>{spans}</span> );
+    let spans = [];
+    for(let i=0; i < props.actions.length; i++){
+        spans.push(getActionMarkup(props.actions[i], i));
     }
+    
+    return ( <span>{spans}</span> );
 }
+
+export default ActionsCpt;
