@@ -18,7 +18,7 @@ export default function LoadModal(props) {
         fetchAbortController.current = new AbortController();
         const signal = fetchAbortController.current.signal;
 
-        // eslint-disable-next-line no-undef
+        // @ts-ignore
         fetch(XWING_API_ENDPOINT + '/squads/' + props.faction, 
         {   
             signal,

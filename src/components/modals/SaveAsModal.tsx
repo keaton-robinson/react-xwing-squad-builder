@@ -6,10 +6,6 @@ interface SaveAsModalProps {
     saveSquad: (string) => any;
 }
 
-interface SaveAsModalState {
-    squadName: string
-}
-
 const SaveAsModal:React.FC<SaveAsModalProps> = (props) =>  {
     const [state, setState] = useState({ squadName: props.squadName});
 

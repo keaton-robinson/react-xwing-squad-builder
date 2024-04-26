@@ -1,6 +1,12 @@
-import React from "react";
+import React, { ReactElement } from "react";
 
-const MyModal = ({ handleClose, headerTitle, children }) => {
+interface ModalContainerProps {
+    handleClose: () => void;
+    headerTitle: string;
+    children: ReactElement
+}
+
+const ModalContainer: React.FC<ModalContainerProps> = ({ handleClose, headerTitle, children }) => {
 
     const modalContentClicked = (event) => {
         event.stopPropagation();
@@ -20,4 +26,4 @@ const MyModal = ({ handleClose, headerTitle, children }) => {
   );
 };
 
-export default MyModal;
+export default ModalContainer;

@@ -3,7 +3,11 @@ import * as yup from 'yup';
 import { Formik } from 'formik';
 import { XwingTextInput, XwingFormSubmitButton, XwingForm } from '../CustomFormikControls/XwingFormikCustomControls';
 
-export default function RegisterModal(props) {
+interface RegisterModalProps {
+  switchToLogin: () => void;
+}
+
+const RegisterModal: React.FC<RegisterModalProps> = (props) => {
 
   const [usernameMin, usernameMax] = [6, 30];
   const [passwordMin, passwordMax] = [6, 50];
@@ -82,3 +86,4 @@ export default function RegisterModal(props) {
 }
 
 
+export default RegisterModal;
