@@ -11,7 +11,7 @@ interface LoginModalProps {
 
 const LoginModal:React.FC<LoginModalProps> = (props) => {
     const userContext = useUserContext();
-    const isMounted = useRef(false); 
+    const isMounted = useRef(true); 
     const [statusMessage, setStatusMessage] = useState('');
     const [successfullyLoggedIn, setSuccessfullyLoggedIn] = useState(false);
 

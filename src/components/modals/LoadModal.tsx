@@ -1,52 +1,50 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { UserContext } from '../../contexts/UserContext';
+import { useUserContext } from '../../contexts/UserContext';
+import { Faction } from '../../data/xwing_data';
 
-export default function LoadModal(props) {
-    const mounted = useRef(false);
-    const fetchAbortController = useRef(null); 
-    const userContextBundle = useContext(UserContext);
+interface LoadModalProps {
+    loadSquad: (squadDataFromServer) => void;
+    faction: Faction;
+}
+
+const LoadModal:React.FC<LoadModalProps> = (props) => {
+    const isMounted = useRef(true); 
+    const userContext = useUserContext();
     const [squads, setSquads] = useState([]);
     const [statusMessage, setStatusMessage] = useState("Fetching squads...");
     const [selectedSquad, setSelectedSquad] = useState(null);
 
+    useEffect(()=> {
+        isMounted.current = true;
+        return () => { isMounted.current = false; };
+    }, [])
     
     useEffect(() => {
-        mounted.current = true;
-        if(fetchAbortController.current){
-            fetchAbortController.current.abort();
+        const getUserFactionSquads = async () => {
+            try {
+                // @ts-ignore
+                const response = await fetch(XWING_API_ENDPOINT + '/squads/' + props.faction, { 
+                    headers: { Authorization: userContext.user.token } 
+                });
+                const responseData = await response.json();
+                if(isMounted.current){
+                    if(responseData.success){
+                        setSquads(responseData.squads);
+                        setStatusMessage(null);
+                    } else {
+                        setStatusMessage(responseData.message);
+                    }
+                }
+            } catch (error) {
+                if(isMounted.current){
+                    setStatusMessage("Failed to load squads");
+                    setSquads([]);
+                }
+            }
         }
-        fetchAbortController.current = new AbortController();
-        const signal = fetchAbortController.current.signal;
 
-        // @ts-ignore
-        fetch(XWING_API_ENDPOINT + '/squads/' + props.faction, 
-        {   
-            signal,
-            headers: { Authorization: userContextBundle.user.token }
-        })
-        .then(response => response.json())
-        .then(responseData => {
-            if(responseData.success){
-                setSquads(responseData.squads);
-                setStatusMessage(null);
-            } else {
-                setStatusMessage(responseData.message);
-            }
-        })
-        .catch(() => {
-            if(mounted.current){
-                setStatusMessage("Failed to load squads");
-                setSquads([]);
-            }
-        });
-
-        return () => {
-            mounted.current = false;
-            if(fetchAbortController.current){
-                fetchAbortController.current.abort();
-            } 
-        };
-    }, []);
+        getUserFactionSquads();
+    }, [props.faction]);
 
     const loadClicked = () => {
         if(selectedSquad){
@@ -54,34 +52,36 @@ export default function LoadModal(props) {
         }
     }
 
-    const deleteClicked = () => {
+    const deleteClicked = async () => {
         if(selectedSquad){
             let deleteConfirmed = confirm(`Delete ${selectedSquad.name}?`);
-            const signal = fetchAbortController.current.signal;
 
             if(deleteConfirmed){
                 //delete the squad
-                // eslint-disable-next-line no-undef
-                // @ts-ignore (environment variable)
-                fetch(XWING_API_ENDPOINT + `/squads/${selectedSquad._id}`, {
-                    method: "DELETE", signal, headers: { Authorization: userContextBundle.user.token }
-                })
-                .then(response => response.json())
-                .then(responseData => {
-                    if(responseData.success){
-                        const squadsCopy = [...squads];
-                        const indexOfSquadToRemove = squadsCopy.findIndex(squad => squad._id === selectedSquad._id);
-                        squadsCopy.splice(indexOfSquadToRemove, 1);
-                        setSquads(squadsCopy);
-                    } else {
-                        setStatusMessage(responseData.message);
+                try {
+                    // @ts-ignore (environment variable)
+                    const response = await fetch(XWING_API_ENDPOINT + `/squads/${selectedSquad._id}`, {
+                        method: "DELETE",
+                        headers: { 
+                            Authorization: userContext.user.token 
+                        }
+                    });
+                    const responseData = await response.json();
+                    if(isMounted.current) {
+                        if(responseData.success){
+                            const squadsCopy = [...squads];
+                            const indexOfSquadToRemove = squadsCopy.findIndex(squad => squad._id === selectedSquad._id);
+                            squadsCopy.splice(indexOfSquadToRemove, 1);
+                            setSquads(squadsCopy);
+                        } else {
+                            setStatusMessage(responseData.message);
+                        }
                     }
-                })
-                .catch(() => {
-                    if(mounted.current){
+                } catch (error) {
+                    if(isMounted.current){
                         setStatusMessage("An error occured...please try deleting again.");
                     }
-                }); 
+                }
             }
         }
     }
@@ -118,3 +118,5 @@ export default function LoadModal(props) {
         </div>
     );
 }
+
+export default LoadModal;
