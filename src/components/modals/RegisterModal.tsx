@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import { XwingTextInput, XwingFormSubmitButton, XwingForm } from '../CustomFormikControls/XwingFormikCustomControls';
@@ -8,12 +8,47 @@ interface RegisterModalProps {
 }
 
 const RegisterModal: React.FC<RegisterModalProps> = (props) => {
-
   const [usernameMin, usernameMax] = [6, 30];
   const [passwordMin, passwordMax] = [6, 50];
-
   const [statusMessage, setStatusMessage] = useState('');
   const [successfullyRegistered, setSuccessfullyRegistered] = useState(false);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => { isMounted.current = false; };
+  }, [])
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+
+    try {
+      // @ts-ignore  (environment variable)
+      const response = await fetch(XWING_API_ENDPOINT + '/users/register', {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        },
+        body: JSON.stringify({
+          username: values.username,
+          password: values.password
+        })
+      });
+      const responseData = await response.json();
+      
+      if(isMounted.current){
+        if(responseData.success){
+          setStatusMessage("You have succesfully registered");
+          setSuccessfullyRegistered(true);
+        }else {
+          setStatusMessage(responseData.message); 
+        }
+      }
+    } catch(error) {
+      setStatusMessage("Sorry, there was an error while trying to register.");
+    } finally {
+      setSubmitting(false);
+    } 
+  }
 
   return (
     <Formik
@@ -34,39 +69,8 @@ const RegisterModal: React.FC<RegisterModalProps> = (props) => {
         passwordConfirmation: yup.string()
           .oneOf([yup.ref('password'), null], 'Passwords must match')
       })}
-      onSubmit={(values, { setSubmitting }) => { 
-        // eslint-disable-next-line no-undef
-        // @ts-ignore  (environment variable)
-        fetch(XWING_API_ENDPOINT + '/users/register', {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json; charset=UTF-8"
-          },
-          body: JSON.stringify({
-            username: values.username,
-            password: values.password
-          })
-        })
-        .then((response) => { 
-          return response.json()
-        })
-        .then((responseData) => {
-          if(responseData.success){
-            setStatusMessage("You have succesfully registered");
-            setSuccessfullyRegistered(true);
-          }else {
-            setStatusMessage(responseData.message); 
-          }
-        })
-        // eslint-disable-next-line
-        .catch(error => { // I want to be reminded this variable is available
-            setStatusMessage("Sorry, there was an error while trying to register.");
-        })
-        .finally(() => {
-          setSubmitting(false);
-        }); 
-      }
-    }>
+      onSubmit={(values, { setSubmitting }) => handleSubmit(values, { setSubmitting })}
+    >
       <div className="loginRegisterForm">
         <span style={{color: successfullyRegistered ? "black" : "red"}}>{statusMessage}</span>
         { !successfullyRegistered ? <XwingForm>
@@ -84,6 +88,5 @@ const RegisterModal: React.FC<RegisterModalProps> = (props) => {
     </Formik>
   );
 }
-
 
 export default RegisterModal;
