@@ -7,21 +7,40 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import SquadBuilderCpt from './SquadBuilderCpt';
+import { UserProvider } from '../contexts/UserContext';
+import ModalProvider from '../contexts/ModalContext';
 
-
+const AllProviders = ({children}) => (
+  <UserProvider>
+    <ModalProvider>
+      {children}
+    </ModalProvider>
+  </UserProvider>
+)
 
 test('with default parameters, renders add ship drop down', () => {
-  render(<SquadBuilderCpt selectedFaction={'Rebel Alliance'} faction={'Rebel Alliance'} setModal={function (modalConfig: any): void {
-      throw new Error('Function not implemented.');
-  } } />);
+  render(
+    <AllProviders>
+      <SquadBuilderCpt selectedFaction={'Rebel Alliance'} faction={'Rebel Alliance'} 
+        setModal={function (modalConfig: any): void {
+          throw new Error('Function not implemented.');
+      }}/>
+    </AllProviders>
+  );
   const newShipElement = screen.getByText(/Add a ship/i);
   expect(newShipElement).toBeInTheDocument();
 });
 
 test('after removing prerequsite upgrade, automatically removes upgrade that depended upon it', async () => {
-  const { container } =  render(<SquadBuilderCpt selectedFaction={'Rebel Alliance'} faction={'Rebel Alliance'} setModal={function (modalConfig: any): void {
-      throw new Error('Function not implemented.');
-  } } />);
+  const { container } =  render(
+    <AllProviders>
+      <SquadBuilderCpt selectedFaction={'Rebel Alliance'} faction={'Rebel Alliance'} 
+        setModal={function (modalConfig: any): void {
+          throw new Error('Function not implemented.');
+        }}
+      />
+    </AllProviders>
+  );
 
   const selectUpgrade = async (key, originalText, textToSelect) => {
     const upgradeSlot = container.querySelector(`[data-upgrade-slot="${key}"]`);
