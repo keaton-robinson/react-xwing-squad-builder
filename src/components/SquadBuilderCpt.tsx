@@ -5,7 +5,7 @@ import AddShipCpt from './AddShipCpt';
 import SquadNamePointsPrint from './SquadNamePointsPrint';
 import SaveLoadNew from './SaveLoadNewCpt';
 import * as xwingData from '../data/xwing_data';
-import { Faction, Pilot, Ship, ShipName, Upgrade } from '../data/xwing_data';
+import { Faction, Pilot, ShipName } from '../data/xwing_data';
 import * as xwingUtils from '../data/xwing_utils';
 import { useUserContext } from '../contexts/UserContext'; 
 import { InfoPanelCard, SelectedPilot, SelectedUpgrade } from '../data/xwing_utils';
@@ -16,7 +16,7 @@ interface SquadBuilderCptProps {
     setModal: (modalConfig: any) => void;
 }
 
-export interface SquadBuilderCptState {
+interface SquadBuilderCptState {
     squadId: string;
     squad: SelectedPilot[];
     squadName: string;
