@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import {XwingTextInput, XwingFormSubmitButton, XwingForm } from '../CustomFormikControls/XwingFormikCustomControls';
-import { UserContext, useUserContext } from '../../contexts/UserContext'
+import { useUserContext } from '../../contexts/UserContext'
 
 interface LoginModalProps {
     switchToRegister: () => void;

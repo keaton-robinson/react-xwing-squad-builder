@@ -1,4 +1,4 @@
-import { Faction, Ship, Pilot, PilotRulesText, Upgrade, UpgradeRulesText, Slots } from './xwing_data';
+import { Ship, Pilot, Upgrade } from './xwing_data';
 import { isNotNullOrUndefined, ShipBaseSize, getShipBaseSize, getUpgradeCost, SelectedPilot, getPilotCost, getSquadCost, getPilotEffectiveStats } from './xwing_utils';
 
 describe('isNotNullOrUndefined', () => {
@@ -52,10 +52,6 @@ describe('getUpgradeCost', () => {
         };
         const pilotWithSkill0: Partial<Pilot> = { skill: 0};
         const pilotWithSkill1: Partial<Pilot> = { skill: 1};
-        const pilotWithSkill2: Partial<Pilot> = { skill: 2}
-        const pilotWithSkill3: Partial<Pilot> = { skill: 3}
-        const pilotWithSkill4: Partial<Pilot> = { skill: 4}
-        const pilotWithSkill5: Partial<Pilot> = { skill: 5}
         const pilotWithSkill6: Partial<Pilot> = { skill: 6}
         const pilotWithSkillTen: Partial<Pilot> = { skill: 10 };
 
