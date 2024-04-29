@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import FactionCpt from "./FactionCpt";
 import LoginModal from "./modals/LoginModal";
@@ -57,7 +58,6 @@ const HeaderComponent: React.FC<HeaderProps> = (props) => {
             </a>
           </li>
           {userContext.user ? (
-            // eslint-disable-next-line jsx-a11y/anchor-is-valid
             <li id="logoutBtn" onClick={userContext.logout}>
               <a style={{ cursor: "pointer" }}>
                 <i
@@ -68,7 +68,6 @@ const HeaderComponent: React.FC<HeaderProps> = (props) => {
               </a>
             </li>
           ) : (
-            // eslint-disable-next-line jsx-a11y/anchor-is-valid
             <li id="loginBtn" onClick={showLogin}>
               <a style={{ cursor: "pointer" }}>
                 <i

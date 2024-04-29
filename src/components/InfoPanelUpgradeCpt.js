@@ -5,9 +5,6 @@ import ActionsCpt from "./ActionsCpt";
 import StatBlockCpt from "./StatBlockCpt";
 
 export default class InfoPanelUpgradeCpt extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   renderRestrictions = (upgrade) => {
     if (upgrade.faction || upgrade.ship || upgrade.restrictions) {
@@ -18,12 +15,12 @@ export default class InfoPanelUpgradeCpt extends React.Component {
         let allowedFaction;
         if (Array.isArray(upgrade.faction)) {
           let orUniqueRestriction = upgrade.restrictions?.find(
-            (restr) => restr[0] == "orUnique",
+            (restr) => restr[0] === "orUnique",
           );
           if (orUniqueRestriction) {
             //or unique only allows one faction or with a unique character (character part handled later)
             allowedFaction = upgrade.restrictions.find(
-              (restr) => restr[0] == "Faction",
+              (restr) => restr[0] === "Faction",
             )[1];
             textRestrictions.push(
               `${allowedFaction} or squad containing ${orUniqueRestriction[1]}`,
@@ -47,7 +44,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
 
           switch (restrictionType) {
             case "Base":
-              if (restrictionValue == "Standard") {
+              if (restrictionValue === "Standard") {
                 textRestrictions.push("Non-huge ship");
               } else {
                 textRestrictions.push(`${restrictionValue} ship`);
@@ -100,6 +97,8 @@ export default class InfoPanelUpgradeCpt extends React.Component {
             case "Action":
               actionRestrictions.push(`${restrictionValue}`);
               break;
+            default: 
+              throw new Error(`Invalid restriction type: ${restrictionType}`);
           }
         }
       }
@@ -149,51 +148,51 @@ export default class InfoPanelUpgradeCpt extends React.Component {
 
     if (upgrade.modifier_func) {
       upgrade.modifier_func(statchange);
-      if (statchange.attack != 0) {
+      if (statchange.attack !== 0) {
         addText += comma + `%FRONTARC% (${statchange.attack})`;
         comma = ", ";
       }
-      if (statchange.attackf != 0) {
+      if (statchange.attackf !== 0) {
         addText += comma + `%FULLFRONTARC% (${statchange.attackf})`;
         comma = ", ";
       }
-      if (statchange.attackbull != 0) {
+      if (statchange.attackbull !== 0) {
         addText += comma + `%BULLSEYEARC% (${statchange.attackbull})`;
         comma = ", ";
       }
-      if (statchange.attackb != 0) {
+      if (statchange.attackb !== 0) {
         addText += comma + `%REARARC% (${statchange.attackb})`;
         comma = ", ";
       }
-      if (statchange.attackt != 0) {
+      if (statchange.attackt !== 0) {
         addText += comma + `%SINGLETURRETARC% (${statchange.attackt})`;
         comma = ", ";
       }
-      if (statchange.attackl != 0) {
+      if (statchange.attackl !== 0) {
         addText += comma + `%LEFTARC% (${statchange.attackl})`;
         comma = ", ";
       }
-      if (statchange.attackr != 0) {
+      if (statchange.attackr !== 0) {
         addText += comma + `%RIGHTARC% (${statchange.attackr})`;
         comma = ", ";
       }
-      if (statchange.attackdt != 0) {
+      if (statchange.attackdt !== 0) {
         addText += comma + `%DOUBLETURRETARC% (${statchange.attackdt})`;
         comma = ", ";
       }
-      if (statchange.energy != 0) {
+      if (statchange.energy !== 0) {
         addText += comma + `%ENERGY% (${statchange.energy})`;
         comma = ", ";
       }
-      if (statchange.agility != 0) {
+      if (statchange.agility !== 0) {
         addText += comma + `%AGILITY% (${statchange.agility})`;
         comma = ", ";
       }
-      if (statchange.hull != 0) {
+      if (statchange.hull !== 0) {
         addText += comma + `%HULL% (${statchange.hull})`;
         comma = ", ";
       }
-      if (statchange.shields != 0) {
+      if (statchange.shields !== 0) {
         addText += comma + `%SHIELD% (${statchange.shields})`;
         comma = ", ";
       }
@@ -217,7 +216,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
 
     return (
       <div>
-        {addText != "" ? (
+        {addText !== "" ? (
           <div>
             <strong>Adds: </strong>
             <span
@@ -231,7 +230,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
             <ActionsCpt actions={statchange.actions} />
           </div>
         ) : null}
-        {removestext != "" ? (
+        {removestext !== "" ? (
           <div>
             <strong>Removes: </strong>
             <span

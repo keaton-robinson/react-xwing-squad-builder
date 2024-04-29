@@ -13,7 +13,7 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
     for (const selectedUpgrade of selectedPilot.selectedUpgrades) {
       if (selectedUpgrade.selectedUpgradeId) {
         let upgradeRecord = xwingData.upgrades.find(
-          (upgr) => upgr.id == selectedUpgrade.selectedUpgradeId,
+          (upgr) => upgr.id === selectedUpgrade.selectedUpgradeId,
         );
         cost += xwingUtils.getUpgradeCost(upgradeRecord, selectedPilot);
       }
@@ -26,7 +26,7 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
       return null;
     }
     let upgradeRecord = xwingData.upgrades.find(
-      (upgr) => upgr.id == selectedUpgrade.selectedUpgradeId,
+      (upgr) => upgr.id === selectedUpgrade.selectedUpgradeId,
     );
     return (
       <tr key={selectedUpgrade.key}>
