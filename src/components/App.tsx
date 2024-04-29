@@ -1,10 +1,9 @@
-import React from 'react';
-import FactionSelector from './FactionSelector';
-import ModalProvider from '../contexts/ModalContext';
-import { UserProvider } from '../contexts/UserContext';
+import React from "react";
+import FactionSelector from "./FactionSelector";
+import ModalProvider from "../contexts/ModalContext";
+import { UserProvider } from "../contexts/UserContext";
 
 const App: React.FC = () => {
-
   return (
     <UserProvider>
       <ModalProvider>
@@ -12,6 +11,6 @@ const App: React.FC = () => {
       </ModalProvider>
     </UserProvider>
   );
-}
+};
 
 export default App;

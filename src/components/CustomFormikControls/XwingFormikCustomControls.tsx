@@ -1,6 +1,6 @@
-import React from 'react';
-import { useField, useFormikContext, Form } from 'formik';
- 
+import React from "react";
+import { useField, useFormikContext, Form } from "formik";
+
 export const XwingTextInput = (props) => {
   // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
   // which we can spread on <input>. We can use field meta to show an error
@@ -9,26 +9,45 @@ export const XwingTextInput = (props) => {
   const somethingWrong = meta.touched && meta.error;
   return (
     <>
-      <input placeholder={props.name} {...field} {...props} style={{ ...props.style, animation: somethingWrong ? "shake 300ms" : props.style?.animation}}/>
+      <input
+        placeholder={props.name}
+        {...field}
+        {...props}
+        style={{
+          ...props.style,
+          animation: somethingWrong ? "shake 300ms" : props.style?.animation,
+        }}
+      />
       {somethingWrong ? (
-        <div className="inputValidationMsg"><i className="fa-solid fa-triangle-exclamation" />{meta.error}</div>
+        <div className="inputValidationMsg">
+          <i className="fa-solid fa-triangle-exclamation" />
+          {meta.error}
+        </div>
       ) : null}
     </>
   );
 };
 
-export const XwingFormSubmitButton = (({children,...props}) => {
+export const XwingFormSubmitButton = ({ children, ...props }) => {
   const formikContext = useFormikContext();
-  
-  return (<button type="submit" disabled={formikContext.isSubmitting} {...props}>{formikContext.isSubmitting ? 'Loading...' : children}</button>); 
-});
 
-export const XwingForm = (({children,...props}) => {
+  return (
+    <button type="submit" disabled={formikContext.isSubmitting} {...props}>
+      {formikContext.isSubmitting ? "Loading..." : children}
+    </button>
+  );
+};
+
+export const XwingForm = ({ children, ...props }) => {
   const formikContext = useFormikContext();
   return (
     <Form {...props}>
-      <fieldset disabled={formikContext.isSubmitting} style={{borderStyle: 'none'}}>
+      <fieldset
+        disabled={formikContext.isSubmitting}
+        style={{ borderStyle: "none" }}
+      >
         {children}
       </fieldset>
-    </Form>); 
-});
+    </Form>
+  );
+};

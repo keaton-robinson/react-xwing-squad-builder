@@ -1,576 +1,584 @@
 @font-face {
-    font-family: EurostileStandard;
-    src: url("../fonts/EurostileLTStd.otf");
+  font-family: EurostileStandard;
+  src: url("../fonts/EurostileLTStd.otf");
 }
 
 @font-face {
-    font-family: kimberley;
-    src: url("../fonts/kimberley\ bl.ttf");
+  font-family: kimberley;
+  src: url("../fonts/kimberley\ bl.ttf");
 }
 
 @font-face {
-    font-family: BankGothicHD;
-    src: url("../fonts/bankgthd.ttf");
+  font-family: BankGothicHD;
+  src: url("../fonts/bankgthd.ttf");
 }
 
-a, a:visited, a:hover, a:active {
-    color: inherit;
-    text-decoration: none;
+a,
+a:visited,
+a:hover,
+a:active {
+  color: inherit;
+  text-decoration: none;
 }
 
 .fa-disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 body {
-    margin: 0;
-    background-color: #202020;
-    font-family: "EurostileStandard";
-    color: white;
-    font-size: 0.9em;
+  margin: 0;
+  background-color: #202020;
+  font-family: "EurostileStandard";
+  color: white;
+  font-size: 0.9em;
 }
 
 .dd-wrapper {
-    font-size: 1rem;
-    color: black;
+  font-size: 1rem;
+  color: black;
 }
 
-
 #navbar {
-    color: rgb(0, 153, 255);
-    background-color: #101010;
+  color: rgb(0, 153, 255);
+  background-color: #101010;
 }
 
 #factionChooser {
-    font-size: 1.25rem;
+  font-size: 1.25rem;
 }
-
-
-
 
 /* Nav Layout */
 
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 nav ul {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: center;
-    list-style-type: none;
-    padding: 0;
-    margin: 0px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  list-style-type: none;
+  padding: 0;
+  margin: 0px;
 }
 
 nav ul li {
-    padding-left: 5px;
-    padding-right: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
-
-
 
 /* Squad and points tracker layout */
 
 .squad-name-and-points-row {
-    display: flex;
-    justify-content: space-between;
-    /* background-color: #161616; */
+  display: flex;
+  justify-content: space-between;
+  /* background-color: #161616; */
 }
 
 .squad-name-and-points-row h3 {
-    margin-top: 0px;
+  margin-top: 0px;
 }
-
 
 /* Ship info layout */
 
 .shipAndInfoContainer {
-    display: flex;
+  display: flex;
 }
 
 .shipAndInfoContainer .shipAndObstacleSelectors {
-    flex: 3;
+  flex: 3;
 }
 
 .shipAndInfoContainer .infoPanelMaster {
-    flex: 1;
-    margin-left: 10px;
-    margin-right: 15px;
-    margin-bottom:10px;
+  flex: 1;
+  margin-left: 10px;
+  margin-right: 15px;
+  margin-bottom: 10px;
 }
 
 /* ship row layout */
 .shipRow {
-    display: flex;
-    padding: 5px;
-    min-height: 100px;
+  display: flex;
+  padding: 5px;
+  min-height: 100px;
 }
 
-
 /* ship, points, upgrades flex sizes */
-.shipAndPilotSelectorDiv{
-    flex: 3;
-    min-width: 200px;
+.shipAndPilotSelectorDiv {
+  flex: 3;
+  min-width: 200px;
 }
 
 .shipPointCost {
-    flex: 1;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  flex: 1;
+  text-shadow:
+    -1px 0 black,
+    0 1px black,
+    1px 0 black,
+    0 -1px black;
 }
 
 .shipUpgrades {
-    flex: 4;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-auto-rows: minmax(min-content, max-content);
+  flex: 4;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: minmax(min-content, max-content);
 }
-
 
 /* ship point cost settings */
 .shipPointCost {
-    text-align: center;
-    min-width: 50px;
+  text-align: center;
+  min-width: 50px;
 }
 
-/* upgrade settings */ 
-.shipUpgrades select{
-    width: 45%;
-    min-width: 200px;
+/* upgrade settings */
+.shipUpgrades select {
+  width: 45%;
+  min-width: 200px;
 }
 
 .infoName {
-    margin-top: 0px;
-    margin-bottom:5px;
-    font-size: 1.5em;
-    font-weight: normal;
-    font-family: 'BankGothicHD';
+  margin-top: 0px;
+  margin-bottom: 5px;
+  font-size: 1.5em;
+  font-weight: normal;
+  font-family: "BankGothicHD";
 }
 
 .infoType {
-    margin-top: 0px;
-    margin-bottom:5px;
-    font-family: 'BankGothicHD';
-    font-size: 1.2em;
-    font-weight: normal;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  font-family: "BankGothicHD";
+  font-size: 1.2em;
+  font-weight: normal;
 }
 
-
 .infoPanel {
-    background-color: white;
-    color: black;
-    padding: 10px;
+  background-color: white;
+  color: black;
+  padding: 10px;
 }
 
 .red {
-    color: red;
+  color: red;
 }
 
 .force {
-    color: purple;
+  color: purple;
 }
 
 /* overriding annoying css color property inheritance of "white" from table element */
 .info-stats {
-    color: black;
+  color: black;
 }
 
-table.info-stats > tbody > tr >td:nth-child(1) {
-    width: 50px;
+table.info-stats > tbody > tr > td:nth-child(1) {
+  width: 50px;
 }
 
-.info-stats tr.stat-icon{
-    height: 3rem;
+.info-stats tr.stat-icon {
+  height: 3rem;
 }
 
 .info-text {
-    margin-top:10px;
+  margin-top: 10px;
 }
 
-
-
 .info-maneuvers {
-    background-color: #a29199;
-    border-collapse: collapse;
-    font-family: "kimberley";
-    font-size: 1.5rem;
-    color: white;
-    margin-top: 10px;
-
+  background-color: #a29199;
+  border-collapse: collapse;
+  font-family: "kimberley";
+  font-size: 1.5rem;
+  color: white;
+  margin-top: 10px;
 }
 
 .info-maneuvers > tbody > tr > td {
-    border: 2px solid #d6c9d2;
+  border: 2px solid #d6c9d2;
 }
 
 .info-maneuvers > tbody > tr > td:first-child {
-    background-color: #888888;
-    background-image: linear-gradient(rgba(45, 45, 45, 0.2) 50%, transparent 50%, transparent 100%);
-    background-size: 5px 5px;
-    padding: 5px;
-    text-align: center;
-
+  background-color: #888888;
+  background-image: linear-gradient(
+    rgba(45, 45, 45, 0.2) 50%,
+    transparent 50%,
+    transparent 100%
+  );
+  background-size: 5px 5px;
+  padding: 5px;
+  text-align: center;
 }
 
-.btn-primary, .btn-info, .btn-danger {
-    padding: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
-    font-family: "EurostileStandard";
+.btn-primary,
+.btn-info,
+.btn-danger {
+  padding: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-family: "EurostileStandard";
 }
 
 .btn-primary {
-    color: #fff;
-    background-color: #007bff;
-  }
+  color: #fff;
+  background-color: #007bff;
+}
 
 .btn-info {
-    color: white;
-    background-color: #17a2b8;
-    
+  color: white;
+  background-color: #17a2b8;
 }
 
 .btn-danger {
-    color: white;
-    background-color: #dc3545;
+  color: white;
+  background-color: #dc3545;
 }
 
-
-.header-attack, .header-agility, .header-hull, .header-shield, .header-force, .header-charge {
-    background-color: black;
-    border-radius: 50%;
-    padding:2px;
+.header-attack,
+.header-agility,
+.header-hull,
+.header-shield,
+.header-force,
+.header-charge {
+  background-color: black;
+  border-radius: 50%;
+  padding: 2px;
 }
 
 .info-initiative {
-    margin-left: 5px;
-    color: #CD6D2D;
-    font-family: "kimberley";
-    font-size: 1.5rem;
+  margin-left: 5px;
+  color: #cd6d2d;
+  font-family: "kimberley";
+  font-size: 1.5rem;
 }
 
 .header-attack {
-    color: #EF232B;
-    padding-left: 9px;
-    padding-right: 9px;
-    padding-bottom: 7px;
+  color: #ef232b;
+  padding-left: 9px;
+  padding-right: 9px;
+  padding-bottom: 7px;
 }
 
 .info-attack {
-    color: #EF232B;
-    font-family: "kimberley";
-    font-size: 1.5rem;
+  color: #ef232b;
+  font-family: "kimberley";
+  font-size: 1.5rem;
 }
 
 .header-agility {
-    color: #6BBE44;
-    padding-left: 7px;
-    padding-right: 7px;
-    padding-bottom: 6px;
+  color: #6bbe44;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-bottom: 6px;
 }
 
 .info-agility {
-    color: #6BBE44;
-    font-family: "kimberley";
-    font-size: 1.5rem;
+  color: #6bbe44;
+  font-family: "kimberley";
+  font-size: 1.5rem;
 }
 
 .header-hull {
-    color: #B6B335;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 7px;
+  color: #b6b335;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 7px;
 }
 
 .info-hull {
-    color: #B6B335;
-    font-family: "kimberley";
-    font-size: 1.5rem;
+  color: #b6b335;
+  font-family: "kimberley";
+  font-size: 1.5rem;
 }
 
 .header-shield {
-    color: #7ED3E5;
-    padding-left: 8px;
-    padding-right: 9px;
-    padding-bottom: 8px;
+  color: #7ed3e5;
+  padding-left: 8px;
+  padding-right: 9px;
+  padding-bottom: 8px;
 }
 
 .info-shield {
-    color: #7ED3E5;
-    font-family: "kimberley";
-    font-size: 1.5rem;
+  color: #7ed3e5;
+  font-family: "kimberley";
+  font-size: 1.5rem;
 }
 
 .header-force {
-    color: #9D899D;
-    padding-left: 7px;
-    padding-right: 7px;
-    padding-bottom: 7px;
-
+  color: #9d899d;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-bottom: 7px;
 }
 
 .info-force {
-    color: #9D899D;
-    font-family: "kimberley";
-    font-size: 1.5rem;
+  color: #9d899d;
+  font-family: "kimberley";
+  font-size: 1.5rem;
 }
 
 .header-charge {
-    color: #C2B230;
-    padding-left: 9px;
-    padding-right: 9px;
-    padding-bottom: 7px;
+  color: #c2b230;
+  padding-left: 9px;
+  padding-right: 9px;
+  padding-bottom: 7px;
 }
 
 .info-charge {
-    color: #C2B230;
-    font-family: "kimberley";
-    font-size: 1.5rem;
+  color: #c2b230;
+  font-family: "kimberley";
+  font-size: 1.5rem;
 }
 
 i.header-range {
-    vertical-align: middle;
-    padding: 0px 3px;
-    background-color: black;
-    color: #EF232B; 
+  vertical-align: middle;
+  padding: 0px 3px;
+  background-color: black;
+  color: #ef232b;
 }
 
-r { color: #EF232B; }
-  
-f { color: #9D899D; }
+r {
+  color: #ef232b;
+}
+
+f {
+  color: #9d899d;
+}
 
 svg > g.maneuver.backwards {
-    transform: translate(200px, 200px) rotate(180deg); 
+  transform: translate(200px, 200px) rotate(180deg);
 }
 
 .xwing-miniatures-font-linked {
-    margin-left: 3px;
-    margin-right:3px;
+  margin-left: 3px;
+  margin-right: 3px;
 }
 
 .modal {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width:100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    
-  }
-  
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
 .modal-main {
-    position:fixed;
-    background: white;
-    color: black;
-    height: auto;
-    min-width: 400px;
-    top:50%;
-    left:50%;
-    transform: translate(-50%,-50%);
-  }
+  position: fixed;
+  background: white;
+  color: black;
+  height: auto;
+  min-width: 400px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 .modal-header-container {
-    font-size: 1.5rem;
-    font-weight: bold;
-    display: flex;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
 }
 
 .modal-header-content {
-    margin-top: 0.5rem;
-    margin-left: 0.5rem;
-    flex:15;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  flex: 15;
 }
 
 .modal-children {
-    padding-top: 5px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: 10px;
+  padding-top: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
 }
 
 .modal-close {
-    flex: 1;
-    margin-top: 0.1rem;
-    margin-right: 0.5rem;
-    text-align: right;
-    color: #aaaaaa;
-  }
+  flex: 1;
+  margin-top: 0.1rem;
+  margin-right: 0.5rem;
+  text-align: right;
+  color: #aaaaaa;
+}
 
-.modal-close:hover, .modal-close:focus {
+.modal-close:hover,
+.modal-close:focus {
   color: #000;
   text-decoration: none;
   cursor: pointer;
 }
 
 .modal button {
-    font-size: 1rem;
-    padding: .375rem .75rem;
-    border-radius: .25rem;
+  font-size: 1rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
 }
 
 .loginDivider {
-    border-top: 1px solid grey;
-    position: relative;
-    margin-top: 4.75%;
-    height: 15px;
-    text-align: center;
+  border-top: 1px solid grey;
+  position: relative;
+  margin-top: 4.75%;
+  height: 15px;
+  text-align: center;
 }
 
 .loginRegisterForm {
-    text-align: center;
+  text-align: center;
 }
 
 .loginRegisterForm input {
-    display: block;
-    width: 100%;
-    margin-top: .65em;
-    font-size: 1.3em;
-    height: 2em;
+  display: block;
+  width: 100%;
+  margin-top: 0.65em;
+  font-size: 1.3em;
+  height: 2em;
 }
 
 .loginDividerText {
-    background-color: #fff;
-    padding: 0 0.5em;
-    position: relative;
-    color: grey;
-    top: -0.7em;
+  background-color: #fff;
+  padding: 0 0.5em;
+  position: relative;
+  color: grey;
+  top: -0.7em;
 }
 
 .loginRegisterBtn {
-    margin-top: .65em;
+  margin-top: 0.65em;
 }
 
 .btn-primary:disabled {
-    background-color: #84afdd;
+  background-color: #84afdd;
 }
 
 .btn-info:disabled {
-    background-color: #7cb7c1;
+  background-color: #7cb7c1;
 }
 
 .inputValidationMsg {
-    width: 100%;
-    text-align: left;
-    color: red;
-    margin-top: 3px;
+  width: 100%;
+  text-align: left;
+  color: red;
+  margin-top: 3px;
 }
 
-@keyframes shake{
-    25%{
-        transform:translateX(4px)
-    }
-    50%{
-        transform:translateX(-4px)
-    }
-    75%{
-        transform:translateX(4px)
-    }
+@keyframes shake {
+  25% {
+    transform: translateX(4px);
+  }
+  50% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
 }
 
 .onlyShowOnMobile {
-    display: none;
+  display: none;
 }
 
 @media only screen and (max-width: 450px) {
-    
-    .hideOnMobile {
-        display: none;
-    }
+  .hideOnMobile {
+    display: none;
+  }
 
-    .onlyShowOnMobile {
-        display: unset;
-    }
-    
-    #factionChooser {
-        font-size: 1.5rem;
-    }
+  .onlyShowOnMobile {
+    display: unset;
+  }
 
-    .squad-name-and-points-row h3 {
-        font-size: 1.05em
-    }
+  #factionChooser {
+    font-size: 1.5rem;
+  }
 
-    .printBtn {
-        display: none;
-    }
-    
-    .shipAndInfoContainer {
-        display: block;
-    }
+  .squad-name-and-points-row h3 {
+    font-size: 1.05em;
+  }
 
-    .shipRow {
-        flex-direction: column;
-        margin-bottom: 20px;
-    }
+  .printBtn {
+    display: none;
+  }
 
-    .shipUpgrades {
-        display: block;
-    }
+  .shipAndInfoContainer {
+    display: block;
+  }
 
-    .deleteOrCopyShip{
-        max-width: 300px;
-        text-align: right;
-    }
+  .shipRow {
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
 
-    .modal-main {
-        min-width: 95%;
-      }
+  .shipUpgrades {
+    display: block;
+  }
 
-    .squad-name-and-points-row{
-        display: block;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
+  .deleteOrCopyShip {
+    max-width: 300px;
+    text-align: right;
+  }
 
-    #navbar {
-        display: grid;
-        grid-template-columns: 100%;
-    }
+  .modal-main {
+    min-width: 95%;
+  }
 
-    #navLinks {
-        grid-row: 1;
-        width: 100%;
-        font-size: 1.3rem;
-        margin-bottom: 20px;
-    }
+  .squad-name-and-points-row {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 
-    #loginBtn, #logoutBtn {
-        flex-grow: 1;
-        text-align: right;
-    }
+  #navbar {
+    display: grid;
+    grid-template-columns: 100%;
+  }
 
-    #factionChooser {
-        grid-row: 2;
-    }
+  #navLinks {
+    grid-row: 1;
+    width: 100%;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+
+  #loginBtn,
+  #logoutBtn {
+    flex-grow: 1;
+    text-align: right;
+  }
+
+  #factionChooser {
+    grid-row: 2;
+  }
 }
 
-
 @media print {
-    body * {
-        visibility: hidden;
-    }
+  body * {
+    visibility: hidden;
+  }
 
-    .modal-main, .modal-main * {
-        visibility: visible;
-    }
+  .modal-main,
+  .modal-main * {
+    visibility: visible;
+  }
 
-    /* prevent big page body from causing print to go onto multiple pages */
-    .shipAndInfoContainer, .infoPanelMaster {
-        display: none;
-    }
+  /* prevent big page body from causing print to go onto multiple pages */
+  .shipAndInfoContainer,
+  .infoPanelMaster {
+    display: none;
+  }
 
-    .modal-main {
-        position: absolute;
-        left: 0;
-        top: 0;
-        transform: none;
-    }
+  .modal-main {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: none;
+  }
 
-    .modal-close, .no-print, .no-print * {
-        visibility: hidden;
-    }
+  .modal-close,
+  .no-print,
+  .no-print * {
+    visibility: hidden;
+  }
 }
