@@ -19,25 +19,27 @@ export default class StatBlockCpt extends React.Component<{
 
   validateInputAndGetCardToShow = () => {
     if (!(this.props.pilot || this.props.ship || this.props.upgrade)) {
-      throw {
-        message: `StatBlockCpt requires at least one of pilot, ship, or upgrade props to be set`,
-      };
+      throw new Error(
+        `StatBlockCpt requires at least one of pilot, ship, or upgrade props to be set`,
+      );
     } else if (this.props.pilot) {
       if (this.props.ship || this.props.upgrade) {
-        throw {
-          message: `StatBlockCpt doesn't allow ship or upgrade prop to be set when pilot prop is set.`,
-          shipVal: this.props.ship,
-          upgradeVal: this.props.upgrade,
-          pilotVal: this.props.pilot,
-        };
+        const error: any = new Error(
+          `StatBlockCpt doesn't allow ship or upgrade prop to be set when pilot prop is set.`,
+        );
+        error.shipVal = this.props.ship;
+        error.upgradeVal = this.props.upgrade;
+        error.pilotVal = this.props.pilot;
+        throw error;
       }
       return this.props.pilot.pilotShip;
     } else if (this.props.ship && this.props.upgrade) {
-      throw {
-        message: `StatBlockCpt doesn't allow ship and upgrade prop to both be set.`,
-        shipVal: this.props.ship,
-        upgradeVal: this.props.upgrade,
-      };
+      const error: any = new Error(
+        `StatBlockCpt doesn't allow ship and upgrade prop to both be set.`,
+      );
+      error.shipVal = this.props.ship;
+      error.upgradeVal = this.props.upgrade;
+      throw error;
     } else {
       return this.props.ship ? this.props.ship : this.props.upgrade;
     }

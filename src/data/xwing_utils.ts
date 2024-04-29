@@ -5,6 +5,12 @@ function isNotNullOrUndefined(value) {
   return value !== null && value !== undefined;
 }
 
+function createError(message: string, extraProps: Record<string, any>): Error {
+  const error = new Error(message);
+  Object.assign(error, extraProps);
+  return error;
+}
+
 interface PilotShip extends Ship {
   force?: number;
   charge?: number;
@@ -55,11 +61,14 @@ function getUpgradeCost(upgrade: Upgrade, pilot: SelectedPilot): number {
       return upgrade.pointsarray[pilot.pilotShip.agility];
     }
   }
-  throw {
-    message: "Error calculating points on upgrade. Couldn't find point value.",
-    upgradeVal: upgrade,
-    pilotVal: pilot,
-  };
+
+  throw createError(
+    "Error calculating points on upgrade. Couldn't find point value.",
+    {
+      upgradeVal: upgrade,
+      pilotVal: pilot,
+    },
+  );
 }
 
 function getPilotCost(pilot: SelectedPilot, upgradesData: Upgrade[]): number {
@@ -92,10 +101,9 @@ function getPilotEffectiveStats(
   upgradesData: Upgrade[],
 ): SelectedPilot {
   if (!pilot) {
-    throw {
-      message: "pilot required for getPilotEffectiveStats",
+    throw createError("pilot required for getPilotEffectiveStats", {
       pilotVal: pilot,
-    };
+    });
   }
 
   const pilotCopy = JSON.parse(JSON.stringify(pilot));
@@ -107,12 +115,12 @@ function getPilotEffectiveStats(
         (upgrade) => upgrade.id === selectedUpgrade.selectedUpgradeId,
       );
       if (!upgradeData) {
-        throw {
-          message:
-            "Failed to find upgrade record for upgrade record id: " +
-            selectedUpgrade.selectedUpgradeId,
-          selectedUpgradeVal: selectedUpgrade,
-        };
+        throw createError(
+          `Failed to find upgrade record for upgrade record id: ${selectedUpgrade.selectedUpgradeId}`,
+          {
+            selectedUpgradeVal: selectedUpgrade,
+          },
+        );
       } else {
         if (upgradeData.modifier_func) {
           upgradeData.modifier_func(pilotCopy.pilotShip);
@@ -145,19 +153,14 @@ function maxPilotOrUpgradeReached(
         return true;
       } else if (numberOfUpgradeInSquad > cardToCheck.max_per_squad) {
         const error = new Error();
-        throw {
-          message:
-            "Somehow got more than " +
-            cardToCheck.max_per_squad +
-            " instances of " +
-            cardToCheck.name +
-            " id: " +
-            cardToCheck.id +
-            " in squad. Investigate.",
-          upgradeToCheckVal: cardToCheck,
-          squadVal: squad,
-          error: error,
-        };
+        throw createError(
+          `Somehow got more than ${cardToCheck.max_per_squad} instances of ${cardToCheck.name} id: ${cardToCheck.id} in squad. Investigate.`,
+          {
+            upgradeToCheckVal: cardToCheck,
+            squadVal: squad,
+            error: error,
+          },
+        );
       }
     } else {
       //we're looking at a pilot card
@@ -168,19 +171,14 @@ function maxPilotOrUpgradeReached(
         return true;
       } else if (numberOfPilotInSquad > cardToCheck.max_per_squad) {
         const error = new Error();
-        throw {
-          message:
-            "Somehow got more than " +
-            cardToCheck.max_per_squad +
-            " instances of " +
-            cardToCheck.name +
-            " id: " +
-            cardToCheck.id +
-            " in squad. Investigate.",
-          pilotToCheckVal: cardToCheck,
-          squadVal: squad,
-          error: error,
-        };
+        throw createError(
+          `Somehow got more than ${cardToCheck.max_per_squad} instances of ${cardToCheck.name} id: ${cardToCheck.id} in squad. Investigate.`,
+          {
+            pilotToCheckVal: cardToCheck,
+            squadVal: squad,
+            error: error,
+          },
+        );
       }
     }
   }
@@ -246,14 +244,15 @@ function isUpgradeAllowed(
   upgradesData: Upgrade[],
 ): boolean {
   if (!selectedUpgradeSlot || !upgrade || !pilot || !squad) {
-    throw {
-      message:
-        "selectedUpgradeSlot, upgrade, pilot, and squad arguments are required for isUpgradeAllowed function",
-      selectedUpgradeSlotVal: selectedUpgradeSlot,
-      upgradeVal: upgrade,
-      pilotVal: pilot,
-      squadVal: squad,
-    };
+    createError(
+      "selectedUpgradeSlot, upgrade, pilot, and squad arguments are required for isUpgradeAllowed function",
+      {
+        selectedUpgradeSlotVal: selectedUpgradeSlot,
+        upgradeVal: upgrade,
+        pilotVal: pilot,
+        squadVal: squad,
+      },
+    );
   }
 
   const effectivePilot = getPilotEffectiveStats(pilot, upgradesData);
@@ -311,15 +310,16 @@ function isUpgradeAllowedByRestrictions(
   upgradesData: Upgrade[],
 ): boolean {
   if (!selectedUpgradeSlot || !restrictions || !upgrade || !pilot || !squad) {
-    throw {
-      message:
-        "isUpgradeAllowedByRestrictions requires selectedUpgradeSlot, restrictions, upgrade, pilot, and squad parameters, but didn't receive one or more.",
-      selectedUpgradeSlotVal: selectedUpgradeSlot,
-      restrictionsVal: restrictions,
-      upgradeVal: upgrade,
-      pilotVal: pilot,
-      squadVal: squad,
-    };
+    throw createError(
+      "isUpgradeAllowedByRestrictions requires selectedUpgradeSlot, restrictions, upgrade, pilot, and squad parameters, but didn't receive one or more.",
+      {
+        selectedUpgradeSlotVal: selectedUpgradeSlot,
+        restrictionsVal: restrictions,
+        upgradeVal: upgrade,
+        pilotVal: pilot,
+        squadVal: squad,
+      },
+    );
   }
 
   if (restrictions.length > 0) {
@@ -410,14 +410,15 @@ function isUpgradeAllowedByRestrictions(
 
         //the "Or" part is handled here...
         if (restrictions.length < 1) {
-          throw {
-            message:
-              "OrUnique requirement couldn't find the second restriction to check",
-            restrictionsVal: restrictions,
-            upgradeVal: upgrade,
-            pilotVal: pilot,
-            squadVal: squad,
-          };
+          throw createError(
+            "OrUnique requirement couldn't find the second restriction to check",
+            {
+              restrictionsVal: restrictions,
+              upgradeVal: upgrade,
+              pilotVal: pilot,
+              squadVal: squad,
+            },
+          );
         }
         const nextRestriction = restrictions.shift();
         //evaluate next restriction by itself by putting it in its own array
@@ -551,13 +552,14 @@ function addUpgrades(
   upgradesData: Upgrade[],
 ): void {
   if (!newPilot || !upgradesToAdd || !squad) {
-    throw {
-      message:
-        "newPilot, upgradesToAdd, and squad must be provided to addUpgrades function",
-      newPilotVal: newPilot,
-      upgradesToAddVal: upgradesToAdd,
-      squadVal: squad,
-    };
+    throw createError(
+      "newPilot, upgradesToAdd, and squad must be provided to addUpgrades function",
+      {
+        newPilotVal: newPilot,
+        upgradesToAddVal: upgradesToAdd,
+        squadVal: squad,
+      },
+    );
   }
 
   upgradesToAdd.forEach((upgradeToAdd) => {
@@ -586,10 +588,9 @@ function getAppReadyPilot(
   //makes deep copies so I don't have side effects on my "data repo"
   const shipForPilot = shipsData[pilot.ship];
   if (!shipForPilot) {
-    throw {
-      message: "Couldn't find ship for pilot: " + pilot.name,
+    throw createError(`Couldn't find ship for pilot: ${pilot.name}`, {
       pilotVal: pilot,
-    };
+    });
   }
   //make deep copy of ship to attach
   const shipCopy = JSON.parse(JSON.stringify(shipForPilot));
@@ -666,13 +667,14 @@ function getCheapestAvailablePilotForShip(
   pilotsData: Pilot[],
 ): Pilot {
   if (!ship || !faction || !squad) {
-    throw {
-      message:
-        "You must provide ship, faction, and squad to the getCheapestAvailablePilotForShip function.",
-      shipValue: ship,
-      factionValue: faction,
-      squadValue: squad,
-    };
+    throw createError(
+      "You must provide ship, faction, and squad to the getCheapestAvailablePilotForShip function.",
+      {
+        shipValue: ship,
+        factionValue: faction,
+        squadValue: squad,
+      },
+    );
   }
 
   const availablePilotsForShip = pilotsData.filter(
@@ -810,13 +812,12 @@ function setUpgrade(
 ): void {
   if (!upgradeSlot || !pilot) {
     const error = new Error();
-    throw {
-      message: "changeUpgrade function requires upgradeSlot and pilot",
+    throw createError("changeUpgrade function requires upgradeSlot and pilot", {
       upgradeSlotVal: upgradeSlot,
       newlySelectedUpgradeVal: newlySelectedUpgrade,
       pilotVal: pilot,
       error: error,
-    };
+    });
   }
 
   if (
@@ -824,25 +825,28 @@ function setUpgrade(
     upgradeSlot.selectedUpgradeId === newlySelectedUpgrade.id
   ) {
     const error = new Error();
-    throw {
-      message: "changeUpgrade doesn't allow 'changing' to the same upgrade id",
-      upgradeSlotVal: upgradeSlot,
-      newlySelectedUpgradeVal: newlySelectedUpgrade,
-      error: error,
-    };
+    throw createError(
+      "changeUpgrade doesn't allow 'changing' to the same upgrade id",
+      {
+        upgradeSlotVal: upgradeSlot,
+        newlySelectedUpgradeVal: newlySelectedUpgrade,
+        error: error,
+      },
+    );
   }
 
   if (upgradeSlot.parentUpgradeSlotKey) {
     //I'm not allowing for selected upgrade to be set on a node that's occupied by another multislot upgrade. I want to know if this ever happens
     const error = new Error();
-    throw {
-      message:
-        "Tried to set a selectedUpgradeId on an upgrade slot that is occupied by a multislot upgrade's child upgrade",
-      upgradeSlotVal: upgradeSlot,
-      newlySelectedUpgradeVal: newlySelectedUpgrade,
-      pilotVal: pilot,
-      error: error,
-    };
+    throw createError(
+      "Tried to set a selectedUpgradeId on an upgrade slot that is occupied by a multislot upgrade's child upgrade",
+      {
+        upgradeSlotVal: upgradeSlot,
+        newlySelectedUpgradeVal: newlySelectedUpgrade,
+        pilotVal: pilot,
+        error: error,
+      },
+    );
   }
 
   removeUpgrade(upgradeSlot, pilot, upgradesData);
@@ -871,15 +875,15 @@ function setUpgrade(
         );
         if (!slotToOccupy) {
           const error = new Error();
-          throw {
-            message:
-              "changeUpgrade function failed to find required slot to occupy: " +
-              slot,
-            upgradeSlotVal: upgradeSlot,
-            newlySelectedUpgradeVal: newlySelectedUpgrade,
-            pilotVal: pilot,
-            error: error,
-          };
+          throw createError(
+            `changeUpgrade function failed to find required slot to occupy:  ${slot}`,
+            {
+              upgradeSlotVal: upgradeSlot,
+              newlySelectedUpgradeVal: newlySelectedUpgrade,
+              pilotVal: pilot,
+              error: error,
+            },
+          );
         }
         slotToOccupy.parentUpgradeSlotKey = upgradeSlot.key;
       }
