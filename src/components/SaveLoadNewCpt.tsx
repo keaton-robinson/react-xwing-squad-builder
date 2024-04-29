@@ -52,8 +52,9 @@ const SaveLoadNew: React.FC<SaveLoadNewProps> = (props) => {
     setSaveStatusMessage(saveStatusMessages.saving);
     try {
       // updating existing squad... do put/patch
-      // @ts-ignore
+
       const response = await fetch(
+        // @ts-ignore
         XWING_API_ENDPOINT + `/squads/${props.squadId}`,
         {
           method: "PATCH",
