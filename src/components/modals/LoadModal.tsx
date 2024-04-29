@@ -24,8 +24,8 @@ const LoadModal: React.FC<LoadModalProps> = (props) => {
   useEffect(() => {
     const getUserFactionSquads = async () => {
       try {
-        // @ts-ignore
         const response = await fetch(
+          // @ts-ignore
           XWING_API_ENDPOINT + "/squads/" + props.faction,
           {
             headers: { Authorization: userContext.user.token },
@@ -64,8 +64,8 @@ const LoadModal: React.FC<LoadModalProps> = (props) => {
       if (deleteConfirmed) {
         //delete the squad
         try {
-          // @ts-ignore (environment variable)
           const response = await fetch(
+            // @ts-ignore (environment variable)
             XWING_API_ENDPOINT + `/squads/${selectedSquad._id}`,
             {
               method: "DELETE",
