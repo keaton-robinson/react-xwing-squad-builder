@@ -3,15 +3,11 @@ import React from "react";
 import * as xwingData from "../data/xwing_data";
 
 export default class UpgradesCpt extends React.Component<{ pilots: any }> {
-  constructor(props) {
-    super(props);
-  }
-
   getSlotMarkup = (slot) => {
     let slotName = slot[0];
     let numSlotsPerPilot = slot[1].numSlotsPerPilot;
     let upgradeIsAvailableToAllPilots =
-      slot[1].numPilots == this.props.pilots.length; //slot count is slot[1].numPilots
+      slot[1].numPilots === this.props.pilots.length; //slot count is slot[1].numPilots
     let innerHtml = "";
     for (let i = 0; i < numSlotsPerPilot; i++) {
       innerHtml += xwingData.sloticon[slotName];

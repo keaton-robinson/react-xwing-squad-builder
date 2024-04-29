@@ -13,7 +13,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
     const columnsToRender = {};
     for (let i = 0; i < props.maneuvers.length; i++) {
       for (let j = 0; j < props.maneuvers[i].length; j++) {
-        if (props.maneuvers[i][j] != xwingData.difficulties.impossible) {
+        if (props.maneuvers[i][j] !== xwingData.difficulties.impossible) {
           rowsToRender[i] = true;
           columnsToRender[j] = true;
         }

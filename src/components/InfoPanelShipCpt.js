@@ -9,16 +9,12 @@ import StatBlockCpt from "./StatBlockCpt";
 export default class InfoPanelShipCpt extends React.Component {
   shipData = {};
 
-  constructor(props) {
-    super(props);
-  }
-
   initializeShipData = () => {
     //make a copy of the pilot so I don't have side effects on my "data repo"
     this.shipData = JSON.parse(JSON.stringify(this.props.ship));
     this.shipData.pilotsForShip = xwingData.pilots.filter(
       (pilot) =>
-        pilot.ship == this.shipData.name && pilot.faction == this.props.faction,
+        pilot.ship === this.shipData.name && pilot.faction === this.props.faction,
     );
 
     this.shipData.pilotSkills = [];

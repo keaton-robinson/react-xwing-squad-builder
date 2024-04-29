@@ -42,7 +42,7 @@ const SquadNamePointsPrint: React.FC<SquadNamePointsPrintProps> = (props) => {
   };
 
   const onSquadNameEditKeyDown = (event) => {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       //they pressed "enter"
       setEditingSquadName(false);
     }

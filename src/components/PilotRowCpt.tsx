@@ -49,16 +49,16 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
   }));
 
   const handleShipSelection = (selectedShip) => {
-    if (selectedShip.value != props.selectedPilot.ship) {
+    if (selectedShip.value !== props.selectedPilot.ship) {
       props.changeShip(selectedShip.value, props.selectedPilot);
     }
   };
 
   const handlePilotSelection = (selectedPilot) => {
-    if (selectedPilot.value != props.selectedPilot.id) {
+    if (selectedPilot.value !== props.selectedPilot.id) {
       props.changePilot(
         props.selectedPilot,
-        props.availablePilots.find((pilot) => pilot.id == selectedPilot.value),
+        props.availablePilots.find((pilot) => pilot.id === selectedPilot.value),
       );
     }
   };

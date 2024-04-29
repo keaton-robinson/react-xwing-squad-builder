@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import InfoPanelCpt from "./InfoPanelCpt";
 import PilotRowCpt from "./PilotRowCpt";
 import AddShipCpt from "./AddShipCpt";
@@ -31,12 +31,14 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
   const factionShips = Object.keys(xwingData.ships)
     .filter((ship) => xwingData.ships[ship].factions.includes(props.faction))
     .sort() as ShipName[];
-  const initialState: SquadBuilderCptState = {
-    squadId: null,
-    squad: [],
-    squadName: `${props.faction} Squadron`,
-    infoPanelCard: null,
-  };
+  const initialState: SquadBuilderCptState = useMemo(() => {
+    return {
+      squadId: null,
+      squad: [],
+      squadName: `${props.faction} Squadron`,
+      infoPanelCard: null,
+    };
+  }, [props.faction]);
   const userContext = useUserContext();
   const [state, setState] = useState<SquadBuilderCptState>(initialState);
 
@@ -45,7 +47,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     if (!userContext.user) {
       setState(initialState);
     }
-  }, [userContext.user]);
+  }, [userContext.user, initialState]);
 
   const showInfoPanelCard = (infoPanelCard: InfoPanelCard) => {
     setState({ ...state, infoPanelCard: infoPanelCard });
@@ -75,10 +77,10 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
         for (const autoEquipUpgrade of selectedShip.autoequip) {
           const configSelUpgradeSlot = appReadyNewPilot.selectedUpgrades.find(
             (selUpgrade) =>
-              selUpgrade.slot == xwingData.slots.Configuration.key,
+              selUpgrade.slot === xwingData.slots.Configuration.key,
           );
           configSelUpgradeSlot.selectedUpgradeId = xwingData.upgrades.find(
-            (upgrade) => upgrade.name == autoEquipUpgrade,
+            (upgrade) => upgrade.name === autoEquipUpgrade,
           ).id; // TODO: directly mutated state?
         }
       }
@@ -281,7 +283,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
                       state.squad,
                       xwingData.upgrades,
                     ) ||
-                      availPilot.id == squadPilot.id),
+                      availPilot.id === squadPilot.id),
                 )
                 .sort((first, second) => first.points - second.points)}
               changePilot={changePilot}

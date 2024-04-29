@@ -6,15 +6,11 @@ export default class StatBlockCpt extends React.Component<{
   upgrade;
   pilotAfterUpgrades;
 }> {
-  constructor(props) {
-    super(props);
-  }
-
   renderEffectiveStat = (baseStat, statAfterUpgrades) => {
     return (
       <span>
         {baseStat ? baseStat : 0}{" "}
-        {statAfterUpgrades && statAfterUpgrades != baseStat
+        {statAfterUpgrades && statAfterUpgrades !== baseStat
           ? `(${statAfterUpgrades})`
           : null}
       </span>

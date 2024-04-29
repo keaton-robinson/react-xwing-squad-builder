@@ -41,11 +41,11 @@ const ActionsCpt: React.FC<ActionsCptProps> = (props) => {
     if (action.includes("Slam")) return stylePrefix + "slam";
   };
 
-  const getActionMarkup = (action, ordinal) => {
+  const getActionMarkup = (action, ordinal: number) => {
     return (
       <span key={action + ordinal}>
         {/* //first action shouldn't have a comma or > before it */}
-        {ordinal != 0 ? getActionSeparator(action) : null}
+        {ordinal !== 0 ? getActionSeparator(action) : null}
         <i
           className={
             "xwing-miniatures-font " +

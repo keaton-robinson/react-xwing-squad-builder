@@ -15,8 +15,8 @@ export default class ShipUpgradeCpt extends React.Component<any> {
   upgradeAlreadySelectedOnADifferentSlot = (upgrade) => {
     return this.props.pilot.selectedUpgrades.find(
       (selUpgrade) =>
-        selUpgrade.selectedUpgradeId == upgrade.id &&
-        selUpgrade.key != this.props.upgradeSlot.key,
+        selUpgrade.selectedUpgradeId === upgrade.id &&
+        selUpgrade.key !== this.props.upgradeSlot.key,
     );
   };
 
@@ -26,7 +26,7 @@ export default class ShipUpgradeCpt extends React.Component<any> {
       return null;
     }
     const matchingSlots = [];
-    if (this.props.upgradeSlot.slot == xwingData.slots.HardpointShip.key) {
+    if (this.props.upgradeSlot.slot === xwingData.slots.HardpointShip.key) {
       // a "hardpointship" upgrade means the slot can accept a cannon, missile, or torpedo upgrade
       matchingSlots.push(xwingData.slots.Cannon.key);
       matchingSlots.push(xwingData.slots.Missile.key);
@@ -44,7 +44,7 @@ export default class ShipUpgradeCpt extends React.Component<any> {
           this.props.squad,
           xwingData.upgrades,
         ) ||
-          this.props.upgradeSlot.selectedUpgradeId == upgrade.id) &&
+          this.props.upgradeSlot.selectedUpgradeId === upgrade.id) &&
         xwingUtils.isUpgradeAllowed(
           this.props.upgradeSlot,
           upgrade,
@@ -57,9 +57,9 @@ export default class ShipUpgradeCpt extends React.Component<any> {
   };
 
   handleUpgradeSelection = (selectedUpgrade) => {
-    if (selectedUpgrade.value != this.props.upgradeSlot.selectedUpgradeId) {
+    if (selectedUpgrade.value !== this.props.upgradeSlot.selectedUpgradeId) {
       const newlySelectedUpgrade = xwingData.upgrades.find(
-        (upgrade) => upgrade.id == selectedUpgrade.value,
+        (upgrade) => upgrade.id === selectedUpgrade.value,
       );
       this.props.changeUpgrade(
         this.props.upgradeSlot,
