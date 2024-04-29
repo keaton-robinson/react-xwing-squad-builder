@@ -44,7 +44,7 @@ const LoadModal:React.FC<LoadModalProps> = (props) => {
         }
 
         getUserFactionSquads();
-    }, [props.faction]);
+    }, [props.faction, userContext.user?.token]);
 
     const loadClicked = () => {
         if(selectedSquad){
@@ -54,7 +54,7 @@ const LoadModal:React.FC<LoadModalProps> = (props) => {
 
     const deleteClicked = async () => {
         if(selectedSquad){
-            let deleteConfirmed = confirm(`Delete ${selectedSquad.name}?`);
+            let deleteConfirmed = window.confirm(`Delete ${selectedSquad.name}?`);
 
             if(deleteConfirmed){
                 //delete the squad
