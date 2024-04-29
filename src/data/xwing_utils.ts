@@ -104,7 +104,7 @@ function getPilotEffectiveStats(
     //gotta get the upgrade data
     if (isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)) {
       const upgradeData = upgradesData.find(
-        (upgrade) => upgrade.id == selectedUpgrade.selectedUpgradeId,
+        (upgrade) => upgrade.id === selectedUpgrade.selectedUpgradeId,
       );
       if (!upgradeData) {
         throw {
@@ -132,16 +132,16 @@ function maxPilotOrUpgradeReached(
   if (cardToCheck.max_per_squad) {
     if ("slot" in cardToCheck) {
       //we're looking at an upgrade card
-      let numberOfUpgradeInSquad = 0;
+      let numberOfUpgradeInSquad: number = 0;
       for (const squadPilot of squad) {
         for (const pilotUpgrade of squadPilot.selectedUpgrades) {
-          if (pilotUpgrade.selectedUpgradeId == cardToCheck.id) {
+          if (pilotUpgrade.selectedUpgradeId === cardToCheck.id) {
             numberOfUpgradeInSquad++;
           }
         }
       }
 
-      if (numberOfUpgradeInSquad == cardToCheck.max_per_squad) {
+      if (numberOfUpgradeInSquad === cardToCheck.max_per_squad) {
         return true;
       } else if (numberOfUpgradeInSquad > cardToCheck.max_per_squad) {
         const error = new Error();
@@ -161,10 +161,10 @@ function maxPilotOrUpgradeReached(
       }
     } else {
       //we're looking at a pilot card
-      let numberOfPilotInSquad = squad.filter(
-        (squadPilot) => squadPilot.id == cardToCheck.id,
+      let numberOfPilotInSquad: number = squad.filter(
+        (squadPilot) => squadPilot.id === cardToCheck.id,
       ).length;
-      if (numberOfPilotInSquad == cardToCheck.max_per_squad) {
+      if (numberOfPilotInSquad === cardToCheck.max_per_squad) {
         return true;
       } else if (numberOfPilotInSquad > cardToCheck.max_per_squad) {
         const error = new Error();
@@ -221,7 +221,7 @@ function isUniqueInSquad(
           if (isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)) {
             const upgradeData = upgradesData.find(
               (upgradeRecord) =>
-                upgradeRecord.id == selectedUpgrade.selectedUpgradeId,
+                upgradeRecord.id === selectedUpgrade.selectedUpgradeId,
             );
             if (upgradeData.name.includes(uniqueCanonName)) {
               uniqueFound = true;
@@ -378,12 +378,12 @@ function isUpgradeAllowedByRestrictions(
       }
       case "Slot":
         //if the upgrade is not currently the equiped upgrade, need to check if another slot of the specified type is available
-        if (selectedUpgradeSlot.selectedUpgradeId != upgrade.id) {
+        if (selectedUpgradeSlot.selectedUpgradeId !== upgrade.id) {
           if (
             !pilot.selectedUpgrades.find(
               (selUpgradeSlot) =>
-                selUpgradeSlot.key != selectedUpgradeSlot.key &&
-                selUpgradeSlot.slot == restriction[1] &&
+                selUpgradeSlot.key !== selectedUpgradeSlot.key &&
+                selUpgradeSlot.slot === restriction[1] &&
                 !isNotNullOrUndefined(selUpgradeSlot.selectedUpgradeId) &&
                 !selUpgradeSlot.parentUpgradeSlotKey,
             )
@@ -397,7 +397,7 @@ function isUpgradeAllowedByRestrictions(
           if (
             !pilot.selectedUpgrades.find(
               (selUpgrade) =>
-                selUpgrade.parentUpgradeSlotKey == selectedUpgradeSlot.key,
+                selUpgrade.parentUpgradeSlotKey === selectedUpgradeSlot.key,
             )
           ) {
             return false;
@@ -490,7 +490,7 @@ function isUpgradeAllowedByRestrictions(
         break;
       case "Equipped": {
         const selectedUpgradeForSlot = pilot.selectedUpgrades.find(
-          (selUpgrade) => selUpgrade.slot == restriction[1],
+          (selUpgrade) => selUpgrade.slot === restriction[1],
         );
         if (
           !selectedUpgradeForSlot ||
@@ -563,7 +563,7 @@ function addUpgrades(
   upgradesToAdd.forEach((upgradeToAdd) => {
     if (isNotNullOrUndefined(upgradeToAdd.selectedUpgradeId)) {
       const newPilotUpgradeSlot = newPilot.selectedUpgrades.find(
-        (newPilotUpgrade) => newPilotUpgrade.key == upgradeToAdd.key,
+        (newPilotUpgrade) => newPilotUpgrade.key === upgradeToAdd.key,
       );
       const upgradeData = upgradesData.find(
         (upgrade) => upgrade.id === upgradeToAdd.selectedUpgradeId,
@@ -705,7 +705,7 @@ function removeInvalidUpgrades(
       for (const selectedUpgrade of pilot.selectedUpgrades) {
         if (isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)) {
           const upgradeRecord = upgradesData.find(
-            (upgrade) => upgrade.id == selectedUpgrade.selectedUpgradeId,
+            (upgrade) => upgrade.id === selectedUpgrade.selectedUpgradeId,
           );
           if (
             !isUpgradeAllowed(
@@ -734,7 +734,7 @@ function removeUpgrade(
 ) {
   if (isNotNullOrUndefined(selectedUpgradeSlot.selectedUpgradeId)) {
     const upgradeRecord = upgradesData.find(
-      (upgrade) => upgrade.id == selectedUpgradeSlot.selectedUpgradeId,
+      (upgrade) => upgrade.id === selectedUpgradeSlot.selectedUpgradeId,
     );
     selectedUpgradeSlot.selectedUpgradeId = null;
 
@@ -743,7 +743,7 @@ function removeUpgrade(
       for (const addon of upgradeRecord.confersAddons) {
         const lastIndexOfMatchingAddon = [...pilot.selectedUpgrades]
           .reverse()
-          .findIndex((selUpgrade) => selUpgrade.slot == addon.slot);
+          .findIndex((selUpgrade) => selUpgrade.slot === addon.slot);
         pilot.selectedUpgrades.splice(lastIndexOfMatchingAddon, 1);
       }
     }
@@ -751,7 +751,7 @@ function removeUpgrade(
     //remove any upgrades that were applied by "also_occupies_upgrades" from the previous slot
     pilot.selectedUpgrades.forEach((selUpgrade) => {
       if (isNotNullOrUndefined(selUpgrade.parentUpgradeSlotKey)) {
-        if (selUpgrade.parentUpgradeSlotKey == selectedUpgradeSlot.key) {
+        if (selUpgrade.parentUpgradeSlotKey === selectedUpgradeSlot.key) {
           delete selUpgrade.parentUpgradeSlotKey;
         }
       }
@@ -768,17 +768,17 @@ function upgradeSquadShip(
   upgradesData: Upgrade[],
 ): void {
   const prevUpgradeRecord = upgradesData.find(
-    (upgrade) => upgrade.id == upgradeSlot.selectedUpgradeId,
+    (upgrade) => upgrade.id === upgradeSlot.selectedUpgradeId,
   );
   const shipType = pilot.pilotShip.name;
   const shipsOfSameType = squad.filter(
-    (squadPilot) => squadPilot.pilotShip.name == shipType,
+    (squadPilot) => squadPilot.pilotShip.name === shipType,
   );
 
   if (prevUpgradeRecord && prevUpgradeRecord.standardized) {
     for (const squadPilot of shipsOfSameType) {
       const squadPilotUpgradeSlot = squadPilot.selectedUpgrades.find(
-        (slot) => slot.key == upgradeSlot.key,
+        (slot) => slot.key === upgradeSlot.key,
       );
       removeUpgrade(squadPilotUpgradeSlot, squadPilot, upgradesData);
     }
@@ -787,7 +787,7 @@ function upgradeSquadShip(
   if (newlySelectedUpgrade && newlySelectedUpgrade.standardized) {
     for (const squadPilot of shipsOfSameType) {
       const squadPilotUpgradeSlot = squadPilot.selectedUpgrades.find(
-        (slot) => slot.key == upgradeSlot.key,
+        (slot) => slot.key === upgradeSlot.key,
       );
       setUpgrade(
         squadPilotUpgradeSlot,
@@ -821,7 +821,7 @@ function setUpgrade(
 
   if (
     newlySelectedUpgrade &&
-    upgradeSlot.selectedUpgradeId == newlySelectedUpgrade.id
+    upgradeSlot.selectedUpgradeId === newlySelectedUpgrade.id
   ) {
     const error = new Error();
     throw {
@@ -856,7 +856,7 @@ function setUpgrade(
       for (const unequip_slot of newlySelectedUpgrade.unequips_upgrades) {
         const lastMatchingUnequipSlot = [...pilot.selectedUpgrades]
           .reverse()
-          .find((selUpgrade) => selUpgrade.slot == unequip_slot);
+          .find((selUpgrade) => selUpgrade.slot === unequip_slot);
         removeUpgrade(lastMatchingUnequipSlot, pilot, upgradesData);
       }
     }
@@ -866,7 +866,7 @@ function setUpgrade(
       for (const slot of newlySelectedUpgrade.also_occupies_upgrades) {
         const slotToOccupy = pilot.selectedUpgrades.find(
           (selUpgrade) =>
-            selUpgrade.slot == slot &&
+            selUpgrade.slot === slot &&
             !isNotNullOrUndefined(selUpgrade.selectedUpgradeId),
         );
         if (!slotToOccupy) {
@@ -910,12 +910,12 @@ function squadContainsAnotherSolitaryCardForThisSlot(
   for (const squadPilot of squad) {
     for (const squadPilotUpgrade of squadPilot.selectedUpgrades) {
       if (
-        squadPilotUpgrade != upgradeSlot &&
-        squadPilotUpgrade.slot == upgradeSlot.slot &&
+        squadPilotUpgrade !== upgradeSlot &&
+        squadPilotUpgrade.slot === upgradeSlot.slot &&
         isNotNullOrUndefined(squadPilotUpgrade.selectedUpgradeId)
       ) {
         const upgradeRecord = upgradesData.find(
-          (upgrade) => upgrade.id == squadPilotUpgrade.selectedUpgradeId,
+          (upgrade) => upgrade.id === squadPilotUpgrade.selectedUpgradeId,
         );
         if (upgradeRecord.solitary) {
           return true;
