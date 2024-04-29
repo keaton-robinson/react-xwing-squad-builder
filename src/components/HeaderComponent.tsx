@@ -45,8 +45,10 @@ const HeaderComponent: React.FC<HeaderProps> = (props) =>  {
         <ul>
           <li><a href="https://github.com/keaton-robinson/react-xwing-squad-builder">GitHub Repository</a></li>
           { userContext.user ?
+              // eslint-disable-next-line jsx-a11y/anchor-is-valid
               <li id="logoutBtn" onClick={userContext.logout}><a style={{cursor: "pointer"}}><i className="fa fa-sign-in-alt" style={{marginRight: "5px"}}></i>Log Out</a></li>
             :
+              // eslint-disable-next-line jsx-a11y/anchor-is-valid
               <li id="loginBtn" onClick={showLogin}><a style={{cursor: "pointer"}}><i className="fa fa-sign-in-alt" style={{marginRight: "5px"}}></i>Log In</a></li>
           }
         </ul>      
