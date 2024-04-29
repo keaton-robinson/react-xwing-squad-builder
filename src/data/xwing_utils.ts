@@ -1,4 +1,4 @@
-import { Faction, Ship, ShipName, Pilot, PilotRulesText, Upgrade, UpgradeRulesText, Slots } from './xwing_data';
+import { Faction, Ship, ShipName, Pilot, Upgrade } from './xwing_data';
 
 //intended to be used for checking if an id is selected
 function isNotNullOrUndefined(value) {

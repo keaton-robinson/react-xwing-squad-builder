@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useUserContext } from '../../contexts/UserContext';
 import { Faction } from '../../data/xwing_data';
 

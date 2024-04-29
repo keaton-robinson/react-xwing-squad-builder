@@ -7,11 +7,6 @@ import StatBlockCpt from './StatBlockCpt';
 import UpgradesCpt from './UpgradesCpt';
 
 export default class InfoPanelPilotCpt extends React.Component {
-
-    constructor(props){
-        super(props);
-    }
-
     getRulesMarkupForPilot = (pilotToShow) => {
         const pilotRules = xwingData.pilotRules[pilotToShow.name];
         if(pilotRules){

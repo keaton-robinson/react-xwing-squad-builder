@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as xwingUtils from '../data/xwing_utils';
 import * as xwingData from '../data/xwing_data';
 import { useModalSetter } from '../contexts/ModalContext';

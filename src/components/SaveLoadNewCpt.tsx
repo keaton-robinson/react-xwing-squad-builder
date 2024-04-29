@@ -8,7 +8,6 @@ import * as xwingUtils from '../data/xwing_utils';
 import * as xwingData from '../data/xwing_data';
 import { SelectedPilot } from '../data/xwing_utils';
 import { Faction } from '../data/xwing_data';
-import { SquadBuilderCptState } from './SquadBuilderCpt';
 
 const saveStatusMessages = {
     saving: "saving...",

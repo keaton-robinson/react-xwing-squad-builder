@@ -7,7 +7,7 @@ export interface UserContextBundle {
     logout: () => void
 }
 
-export const UserContext = React.createContext<UserContextBundle>(null);
+export const UserContext = createContext<UserContextBundle>(null);
 UserContext.displayName = "UserContext";
 
 
