@@ -10,17 +10,20 @@ import {
 } from "./xwing_types";
 
 //intended to be used for checking if an id is selected
-function isNotNullOrUndefined(value) {
+export function isNotNullOrUndefined(value) {
   return value !== null && value !== undefined;
 }
 
-function createError(message: string, extraProps: Record<string, any>): Error {
+export function createError(
+  message: string,
+  extraProps: Record<string, any>,
+): Error {
   const error = new Error(message);
   Object.assign(error, extraProps);
   return error;
 }
 
-const getShipBaseSize = (ship: Ship): ShipBaseSize => {
+export const getShipBaseSize = (ship: Ship): ShipBaseSize => {
   if (ship.huge) {
     return "Huge";
   } else if (ship.large) {
@@ -32,7 +35,7 @@ const getShipBaseSize = (ship: Ship): ShipBaseSize => {
   }
 };
 
-function getUpgradeCost(
+export function getUpgradeCost(
   upgrade: Upgrade,
   pilot: SelectedPilotThatAllowsMutations,
 ): number {
@@ -64,7 +67,7 @@ function getUpgradeCost(
   );
 }
 
-function getPilotCost(
+export function getPilotCost(
   pilot: SelectedPilotThatAllowsMutations,
   upgradesData: Upgrade[],
 ): number {
@@ -86,7 +89,7 @@ function getPilotCost(
   );
 }
 
-function getSquadCost(
+export function getSquadCost(
   squad: SelectedPilotThatAllowsMutations[],
   upgradesData: Upgrade[],
 ): number {
@@ -95,7 +98,7 @@ function getSquadCost(
   }, 0);
 }
 
-function getPilotEffectiveStats(
+export function getPilotEffectiveStats(
   pilot: SelectedPilotThatAllowsMutations,
   upgradesData: Upgrade[],
 ): SelectedPilotThatAllowsMutations {
@@ -131,7 +134,7 @@ function getPilotEffectiveStats(
 }
 
 //returns true if unique or max_per_squad pilot has already been selected max_times in the squad already
-function maxPilotOrUpgradeReached(
+export function maxPilotOrUpgradeReached(
   cardToCheck: Pilot | Upgrade,
   squad,
   upgradesData,
@@ -235,7 +238,7 @@ function isUniqueInSquad(
 }
 
 //upgrade should be data-repo upgrade, not "selected" upgrade
-function isUpgradeAllowed(
+export function isUpgradeAllowed(
   selectedUpgradeSlot: SelectedUpgradeThatAllowsMutations,
   upgrade: Upgrade,
   pilot: SelectedPilotThatAllowsMutations,
@@ -300,7 +303,7 @@ function isUpgradeAllowed(
   return true;
 }
 
-function isUpgradeAllowedByRestrictions(
+export function isUpgradeAllowedByRestrictions(
   selectedUpgradeSlot: SelectedUpgradeThatAllowsMutations,
   restrictions: [string, any][],
   upgrade: Upgrade,
@@ -544,7 +547,7 @@ function isUpgradeAllowedByRestrictions(
 }
 
 //copies selected upgrades from prevPilot to new pilot (in place). Ignores upgrade slots that aren't available on new pilot
-function addUpgrades(
+export function addUpgrades(
   newPilot: SelectedPilotThatAllowsMutations,
   upgradesToAdd: SelectedUpgradeThatAllowsMutations[],
   squad: SelectedPilotThatAllowsMutations[],
@@ -580,7 +583,7 @@ function addUpgrades(
   });
 }
 
-function getAppReadyPilot(
+export function getAppReadyPilot(
   pilot: Pilot,
   shipsData: Record<string, Ship>,
   prevUIKey?: string,
@@ -667,7 +670,7 @@ function getSelectedUpgradesWithKeys(
 }
 
 //returns cheapest pilot in-faction that hasn't been selected max-times or selected elsewhere with uniqueness
-function getCheapestAvailablePilotForShip(
+export function getCheapestAvailablePilotForShip(
   ship: ShipName,
   faction: Faction,
   squad: SelectedPilotThatAllowsMutations[],
@@ -703,7 +706,7 @@ function getCheapestAvailablePilotForShip(
 }
 
 // TODO: mutating state in place. Fix
-function removeInvalidUpgrades(
+export function removeInvalidUpgrades(
   squad: SelectedPilotThatAllowsMutations[],
   upgradesData: Upgrade[],
 ): SelectedPilotThatAllowsMutations[] {
@@ -770,7 +773,7 @@ function removeUpgrade(
 }
 
 // TODO: mutating state in place. Fix.
-function upgradeSquadShip(
+export function upgradeSquadShip(
   upgradeSlot: SelectedUpgradeThatAllowsMutations,
   newlySelectedUpgrade: Upgrade,
   pilot: SelectedPilotThatAllowsMutations,
@@ -914,7 +917,7 @@ function setUpgrade(
 }
 
 //returns true if there is a solitary upgrade card equiped to another slot of the same type within the squad
-function squadContainsAnotherSolitaryCardForThisSlot(
+export function squadContainsAnotherSolitaryCardForThisSlot(
   upgradeSlot: SelectedUpgradeThatAllowsMutations,
   squad: SelectedPilotThatAllowsMutations[],
   upgradesData: Upgrade[],
@@ -949,7 +952,7 @@ function makeid(length: number): string {
   return result;
 }
 
-const fixIcons = (text) => {
+export const fixIcons = (text) => {
   if (text != null) {
     return text
       .replace(
@@ -1259,23 +1262,4 @@ const fixIcons = (text) => {
       )
       .replace(/%LINEBREAK%/g, "<br /><br />");
   }
-};
-
-export {
-  isNotNullOrUndefined,
-  getUpgradeCost,
-  getPilotCost,
-  getSquadCost,
-  getPilotEffectiveStats,
-  maxPilotOrUpgradeReached,
-  isUpgradeAllowed,
-  addUpgrades,
-  getAppReadyPilot,
-  getCheapestAvailablePilotForShip,
-  removeInvalidUpgrades,
-  upgradeSquadShip,
-  squadContainsAnotherSolitaryCardForThisSlot,
-  getShipBaseSize,
-  fixIcons,
-  makeid,
 };

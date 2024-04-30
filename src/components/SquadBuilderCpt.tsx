@@ -19,7 +19,6 @@ import {
   removeInvalidUpgrades,
   addUpgrades,
   getAppReadyPilot,
-  makeid,
   getCheapestAvailablePilotForShip,
   maxPilotOrUpgradeReached,
   upgradeSquadShip,
