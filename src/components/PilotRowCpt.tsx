@@ -1,14 +1,20 @@
 import React, { useRef } from "react";
-import * as xwingData from "../data/xwing_data";
-import * as xwingUtils from "../data/xwing_utils";
 import ShipUpgradeCpt from "./ShipUpgradeCpt";
 import { Dropdown } from "@keatonr06/reactjs-dropdown-component";
 import { DropDownStyles } from "../styleData/styleData";
-import { InfoPanelCard, SelectedPilot } from "../data/xwing_utils";
-import { Pilot, ShipName, Upgrade } from "../data/xwing_data";
+import {
+  InfoPanelCard,
+  Pilot,
+  SelectedPilot,
+  SelectedUpgrade,
+  ShipName,
+  Upgrade,
+} from "../data/xwing_types";
+import { ships, upgrades } from "../data/xwing_data";
+import { getPilotCost } from "../data/xwing_utils";
 
 interface PilotRowCptProps {
-  factionShips: xwingData.ShipName[];
+  factionShips: ShipName[];
   squad: SelectedPilot[];
   selectedPilot: SelectedPilot;
   availablePilots: Pilot[];
@@ -24,8 +30,8 @@ interface PilotRowCptProps {
   removePilot: (pilotToRemove: SelectedPilot) => void;
   clonePilot: (pilot: SelectedPilot) => void;
   changeUpgrade: (
-    upgradeSlot: xwingUtils.SelectedUpgrade,
-    newlySelectedUpgrade: xwingData.Upgrade,
+    upgradeSlot: SelectedUpgrade,
+    newlySelectedUpgrade: Upgrade,
     pilot: SelectedPilot,
   ) => void;
   onRecordMouseEnter: (infoPanelCard: InfoPanelCard) => void;
@@ -65,7 +71,7 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
 
   const handleShipMouseEnter = (shipDropDownItem) => {
     props.onRecordMouseEnter({
-      cardData: xwingData.ships[shipDropDownItem.value],
+      cardData: ships[shipDropDownItem.value],
       type: "Ship",
     });
   };
@@ -136,9 +142,7 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
         </div>
       </div>
       <div className="shipPointCost hideOnMobile">
-        <span>
-          {xwingUtils.getPilotCost(props.selectedPilot, xwingData.upgrades)}
-        </span>
+        <span>{getPilotCost(props.selectedPilot, upgrades)}</span>
       </div>
       <div
         className="onlyShowOnMobile"
@@ -163,7 +167,7 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
         ))}
       </div>
       <div className="deleteOrCopyShip" style={{ marginTop: "5px" }}>
-        <span className="onlyShowOnMobile">{`Total ship points: ${xwingUtils.getPilotCost(props.selectedPilot, xwingData.upgrades)}  `}</span>
+        <span className="onlyShowOnMobile">{`Total ship points: ${getPilotCost(props.selectedPilot, upgrades)}  `}</span>
         <button className="btn-danger" onClick={delBtnPressed}>
           Delete
         </button>
@@ -179,167 +183,167 @@ export default PilotRowCpt;
 
 const getShipBackgroundStylePostFix = (shipName) => {
   switch (shipName) {
-    case xwingData.ships["X-Wing"].name:
+    case ships["X-Wing"].name:
       return "xwing";
-    case xwingData.ships["Y-Wing"].name:
+    case ships["Y-Wing"].name:
       return "ywing";
-    case xwingData.ships["A-Wing"].name:
+    case ships["A-Wing"].name:
       return "awing";
-    case xwingData.ships["TIE Fighter"].name:
+    case ships["TIE Fighter"].name:
       return "tiefighter";
-    case xwingData.ships["TIE Advanced"].name:
+    case ships["TIE Advanced"].name:
       return "tieadvanced";
-    case xwingData.ships["TIE Interceptor"].name:
+    case ships["TIE Interceptor"].name:
       return "tieinterceptor";
-    case xwingData.ships["YT-1300"].name:
+    case ships["YT-1300"].name:
       return "yt1300";
-    case xwingData.ships["Firespray-31"].name:
+    case ships["Firespray-31"].name:
       return "firespray31";
-    case xwingData.ships["B-Wing"].name:
+    case ships["B-Wing"].name:
       return "bwing";
-    case xwingData.ships["TIE Bomber"].name:
+    case ships["TIE Bomber"].name:
       return "tiebomber";
-    case xwingData.ships["Lambda-Class Shuttle"].name:
+    case ships["Lambda-Class Shuttle"].name:
       return "lambdaclassshuttle";
-    case xwingData.ships["HWK-290"].name:
+    case ships["HWK-290"].name:
       return "hwk290";
-    case xwingData.ships.StarViper.name:
+    case ships.StarViper.name:
       return "starviper";
-    case xwingData.ships["Z-95 Headhunter"].name:
+    case ships["Z-95 Headhunter"].name:
       return "z95headhunter";
-    case xwingData.ships["M3-A Interceptor"].name:
+    case ships["M3-A Interceptor"].name:
       return "m3ainterceptor";
-    case xwingData.ships["YT-2400"].name:
+    case ships["YT-2400"].name:
       return "yt2400";
-    case xwingData.ships["VT-49 Decimator"].name:
+    case ships["VT-49 Decimator"].name:
       return "vt49decimator";
-    case xwingData.ships["TIE Defender"].name:
+    case ships["TIE Defender"].name:
       return "tiedefender";
-    case xwingData.ships["TIE Phantom"].name:
+    case ships["TIE Phantom"].name:
       return "tiephantom";
-    case xwingData.ships.Aggressor.name:
+    case ships.Aggressor.name:
       return "aggressor";
-    case xwingData.ships["TIE/FO Fighter"].name:
+    case ships["TIE/FO Fighter"].name:
       return "tiefofighter";
-    case xwingData.ships["T-70 X-Wing"].name:
+    case ships["T-70 X-Wing"].name:
       return "t70xwing";
-    case xwingData.ships["TIE Advanced Prototype"].name:
+    case ships["TIE Advanced Prototype"].name:
       return "tieadvancedprototype";
-    case xwingData.ships["VCX-100"].name:
+    case ships["VCX-100"].name:
       return "vcx100";
-    case xwingData.ships["Attack Shuttle"].name:
+    case ships["Attack Shuttle"].name:
       return "attackshuttle";
-    case xwingData.ships["ARC-170"].name:
+    case ships["ARC-170"].name:
       return "arc170";
-    case xwingData.ships["Lancer-Class Pursuit Craft"].name:
+    case ships["Lancer-Class Pursuit Craft"].name:
       return "lancerclasspursuitcraft";
-    case xwingData.ships["Fang Fighter"].name:
+    case ships["Fang Fighter"].name:
       return "fangfighter";
-    case xwingData.ships["TIE/SF Fighter"].name:
+    case ships["TIE/SF Fighter"].name:
       return "tiesffighter";
-    case xwingData.ships["Upsilon-Class Command Shuttle"].name:
+    case ships["Upsilon-Class Command Shuttle"].name:
       return "upsilonclasscommandshuttle";
-    case xwingData.ships["TIE Aggressor"].name:
+    case ships["TIE Aggressor"].name:
       return "tieaggressor";
-    case xwingData.ships["K-Wing"].name:
+    case ships["K-Wing"].name:
       return "kwing";
-    case xwingData.ships["Sheathipede-Class Shuttle"].name:
+    case ships["Sheathipede-Class Shuttle"].name:
       return "sheathipedeclassshuttle";
-    case xwingData.ships["Auzituck Gunship"].name:
+    case ships["Auzituck Gunship"].name:
       return "auzituckgunship";
-    case xwingData.ships["U-Wing"].name:
+    case ships["U-Wing"].name:
       return "uwing";
-    case xwingData.ships["Alpha-Class Star Wing"].name:
+    case ships["Alpha-Class Star Wing"].name:
       return "alphaclassstarwing";
-    case xwingData.ships["TIE Punisher"].name:
+    case ships["TIE Punisher"].name:
       return "tiepunisher";
-    case xwingData.ships["TIE Striker"].name:
+    case ships["TIE Striker"].name:
       return "tiestriker";
-    case xwingData.ships["G-1A Starfighter"].name:
+    case ships["G-1A Starfighter"].name:
       return "g1astarfighter";
-    case xwingData.ships["JumpMaster 5000"].name:
+    case ships["JumpMaster 5000"].name:
       return "jumpmaster5000";
-    case xwingData.ships["Kihraxz Fighter"].name:
+    case ships["Kihraxz Fighter"].name:
       return "kihraxzfighter";
-    case xwingData.ships["M12-L Kimogila Fighter"].name:
+    case ships["M12-L Kimogila Fighter"].name:
       return "m12lkimogilafighter";
-    case xwingData.ships["Customized YT-1300"].name:
+    case ships["Customized YT-1300"].name:
       return "customizedyt1300";
-    case xwingData.ships["Mining Guild TIE Fighter"].name:
+    case ships["Mining Guild TIE Fighter"].name:
       return "miningguildtiefighter";
-    case xwingData.ships.Quadjumper.name:
+    case ships.Quadjumper.name:
       return "quadjumper";
-    case xwingData.ships["Scurrg H-6 Bomber"].name:
+    case ships["Scurrg H-6 Bomber"].name:
       return "scurrgh6bomber";
-    case xwingData.ships["YV-666"].name:
+    case ships["YV-666"].name:
       return "yv666";
-    case xwingData.ships["TIE/VN Silencer"].name:
+    case ships["TIE/VN Silencer"].name:
       return "tievnsilencer";
-    case xwingData.ships["Scavenged YT-1300"].name:
+    case ships["Scavenged YT-1300"].name:
       return "scavengedyt1300";
-    case xwingData.ships["MG-100 StarFortress"].name:
+    case ships["MG-100 StarFortress"].name:
       return "mg100starfortress";
-    case xwingData.ships["RZ-2 A-Wing"].name:
+    case ships["RZ-2 A-Wing"].name:
       return "rz2awing";
-    case xwingData.ships["Escape Craft"].name:
+    case ships["Escape Craft"].name:
       return "escapecraft";
-    case xwingData.ships["Resistance Transport"].name:
+    case ships["Resistance Transport"].name:
       return "resistancetransport";
-    case xwingData.ships["Naboo Royal N-1 Starfighter"].name:
+    case ships["Naboo Royal N-1 Starfighter"].name:
       return "nabooroyaln1starfighter";
-    case xwingData.ships["Hyena-Class Droid Bomber"].name:
+    case ships["Hyena-Class Droid Bomber"].name:
       return "hyenaclassdroidbomber";
-    case xwingData.ships["Delta-7 Aethersprite"].name:
+    case ships["Delta-7 Aethersprite"].name:
       return "delta7aethersprite";
-    case xwingData.ships["V-19 Torrent"].name:
+    case ships["V-19 Torrent"].name:
       return "v19torrent";
-    case xwingData.ships["Belbullab-22 Starfighter"].name:
+    case ships["Belbullab-22 Starfighter"].name:
       return "belbullab22starfighter";
-    case xwingData.ships["Sith Infiltrator"].name:
+    case ships["Sith Infiltrator"].name:
       return "sithinfiltrator";
-    case xwingData.ships["BTL-B Y-Wing"].name:
+    case ships["BTL-B Y-Wing"].name:
       return "btlbywing";
-    case xwingData.ships["Nantex-Class Starfighter"].name:
+    case ships["Nantex-Class Starfighter"].name:
       return "nantexclassstarfighter";
-    case xwingData.ships["Vulture-class Droid Fighter"].name:
+    case ships["Vulture-class Droid Fighter"].name:
       return "vultureclassdroidfighter";
-    case xwingData.ships["E-Wing"].name:
+    case ships["E-Wing"].name:
       return "ewing";
-    case xwingData.ships["TIE Reaper"].name:
+    case ships["TIE Reaper"].name:
       return "tiereaper";
-    case xwingData.ships.Fireball.name:
+    case ships.Fireball.name:
       return "fireball";
-    case xwingData.ships["TIE/Ba Interceptor"].name:
+    case ships["TIE/Ba Interceptor"].name:
       return "tiebainterceptor";
-    case xwingData.ships["Resistance Transport Pod"].name:
+    case ships["Resistance Transport Pod"].name:
       return "resistancetransportpod";
-    case xwingData.ships["TIE/rb Heavy"].name:
+    case ships["TIE/rb Heavy"].name:
       return "tierbheavy";
-    case xwingData.ships["Xi-class Light Shuttle"].name:
+    case ships["Xi-class Light Shuttle"].name:
       return "xiclasslightshuttle";
-    case xwingData.ships["Eta-2 Actis"].name:
+    case ships["Eta-2 Actis"].name:
       return "eta2actis";
-    case xwingData.ships["LAAT/i Gunship"].name:
+    case ships["LAAT/i Gunship"].name:
       return "laatigunship";
-    case xwingData.ships["Nimbus-class V-Wing"].name:
+    case ships["Nimbus-class V-Wing"].name:
       return "nimbusclassvwing";
-    case xwingData.ships["Syliure-class Hyperspace Ring"].name:
+    case ships["Syliure-class Hyperspace Ring"].name:
       return "syliureclasshyperspacering";
-    case xwingData.ships["Droid Tri-Fighter"].name:
+    case ships["Droid Tri-Fighter"].name:
       return "droidtrifighter";
-    case xwingData.ships["HMP Droid Gunship"].name:
+    case ships["HMP Droid Gunship"].name:
       return "hmpdroidgunship";
-    case xwingData.ships["GR-75 Medium Transport"].name:
+    case ships["GR-75 Medium Transport"].name:
       return "gr75mediumtransport";
-    case xwingData.ships["CR90 Corellian Corvette"].name:
+    case ships["CR90 Corellian Corvette"].name:
       return "cr90corelliancorvette";
-    case xwingData.ships["C-ROC Cruiser"].name:
+    case ships["C-ROC Cruiser"].name:
       return "croccruiser";
-    case xwingData.ships["Gozanti-class Cruiser"].name:
+    case ships["Gozanti-class Cruiser"].name:
       return "gozanticlasscruiser";
-    case xwingData.ships["Raider-class Corvette"].name:
+    case ships["Raider-class Corvette"].name:
       return "raiderclasscorvette";
-    case xwingData.ships["Trident-class Assault Ship"].name:
+    case ships["Trident-class Assault Ship"].name:
       return "tridentclassassaultship";
     default:
       return "";

@@ -1,5 +1,6 @@
 import React from "react";
-import { Faction, factionNames } from "../data/xwing_data";
+import { factionNames } from "../data/xwing_data";
+import { Faction } from "../data/xwing_types";
 
 const getFontClassName = (factionName) => {
   switch (factionName) {

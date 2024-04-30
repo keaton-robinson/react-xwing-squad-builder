@@ -1,11 +1,11 @@
 import React from "react";
-import * as xwingUtils from "../data/xwing_utils";
-import * as xwingData from "../data/xwing_data";
 import ActionsCpt from "./ActionsCpt";
 import ManeuversCpt from "./ManeuversCpt";
 import UpgradesCpt from "./UpgradesCpt";
 import StatBlockCpt from "./StatBlockCpt";
-import { Faction, Pilot, Ship } from "../data/xwing_data";
+import { Faction, Pilot, Ship } from "../data/xwing_types";
+import { pilots } from "../data/xwing_data";
+import { getShipBaseSize } from "../data/xwing_utils";
 
 interface InfoPanelShipCptProps {
   ship: Ship;
@@ -23,7 +23,7 @@ const InfoPanelShipCpt: React.FC<InfoPanelShipCptProps> = (props) => {
   const getShipData = (): ShipData => {
     //make a copy of the pilot so I don't have side effects on my "data repo"
     const shipData: ShipData = JSON.parse(JSON.stringify(props.ship));
-    shipData.pilotsForShip = xwingData.pilots.filter(
+    shipData.pilotsForShip = pilots.filter(
       (pilot) =>
         pilot.ship === shipData.name && pilot.faction === props.faction,
     );
@@ -64,7 +64,7 @@ const InfoPanelShipCpt: React.FC<InfoPanelShipCptProps> = (props) => {
       <h4 className="infoType">Ship</h4>
       <div>
         <strong>Base: </strong>
-        <span>{xwingUtils.getShipBaseSize(shipData)}</span>
+        <span>{getShipBaseSize(shipData)}</span>
       </div>
       <div>
         <strong>Initiative: </strong>

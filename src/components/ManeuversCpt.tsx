@@ -1,10 +1,11 @@
 import React from "react";
 import ManeuverCpt from "./ManeuverCpt";
-import * as xwingData from "../data/xwing_data";
+import { difficulties, bearings } from "../data/xwing_data";
+import { Difficulty } from "../data/xwing_types";
 
 interface ManeuverCptProps {
-  maneuvers: xwingData.Difficulty[][];
-  maneuversAfterUpgrades?: xwingData.Difficulty[][];
+  maneuvers: Difficulty[][];
+  maneuversAfterUpgrades?: Difficulty[][];
 }
 
 const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
@@ -13,7 +14,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
     const columnsToRender = {};
     for (let i = 0; i < props.maneuvers.length; i++) {
       for (let j = 0; j < props.maneuvers[i].length; j++) {
-        if (props.maneuvers[i][j] !== xwingData.difficulties.impossible) {
+        if (props.maneuvers[i][j] !== difficulties.impossible) {
           rowsToRender[i] = true;
           columnsToRender[j] = true;
         }
@@ -43,7 +44,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[0] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.left_hard}
+                  bearing={bearings.left_hard}
                   difficulty={getEffectiveManeuver(i, 0)}
                 />
               </td>
@@ -51,7 +52,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[1] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.left_bank}
+                  bearing={bearings.left_bank}
                   difficulty={getEffectiveManeuver(i, 1)}
                 />
               </td>
@@ -59,7 +60,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[2] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.straight}
+                  bearing={bearings.straight}
                   difficulty={getEffectiveManeuver(i, 2)}
                 />
               </td>
@@ -68,7 +69,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[3] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.right_bank}
+                  bearing={bearings.right_bank}
                   difficulty={getEffectiveManeuver(i, 3)}
                 />
               </td>
@@ -77,7 +78,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[4] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.right_hard}
+                  bearing={bearings.right_hard}
                   difficulty={getEffectiveManeuver(i, 4)}
                 />
               </td>
@@ -86,7 +87,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[5] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.k_turn}
+                  bearing={bearings.k_turn}
                   difficulty={getEffectiveManeuver(i, 5)}
                 />
               </td>
@@ -95,7 +96,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[6] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.left_sloop}
+                  bearing={bearings.left_sloop}
                   difficulty={getEffectiveManeuver(i, 6)}
                 />
               </td>
@@ -104,7 +105,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[7] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.right_sloop}
+                  bearing={bearings.right_sloop}
                   difficulty={getEffectiveManeuver(i, 7)}
                 />
               </td>
@@ -113,7 +114,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[8] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.left_tallion}
+                  bearing={bearings.left_tallion}
                   difficulty={getEffectiveManeuver(i, 8)}
                 />
               </td>
@@ -122,7 +123,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[9] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.right_tallion}
+                  bearing={bearings.right_tallion}
                   difficulty={getEffectiveManeuver(i, 9)}
                 />
               </td>
@@ -131,7 +132,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[10] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.reverse_left}
+                  bearing={bearings.reverse_left}
                   difficulty={getEffectiveManeuver(i, 10)}
                 />
               </td>
@@ -140,7 +141,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[11] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.reverse_straight}
+                  bearing={bearings.reverse_straight}
                   difficulty={getEffectiveManeuver(i, 11)}
                 />
               </td>
@@ -149,7 +150,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
             {columnsToRender[12] ? (
               <td>
                 <ManeuverCpt
-                  bearing={xwingData.bearings.reverse_right}
+                  bearing={bearings.reverse_right}
                   difficulty={getEffectiveManeuver(i, 12)}
                 />
               </td>

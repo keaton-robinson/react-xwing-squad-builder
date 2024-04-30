@@ -5,7 +5,7 @@ import LoginModal from "./modals/LoginModal";
 import RegisterModal from "./modals/RegisterModal";
 import { useUserContext } from "../contexts/UserContext";
 import { useModalSetter } from "../contexts/ModalContext";
-import { Faction } from "../data/xwing_data";
+import { Faction } from "../data/xwing_types";
 
 interface HeaderProps {
   factions: Faction[];

@@ -1,3 +1,16 @@
+import {
+  Bearing,
+  Difficulty,
+  DifficultyName,
+  Pilot,
+  PilotRulesText,
+  Ship,
+  Slot,
+  SlotName,
+  Upgrade,
+  UpgradeRulesText,
+} from "./xwing_types";
+
 //need this because coffeescript generated this on yasb's end, and I'm not using coffeescript currently
 const __indexOf =
   [].indexOf ||
@@ -25,35 +38,6 @@ const factionNames: Record<Faction, Faction> = {
   "Galactic Republic": "Galactic Republic",
   "Separatist Alliance": "Separatist Alliance",
 };
-
-interface Ship {
-  name: string;
-  canonical_name?: string;
-  xws: string;
-  factions: Faction[];
-  attack?: number;
-  attackf?: number;
-  attackb?: number;
-  attackl?: number;
-  attackr?: number;
-  attackbull?: number;
-  attackt?: number;
-  attackdt?: number;
-  agility: number;
-  hull: number;
-  shields: number;
-  actions: string[];
-  maneuvers: Difficulty[][];
-  autoequip?: string[]; // Optional property
-  keyword?: string[];
-  huge?: boolean;
-  large?: boolean;
-  medium?: boolean;
-  icon?: string;
-  shieldrecurr?: number;
-  energy?: number;
-  energyrecurr?: number;
-}
 
 const ships: Record<string, Ship> = {
   "X-Wing": {
@@ -1618,29 +1602,6 @@ const ships: Record<string, Ship> = {
   },
 };
 type ShipName = keyof typeof ships;
-
-interface Pilot {
-  name: string;
-  id: number;
-  faction: Faction;
-  ship: ShipName;
-  keyword?: string[];
-  skill: number;
-  points: number;
-  slots: string[];
-  unique?: boolean;
-  force?: number;
-  canonical_name?: string;
-  xws?: string;
-  applies_condition?: string | string[];
-  charge?: number;
-  recurring?: number;
-  restrictions?: string[][];
-  restriction_func?: (a: any) => any;
-  max_per_squad?: number;
-  ship_override?: { actions: string[] };
-  engagement?: number;
-}
 
 const pilots: Pilot[] = [
   {
@@ -8204,11 +8165,6 @@ const pilots: Pilot[] = [
   },
 ];
 
-interface PilotRulesText {
-  display_name?: string;
-  text: string;
-}
-
 const pilotRules: Record<string, PilotRulesText> = {
   "0-66": {
     display_name: "0-66",
@@ -9979,46 +9935,6 @@ const pilotRules: Record<string, PilotRulesText> = {
     text: "<i class = flavor_text>The Separatist Alliance has close ties to certain mercenaries and criminal groups and, as the war rages on, its technology sometimes finds its way into unsavory hands.</i> %LINEBREAK% <strong>Tractor Grasp:</strong> After you perform a <b>Tractor Tentacles</b> attack that hits, the defender gains 1 tractor token.",
   },
 };
-
-interface Upgrade {
-  name: string;
-  xws?: string;
-  id: number;
-  slot: keyof typeof slots;
-  canonical_name?: string;
-  points?: number;
-  pointsarray?: number[];
-  unique?: boolean;
-  faction?: Faction | Faction[];
-  variableagility?: boolean;
-  variablebase?: boolean;
-  variableinit?: boolean;
-  force?: number;
-  charge?: number;
-  restrictions?: [string, any][];
-  modifier_func?: (a: any) => any;
-  attack?: number;
-  attackf?: number;
-  attackb?: number;
-  attackl?: number;
-  attackr?: number;
-  attackbull?: number;
-  attackt?: number;
-  attackdt?: number;
-  range?: any;
-  ship?: ShipName | ShipName[];
-  validation_func?: Function;
-  also_occupies_upgrades?: string[];
-  rangebonus?: boolean;
-  standardized?: boolean;
-  recurring?: number;
-  applies_condition?: string | string[];
-  solitary?: boolean;
-  max_per_squad?: number;
-  confersAddons?: { type: string; slot: string }[];
-  unequips_upgrades?: string[];
-  keyword?: string[];
-}
 
 const upgrades: Upgrade[] = [
   {
@@ -14176,11 +14092,6 @@ const upgrades: Upgrade[] = [
   },
 ];
 
-interface UpgradeRulesText {
-  display_name?: string;
-  text: string;
-}
-
 const upgradeRules: Record<string, UpgradeRulesText> = {
   "0-0-0": {
     display_name: "0-0-0",
@@ -15703,7 +15614,7 @@ const upgradeRules: Record<string, UpgradeRulesText> = {
   },
 };
 
-const slots: Record<string, { key: string; displayName: string }> = {
+const slots: Record<string, Slot> = {
   Astromech: { key: "Astromech", displayName: "Astromech" },
   Force: { key: "Force", displayName: "Force" },
   Bomb: { key: "Bomb", displayName: "Bomb" },
@@ -15730,9 +15641,7 @@ const slots: Record<string, { key: string; displayName: string }> = {
   Cargo: { key: "Cargo", displayName: "Cargo" },
 };
 
-type Slots = keyof typeof slots;
-
-const sloticon: Partial<Record<Slots, string>> = {
+const sloticon: Partial<Record<SlotName, string>> = {
   Astromech:
     '<i class="xwing-miniatures-font xwing-miniatures-font-astromech"></i>',
   Force:
@@ -15769,31 +15678,13 @@ const sloticon: Partial<Record<Slots, string>> = {
     '<i class="xwing-miniatures-font xwing-miniatures-font-tacticalrelay"></i>',
 };
 
-type DifficultyName = "impossible" | "blue" | "white" | "red" | "purple";
-type Difficulty = 0 | 1 | 2 | 3 | 4;
-const difficulties = {
+const difficulties: Record<DifficultyName, Difficulty> = {
   impossible: 0,
   blue: 1,
   white: 2,
   red: 3,
   purple: 4,
 };
-
-type Bearing =
-  | "left_hard"
-  | "left_bank"
-  | "straight"
-  | "right_bank"
-  | "right_hard"
-  | "k_turn"
-  | "left_sloop"
-  | "right_sloop"
-  | "left_tallion"
-  | "right_tallion"
-  | "stationary"
-  | "reverse_left"
-  | "reverse_straight"
-  | "reverse_right";
 
 const bearings: Record<Bearing, Bearing> = {
   left_hard: "left_hard",
@@ -15821,17 +15712,6 @@ export {
   sloticon,
   upgrades,
   upgradeRules,
-  DifficultyName,
-  Difficulty,
   difficulties,
-  Bearing,
   bearings,
-  Faction,
-  Ship,
-  ShipName,
-  Pilot,
-  PilotRulesText,
-  Upgrade,
-  UpgradeRulesText,
-  Slots,
 };

@@ -1,7 +1,8 @@
 import React from "react";
 import ActionsCpt from "./ActionsCpt";
 import StatBlockCpt from "./StatBlockCpt";
-import { Upgrade, upgradeRules } from "../data/xwing_data";
+import { upgradeRules } from "../data/xwing_data";
+import { Upgrade } from "../data/xwing_types";
 import { fixIcons } from "../data/xwing_utils";
 
 interface InfoPanelUpgradeCptProps {

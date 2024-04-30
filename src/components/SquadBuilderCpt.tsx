@@ -4,14 +4,25 @@ import PilotRowCpt from "./PilotRowCpt";
 import AddShipCpt from "./AddShipCpt";
 import SquadNamePointsPrint from "./SquadNamePointsPrint";
 import SaveLoadNew from "./SaveLoadNewCpt";
-import * as xwingData from "../data/xwing_data";
-import { Faction, Pilot, ShipName } from "../data/xwing_data";
-import * as xwingUtils from "../data/xwing_utils";
 import { useUserContext } from "../contexts/UserContext";
 import {
+  Faction,
+  Pilot,
+  ShipName,
   InfoPanelCard,
   SelectedPilot,
   SelectedUpgrade,
+  Upgrade,
+} from "../data/xwing_types";
+import { ships, upgrades, slots, pilots } from "../data/xwing_data";
+import {
+  removeInvalidUpgrades,
+  addUpgrades,
+  getAppReadyPilot,
+  makeid,
+  getCheapestAvailablePilotForShip,
+  maxPilotOrUpgradeReached,
+  upgradeSquadShip,
 } from "../data/xwing_utils";
 
 interface SquadBuilderCptProps {
@@ -28,8 +39,8 @@ interface SquadBuilderCptState {
 }
 
 const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
-  const factionShips = Object.keys(xwingData.ships)
-    .filter((ship) => xwingData.ships[ship].factions.includes(props.faction))
+  const factionShips = Object.keys(ships)
+    .filter((ship) => ships[ship].factions.includes(props.faction))
     .sort() as ShipName[];
   const initialState: SquadBuilderCptState = useMemo(() => {
     return {
@@ -54,7 +65,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
   };
 
   const removeInvalidUpgradesAndSetState = (updatedSquad) => {
-    xwingUtils.removeInvalidUpgrades(updatedSquad, xwingData.upgrades);
+    removeInvalidUpgrades(updatedSquad, upgrades);
     setState({ ...state, squad: updatedSquad });
   };
 
@@ -64,22 +75,21 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     squadIncludingNewPilot,
   ): void => {
     if (upgradesToApply) {
-      xwingUtils.addUpgrades(
+      addUpgrades(
         appReadyNewPilot,
         upgradesToApply,
         squadIncludingNewPilot,
-        xwingData.upgrades,
+        upgrades,
       );
     } else {
       //if no upgrades specified, attach the default auto-equips
-      const selectedShip = xwingData.ships[appReadyNewPilot.ship];
+      const selectedShip = ships[appReadyNewPilot.ship];
       if (selectedShip.autoequip) {
         for (const autoEquipUpgrade of selectedShip.autoequip) {
           const configSelUpgradeSlot = appReadyNewPilot.selectedUpgrades.find(
-            (selUpgrade) =>
-              selUpgrade.slot === xwingData.slots.Configuration.key,
+            (selUpgrade) => selUpgrade.slot === slots.Configuration.key,
           );
-          configSelUpgradeSlot.selectedUpgradeId = xwingData.upgrades.find(
+          configSelUpgradeSlot.selectedUpgradeId = upgrades.find(
             (upgrade) => upgrade.name === autoEquipUpgrade,
           ).id; // TODO: directly mutated state?
         }
@@ -91,11 +101,8 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     pilotToAdd: Pilot,
     upgradesToApply?: SelectedUpgrade[],
   ): void => {
-    const appReadyNewPilot = xwingUtils.getAppReadyPilot(
-      pilotToAdd,
-      xwingData.ships,
-    );
-    appReadyNewPilot.uiKey = xwingUtils.makeid(25);
+    const appReadyNewPilot = getAppReadyPilot(pilotToAdd, ships);
+    appReadyNewPilot.uiKey = makeid(25);
     const newSquadAfterAddition = [...state.squad, appReadyNewPilot];
 
     setUpgradesOnNewPilot(
@@ -111,10 +118,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     newPilot: Pilot,
     copyUpgrades: boolean = true,
   ): void => {
-    const appReadyNewPilot = xwingUtils.getAppReadyPilot(
-      newPilot,
-      xwingData.ships,
-    );
+    const appReadyNewPilot = getAppReadyPilot(newPilot, ships);
     //transfer the existing UI key to the new pilot object so react rcognizes it as the previous one
     appReadyNewPilot.uiKey = prevSelectedPilot.uiKey;
 
@@ -152,12 +156,12 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     ship: ShipName,
     upgradesToInclude?: SelectedUpgrade[],
   ): void => {
-    const cheapestAvailablePilot = xwingUtils.getCheapestAvailablePilotForShip(
+    const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
       ship,
       props.faction,
       state.squad,
-      xwingData.upgrades,
-      xwingData.pilots,
+      upgrades,
+      pilots,
     );
     if (cheapestAvailablePilot) {
       addPilot(cheapestAvailablePilot, upgradesToInclude);
@@ -170,14 +174,13 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     shipToChangeTo: ShipName,
     prevSelectedPilot: SelectedPilot,
   ): void => {
-    const cheapestAvailablePilotForShip =
-      xwingUtils.getCheapestAvailablePilotForShip(
-        shipToChangeTo,
-        props.faction,
-        state.squad,
-        xwingData.upgrades,
-        xwingData.pilots,
-      );
+    const cheapestAvailablePilotForShip = getCheapestAvailablePilotForShip(
+      shipToChangeTo,
+      props.faction,
+      state.squad,
+      upgrades,
+      pilots,
+    );
     if (cheapestAvailablePilotForShip) {
       changePilot(prevSelectedPilot, cheapestAvailablePilotForShip, false);
     } else {
@@ -186,13 +189,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
   };
 
   const clonePilot = (pilot: SelectedPilot): void => {
-    if (
-      xwingUtils.maxPilotOrUpgradeReached(
-        pilot,
-        state.squad,
-        xwingData.upgrades,
-      )
-    ) {
+    if (maxPilotOrUpgradeReached(pilot, state.squad, upgrades)) {
       addCheapestAvailablePilotForShip(pilot.ship, pilot.selectedUpgrades);
     } else {
       addPilot(pilot, pilot.selectedUpgrades);
@@ -200,26 +197,22 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
   };
 
   const changeUpgrade = (
-    upgradeSlot: xwingUtils.SelectedUpgrade,
-    newlySelectedUpgrade: xwingData.Upgrade,
+    upgradeSlot: SelectedUpgrade,
+    newlySelectedUpgrade: Upgrade,
     pilot: SelectedPilot,
   ): void => {
     if (
       newlySelectedUpgrade &&
-      xwingUtils.maxPilotOrUpgradeReached(
-        newlySelectedUpgrade,
-        state.squad,
-        xwingData.upgrades,
-      )
+      maxPilotOrUpgradeReached(newlySelectedUpgrade, state.squad, upgrades)
     ) {
       alert("Already have max amount of " + newlySelectedUpgrade.name);
     } else {
-      xwingUtils.upgradeSquadShip(
+      upgradeSquadShip(
         upgradeSlot,
         newlySelectedUpgrade,
         pilot,
         state.squad,
-        xwingData.upgrades,
+        upgrades,
       );
     }
     removeInvalidUpgradesAndSetState(state.squad);
@@ -273,15 +266,15 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
               factionShips={factionShips}
               squad={state.squad}
               selectedPilot={squadPilot}
-              availablePilots={xwingData.pilots
+              availablePilots={pilots
                 .filter(
                   (availPilot) =>
                     availPilot.ship === squadPilot.ship &&
                     availPilot.faction === props.faction &&
-                    (!xwingUtils.maxPilotOrUpgradeReached(
+                    (!maxPilotOrUpgradeReached(
                       availPilot,
                       state.squad,
-                      xwingData.upgrades,
+                      upgrades,
                     ) ||
                       availPilot.id === squadPilot.id),
                 )

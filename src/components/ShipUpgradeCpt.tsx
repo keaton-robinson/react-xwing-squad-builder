@@ -1,10 +1,14 @@
 import React, { useRef } from "react";
-import * as xwingData from "../data/xwing_data";
-import * as xwingUtils from "../data/xwing_utils";
 import { Dropdown } from "@keatonr06/reactjs-dropdown-component";
 import { DropDownStyles } from "../styleData/styleData";
-import { SelectedPilot, SelectedUpgrade } from "../data/xwing_utils";
-import { Upgrade } from "../data/xwing_data";
+import { Upgrade, SelectedPilot, SelectedUpgrade } from "../data/xwing_types";
+import { slots, upgrades } from "../data/xwing_data";
+import {
+  maxPilotOrUpgradeReached,
+  isUpgradeAllowed,
+  squadContainsAnotherSolitaryCardForThisSlot,
+  getUpgradeCost,
+} from "../data/xwing_utils";
 
 interface ShipUpgradeCptProps {
   upgradeSlot: SelectedUpgrade;
@@ -37,31 +41,27 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
       return null;
     }
     const matchingSlots = [];
-    if (props.upgradeSlot.slot === xwingData.slots.HardpointShip.key) {
+    if (props.upgradeSlot.slot === slots.HardpointShip.key) {
       // a "hardpointship" upgrade means the slot can accept a cannon, missile, or torpedo upgrade
-      matchingSlots.push(xwingData.slots.Cannon.key);
-      matchingSlots.push(xwingData.slots.Missile.key);
-      matchingSlots.push(xwingData.slots.Torpedo.key);
+      matchingSlots.push(slots.Cannon.key);
+      matchingSlots.push(slots.Missile.key);
+      matchingSlots.push(slots.Torpedo.key);
     } else {
       // otherwise, treat it as a normal upgrade
       matchingSlots.push(props.upgradeSlot.slot);
     }
 
-    return xwingData.upgrades.filter(
+    return upgrades.filter(
       (upgrade) =>
         matchingSlots.includes(upgrade.slot) && // upgrade.slot === props.upgradeSlot.slot
-        (!xwingUtils.maxPilotOrUpgradeReached(
-          upgrade,
-          props.squad,
-          xwingData.upgrades,
-        ) ||
+        (!maxPilotOrUpgradeReached(upgrade, props.squad, upgrades) ||
           props.upgradeSlot.selectedUpgradeId === upgrade.id) &&
-        xwingUtils.isUpgradeAllowed(
+        isUpgradeAllowed(
           props.upgradeSlot,
           upgrade,
           props.pilot,
           props.squad,
-          xwingData.upgrades,
+          upgrades,
         ) &&
         !upgradeAlreadySelectedOnADifferentSlot(upgrade),
     );
@@ -69,7 +69,7 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
 
   const handleUpgradeSelection = (selectedUpgrade) => {
     if (selectedUpgrade.value !== props.upgradeSlot.selectedUpgradeId) {
-      const newlySelectedUpgrade = xwingData.upgrades.find(
+      const newlySelectedUpgrade = upgrades.find(
         (upgrade) => upgrade.id === selectedUpgrade.value,
       );
       props.changeUpgrade(props.upgradeSlot, newlySelectedUpgrade, props.pilot);
@@ -82,35 +82,35 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
     }
   };
 
-  const squadContainsAnotherSolitaryCardForThisSlot =
-    xwingUtils.squadContainsAnotherSolitaryCardForThisSlot(
+  const doesSquadContainAnotherSolitaryCardForThisSlot =
+    squadContainsAnotherSolitaryCardForThisSlot(
       props.upgradeSlot,
       props.squad,
-      xwingData.upgrades,
+      upgrades,
     );
   const availableUpgrades = getAvailableUpgrades(
-    squadContainsAnotherSolitaryCardForThisSlot,
+    doesSquadContainAnotherSolitaryCardForThisSlot,
   ).sort(
     (upgrade1, upgrade2) =>
-      xwingUtils.getUpgradeCost(upgrade1, props.pilot) -
-      xwingUtils.getUpgradeCost(upgrade2, props.pilot),
+      getUpgradeCost(upgrade1, props.pilot) -
+      getUpgradeCost(upgrade2, props.pilot),
   );
   const upgradesForCustomDropdown: {
     value: number;
     label: string;
-    upgradeRecord?: xwingData.Upgrade;
+    upgradeRecord?: Upgrade;
   }[] = availableUpgrades.map((availUpgrade) => ({
     label:
       availUpgrade.name +
       " (" +
-      xwingUtils.getUpgradeCost(availUpgrade, props.pilot) +
+      getUpgradeCost(availUpgrade, props.pilot) +
       ")",
     value: availUpgrade.id,
     upgradeRecord: availUpgrade,
   }));
   upgradesForCustomDropdown.unshift({
     value: null,
-    label: `No ${xwingData.slots[props.upgradeSlot.slot].displayName} Upgrade`,
+    label: `No ${slots[props.upgradeSlot.slot].displayName} Upgrade`,
   }); // needed so that people can remove upgrades
 
   return (
@@ -125,7 +125,7 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
       onMouseEnter={handleMouseEnter}
       immutable={
         props.upgradeSlot.parentUpgradeSlotKey ||
-        squadContainsAnotherSolitaryCardForThisSlot
+        doesSquadContainAnotherSolitaryCardForThisSlot
       }
       select={{ value: props.upgradeSlot.selectedUpgradeId }}
     />

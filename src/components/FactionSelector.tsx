@@ -1,23 +1,24 @@
 import React, { useState } from "react";
-import * as xwingData from "../data/xwing_data";
 import HeaderComponent from "./HeaderComponent";
 import SquadBuilderCpt from "./SquadBuilderCpt";
 import { useModalSetter } from "../contexts/ModalContext";
+import { factionNames } from "../data/xwing_data";
+import { Faction } from "../data/xwing_types";
 
-const factionsOrdered: xwingData.Faction[] = [
-  xwingData.factionNames["Rebel Alliance"],
-  xwingData.factionNames["Galactic Empire"],
-  xwingData.factionNames["Scum and Villainy"],
-  xwingData.factionNames.Resistance,
-  xwingData.factionNames["First Order"],
-  xwingData.factionNames["Galactic Republic"],
-  xwingData.factionNames["Separatist Alliance"],
+const factionsOrdered: Faction[] = [
+  factionNames["Rebel Alliance"],
+  factionNames["Galactic Empire"],
+  factionNames["Scum and Villainy"],
+  factionNames.Resistance,
+  factionNames["First Order"],
+  factionNames["Galactic Republic"],
+  factionNames["Separatist Alliance"],
 ];
 
 const FactionSelector: React.FC = () => {
   const [selectedFaction, setSelectedFaction] = useState<
-    keyof typeof xwingData.factionNames
-  >(xwingData.factionNames["Rebel Alliance"]);
+    keyof typeof factionNames
+  >(factionNames["Rebel Alliance"]);
   const setModal = useModalSetter();
   return (
     <>

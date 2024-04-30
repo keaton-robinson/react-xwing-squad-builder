@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useUserContext } from "../../contexts/UserContext";
-import { Faction } from "../../data/xwing_data";
+import { Faction } from "../../data/xwing_types";
 
 interface LoadModalProps {
   loadSquad: (squadDataFromServer) => void;

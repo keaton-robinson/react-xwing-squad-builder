@@ -2,8 +2,7 @@ import React from "react";
 import InfoPanelShipCpt from "./InfoPanelShipCpt";
 import InfoPanelUpgradeCpt from "./InfoPanelUpgradeCpt";
 import InfoPanelPilotCpt from "./InfoPanelPilotCpt";
-import { InfoPanelCard } from "../data/xwing_utils";
-import { Faction } from "../data/xwing_data";
+import { InfoPanelCard, Faction } from "../data/xwing_types";
 
 interface InfoPanelCptProps {
   card: InfoPanelCard;

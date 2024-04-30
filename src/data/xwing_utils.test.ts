@@ -1,10 +1,14 @@
-import { Ship, Pilot, Upgrade } from "./xwing_data";
+import {
+  Ship,
+  Pilot,
+  Upgrade,
+  SelectedPilot,
+  ShipBaseSize,
+} from "./xwing_types";
 import {
   isNotNullOrUndefined,
-  ShipBaseSize,
   getShipBaseSize,
   getUpgradeCost,
-  SelectedPilot,
   getPilotCost,
   getSquadCost,
   getPilotEffectiveStats,

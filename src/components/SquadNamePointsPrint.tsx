@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import * as xwingUtils from "../data/xwing_utils";
-import * as xwingData from "../data/xwing_data";
 import { useModalSetter } from "../contexts/ModalContext";
 import PrintSquadModal from "./modals/PrintSquadModal";
+import { Faction, SelectedPilot } from "../data/xwing_types";
+import { upgrades } from "../data/xwing_data";
+import { getSquadCost } from "../data/xwing_utils";
 
 interface SquadNamePointsPrintProps {
   onSquadNameChanged: (newName: string) => void;
   squadName: string;
-  squad: xwingUtils.SelectedPilot[];
-  faction: xwingData.Faction;
+  squad: SelectedPilot[];
+  faction: Faction;
 }
 
 const SquadNamePointsPrint: React.FC<SquadNamePointsPrintProps> = (props) => {
@@ -50,7 +51,7 @@ const SquadNamePointsPrint: React.FC<SquadNamePointsPrintProps> = (props) => {
 
   const showPrintModal = () => {
     setModal({
-      title: `${props.faction} Squadron (${xwingUtils.getSquadCost(props.squad, xwingData.upgrades)})`,
+      title: `${props.faction} Squadron (${getSquadCost(props.squad, upgrades)})`,
       children: <PrintSquadModal squad={props.squad} />,
     });
   };
@@ -79,9 +80,8 @@ const SquadNamePointsPrint: React.FC<SquadNamePointsPrintProps> = (props) => {
       </div>
       <div className="points-display-container">
         <span>
-          Points: {xwingUtils.getSquadCost(props.squad, xwingData.upgrades)}/200
-          ({200 - xwingUtils.getSquadCost(props.squad, xwingData.upgrades)}{" "}
-          left)
+          Points: {getSquadCost(props.squad, upgrades)}/200 (
+          {200 - getSquadCost(props.squad, upgrades)} left)
         </span>
       </div>
       <div className="printBtn">

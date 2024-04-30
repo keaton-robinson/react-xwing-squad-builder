@@ -4,10 +4,9 @@ import { useUserContext } from "../contexts/UserContext";
 import NewSquadConfirmModal from "./modals/NewSquadConfirmModal";
 import LoadModal from "./modals/LoadModal";
 import SaveAsModal from "./modals/SaveAsModal";
-import * as xwingUtils from "../data/xwing_utils";
-import * as xwingData from "../data/xwing_data";
-import { SelectedPilot } from "../data/xwing_utils";
-import { Faction } from "../data/xwing_data";
+import { upgrades } from "../data/xwing_data";
+import { SelectedPilot, Faction } from "../data/xwing_types";
+import { getSquadCost } from "../data/xwing_utils";
 
 const saveStatusMessages = {
   saving: "saving...",
@@ -64,7 +63,7 @@ const SaveLoadNew: React.FC<SaveLoadNewProps> = (props) => {
           },
           body: JSON.stringify({
             name: props.squadName,
-            points: xwingUtils.getSquadCost(props.squad, xwingData.upgrades),
+            points: getSquadCost(props.squad, upgrades),
             pilots: props.squad,
           }),
         },
@@ -102,7 +101,7 @@ const SaveLoadNew: React.FC<SaveLoadNewProps> = (props) => {
         body: JSON.stringify({
           faction: props.faction,
           name: newSquadTitle,
-          points: xwingUtils.getSquadCost(props.squad, xwingData.upgrades),
+          points: getSquadCost(props.squad, upgrades),
           pilots: props.squad,
         }),
       });

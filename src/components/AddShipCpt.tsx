@@ -1,9 +1,8 @@
 import React, { useRef } from "react";
 import { Dropdown } from "@keatonr06/reactjs-dropdown-component";
 import { DropDownStyles } from "../styleData/styleData";
-import * as xwingData from "../data/xwing_data";
-import { ShipName } from "../data/xwing_data";
-import { InfoPanelCard } from "../data/xwing_utils";
+import { ships } from "../data/xwing_data";
+import { ShipName, InfoPanelCard } from "../data/xwing_types";
 
 interface AddShipCptProps {
   factionShips: ShipName[];
@@ -26,7 +25,7 @@ const AddShipCpt: React.FC<AddShipCptProps> = (props) => {
   };
 
   const handleMouseEnter = (shipDropDownItem) => {
-    const ship = xwingData.ships[shipDropDownItem.value];
+    const ship = ships[shipDropDownItem.value];
     props.onRecordMouseEnter({ cardData: ship, type: "Ship" });
   };
 

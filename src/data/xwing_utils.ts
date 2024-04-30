@@ -1,4 +1,13 @@
-import { Faction, Ship, ShipName, Pilot, Upgrade } from "./xwing_data";
+import {
+  Faction,
+  Ship,
+  ShipName,
+  Pilot,
+  Upgrade,
+  SelectedPilot,
+  SelectedUpgrade,
+  ShipBaseSize,
+} from "./xwing_types";
 
 //intended to be used for checking if an id is selected
 function isNotNullOrUndefined(value) {
@@ -10,25 +19,6 @@ function createError(message: string, extraProps: Record<string, any>): Error {
   Object.assign(error, extraProps);
   return error;
 }
-
-interface PilotShip extends Ship {
-  force?: number;
-  charge?: number;
-}
-
-interface SelectedUpgrade {
-  slot: string;
-  key: string;
-  parentUpgradeSlotKey?: string;
-  selectedUpgradeId: number;
-}
-interface SelectedPilot extends Pilot {
-  pilotShip: PilotShip;
-  selectedUpgrades: SelectedUpgrade[];
-  uiKey?: string;
-}
-
-type ShipBaseSize = "Small" | "Medium" | "Large" | "Huge";
 
 const getShipBaseSize = (ship: Ship): ShipBaseSize => {
   if (ship.huge) {
@@ -941,12 +931,6 @@ function makeid(length: number): string {
   return result;
 }
 
-type InfoPanelCard =
-  | { type: "Ship"; cardData: Ship }
-  | { type: "Pilot"; cardData: Pilot }
-  | { type: "SelectedPilot"; cardData: SelectedPilot }
-  | { type: "Upgrade"; cardData: Upgrade };
-
 const fixIcons = (text) => {
   if (text != null) {
     return text
@@ -1273,11 +1257,7 @@ export {
   removeInvalidUpgrades,
   upgradeSquadShip,
   squadContainsAnotherSolitaryCardForThisSlot,
-  InfoPanelCard,
   getShipBaseSize,
   fixIcons,
   makeid,
-  ShipBaseSize,
-  SelectedUpgrade,
-  SelectedPilot,
 };

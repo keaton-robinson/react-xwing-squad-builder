@@ -1,7 +1,7 @@
 import React from "react";
-import * as xwingUtils from "../../data/xwing_utils";
-import * as xwingData from "../../data/xwing_data";
-import { SelectedPilot } from "../../data/xwing_utils";
+import { SelectedPilot } from "../../data/xwing_types";
+import { upgrades } from "../../data/xwing_data";
+import { getUpgradeCost, getPilotEffectiveStats } from "../../data/xwing_utils";
 
 interface PrintSquadModalProps {
   squad: SelectedPilot[];
@@ -12,10 +12,10 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
     let cost = selectedPilot.points;
     for (const selectedUpgrade of selectedPilot.selectedUpgrades) {
       if (selectedUpgrade.selectedUpgradeId) {
-        let upgradeRecord = xwingData.upgrades.find(
+        let upgradeRecord = upgrades.find(
           (upgr) => upgr.id === selectedUpgrade.selectedUpgradeId,
         );
-        cost += xwingUtils.getUpgradeCost(upgradeRecord, selectedPilot);
+        cost += getUpgradeCost(upgradeRecord, selectedPilot);
       }
     }
     return cost;
@@ -25,14 +25,14 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
     if (!selectedUpgrade.selectedUpgradeId) {
       return null;
     }
-    let upgradeRecord = xwingData.upgrades.find(
+    let upgradeRecord = upgrades.find(
       (upgr) => upgr.id === selectedUpgrade.selectedUpgradeId,
     );
     return (
       <tr key={selectedUpgrade.key}>
         <td style={{ paddingLeft: "1.5rem" }}>{upgradeRecord.name}</td>
         <td style={{ textAlign: "right" }}>
-          {xwingUtils.getUpgradeCost(upgradeRecord, selectedPilot)}
+          {getUpgradeCost(upgradeRecord, selectedPilot)}
         </td>
       </tr>
     );
@@ -62,7 +62,7 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
             <tr></tr>
             <tr>
               <td>
-                <strong>{`Half Points: ${Math.ceil(getTotalCost(selectedPilot) / 2)}   Threshold: ${Math.ceil((xwingUtils.getPilotEffectiveStats(selectedPilot, xwingData.upgrades).pilotShip.hull + xwingUtils.getPilotEffectiveStats(selectedPilot, xwingData.upgrades).pilotShip.shields) / 2)}`}</strong>
+                <strong>{`Half Points: ${Math.ceil(getTotalCost(selectedPilot) / 2)}   Threshold: ${Math.ceil((getPilotEffectiveStats(selectedPilot, upgrades).pilotShip.hull + getPilotEffectiveStats(selectedPilot, upgrades).pilotShip.shields) / 2)}`}</strong>
               </td>
               <td style={{ textAlign: "right" }}>
                 <strong>{`Ship Total: ${getTotalCost(selectedPilot)}`}</strong>

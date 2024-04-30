@@ -3,9 +3,9 @@ import ActionsCpt from "./ActionsCpt";
 import ManeuversCpt from "./ManeuversCpt";
 import StatBlockCpt from "./StatBlockCpt";
 import UpgradesCpt from "./UpgradesCpt";
-import { Pilot, pilotRules, ships, upgrades } from "../data/xwing_data";
+import { pilotRules, ships, upgrades } from "../data/xwing_data";
+import { Pilot, SelectedPilot } from "../data/xwing_types";
 import {
-  SelectedPilot,
   fixIcons,
   getAppReadyPilot,
   getPilotEffectiveStats,

@@ -1,10 +1,6 @@
 import React from "react";
-import {
-  Bearing,
-  Difficulty,
-  bearings,
-  difficulties,
-} from "../data/xwing_data";
+import { bearings, difficulties } from "../data/xwing_data";
+import { Difficulty, Bearing } from "../data/xwing_types";
 
 interface ManeuverCptProps {
   difficulty: Difficulty;
