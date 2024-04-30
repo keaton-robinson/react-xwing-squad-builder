@@ -1,12 +1,15 @@
 import React from "react";
-import * as xwingData from "../data/xwing_data";
-import * as xwingUtils from "../data/xwing_utils";
 import ActionsCpt from "./ActionsCpt";
 import StatBlockCpt from "./StatBlockCpt";
+import { Upgrade, upgradeRules } from "../data/xwing_data";
+import { fixIcons } from "../data/xwing_utils";
 
-export default class InfoPanelUpgradeCpt extends React.Component {
+interface InfoPanelUpgradeCptProps {
+  upgrade: Upgrade;
+}
 
-  renderRestrictions = (upgrade) => {
+const InfoPanelUpgradeCpt: React.FC<InfoPanelUpgradeCptProps> = (props) => {
+  const renderRestrictions = (upgrade) => {
     if (upgrade.faction || upgrade.ship || upgrade.restrictions) {
       const textRestrictions = [];
       const actionRestrictions = [];
@@ -97,7 +100,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
             case "Action":
               actionRestrictions.push(`${restrictionValue}`);
               break;
-            default: 
+            default:
               throw new Error(`Invalid restriction type: ${restrictionType}`);
           }
         }
@@ -123,7 +126,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
     return null;
   };
 
-  renderRules = (upgrade) => {
+  const renderRules = (upgrade) => {
     let removestext = "";
     let addText = "";
     let comma = "";
@@ -219,9 +222,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
         {addText !== "" ? (
           <div>
             <strong>Adds: </strong>
-            <span
-              dangerouslySetInnerHTML={{ __html: xwingUtils.fixIcons(addText) }}
-            />
+            <span dangerouslySetInnerHTML={{ __html: fixIcons(addText) }} />
           </div>
         ) : null}
         {statchange.actions.length > 0 ? (
@@ -235,7 +236,7 @@ export default class InfoPanelUpgradeCpt extends React.Component {
             <strong>Removes: </strong>
             <span
               dangerouslySetInnerHTML={{
-                __html: xwingUtils.fixIcons(removestext),
+                __html: fixIcons(removestext),
               }}
             />
           </div>
@@ -243,41 +244,39 @@ export default class InfoPanelUpgradeCpt extends React.Component {
         <div
           className="info-text"
           dangerouslySetInnerHTML={{
-            __html: xwingUtils.fixIcons(
-              xwingData.upgradeRules[upgrade.name].text,
-            ),
+            __html: fixIcons(upgradeRules[upgrade.name].text),
           }}
         />
       </div>
     );
   };
 
-  render() {
-    const upgrade = this.props.upgrade;
+  const upgrade = props.upgrade;
 
-    return (
+  return (
+    <div>
+      <h3 className="infoName">{upgrade.name}</h3>
+      <h4 className="infoType">Upgrade</h4>
       <div>
-        <h3 className="infoName">{upgrade.name}</h3>
-        <h4 className="infoType">Upgrade</h4>
-        <div>
-          <StatBlockCpt upgrade={upgrade} />
-        </div>
-        {upgrade.range ? (
-          <div style={{ marginTop: "5px" }}>
-            <span>
-              <strong>Range </strong>
-              <span>{upgrade.range}</span>
-            </span>
-            <span style={{ marginLeft: "10px" }}>
-              {upgrade.rangebonus ? (
-                <i className="xwing-miniatures-font red header-range xwing-miniatures-font-rangebonusindicator"></i>
-              ) : null}
-            </span>
-          </div>
-        ) : null}
-        <div>{this.renderRestrictions(upgrade)}</div>
-        <div>{this.renderRules(upgrade)}</div>
+        <StatBlockCpt upgrade={upgrade} />
       </div>
-    );
-  }
-}
+      {upgrade.range ? (
+        <div style={{ marginTop: "5px" }}>
+          <span>
+            <strong>Range </strong>
+            <span>{upgrade.range}</span>
+          </span>
+          <span style={{ marginLeft: "10px" }}>
+            {upgrade.rangebonus ? (
+              <i className="xwing-miniatures-font red header-range xwing-miniatures-font-rangebonusindicator"></i>
+            ) : null}
+          </span>
+        </div>
+      ) : null}
+      <div>{renderRestrictions(upgrade)}</div>
+      <div>{renderRules(upgrade)}</div>
+    </div>
+  );
+};
+
+export default InfoPanelUpgradeCpt;
