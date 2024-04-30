@@ -102,7 +102,6 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     upgradesToApply?: SelectedUpgrade[],
   ): void => {
     const appReadyNewPilot = getAppReadyPilot(pilotToAdd, ships);
-    appReadyNewPilot.uiKey = makeid(25);
     const newSquadAfterAddition = [...state.squad, appReadyNewPilot];
 
     setUpgradesOnNewPilot(
@@ -118,9 +117,11 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     newPilot: Pilot,
     copyUpgrades: boolean = true,
   ): void => {
-    const appReadyNewPilot = getAppReadyPilot(newPilot, ships);
-    //transfer the existing UI key to the new pilot object so react rcognizes it as the previous one
-    appReadyNewPilot.uiKey = prevSelectedPilot.uiKey;
+    const appReadyNewPilot = getAppReadyPilot(
+      newPilot,
+      ships,
+      prevSelectedPilot.uiKey,
+    );
 
     //get a copy of selected pilots and splice the new pilot into the position that the prev pilot was at
     const squadCopy = [...state.squad];

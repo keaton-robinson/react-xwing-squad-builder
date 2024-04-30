@@ -574,6 +574,7 @@ function addUpgrades(
 function getAppReadyPilot(
   pilot: Pilot,
   shipsData: Record<string, Ship>,
+  prevUIKey?: string,
 ): SelectedPilot {
   //makes deep copies so I don't have side effects on my "data repo"
   const shipForPilot = shipsData[pilot.ship];
@@ -587,10 +588,18 @@ function getAppReadyPilot(
   const pilotCopy = JSON.parse(JSON.stringify(pilot));
   pilotCopy.pilotShip = shipCopy;
 
+  //for changing pilots... transfer existing UI key to the new pilot object so react rcognizes it as the previous one and preserves ordering
+  if (prevUIKey) {
+    pilotCopy.uiKey = prevUIKey;
+  } else {
+    // otherwise, create a new id to use as key
+    pilotCopy.uiKey = makeid(25);
+  }
+
   //set all of the non-set optional values to zero for ease of incrementing them or displaying zero later
   // (mostly for StatBlockCpt)
-  pilot.force = pilot.force || 0;
-  pilot.charge = pilot.charge || 0;
+  pilotCopy.force = pilot.force || 0;
+  pilotCopy.charge = pilot.charge || 0;
 
   shipCopy.attack = shipCopy.attack || 0;
   shipCopy.attackf = shipCopy.attackf || 0;
