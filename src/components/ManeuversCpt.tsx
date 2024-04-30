@@ -4,7 +4,7 @@ import * as xwingData from "../data/xwing_data";
 
 interface ManeuverCptProps {
   maneuvers: xwingData.Difficulty[][];
-  maneuversAfterUpgrades: xwingData.Difficulty[][];
+  maneuversAfterUpgrades?: xwingData.Difficulty[][];
 }
 
 const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {

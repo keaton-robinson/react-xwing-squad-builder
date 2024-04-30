@@ -1625,7 +1625,7 @@ interface Pilot {
   faction: Faction;
   ship: ShipName;
   keyword?: string[];
-  skill: number | string;
+  skill: number;
   points: number;
   slots: string[];
   unique?: boolean;
@@ -3896,49 +3896,49 @@ const pilots: Pilot[] = [
     points: 22,
     slots: ["Missile", "Illicit", "Modification"],
   },
-  {
-    name: "Nashtah Pup",
-    id: 160,
-    unique: !0,
-    faction: "Scum and Villainy",
-    ship: "Z-95 Headhunter",
-    skill: "*",
-    points: 6,
-    slots: ["Missile", "Illicit", "Modification"],
-    restrictions: [["Unique", "Hound's Tooth"]],
-    restriction_func: function (a) {
-      var b, c, d, e, f, g, h, i, j, k, l, m, n;
-      (b = a.builder), (l = b.uniques_in_use);
-      for (d in l)
-        if (
-          ((f = l[d]),
-          "Slot" !== d &&
-            __indexOf.call(
-              (function () {
-                var a, b, c;
-                for (c = [], a = 0, b = f.length; a < b; a++)
-                  (e = f[a]), c.push(e.canonical_name.getXWSBaseName());
-                return c;
-              })(),
-              "houndstooth",
-            ) >= 0)
-        ) {
-          for (m = a.builder.ships, h = 0, j = m.length; h < j; h++)
-            for (c = m[h], n = c.upgrades, i = 0, k = n.length; i < k; i++)
-              if (
-                ((g = n[i]),
-                null != g.data &&
-                  null != a.pilot &&
-                  "Hound's Tooth" === g.data.name)
-              ) {
-                a.pilot.skill = c.pilot.skill;
-                break;
-              }
-          return !0;
-        }
-      return !1;
-    },
-  },
+  // {
+  //   name: "Nashtah Pup",
+  //   id: 160,
+  //   unique: !0,
+  //   faction: "Scum and Villainy",
+  //   ship: "Z-95 Headhunter",
+  //   skill: "*",
+  //   points: 6,
+  //   slots: ["Missile", "Illicit", "Modification"],
+  //   restrictions: [["Unique", "Hound's Tooth"]],
+  //   restriction_func: function (a) {
+  //     var b, c, d, e, f, g, h, i, j, k, l, m, n;
+  //     (b = a.builder), (l = b.uniques_in_use);
+  //     for (d in l)
+  //       if (
+  //         ((f = l[d]),
+  //         "Slot" !== d &&
+  //           __indexOf.call(
+  //             (function () {
+  //               var a, b, c;
+  //               for (c = [], a = 0, b = f.length; a < b; a++)
+  //                 (e = f[a]), c.push(e.canonical_name.getXWSBaseName());
+  //               return c;
+  //             })(),
+  //             "houndstooth",
+  //           ) >= 0)
+  //       ) {
+  //         for (m = a.builder.ships, h = 0, j = m.length; h < j; h++)
+  //           for (c = m[h], n = c.upgrades, i = 0, k = n.length; i < k; i++)
+  //             if (
+  //               ((g = n[i]),
+  //               null != g.data &&
+  //                 null != a.pilot &&
+  //                 "Hound's Tooth" === g.data.name)
+  //             ) {
+  //               a.pilot.skill = c.pilot.skill;
+  //               break;
+  //             }
+  //         return !0;
+  //       }
+  //     return !1;
+  //   },
+  // },
   {
     name: "Major Vynder",
     id: 161,
@@ -7150,15 +7150,15 @@ const pilots: Pilot[] = [
       "Configuration",
     ],
   },
-  {
-    name: "TransGalMeg Control Link",
-    id: 406,
-    faction: "Galactic Republic",
-    skill: "*",
-    ship: "Syliure-class Hyperspace Ring",
-    points: 5,
-    slots: ["Hyperdrive"],
-  },
+  // {
+  //   name: "TransGalMeg Control Link",
+  //   id: 406,
+  //   faction: "Galactic Republic",
+  //   skill: "*",
+  //   ship: "Syliure-class Hyperspace Ring",
+  //   points: 5,
+  //   slots: ["Hyperdrive"],
+  // },
   {
     name: "Separatist Predator",
     id: 407,
@@ -8222,10 +8222,10 @@ const pilotRules: Record<string, PilotRulesText> = {
     display_name: "4-LOM",
     text: "After you fully execute a red maneuver, gain 1 calculate token.%LINEBREAK%At the start of the End Phase, you may choose 1 ship at range 0-1. If you do, transfer 1 of your stress tokens to that ship.",
   },
-  "Nashtah Pup": {
-    display_name: "Nashtah Pup",
-    text: "You can deploy only via emergency deployment, and you have the name, initiative, pilot ability, and ship %CHARGE% of the friendly, destroyed <strong>Hound’s Tooth</strong>.%LINEBREAK%<strong>Escape Craft:</strong> <strong>Setup:</strong>Requires the <strong>Hound’s Tooth</strong>. You <b>must</b> begin the game docked with the <strong>Hound’s Tooth</strong>.",
-  },
+  // "Nashtah Pup": {
+  //   display_name: "Nashtah Pup",
+  //   text: "You can deploy only via emergency deployment, and you have the name, initiative, pilot ability, and ship %CHARGE% of the friendly, destroyed <strong>Hound’s Tooth</strong>.%LINEBREAK%<strong>Escape Craft:</strong> <strong>Setup:</strong>Requires the <strong>Hound’s Tooth</strong>. You <b>must</b> begin the game docked with the <strong>Hound’s Tooth</strong>.",
+  // },
   "AP-5": {
     display_name: "AP-5",
     text: "While you coordinate, if you chose a ship with exactly 1 stress token, it can perform actions.%LINEBREAK%<strong>Comms Shuttle:</strong> While you are docked, your carrier ship gains %COORDINATE%. Before your carrier ship activates, it may perform a %COORDINATE% action. ",
@@ -9758,9 +9758,9 @@ const pilotRules: Record<string, PilotRulesText> = {
     display_name: "Anakin Skywalker",
     text: "After you or a friendly <b>Obi-Wan Kenobi</b> ship at range 0-3 executes a maneuver, if there are more enemy ships than other friendly ships at range 0-1 of that ship, you may spend 1 %FORCE%. If you do, that ship removes 1 red token of your choice. %LINEBREAK% <strong>Intuitive Controls:</strong> During the System Phase, you may perform a purple %BARRELROLL% or purple %BOOST% action.",
   },
-  "TransGalMeg Control Link": {
-    text: "<strong>Hyperspace Docking Ring:</strong> 1 Delta-7 Aethersprite, Eta-2 Actis, or Nimbus-class V-wing can dock with you. %LINEBREAK% While a ship is docked with you, you gain that ship's initiative and are assigned that ship's dial. While you execute a maneuver, reduce its speed to 1. Before you execute an advanced maneuver, execute a white stationary maneuver (%STOP%) instead, then you may rotate 90º or 180º. %LINEBREAK% While no ship is docked with you, you are not assigned a maneuver dial and do not activate or engage.",
-  },
+  // "TransGalMeg Control Link": {
+  //   text: "<strong>Hyperspace Docking Ring:</strong> 1 Delta-7 Aethersprite, Eta-2 Actis, or Nimbus-class V-wing can dock with you. %LINEBREAK% While a ship is docked with you, you gain that ship's initiative and are assigned that ship's dial. While you execute a maneuver, reduce its speed to 1. Before you execute an advanced maneuver, execute a white stationary maneuver (%STOP%) instead, then you may rotate 90º or 180º. %LINEBREAK% While no ship is docked with you, you are not assigned a maneuver dial and do not activate or engage.",
+  // },
   "Jango Fett": {
     text: "While you defend or perform a primary attack, if the difficulty of your revealed maneuver is less than that of the enemy ship's, you may change 1 of the enemy ship's %FOCUS% results to a blank result.",
   },
