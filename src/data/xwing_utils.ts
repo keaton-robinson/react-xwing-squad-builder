@@ -7,6 +7,7 @@ import {
   SelectedPilotThatAllowsMutations,
   SelectedUpgradeThatAllowsMutations,
   ShipBaseSize,
+  UniqueKey,
 } from "./xwing_types";
 
 //intended to be used for checking if an id is selected
@@ -605,7 +606,7 @@ export function getAppReadyPilot(
     pilotCopy.uiKey = prevUIKey;
   } else {
     // otherwise, create a new id to use as key
-    pilotCopy.uiKey = makeid(25);
+    pilotCopy.uiKey = makeidThatShouldGoAway(25);
   }
 
   //set all of the non-set optional values to zero for ease of incrementing them or displaying zero later
@@ -941,7 +942,8 @@ export function squadContainsAnotherSolitaryCardForThisSlot(
   return false;
 }
 
-function makeid(length: number): string {
+// TODO: get rid of this
+function makeidThatShouldGoAway(length: number): string {
   var result = "";
   var characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -950,6 +952,17 @@ function makeid(length: number): string {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
+}
+
+function makeUniqueKey(length: number): UniqueKey {
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result as UniqueKey;
 }
 
 export const fixIcons = (text) => {

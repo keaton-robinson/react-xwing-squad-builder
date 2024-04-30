@@ -1,5 +1,7 @@
 import { ships, slots } from "./xwing_data";
 
+export type UniqueKey = string & { brand: "UniqueKey" };
+
 export type Faction =
   | "Rebel Alliance"
   | "Galactic Empire"
@@ -104,15 +106,37 @@ export interface Upgrade {
 /**
  * Represents a pilot that has been added to a squad.
  */
-export interface SelectedPilotShip extends Pilot, Ship {
+export interface SquadPilotShip extends Pilot, Ship {
   /**
-   *  Provide a unique value for react 'key' prop. Needs to be unique relative to the rest of the squad's selected pilots
+   *  Provide a unique value for react 'key' prop.
    */
-  readonly uiKey: string;
+  readonly squadPilotShipId: UniqueKey;
   /**
    * Array of selected upgrades user has applied to pilot
    */
-  readonly selectedUpgrades: SelectedUpgradeThatAllowsMutations[];
+  readonly upgrades: SelectedUpgradeThatAllowsMutations[];
+}
+
+/**
+ * Represents an upgrade slot that a squad pilot has
+ */
+export interface SquadPilotShipUpgradeSlot {
+  /**
+   * Provide unique value for react key prop.
+   */
+  readonly squadPilotUpgradeSlotId: UniqueKey;
+  /**
+   * The type of this upgrade slot holds
+   */
+  readonly slot: SlotName;
+  /**
+   * The upgrade currently in this upgrade slot
+   */
+  readonly upgrade: Upgrade | null;
+  /**
+   * For upgrades that take up two slots, this specifies which slot is the 'parent' slot that is causing this slot to be used
+   */
+  readonly parentSquadPilotUpgradeSlotId?: UniqueKey;
 }
 
 export interface PilotShip extends Ship {
