@@ -134,7 +134,7 @@ export interface SelectedUpgrade {
   /**
    * The upgrade id from the xwing upgrades data
    */
-  selectedUpgradeId: number; // todo: make read only
+  selectedUpgradeId: number; // todo: make readonly
   /**
    * The slot that the upgrade is applied to.
    */
