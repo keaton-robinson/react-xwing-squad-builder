@@ -1,10 +1,10 @@
 import React from "react";
 
 interface StatBlockCptProps {
-  pilot;
-  ship;
-  upgrade;
-  pilotAfterUpgrades;
+  pilot?;
+  ship?;
+  upgrade?;
+  pilotAfterUpgrades?;
 }
 
 const StatBlockCpt: React.FC<StatBlockCptProps> = (props) => {
