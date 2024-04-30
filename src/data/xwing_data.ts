@@ -2,6 +2,7 @@ import {
   Bearing,
   Difficulty,
   DifficultyName,
+  Faction,
   Pilot,
   PilotRulesText,
   Ship,
@@ -20,16 +21,7 @@ const __indexOf =
     return -1;
   };
 
-type Faction =
-  | "Rebel Alliance"
-  | "Galactic Empire"
-  | "Scum and Villainy"
-  | "Resistance"
-  | "First Order"
-  | "Galactic Republic"
-  | "Separatist Alliance";
-
-const factionNames: Record<Faction, Faction> = {
+export const factionNames: Record<Faction, Faction> = {
   "Rebel Alliance": "Rebel Alliance",
   "Galactic Empire": "Galactic Empire",
   "Scum and Villainy": "Scum and Villainy",
@@ -39,7 +31,7 @@ const factionNames: Record<Faction, Faction> = {
   "Separatist Alliance": "Separatist Alliance",
 };
 
-const ships: Record<string, Ship> = {
+export const ships: Record<string, Ship> = {
   "X-Wing": {
     name: "X-Wing",
     xws: "T-65 X-wing",
@@ -1601,9 +1593,8 @@ const ships: Record<string, Ship> = {
     ],
   },
 };
-type ShipName = keyof typeof ships;
 
-const pilots: Pilot[] = [
+export const pilots: Pilot[] = [
   {
     name: "Cavern Angels Zealot",
     id: 0,
@@ -8165,7 +8156,7 @@ const pilots: Pilot[] = [
   },
 ];
 
-const pilotRules: Record<string, PilotRulesText> = {
+export const pilotRules: Record<string, PilotRulesText> = {
   "0-66": {
     display_name: "0-66",
     text: "After you defend, you may spend 1 calculate token to perform an action.",
@@ -9936,7 +9927,7 @@ const pilotRules: Record<string, PilotRulesText> = {
   },
 };
 
-const upgrades: Upgrade[] = [
+export const upgrades: Upgrade[] = [
   {
     name: '"Chopper" (Astromech)',
     id: 0,
@@ -14092,7 +14083,7 @@ const upgrades: Upgrade[] = [
   },
 ];
 
-const upgradeRules: Record<string, UpgradeRulesText> = {
+export const upgradeRules: Record<string, UpgradeRulesText> = {
   "0-0-0": {
     display_name: "0-0-0",
     text: "At the start of the Engagement Phase, you may choose 1 enemy ship at range 0-1. If you do, you gain 1 calculate token unless that ship chooses to gain 1 stress token.",
@@ -15614,7 +15605,7 @@ const upgradeRules: Record<string, UpgradeRulesText> = {
   },
 };
 
-const slots: Record<string, Slot> = {
+export const slots: Record<string, Slot> = {
   Astromech: { key: "Astromech", displayName: "Astromech" },
   Force: { key: "Force", displayName: "Force" },
   Bomb: { key: "Bomb", displayName: "Bomb" },
@@ -15641,7 +15632,7 @@ const slots: Record<string, Slot> = {
   Cargo: { key: "Cargo", displayName: "Cargo" },
 };
 
-const sloticon: Partial<Record<SlotName, string>> = {
+export const sloticon: Partial<Record<SlotName, string>> = {
   Astromech:
     '<i class="xwing-miniatures-font xwing-miniatures-font-astromech"></i>',
   Force:
@@ -15678,7 +15669,7 @@ const sloticon: Partial<Record<SlotName, string>> = {
     '<i class="xwing-miniatures-font xwing-miniatures-font-tacticalrelay"></i>',
 };
 
-const difficulties: Record<DifficultyName, Difficulty> = {
+export const difficulties: Record<DifficultyName, Difficulty> = {
   impossible: 0,
   blue: 1,
   white: 2,
@@ -15686,7 +15677,7 @@ const difficulties: Record<DifficultyName, Difficulty> = {
   purple: 4,
 };
 
-const bearings: Record<Bearing, Bearing> = {
+export const bearings: Record<Bearing, Bearing> = {
   left_hard: "left_hard",
   left_bank: "left_bank",
   straight: "straight",
@@ -15701,17 +15692,4 @@ const bearings: Record<Bearing, Bearing> = {
   reverse_left: "reverse_left",
   reverse_straight: "reverse_straight",
   reverse_right: "reverse_right",
-};
-
-export {
-  factionNames,
-  ships,
-  pilots,
-  pilotRules,
-  slots,
-  sloticon,
-  upgrades,
-  upgradeRules,
-  difficulties,
-  bearings,
 };

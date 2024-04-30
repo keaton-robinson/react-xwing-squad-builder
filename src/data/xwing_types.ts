@@ -61,11 +61,6 @@ export interface Pilot {
   engagement?: number;
 }
 
-export interface PilotRulesText {
-  display_name?: string;
-  text: string;
-}
-
 export interface Upgrade {
   name: string;
   xws?: string;
@@ -106,6 +101,28 @@ export interface Upgrade {
   keyword?: string[];
 }
 
+export interface PilotShip extends Ship {
+  force?: number;
+  charge?: number;
+}
+
+export interface SelectedPilot extends Pilot {
+  pilotShip: PilotShip;
+  selectedUpgrades: SelectedUpgrade[];
+  uiKey?: string;
+}
+
+export interface SelectedUpgrade {
+  slot: string;
+  key: string;
+  parentUpgradeSlotKey?: string;
+  selectedUpgradeId: number;
+}
+
+export interface PilotRulesText {
+  display_name?: string;
+  text: string;
+}
 export interface UpgradeRulesText {
   display_name?: string;
   text: string;
@@ -143,23 +160,5 @@ export type InfoPanelCard =
   | { type: "Pilot"; cardData: Pilot }
   | { type: "SelectedPilot"; cardData: SelectedPilot }
   | { type: "Upgrade"; cardData: Upgrade };
-
-export interface PilotShip extends Ship {
-  force?: number;
-  charge?: number;
-}
-
-export interface SelectedUpgrade {
-  slot: string;
-  key: string;
-  parentUpgradeSlotKey?: string;
-  selectedUpgradeId: number;
-}
-
-export interface SelectedPilot extends Pilot {
-  pilotShip: PilotShip;
-  selectedUpgrades: SelectedUpgrade[];
-  uiKey?: string;
-}
 
 export type ShipBaseSize = "Small" | "Medium" | "Large" | "Huge";
