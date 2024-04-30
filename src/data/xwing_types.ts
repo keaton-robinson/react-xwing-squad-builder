@@ -112,7 +112,7 @@ export interface SelectedPilotShip extends Pilot, Ship {
   /**
    * Array of selected upgrades user has applied to pilot
    */
-  readonly selectedUpgrades: SelectedUpgrade[];
+  readonly selectedUpgrades: SelectedUpgradeThatAllowsMutations[];
 }
 
 export interface PilotShip extends Ship {
@@ -120,13 +120,13 @@ export interface PilotShip extends Ship {
   readonly charge?: number;
 }
 
-export interface SelectedPilot extends Pilot {
+export interface SelectedPilotThatAllowsMutations extends Pilot {
   readonly pilotShip: PilotShip;
-  selectedUpgrades: SelectedUpgrade[]; // todo: make readonly
+  selectedUpgrades: SelectedUpgradeThatAllowsMutations[]; // todo: make readonly
   readonly uiKey?: string;
 }
 
-export interface SelectedUpgrade {
+export interface SelectedUpgradeThatAllowsMutations {
   /**
    * Provide unique value for react key prop. Needs to at least be unique within this pilot's collection of upgrades
    */
@@ -184,7 +184,10 @@ export type ShipName = keyof typeof ships;
 export type InfoPanelCard =
   | { readonly type: "Ship"; readonly cardData: Ship }
   | { readonly type: "Pilot"; readonly cardData: Pilot }
-  | { readonly type: "SelectedPilot"; readonly cardData: SelectedPilot }
+  | {
+      readonly type: "SelectedPilot";
+      readonly cardData: SelectedPilotThatAllowsMutations;
+    }
   | { readonly type: "Upgrade"; readonly cardData: Upgrade };
 
 export type ShipBaseSize = "Small" | "Medium" | "Large" | "Huge";

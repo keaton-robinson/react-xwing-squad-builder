@@ -1,10 +1,10 @@
 import React from "react";
-import { SelectedPilot } from "../../data/xwing_types";
+import { SelectedPilotThatAllowsMutations } from "../../data/xwing_types";
 import { upgrades } from "../../data/xwing_data";
 import { getUpgradeCost, getPilotEffectiveStats } from "../../data/xwing_utils";
 
 interface PrintSquadModalProps {
-  squad: SelectedPilot[];
+  squad: SelectedPilotThatAllowsMutations[];
 }
 
 const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {

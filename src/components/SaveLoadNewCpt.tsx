@@ -5,7 +5,7 @@ import NewSquadConfirmModal from "./modals/NewSquadConfirmModal";
 import LoadModal from "./modals/LoadModal";
 import SaveAsModal from "./modals/SaveAsModal";
 import { upgrades } from "../data/xwing_data";
-import { SelectedPilot, Faction } from "../data/xwing_types";
+import { SelectedPilotThatAllowsMutations, Faction } from "../data/xwing_types";
 import { getSquadCost } from "../data/xwing_utils";
 
 const saveStatusMessages = {
@@ -16,7 +16,7 @@ const saveStatusMessages = {
 
 interface SaveLoadNewProps {
   squadId?: number;
-  squad: SelectedPilot[];
+  squad: SelectedPilotThatAllowsMutations[];
   squadName: string;
   faction: Faction;
   onSquadSaved: (squadId: string) => void;
@@ -24,7 +24,7 @@ interface SaveLoadNewProps {
   onSquadLoaded: (loadedSquad: {
     _id: string;
     name: string;
-    pilots: SelectedPilot[];
+    pilots: SelectedPilotThatAllowsMutations[];
   }) => void;
   onNewSquadStarted: () => void;
 }

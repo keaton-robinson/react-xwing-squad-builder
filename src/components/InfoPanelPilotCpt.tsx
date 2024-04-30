@@ -4,7 +4,7 @@ import ManeuversCpt from "./ManeuversCpt";
 import StatBlockCpt from "./StatBlockCpt";
 import UpgradesCpt from "./UpgradesCpt";
 import { pilotRules, ships, upgrades } from "../data/xwing_data";
-import { Pilot, SelectedPilot } from "../data/xwing_types";
+import { Pilot, SelectedPilotThatAllowsMutations } from "../data/xwing_types";
 import {
   fixIcons,
   getAppReadyPilot,
@@ -15,7 +15,7 @@ import {
 interface InfoPanelPilotCptProps {
   isSelectedPilot: boolean;
   pilot?: Pilot;
-  selectedPilot?: SelectedPilot;
+  selectedPilot?: SelectedPilotThatAllowsMutations;
 }
 
 const InfoPanelPilotCpt: React.FC<InfoPanelPilotCptProps> = (props) => {

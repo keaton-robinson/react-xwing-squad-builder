@@ -4,8 +4,8 @@ import {
   ShipName,
   Pilot,
   Upgrade,
-  SelectedPilot,
-  SelectedUpgrade,
+  SelectedPilotThatAllowsMutations,
+  SelectedUpgradeThatAllowsMutations,
   ShipBaseSize,
 } from "./xwing_types";
 
@@ -32,7 +32,10 @@ const getShipBaseSize = (ship: Ship): ShipBaseSize => {
   }
 };
 
-function getUpgradeCost(upgrade: Upgrade, pilot: SelectedPilot): number {
+function getUpgradeCost(
+  upgrade: Upgrade,
+  pilot: SelectedPilotThatAllowsMutations,
+): number {
   if (isNotNullOrUndefined(upgrade.points)) {
     return upgrade.points;
   } else if (upgrade.pointsarray) {
@@ -61,7 +64,10 @@ function getUpgradeCost(upgrade: Upgrade, pilot: SelectedPilot): number {
   );
 }
 
-function getPilotCost(pilot: SelectedPilot, upgradesData: Upgrade[]): number {
+function getPilotCost(
+  pilot: SelectedPilotThatAllowsMutations,
+  upgradesData: Upgrade[],
+): number {
   return (
     pilot.points +
     pilot.selectedUpgrades.reduce((prevPointsSum, selectedUpgrade) => {
@@ -80,16 +86,19 @@ function getPilotCost(pilot: SelectedPilot, upgradesData: Upgrade[]): number {
   );
 }
 
-function getSquadCost(squad: SelectedPilot[], upgradesData: Upgrade[]): number {
+function getSquadCost(
+  squad: SelectedPilotThatAllowsMutations[],
+  upgradesData: Upgrade[],
+): number {
   return squad.reduce((prevPointsSum, pilot) => {
     return prevPointsSum + getPilotCost(pilot, upgradesData);
   }, 0);
 }
 
 function getPilotEffectiveStats(
-  pilot: SelectedPilot,
+  pilot: SelectedPilotThatAllowsMutations,
   upgradesData: Upgrade[],
-): SelectedPilot {
+): SelectedPilotThatAllowsMutations {
   if (!pilot) {
     throw createError("pilot required for getPilotEffectiveStats", {
       pilotVal: pilot,
@@ -192,7 +201,7 @@ function maxPilotOrUpgradeReached(
 
 function isUniqueInSquad(
   uniqueCanonName: string,
-  squad: SelectedPilot[],
+  squad: SelectedPilotThatAllowsMutations[],
   upgradesData: Upgrade[],
 ): boolean {
   //if there's "uniqueName" pilot or upgrade in the squad, they are in.
@@ -227,10 +236,10 @@ function isUniqueInSquad(
 
 //upgrade should be data-repo upgrade, not "selected" upgrade
 function isUpgradeAllowed(
-  selectedUpgradeSlot: SelectedUpgrade,
+  selectedUpgradeSlot: SelectedUpgradeThatAllowsMutations,
   upgrade: Upgrade,
-  pilot: SelectedPilot,
-  squad: SelectedPilot[],
+  pilot: SelectedPilotThatAllowsMutations,
+  squad: SelectedPilotThatAllowsMutations[],
   upgradesData: Upgrade[],
 ): boolean {
   if (!selectedUpgradeSlot || !upgrade || !pilot || !squad) {
@@ -292,11 +301,11 @@ function isUpgradeAllowed(
 }
 
 function isUpgradeAllowedByRestrictions(
-  selectedUpgradeSlot: SelectedUpgrade,
+  selectedUpgradeSlot: SelectedUpgradeThatAllowsMutations,
   restrictions: [string, any][],
   upgrade: Upgrade,
-  pilot: SelectedPilot,
-  squad: SelectedPilot[],
+  pilot: SelectedPilotThatAllowsMutations,
+  squad: SelectedPilotThatAllowsMutations[],
   upgradesData: Upgrade[],
 ): boolean {
   if (!selectedUpgradeSlot || !restrictions || !upgrade || !pilot || !squad) {
@@ -536,9 +545,9 @@ function isUpgradeAllowedByRestrictions(
 
 //copies selected upgrades from prevPilot to new pilot (in place). Ignores upgrade slots that aren't available on new pilot
 function addUpgrades(
-  newPilot: SelectedPilot,
-  upgradesToAdd: SelectedUpgrade[],
-  squad: SelectedPilot[],
+  newPilot: SelectedPilotThatAllowsMutations,
+  upgradesToAdd: SelectedUpgradeThatAllowsMutations[],
+  squad: SelectedPilotThatAllowsMutations[],
   upgradesData: Upgrade[],
 ): void {
   if (!newPilot || !upgradesToAdd || !squad) {
@@ -575,7 +584,7 @@ function getAppReadyPilot(
   pilot: Pilot,
   shipsData: Record<string, Ship>,
   prevUIKey?: string,
-): SelectedPilot {
+): SelectedPilotThatAllowsMutations {
   //makes deep copies so I don't have side effects on my "data repo"
   const shipForPilot = shipsData[pilot.ship];
   if (!shipForPilot) {
@@ -633,8 +642,8 @@ function getAppReadyPilot(
 }
 
 function getSelectedUpgradesWithKeys(
-  selectedUpgrades: SelectedUpgrade[],
-): SelectedUpgrade[] {
+  selectedUpgrades: SelectedUpgradeThatAllowsMutations[],
+): SelectedUpgradeThatAllowsMutations[] {
   let slotNameUsedTracker = {};
   let newSelectedUpgrades = selectedUpgrades.map((selectedUpgrade) => {
     // Create a deep copy of the selectedUpgrade to avoid mutating the original object
@@ -661,7 +670,7 @@ function getSelectedUpgradesWithKeys(
 function getCheapestAvailablePilotForShip(
   ship: ShipName,
   faction: Faction,
-  squad: SelectedPilot[],
+  squad: SelectedPilotThatAllowsMutations[],
   upgradesData: Upgrade[],
   pilotsData: Pilot[],
 ): Pilot {
@@ -695,9 +704,9 @@ function getCheapestAvailablePilotForShip(
 
 // TODO: mutating state in place. Fix
 function removeInvalidUpgrades(
-  squad: SelectedPilot[],
+  squad: SelectedPilotThatAllowsMutations[],
   upgradesData: Upgrade[],
-): SelectedPilot[] {
+): SelectedPilotThatAllowsMutations[] {
   let needToSearchForInvalidUpgrades = true;
 
   while (needToSearchForInvalidUpgrades) {
@@ -729,8 +738,8 @@ function removeInvalidUpgrades(
 
 // TODO: mutating state in place: fix
 function removeUpgrade(
-  selectedUpgradeSlot: SelectedUpgrade,
-  pilot: SelectedPilot,
+  selectedUpgradeSlot: SelectedUpgradeThatAllowsMutations,
+  pilot: SelectedPilotThatAllowsMutations,
   upgradesData: Upgrade[],
 ) {
   if (isNotNullOrUndefined(selectedUpgradeSlot.selectedUpgradeId)) {
@@ -762,10 +771,10 @@ function removeUpgrade(
 
 // TODO: mutating state in place. Fix.
 function upgradeSquadShip(
-  upgradeSlot: SelectedUpgrade,
+  upgradeSlot: SelectedUpgradeThatAllowsMutations,
   newlySelectedUpgrade: Upgrade,
-  pilot: SelectedPilot,
-  squad: SelectedPilot[],
+  pilot: SelectedPilotThatAllowsMutations,
+  squad: SelectedPilotThatAllowsMutations[],
   upgradesData: Upgrade[],
 ): void {
   const prevUpgradeRecord = upgradesData.find(
@@ -804,9 +813,9 @@ function upgradeSquadShip(
 
 // TODO: mutating state in place. Fix
 function setUpgrade(
-  upgradeSlot: SelectedUpgrade,
+  upgradeSlot: SelectedUpgradeThatAllowsMutations,
   newlySelectedUpgrade: Upgrade,
-  pilot: SelectedPilot,
+  pilot: SelectedPilotThatAllowsMutations,
   upgradesData: Upgrade[],
 ): void {
   if (!upgradeSlot || !pilot) {
@@ -906,8 +915,8 @@ function setUpgrade(
 
 //returns true if there is a solitary upgrade card equiped to another slot of the same type within the squad
 function squadContainsAnotherSolitaryCardForThisSlot(
-  upgradeSlot: SelectedUpgrade,
-  squad: SelectedPilot[],
+  upgradeSlot: SelectedUpgradeThatAllowsMutations,
+  squad: SelectedPilotThatAllowsMutations[],
   upgradesData: Upgrade[],
 ) {
   for (const squadPilot of squad) {

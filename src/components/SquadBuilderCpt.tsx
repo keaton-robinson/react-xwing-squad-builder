@@ -10,8 +10,8 @@ import {
   Pilot,
   ShipName,
   InfoPanelCard,
-  SelectedPilot,
-  SelectedUpgrade,
+  SelectedPilotThatAllowsMutations,
+  SelectedUpgradeThatAllowsMutations,
   Upgrade,
 } from "../data/xwing_types";
 import { ships, upgrades, slots, pilots } from "../data/xwing_data";
@@ -33,7 +33,7 @@ interface SquadBuilderCptProps {
 
 interface SquadBuilderCptState {
   squadId: string;
-  squad: SelectedPilot[];
+  squad: SelectedPilotThatAllowsMutations[];
   squadName: string;
   infoPanelCard: InfoPanelCard;
 }
@@ -70,8 +70,8 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
   };
 
   const setUpgradesOnNewPilot = (
-    appReadyNewPilot: SelectedPilot,
-    upgradesToApply: SelectedUpgrade[] | null,
+    appReadyNewPilot: SelectedPilotThatAllowsMutations,
+    upgradesToApply: SelectedUpgradeThatAllowsMutations[] | null,
     squadIncludingNewPilot,
   ): void => {
     if (upgradesToApply) {
@@ -99,7 +99,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
 
   const addPilot = (
     pilotToAdd: Pilot,
-    upgradesToApply?: SelectedUpgrade[],
+    upgradesToApply?: SelectedUpgradeThatAllowsMutations[],
   ): void => {
     const appReadyNewPilot = getAppReadyPilot(pilotToAdd, ships);
     const newSquadAfterAddition = [...state.squad, appReadyNewPilot];
@@ -113,7 +113,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
   };
 
   const changePilot = (
-    prevSelectedPilot: SelectedPilot,
+    prevSelectedPilot: SelectedPilotThatAllowsMutations,
     newPilot: Pilot,
     copyUpgrades: boolean = true,
   ): void => {
@@ -143,7 +143,9 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     removeInvalidUpgradesAndSetState(squadCopy);
   };
 
-  const removePilot = (pilotToRemove: SelectedPilot): void => {
+  const removePilot = (
+    pilotToRemove: SelectedPilotThatAllowsMutations,
+  ): void => {
     const squadCopy = [...state.squad];
     const indexOfPilotToChange = squadCopy.findIndex(
       (pilot) => pilot.uiKey === pilotToRemove.uiKey,
@@ -155,7 +157,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
 
   const addCheapestAvailablePilotForShip = (
     ship: ShipName,
-    upgradesToInclude?: SelectedUpgrade[],
+    upgradesToInclude?: SelectedUpgradeThatAllowsMutations[],
   ): void => {
     const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
       ship,
@@ -173,7 +175,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
 
   const changeShip = (
     shipToChangeTo: ShipName,
-    prevSelectedPilot: SelectedPilot,
+    prevSelectedPilot: SelectedPilotThatAllowsMutations,
   ): void => {
     const cheapestAvailablePilotForShip = getCheapestAvailablePilotForShip(
       shipToChangeTo,
@@ -189,7 +191,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     }
   };
 
-  const clonePilot = (pilot: SelectedPilot): void => {
+  const clonePilot = (pilot: SelectedPilotThatAllowsMutations): void => {
     if (maxPilotOrUpgradeReached(pilot, state.squad, upgrades)) {
       addCheapestAvailablePilotForShip(pilot.ship, pilot.selectedUpgrades);
     } else {
@@ -198,9 +200,9 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
   };
 
   const changeUpgrade = (
-    upgradeSlot: SelectedUpgrade,
+    upgradeSlot: SelectedUpgradeThatAllowsMutations,
     newlySelectedUpgrade: Upgrade,
-    pilot: SelectedPilot,
+    pilot: SelectedPilotThatAllowsMutations,
   ): void => {
     if (
       newlySelectedUpgrade &&
@@ -246,7 +248,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
         onSquadLoaded={(loadedSquad: {
           _id: string;
           name: string;
-          pilots: SelectedPilot[];
+          pilots: SelectedPilotThatAllowsMutations[];
         }): void => {
           setState({
             ...initialState,

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useModalSetter } from "../contexts/ModalContext";
 import PrintSquadModal from "./modals/PrintSquadModal";
-import { Faction, SelectedPilot } from "../data/xwing_types";
+import { Faction, SelectedPilotThatAllowsMutations } from "../data/xwing_types";
 import { upgrades } from "../data/xwing_data";
 import { getSquadCost } from "../data/xwing_utils";
 
 interface SquadNamePointsPrintProps {
   onSquadNameChanged: (newName: string) => void;
   squadName: string;
-  squad: SelectedPilot[];
+  squad: SelectedPilotThatAllowsMutations[];
   faction: Faction;
 }
 

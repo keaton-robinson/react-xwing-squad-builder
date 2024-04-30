@@ -5,8 +5,8 @@ import { DropDownStyles } from "../styleData/styleData";
 import {
   InfoPanelCard,
   Pilot,
-  SelectedPilot,
-  SelectedUpgrade,
+  SelectedPilotThatAllowsMutations,
+  SelectedUpgradeThatAllowsMutations,
   ShipName,
   Upgrade,
 } from "../data/xwing_types";
@@ -15,24 +15,24 @@ import { getPilotCost } from "../data/xwing_utils";
 
 interface PilotRowCptProps {
   factionShips: ShipName[];
-  squad: SelectedPilot[];
-  selectedPilot: SelectedPilot;
+  squad: SelectedPilotThatAllowsMutations[];
+  selectedPilot: SelectedPilotThatAllowsMutations;
   availablePilots: Pilot[];
   changePilot: (
-    prevSelectedPilot: SelectedPilot,
+    prevSelectedPilot: SelectedPilotThatAllowsMutations,
     newPilot: Pilot,
     copyUpgrades?: boolean,
   ) => void;
   changeShip: (
     shipToChangeTo: ShipName,
-    prevSelectedPilot: SelectedPilot,
+    prevSelectedPilot: SelectedPilotThatAllowsMutations,
   ) => void;
-  removePilot: (pilotToRemove: SelectedPilot) => void;
-  clonePilot: (pilot: SelectedPilot) => void;
+  removePilot: (pilotToRemove: SelectedPilotThatAllowsMutations) => void;
+  clonePilot: (pilot: SelectedPilotThatAllowsMutations) => void;
   changeUpgrade: (
-    upgradeSlot: SelectedUpgrade,
+    upgradeSlot: SelectedUpgradeThatAllowsMutations,
     newlySelectedUpgrade: Upgrade,
-    pilot: SelectedPilot,
+    pilot: SelectedPilotThatAllowsMutations,
   ) => void;
   onRecordMouseEnter: (infoPanelCard: InfoPanelCard) => void;
 }

@@ -1,7 +1,11 @@
 import React, { useRef } from "react";
 import { Dropdown } from "@keatonr06/reactjs-dropdown-component";
 import { DropDownStyles } from "../styleData/styleData";
-import { Upgrade, SelectedPilot, SelectedUpgrade } from "../data/xwing_types";
+import {
+  Upgrade,
+  SelectedPilotThatAllowsMutations,
+  SelectedUpgradeThatAllowsMutations,
+} from "../data/xwing_types";
 import { slots, upgrades } from "../data/xwing_data";
 import {
   maxPilotOrUpgradeReached,
@@ -11,14 +15,14 @@ import {
 } from "../data/xwing_utils";
 
 interface ShipUpgradeCptProps {
-  upgradeSlot: SelectedUpgrade;
+  upgradeSlot: SelectedUpgradeThatAllowsMutations;
   changeUpgrade: (
-    upgradeSlot: SelectedUpgrade,
+    upgradeSlot: SelectedUpgradeThatAllowsMutations,
     newlySelectedUpgrade: Upgrade,
-    pilot: SelectedPilot,
+    pilot: SelectedPilotThatAllowsMutations,
   ) => void;
-  pilot: SelectedPilot;
-  squad: SelectedPilot[];
+  pilot: SelectedPilotThatAllowsMutations;
+  squad: SelectedPilotThatAllowsMutations[];
   onRecordMouseEnter: (upgrade: Upgrade) => void;
 }
 
