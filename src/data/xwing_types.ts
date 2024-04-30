@@ -114,7 +114,7 @@ export interface SquadPilotShip extends Pilot, Ship {
   /**
    * Array of selected upgrades user has applied to pilot
    */
-  readonly upgrades: SelectedUpgradeThatAllowsMutations[];
+  readonly upgrades: SquadPilotShipUpgradeSlot[];
 }
 
 /**
