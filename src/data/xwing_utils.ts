@@ -8,6 +8,8 @@ import {
   SelectedUpgradeThatAllowsMutations,
   ShipBaseSize,
   UniqueKey,
+  SquadPilotShip,
+  Squad,
 } from "./xwing_types";
 
 //intended to be used for checking if an id is selected
@@ -33,54 +35,65 @@ export const getShipBaseSize = (ship: Ship): ShipBaseSize => {
   }
 };
 
-export function getUpgradeCost(upgrade: Upgrade, pilot: SelectedPilotThatAllowsMutations): number {
+export function getUpgradeCost(upgrade: Upgrade, squadPilotShip: SquadPilotShip): number {
   if (isNotNullOrUndefined(upgrade.points)) {
     return upgrade.points;
   } else if (upgrade.pointsarray) {
     if (upgrade.variableinit) {
-      return upgrade.pointsarray[pilot.skill];
+      return upgrade.pointsarray[squadPilotShip.skill];
     } else if (upgrade.variablebase) {
-      if (pilot.pilotShip.huge) {
+      if (squadPilotShip.huge) {
         return upgrade.pointsarray[3];
-      } else if (pilot.pilotShip.large) {
+      } else if (squadPilotShip.large) {
         return upgrade.pointsarray[2];
-      } else if (pilot.pilotShip.medium) {
+      } else if (squadPilotShip.medium) {
         return upgrade.pointsarray[1];
       }
       return upgrade.pointsarray[0];
     } else if (upgrade.variableagility) {
-      return upgrade.pointsarray[pilot.pilotShip.agility];
+      return upgrade.pointsarray[squadPilotShip.agility];
     }
   }
 
   throw createError("Error calculating points on upgrade. Couldn't find point value.", {
     upgradeVal: upgrade,
-    pilotVal: pilot,
+    pilotVal: squadPilotShip,
   });
 }
 
-export function getPilotCost(pilot: SelectedPilotThatAllowsMutations, upgradesData: Upgrade[]): number {
+export function getPilotCost(squadPilot: SquadPilotShip): number {
   return (
-    pilot.points +
-    pilot.selectedUpgrades.reduce((prevPointsSum, selectedUpgrade) => {
-      if (isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)) {
-        const upgrade = upgradesData.find(
-          (upgradeFromData) => upgradeFromData.id === selectedUpgrade.selectedUpgradeId,
-        );
-        if (!upgrade) {
-          throw new Error("Invalid upgrade id specified");
-        }
-        return prevPointsSum + getUpgradeCost(upgrade, pilot);
+    squadPilot.points +
+    squadPilot.upgrades.reduce((prevPointsSum, selectedUpgrade) => {
+      if (isNotNullOrUndefined(selectedUpgrade.upgrade)) {
+        return prevPointsSum + getUpgradeCost(selectedUpgrade.upgrade, squadPilot);
       }
       return prevPointsSum;
     }, 0)
   );
 }
 
-export function getSquadCost(squad: SelectedPilotThatAllowsMutations[], upgradesData: Upgrade[]): number {
-  return squad.reduce((prevPointsSum, pilot) => {
-    return prevPointsSum + getPilotCost(pilot, upgradesData);
+export function getSquadCost(squad: Squad): number {
+  return squad.squadPilots.reduce((prevPointsSum, pilot) => {
+    return prevPointsSum + getPilotCost(pilot);
   }, 0);
+}
+
+export function getPilotEffectiveStatsNew(squadPilotShip: SquadPilotShip): SquadPilotShip {
+  if (!squadPilotShip) {
+    throw createError("pilot ship required for getPilotEffectiveStats", {
+      pilotVal: squadPilotShip,
+    });
+  }
+
+  const squadPilotShipCopy: SquadPilotShip = JSON.parse(JSON.stringify(squadPilotShip));
+
+  for (const selectedUpgrade of squadPilotShipCopy.upgrades) {
+    if (selectedUpgrade.upgrade?.modifier_func) {
+      selectedUpgrade.upgrade.modifier_func(squadPilotShipCopy);
+    }
+  }
+  return squadPilotShipCopy;
 }
 
 export function getPilotEffectiveStats(

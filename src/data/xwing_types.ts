@@ -11,10 +11,7 @@ export type Faction =
   | "Galactic Republic"
   | "Separatist Alliance";
 
-export interface Ship {
-  readonly name: string;
-  readonly canonical_name?: string;
-  readonly xws?: string;
+interface BaseShip {
   readonly factions: Faction[];
   readonly attack?: number;
   readonly attackf?: number;
@@ -30,7 +27,6 @@ export interface Ship {
   readonly actions: string[];
   readonly maneuvers: Difficulty[][];
   readonly autoequip?: string[]; // Optional property
-  readonly keyword?: string[];
   readonly huge?: boolean;
   readonly large?: boolean;
   readonly medium?: boolean;
@@ -39,20 +35,21 @@ export interface Ship {
   readonly energy?: number;
   readonly energyrecurr?: number;
 }
-
-export interface Pilot {
+export interface Ship extends BaseShip {
   readonly name: string;
-  readonly id: number;
+  readonly xws?: string;
+  readonly canonical_name?: string;
+  readonly keyword?: string[];
+}
+
+interface BasePilot {
   readonly faction: Faction;
   readonly ship: ShipName;
-  readonly keyword?: string[];
   readonly skill: number;
   readonly points: number;
   readonly slots: string[];
   readonly unique?: boolean;
   readonly force?: number;
-  readonly canonical_name?: string;
-  readonly xws?: string;
   readonly applies_condition?: string | string[];
   readonly charge?: number;
   readonly recurring?: number;
@@ -61,6 +58,14 @@ export interface Pilot {
   readonly max_per_squad?: number;
   readonly ship_override?: { actions: string[] };
   readonly engagement?: number;
+}
+
+export interface Pilot extends BasePilot {
+  readonly name: string;
+  readonly id: number;
+  readonly keyword?: string[];
+  readonly xws?: string;
+  readonly canonical_name?: string;
 }
 
 export interface Upgrade {
@@ -103,10 +108,17 @@ export interface Upgrade {
   readonly keyword?: string[];
 }
 
+export interface Squad {
+  readonly id?: string;
+  readonly name: string;
+  readonly faction: Faction;
+  readonly squadPilots: SquadPilotShip[];
+}
+
 /**
  * Represents a pilot that has been added to a squad.
  */
-export interface SquadPilotShip extends Pilot, Ship {
+export interface SquadPilotShip extends BasePilot, BaseShip {
   /**
    *  Provide a unique value for react 'key' prop.
    */
@@ -115,6 +127,14 @@ export interface SquadPilotShip extends Pilot, Ship {
    * Array of selected upgrades user has applied to pilot
    */
   readonly upgrades: SquadPilotShipUpgradeSlot[];
+
+  // properties from pilot and ship that need to be renamed to avoid name conflict
+  readonly shipCanonicalName?: string;
+  readonly ship_keyword?: string[];
+  readonly pilotName: string;
+  readonly pilotId: number;
+  readonly pilotKeyword?: string[];
+  readonly pilotCanonicalName?: string;
 }
 
 /**

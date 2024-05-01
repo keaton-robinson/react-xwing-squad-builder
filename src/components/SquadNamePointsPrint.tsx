@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useModalSetter } from "../contexts/ModalContext";
 import PrintSquadModal from "./modals/PrintSquadModal";
-import { Faction, SelectedPilotThatAllowsMutations } from "../data/xwing_types";
-import { upgrades } from "../data/xwing_data";
+import { Squad } from "../data/xwing_types";
 import { getSquadCost } from "../data/xwing_utils";
+import { useSquadsDispatch } from "../contexts/SquadContext";
 
 interface SquadNamePointsPrintProps {
-  onSquadNameChanged: (newName: string) => void;
-  squadName: string;
-  squad: SelectedPilotThatAllowsMutations[];
-  faction: Faction;
+  squad: Squad;
 }
 
-const SquadNamePointsPrint: React.FC<SquadNamePointsPrintProps> = (props) => {
+const SquadNamePointsPrint: React.FC<SquadNamePointsPrintProps> = ({ squad }) => {
   const [editingSquadName, setEditingSquadName] = useState(false);
   const setModal = useModalSetter();
+  const squadsDispatch = useSquadsDispatch();
 
   // allows clicking outside the edit name textbox to end editing
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (!(event.target.className === "editSquadName")) {
-        console.log("done editing squad!");
         setEditingSquadName(false);
       }
     };
@@ -39,7 +36,7 @@ const SquadNamePointsPrint: React.FC<SquadNamePointsPrintProps> = (props) => {
   };
 
   const handleNameChange = (event) => {
-    props.onSquadNameChanged(event.target.value);
+    squadsDispatch({ type: "renameSquad", newName: event.target.value, squad: squad });
   };
 
   const onSquadNameEditKeyDown = (event) => {
@@ -51,8 +48,8 @@ const SquadNamePointsPrint: React.FC<SquadNamePointsPrintProps> = (props) => {
 
   const showPrintModal = () => {
     setModal({
-      title: `${props.faction} Squadron (${getSquadCost(props.squad, upgrades)})`,
-      children: <PrintSquadModal squad={props.squad} />,
+      title: `${squad.name} (${getSquadCost(squad)})`,
+      children: <PrintSquadModal squad={squad} />,
     });
   };
 
@@ -64,19 +61,19 @@ const SquadNamePointsPrint: React.FC<SquadNamePointsPrintProps> = (props) => {
             className="editSquadName"
             autoFocus={true}
             type="text"
-            value={props.squadName}
+            value={squad.name}
             onChange={handleNameChange}
             onKeyDown={onSquadNameEditKeyDown}
             style={{ fontSize: "1.2rem" }}
           />
         ) : (
-          <h2 style={{ display: "inline" }}>{props.squadName}</h2>
+          <h2 style={{ display: "inline" }}>{squad.name}</h2>
         )}
         <i className="far fa-edit" style={{ marginLeft: "5px", fontSize: "1.2rem" }} onClick={editSquadClicked}></i>
       </div>
       <div className="points-display-container">
         <span>
-          Points: {getSquadCost(props.squad, upgrades)}/200 ({200 - getSquadCost(props.squad, upgrades)} left)
+          Points: {getSquadCost(squad)}/200 ({200 - getSquadCost(squad)} left)
         </span>
       </div>
       <div className="printBtn">

@@ -1,10 +1,10 @@
 import React from "react";
-import { SelectedPilotThatAllowsMutations } from "../../data/xwing_types";
+import { Squad, SquadPilotShip, SquadPilotShipUpgradeSlot } from "../../data/xwing_types";
 import { upgrades } from "../../data/xwing_data";
-import { getUpgradeCost, getPilotEffectiveStats } from "../../data/xwing_utils";
+import { getUpgradeCost, getPilotEffectiveStatsNew } from "../../data/xwing_utils";
 
 interface PrintSquadModalProps {
-  squad: SelectedPilotThatAllowsMutations[];
+  squad: Squad;
 }
 
 const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
@@ -19,15 +19,14 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
     return cost;
   };
 
-  const renderUpgrade = (selectedUpgrade, selectedPilot) => {
-    if (!selectedUpgrade.selectedUpgradeId) {
+  const renderUpgrade = (selectedUpgrade: SquadPilotShipUpgradeSlot, selectedPilot: SquadPilotShip) => {
+    if (!selectedUpgrade.upgrade) {
       return null;
     }
-    let upgradeRecord = upgrades.find((upgr) => upgr.id === selectedUpgrade.selectedUpgradeId);
     return (
-      <tr key={selectedUpgrade.key}>
-        <td style={{ paddingLeft: "1.5rem" }}>{upgradeRecord.name}</td>
-        <td style={{ textAlign: "right" }}>{getUpgradeCost(upgradeRecord, selectedPilot)}</td>
+      <tr key={selectedUpgrade.squadPilotUpgradeSlotId}>
+        <td style={{ paddingLeft: "1.5rem" }}>{selectedUpgrade.upgrade.name}</td>
+        <td style={{ textAlign: "right" }}>{getUpgradeCost(selectedUpgrade.upgrade, selectedPilot)}</td>
       </tr>
     );
   };
@@ -38,23 +37,23 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
 
   return (
     <div>
-      {squad.map((selectedPilot) => (
-        <table key={selectedPilot.uiKey} style={{ marginBottom: "30px", minWidth: "500px" }}>
+      {squad.squadPilots.map((squadPilot) => (
+        <table key={squadPilot.squadPilotShipId} style={{ marginBottom: "30px", minWidth: "500px" }}>
           <tbody>
             <tr>
               <td>
-                <strong>{`${selectedPilot.name} -- ${selectedPilot.pilotShip.name}`}</strong>
+                <strong>{`${squadPilot.pilotName} -- ${squadPilot.ship}`}</strong>
               </td>
-              <td style={{ textAlign: "right" }}>{selectedPilot.points}</td>
+              <td style={{ textAlign: "right" }}>{squadPilot.points}</td>
             </tr>
-            {selectedPilot.selectedUpgrades.map((upgrade) => renderUpgrade(upgrade, selectedPilot))}
+            {squadPilot.upgrades.map((upgrade) => renderUpgrade(upgrade, squadPilot))}
             <tr></tr>
             <tr>
               <td>
-                <strong>{`Half Points: ${Math.ceil(getTotalCost(selectedPilot) / 2)}   Threshold: ${Math.ceil((getPilotEffectiveStats(selectedPilot, upgrades).pilotShip.hull + getPilotEffectiveStats(selectedPilot, upgrades).pilotShip.shields) / 2)}`}</strong>
+                <strong>{`Half Points: ${Math.ceil(getTotalCost(squadPilot) / 2)}   Threshold: ${Math.ceil((getPilotEffectiveStatsNew(squadPilot).hull + getPilotEffectiveStatsNew(squadPilot).shields) / 2)}`}</strong>
               </td>
               <td style={{ textAlign: "right" }}>
-                <strong>{`Ship Total: ${getTotalCost(selectedPilot)}`}</strong>
+                <strong>{`Ship Total: ${getTotalCost(squadPilot)}`}</strong>
               </td>
             </tr>
           </tbody>
