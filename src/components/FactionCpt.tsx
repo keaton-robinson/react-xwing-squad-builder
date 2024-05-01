@@ -1,22 +1,21 @@
 import React from "react";
-import { factionNames } from "../data/xwing_data";
 import { Faction } from "../data/xwing_types";
 
-const getFontClassName = (factionName) => {
+const getFontClassName = (factionName: Faction) => {
   switch (factionName) {
-    case factionNames["Rebel Alliance"]:
+    case "Rebel Alliance":
       return "xwing-miniatures-font-rebel";
-    case factionNames["Galactic Empire"]:
+    case "Galactic Empire":
       return "xwing-miniatures-font-empire";
-    case factionNames["Scum and Villainy"]:
+    case "Scum and Villainy":
       return "xwing-miniatures-font-scum";
-    case factionNames.Resistance:
+    case "Resistance":
       return "xwing-miniatures-font-rebel-outline";
-    case factionNames["First Order"]:
+    case "First Order":
       return "xwing-miniatures-font-firstorder";
-    case factionNames["Galactic Republic"]:
+    case "Galactic Republic":
       return "xwing-miniatures-font-republic";
-    case factionNames["Separatist Alliance"]:
+    case "Separatist Alliance":
       return "xwing-miniatures-font-separatists";
     default:
       return "";

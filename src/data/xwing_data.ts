@@ -20,16 +20,6 @@ const __indexOf =
     return -1;
   };
 
-export const factionNames: Record<Faction, Faction> = {
-  "Rebel Alliance": "Rebel Alliance",
-  "Galactic Empire": "Galactic Empire",
-  "Scum and Villainy": "Scum and Villainy",
-  Resistance: "Resistance",
-  "First Order": "First Order",
-  "Galactic Republic": "Galactic Republic",
-  "Separatist Alliance": "Separatist Alliance",
-};
-
 export const ships: Record<string, Ship> = {
   "X-Wing": {
     name: "X-Wing",
