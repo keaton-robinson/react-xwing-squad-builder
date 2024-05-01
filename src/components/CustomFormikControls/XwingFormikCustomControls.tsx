@@ -42,10 +42,7 @@ export const XwingForm = ({ children, ...props }) => {
   const formikContext = useFormikContext();
   return (
     <Form {...props}>
-      <fieldset
-        disabled={formikContext.isSubmitting}
-        style={{ borderStyle: "none" }}
-      >
+      <fieldset disabled={formikContext.isSubmitting} style={{ borderStyle: "none" }}>
         {children}
       </fieldset>
     </Form>

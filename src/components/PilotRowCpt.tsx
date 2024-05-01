@@ -18,15 +18,8 @@ interface PilotRowCptProps {
   squad: SelectedPilotThatAllowsMutations[];
   selectedPilot: SelectedPilotThatAllowsMutations;
   availablePilots: Pilot[];
-  changePilot: (
-    prevSelectedPilot: SelectedPilotThatAllowsMutations,
-    newPilot: Pilot,
-    copyUpgrades?: boolean,
-  ) => void;
-  changeShip: (
-    shipToChangeTo: ShipName,
-    prevSelectedPilot: SelectedPilotThatAllowsMutations,
-  ) => void;
+  changePilot: (prevSelectedPilot: SelectedPilotThatAllowsMutations, newPilot: Pilot, copyUpgrades?: boolean) => void;
+  changeShip: (shipToChangeTo: ShipName, prevSelectedPilot: SelectedPilotThatAllowsMutations) => void;
   removePilot: (pilotToRemove: SelectedPilotThatAllowsMutations) => void;
   clonePilot: (pilot: SelectedPilotThatAllowsMutations) => void;
   changeUpgrade: (
@@ -76,11 +69,7 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
     });
   };
 
-  const handlePilotMouseEnter = (pilotDropDownItem: {
-    label: string;
-    value: number;
-    pilotRecord: Pilot;
-  }) => {
+  const handlePilotMouseEnter = (pilotDropDownItem: { label: string; value: number; pilotRecord: Pilot }) => {
     props.onRecordMouseEnter({
       cardData: pilotDropDownItem.pilotRecord,
       type: "Pilot",
@@ -107,12 +96,7 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
   };
 
   return (
-    <div
-      className={
-        "shipRow ship-" +
-        getShipBackgroundStylePostFix(props.selectedPilot.ship)
-      }
-    >
+    <div className={"shipRow ship-" + getShipBackgroundStylePostFix(props.selectedPilot.ship)}>
       <div className="shipAndPilotSelectorDiv">
         <div>
           <Dropdown
@@ -144,18 +128,12 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
       <div className="shipPointCost hideOnMobile">
         <span>{getPilotCost(props.selectedPilot, upgrades)}</span>
       </div>
-      <div
-        className="onlyShowOnMobile"
-        style={{ backgroundColor: "rgb(32,32,32, .6)", maxWidth: "300px" }}
-      >
+      <div className="onlyShowOnMobile" style={{ backgroundColor: "rgb(32,32,32, .6)", maxWidth: "300px" }}>
         Upgrades:
       </div>
       <div className="shipUpgrades">
         {props.selectedPilot.selectedUpgrades.map((selectedUpgrade) => (
-          <span
-            key={selectedUpgrade.key}
-            data-upgrade-slot={selectedUpgrade.key}
-          >
+          <span key={selectedUpgrade.key} data-upgrade-slot={selectedUpgrade.key}>
             <ShipUpgradeCpt
               upgradeSlot={selectedUpgrade}
               changeUpgrade={props.changeUpgrade}

@@ -78,9 +78,7 @@ const LoadModal: React.FC<LoadModalProps> = (props) => {
           if (isMounted.current) {
             if (responseData.success) {
               const squadsCopy = [...squads];
-              const indexOfSquadToRemove = squadsCopy.findIndex(
-                (squad) => squad._id === selectedSquad._id,
-              );
+              const indexOfSquadToRemove = squadsCopy.findIndex((squad) => squad._id === selectedSquad._id);
               squadsCopy.splice(indexOfSquadToRemove, 1);
               setSquads(squadsCopy);
             } else {
@@ -103,9 +101,7 @@ const LoadModal: React.FC<LoadModalProps> = (props) => {
   return (
     <div>
       {statusMessage ? (
-        <div style={{ display: statusMessage ? "block" : "none" }}>
-          {statusMessage}
-        </div>
+        <div style={{ display: statusMessage ? "block" : "none" }}>{statusMessage}</div>
       ) : (
         <ul
           style={{
@@ -127,8 +123,7 @@ const LoadModal: React.FC<LoadModalProps> = (props) => {
                   display: "grid",
                   marginBottom: "30px",
                   color: squad === selectedSquad ? "white" : "inherit",
-                  backgroundColor:
-                    squad === selectedSquad ? "dimgray" : "inherit",
+                  backgroundColor: squad === selectedSquad ? "dimgray" : "inherit",
                   paddingLeft: "5px",
                   paddingRight: "5px",
                 }}
@@ -156,9 +151,7 @@ const LoadModal: React.FC<LoadModalProps> = (props) => {
                 </h4>
                 <span style={{ gridRow: 2 }}>
                   {squad.pilots.reduce((previousValue, currentValue) => {
-                    return previousValue
-                      ? previousValue + ", " + currentValue.name
-                      : currentValue.name;
+                    return previousValue ? previousValue + ", " + currentValue.name : currentValue.name;
                   }, "")}
                 </span>
               </li>

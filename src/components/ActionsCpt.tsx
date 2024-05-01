@@ -7,9 +7,7 @@ interface ActionsCptProps {
 const ActionsCpt: React.FC<ActionsCptProps> = (props) => {
   const getActionSeparator = (action) => {
     if (action.includes("->")) {
-      return (
-        <i className="xwing-miniatures-font xwing-miniatures-font-linked"></i>
-      );
+      return <i className="xwing-miniatures-font xwing-miniatures-font-linked"></i>;
     }
     return ", ";
   };
@@ -46,14 +44,7 @@ const ActionsCpt: React.FC<ActionsCptProps> = (props) => {
       <span key={action + ordinal}>
         {/* //first action shouldn't have a comma or > before it */}
         {ordinal !== 0 ? getActionSeparator(action) : null}
-        <i
-          className={
-            "xwing-miniatures-font " +
-            getActionStyle(action) +
-            " " +
-            getActionDifficulty(action)
-          }
-        ></i>
+        <i className={"xwing-miniatures-font " + getActionStyle(action) + " " + getActionDifficulty(action)}></i>
       </span>
     );
   };

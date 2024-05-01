@@ -6,11 +6,7 @@ interface ModalContainerProps {
   children: ReactElement;
 }
 
-const ModalContainer: React.FC<ModalContainerProps> = ({
-  handleClose,
-  headerTitle,
-  children,
-}) => {
+const ModalContainer: React.FC<ModalContainerProps> = ({ handleClose, headerTitle, children }) => {
   const modalContentClicked = (event) => {
     event.stopPropagation();
   };

@@ -29,49 +29,19 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
   switch (props.bearing) {
     case bearings.left_hard:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver ">
-            <path
-              strokeWidth="25"
-              fill="none"
-              stroke="black"
-              d="M160,180 L160,70 80,70"
-            ></path>
-            <path
-              d="M80,100 V40 L30,70 Z"
-              fill={getDifficultyUIColor()}
-              strokeWidth="5"
-              stroke="black"
-            ></path>
-            <path
-              strokeWidth="15"
-              fill="none"
-              stroke={getDifficultyUIColor()}
-              d="M160,180 L160,70 80,70"
-            ></path>
+            <path strokeWidth="25" fill="none" stroke="black" d="M160,180 L160,70 80,70"></path>
+            <path d="M80,100 V40 L30,70 Z" fill={getDifficultyUIColor()} strokeWidth="5" stroke="black"></path>
+            <path strokeWidth="15" fill="none" stroke={getDifficultyUIColor()} d="M160,180 L160,70 80,70"></path>
           </g>
         </svg>
       );
     case bearings.left_bank:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver ">
-            <path
-              strokeWidth="25"
-              fill="none"
-              stroke="black"
-              d="M150,180 S150,120 80,60"
-            ></path>
+            <path strokeWidth="25" fill="none" stroke="black" d="M150,180 S150,120 80,60"></path>
             <path
               d="M80,100 V40 L30,70 Z"
               fill={getDifficultyUIColor()}
@@ -79,23 +49,13 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
               stroke="black"
               transform="translate(-5 -15) rotate(45 70 90)"
             ></path>
-            <path
-              strokeWidth="15"
-              fill="none"
-              stroke={getDifficultyUIColor()}
-              d="M150,180 S150,120 80,60"
-            ></path>
+            <path strokeWidth="15" fill="none" stroke={getDifficultyUIColor()} d="M150,180 S150,120 80,60"></path>
           </g>
         </svg>
       );
     case bearings.straight:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver ">
             <path
               className="svg-maneuver-outer svg-white-maneuver svg-base-maneuver"
@@ -123,12 +83,7 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
       );
     case bearings.right_bank:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver ">
             <path
               className="svg-maneuver-outer svg-white-maneuver svg-base-maneuver"
@@ -157,12 +112,7 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
       );
     case bearings.right_hard:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver ">
             <path
               className="svg-maneuver-outer svg-white-maneuver svg-base-maneuver"
@@ -190,12 +140,7 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
       );
     case bearings.k_turn:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver ">
             <path
               className="svg-maneuver-outer svg-red-maneuver svg-base-maneuver"
@@ -223,12 +168,7 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
       );
     case bearings.left_sloop:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver ">
             <path
               className="svg-maneuver-outer svg-red-maneuver svg-base-maneuver"
@@ -257,12 +197,7 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
       );
     case bearings.right_sloop:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver ">
             <path
               className="svg-maneuver-outer svg-red-maneuver svg-base-maneuver"
@@ -291,12 +226,7 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
       );
     case bearings.left_tallion:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver ">
             <path
               className="svg-maneuver-outer svg-red-maneuver svg-base-maneuver"
@@ -324,12 +254,7 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
       );
     case bearings.right_tallion:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver ">
             <path
               className="svg-maneuver-outer svg-red-maneuver svg-base-maneuver"
@@ -357,12 +282,7 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
       );
     case bearings.stationary:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <rect
             className="svg-maneuver-stop svg-red-maneuver svg-base-maneuver"
             x="50"
@@ -375,12 +295,7 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
       );
     case bearings.reverse_left:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver backwards">
             <path
               className="svg-maneuver-outer svg-red-maneuver svg-base-maneuver"
@@ -409,12 +324,7 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
       );
     case bearings.reverse_straight:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver backwards">
             <path
               className="svg-maneuver-outer svg-red-maneuver svg-base-maneuver"
@@ -442,12 +352,7 @@ const ManeuverCpt: React.FC<ManeuverCptProps> = (props) => {
       );
     case bearings.reverse_right:
       return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30px"
-          height="30px"
-          viewBox="0 0 200 200"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 200 200">
           <g className="maneuver backwards">
             <path
               className="svg-maneuver-outer svg-red-maneuver svg-base-maneuver"

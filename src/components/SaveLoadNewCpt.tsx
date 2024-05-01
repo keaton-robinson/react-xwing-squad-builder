@@ -21,11 +21,7 @@ interface SaveLoadNewProps {
   faction: Faction;
   onSquadSaved: (squadId: string) => void;
   onSquadNameChanged: (newName: string) => void;
-  onSquadLoaded: (loadedSquad: {
-    _id: string;
-    name: string;
-    pilots: SelectedPilotThatAllowsMutations[];
-  }) => void;
+  onSquadLoaded: (loadedSquad: { _id: string; name: string; pilots: SelectedPilotThatAllowsMutations[] }) => void;
   onNewSquadStarted: () => void;
 }
 
@@ -132,9 +128,7 @@ const SaveLoadNew: React.FC<SaveLoadNewProps> = (props) => {
   const showSaveAsModal = () => {
     setModal({
       title: "Save squad",
-      children: (
-        <SaveAsModal saveSquad={saveSquadAs} squadName={props.squadName} />
-      ),
+      children: <SaveAsModal saveSquad={saveSquadAs} squadName={props.squadName} />,
     });
   };
 
@@ -153,12 +147,7 @@ const SaveLoadNew: React.FC<SaveLoadNewProps> = (props) => {
   const showNewSquadConfirmModal = () => {
     setModal({
       title: `Create new squad?`,
-      children: (
-        <NewSquadConfirmModal
-          cancel={() => setModal(null)}
-          createNewSquad={createNewSquad}
-        />
-      ),
+      children: <NewSquadConfirmModal cancel={() => setModal(null)} createNewSquad={createNewSquad} />,
     });
   };
 
@@ -181,17 +170,11 @@ const SaveLoadNew: React.FC<SaveLoadNewProps> = (props) => {
           Load Squad
         </button>
       )}
-      <button
-        className="btn-danger"
-        style={{ margin: "5px" }}
-        onClick={showNewSquadConfirmModal}
-      >
+      <button className="btn-danger" style={{ margin: "5px" }} onClick={showNewSquadConfirmModal}>
         New Squad
       </button>
       {userContextBundle?.user && (
-        <span style={{ visibility: saveStatusMessage ? "visible" : "hidden" }}>
-          {saveStatusMessage}
-        </span>
+        <span style={{ visibility: saveStatusMessage ? "visible" : "hidden" }}>{saveStatusMessage}</span>
       )}
     </div>
   );

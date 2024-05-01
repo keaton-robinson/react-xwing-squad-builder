@@ -8,10 +8,7 @@ interface NewSquadConfirmModalProps {
 const NewSquadConfirmModal: React.FC<NewSquadConfirmModalProps> = (props) => {
   return (
     <div>
-      <div>
-        Are you sure you want to create a new squad? Your current ships will be
-        removed.
-      </div>
+      <div>Are you sure you want to create a new squad? Your current ships will be removed.</div>
       <hr />
       <div style={{ textAlign: "right" }}>
         <button className="btn-primary" onClick={props.cancel}>

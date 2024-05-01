@@ -64,15 +64,11 @@ test("after removing prerequsite upgrade, automatically removes upgrade that dep
   await selectUpgrade("Crew1", "No Crew Upgrade", "Maul");
 
   let elements = container.querySelectorAll(".dd-header-title");
-  let maulElement = Array.from(elements).find(
-    (el) => el.textContent === "Maul (10)",
-  );
+  let maulElement = Array.from(elements).find((el) => el.textContent === "Maul (10)");
 
   if (!maulElement) {
     // Handle the case where the element is not found
-    throw new Error(
-      'Element with the class "dd-header-title" and text "Maul (10)" not found after selecting Maul',
-    );
+    throw new Error('Element with the class "dd-header-title" and text "Maul (10)" not found after selecting Maul');
   }
 
   await selectUpgrade("Gunner1", "Ezra Bridger", "No Gunner Upgrade");
@@ -83,9 +79,7 @@ test("after removing prerequsite upgrade, automatically removes upgrade that dep
   expect(noCrew).toBeInTheDocument();
 
   elements = container.querySelectorAll(".dd-header-title");
-  maulElement = Array.from(elements).find(
-    (el) => el.textContent === "Maul (10)",
-  );
+  maulElement = Array.from(elements).find((el) => el.textContent === "Maul (10)");
 
   expect(maulElement).toBeUndefined();
 });

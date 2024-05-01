@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as yup from "yup";
 import { Formik } from "formik";
-import {
-  XwingTextInput,
-  XwingFormSubmitButton,
-  XwingForm,
-} from "../CustomFormikControls/XwingFormikCustomControls";
+import { XwingTextInput, XwingFormSubmitButton, XwingForm } from "../CustomFormikControls/XwingFormikCustomControls";
 
 interface RegisterModalProps {
   switchToLogin: () => void;
@@ -77,42 +73,23 @@ const RegisterModal: React.FC<RegisterModalProps> = (props) => {
           .required("Required")
           .min(passwordMin, `Must be ${passwordMin} characters or more`)
           .max(passwordMax, `Must be ${passwordMax} characters or less`),
-        passwordConfirmation: yup
-          .string()
-          .oneOf([yup.ref("password"), null], "Passwords must match"),
+        passwordConfirmation: yup.string().oneOf([yup.ref("password"), null], "Passwords must match"),
       })}
-      onSubmit={(values, { setSubmitting }) =>
-        handleSubmit(values, { setSubmitting })
-      }
+      onSubmit={(values, { setSubmitting }) => handleSubmit(values, { setSubmitting })}
     >
       <div className="loginRegisterForm">
-        <span style={{ color: successfullyRegistered ? "black" : "red" }}>
-          {statusMessage}
-        </span>
+        <span style={{ color: successfullyRegistered ? "black" : "red" }}>{statusMessage}</span>
         {!successfullyRegistered ? (
           <XwingForm>
-            <XwingTextInput
-              type="text"
-              name="username"
-              style={{ marginTop: "0px" }}
-            />
+            <XwingTextInput type="text" name="username" style={{ marginTop: "0px" }} />
             <XwingTextInput type="password" name="password" />
-            <XwingTextInput
-              type="password"
-              name="passwordConfirmation"
-              placeholder="confirm password"
-            />
+            <XwingTextInput type="password" name="passwordConfirmation" placeholder="confirm password" />
 
-            <XwingFormSubmitButton className="btn-primary loginRegisterBtn">
-              Register
-            </XwingFormSubmitButton>
+            <XwingFormSubmitButton className="btn-primary loginRegisterBtn">Register</XwingFormSubmitButton>
           </XwingForm>
         ) : (
           <div>
-            <button
-              className="btn-primary loginRegisterBtn"
-              onClick={props.switchToLogin}
-            >
+            <button className="btn-primary loginRegisterBtn" onClick={props.switchToLogin}>
               Go back to login ...
             </button>
           </div>

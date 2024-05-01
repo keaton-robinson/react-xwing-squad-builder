@@ -1,10 +1,4 @@
-import {
-  Ship,
-  Pilot,
-  Upgrade,
-  SelectedPilotThatAllowsMutations,
-  ShipBaseSize,
-} from "./xwing_types";
+import { Ship, Pilot, Upgrade, SelectedPilotThatAllowsMutations, ShipBaseSize } from "./xwing_types";
 import {
   isNotNullOrUndefined,
   getShipBaseSize,
@@ -56,17 +50,15 @@ describe("getUpgradeCost", () => {
       pointsarray: undefined,
     };
 
-    expect(() =>
-      getUpgradeCost(upgradeWithNoPointCostAtAll as Upgrade, null),
-    ).toThrow("Error calculating points on upgrade");
+    expect(() => getUpgradeCost(upgradeWithNoPointCostAtAll as Upgrade, null)).toThrow(
+      "Error calculating points on upgrade",
+    );
   });
   it("when static point cost defined, returns static point cost", () => {
     const upgradeWithStaticPointCost = { points: 8 };
     const expectedReturnValue = 8;
 
-    expect(getUpgradeCost(upgradeWithStaticPointCost as Upgrade, null)).toBe(
-      expectedReturnValue,
-    );
+    expect(getUpgradeCost(upgradeWithStaticPointCost as Upgrade, null)).toBe(expectedReturnValue);
   });
   describe("variable point cost based on pilot skill", () => {
     const upgradeWithVariableInitPoints = {
@@ -83,17 +75,11 @@ describe("getUpgradeCost", () => {
       [pilotWithSkill1, 1],
       [pilotWithSkill6, 6],
       [pilotWithSkillTen, 10],
-    ])(
-      "when pilot is %s, return point cost from index %s",
-      (pilot, returnValue) => {
-        expect(
-          getUpgradeCost(
-            upgradeWithVariableInitPoints as Upgrade,
-            pilot as SelectedPilotThatAllowsMutations,
-          ),
-        ).toBe(returnValue);
-      },
-    );
+    ])("when pilot is %s, return point cost from index %s", (pilot, returnValue) => {
+      expect(getUpgradeCost(upgradeWithVariableInitPoints as Upgrade, pilot as SelectedPilotThatAllowsMutations)).toBe(
+        returnValue,
+      );
+    });
   });
   describe("variable point cost based on ship base size", () => {
     const upgradeWithVariableBasePoints = {
@@ -112,17 +98,11 @@ describe("getUpgradeCost", () => {
       [pilotWithLargeShip, 8],
       [pilotWithMediumShip, 6],
       [pilotWithSmallShip, 4],
-    ])(
-      "when pilot has %s ship, returns point cost %s",
-      (pilot, returnValue) => {
-        expect(
-          getUpgradeCost(
-            upgradeWithVariableBasePoints as Upgrade,
-            pilot as SelectedPilotThatAllowsMutations,
-          ),
-        ).toBe(returnValue);
-      },
-    );
+    ])("when pilot has %s ship, returns point cost %s", (pilot, returnValue) => {
+      expect(getUpgradeCost(upgradeWithVariableBasePoints as Upgrade, pilot as SelectedPilotThatAllowsMutations)).toBe(
+        returnValue,
+      );
+    });
   });
 
   describe("variable point cost based on agility", () => {
@@ -140,17 +120,11 @@ describe("getUpgradeCost", () => {
       [pilotWithAgility1, 5],
       [pilotWithAgility2, 6],
       [pilotWithAgility3, 9],
-    ])(
-      "when pilot's ship has agility %s, returns point cost %s",
-      (pilot, returnValue) => {
-        expect(
-          getUpgradeCost(
-            upgradeWithVariableAgilityPoints as Upgrade,
-            pilot as SelectedPilotThatAllowsMutations,
-          ),
-        ).toBe(returnValue);
-      },
-    );
+    ])("when pilot's ship has agility %s, returns point cost %s", (pilot, returnValue) => {
+      expect(
+        getUpgradeCost(upgradeWithVariableAgilityPoints as Upgrade, pilot as SelectedPilotThatAllowsMutations),
+      ).toBe(returnValue);
+    });
   });
 });
 
@@ -166,19 +140,12 @@ describe("getPilotCost", () => {
       selectedUpgrades: [{ selectedUpgradeId: 99 }],
     }; // 99 is an invalid ID
     expect(() =>
-      getPilotCost(
-        pilotWithInvalidUpgrade as SelectedPilotThatAllowsMutations,
-        stubUpgradesData as Upgrade[],
-      ),
+      getPilotCost(pilotWithInvalidUpgrade as SelectedPilotThatAllowsMutations, stubUpgradesData as Upgrade[]),
     ).toThrow("Invalid upgrade");
   });
 
   it.each([
-    [
-      "with no upgrades returns just pilot cost",
-      { points: 100, selectedUpgrades: [] },
-      100,
-    ],
+    ["with no upgrades returns just pilot cost", { points: 100, selectedUpgrades: [] }, 100],
     [
       "with one upgrade, sums pilot cost with upgrade cost",
       { points: 100, selectedUpgrades: [{ selectedUpgradeId: 1 }] },
@@ -203,10 +170,7 @@ describe("getPilotCost", () => {
       100,
     ],
   ])("%s", (description, pilot, expectedCost) => {
-    const cost = getPilotCost(
-      pilot as SelectedPilotThatAllowsMutations,
-      stubUpgradesData as Upgrade[],
-    );
+    const cost = getPilotCost(pilot as SelectedPilotThatAllowsMutations, stubUpgradesData as Upgrade[]);
     expect(cost).toBe(expectedCost);
   });
 });
@@ -225,11 +189,7 @@ describe("getSquadCost", () => {
   it.each([
     ["empty squad costs zero", [], 0],
     ["one 50 point pilot costs 50", [fiftyPointPilot], 50],
-    [
-      "50 point pilot + 45 point pilot costs 95",
-      [fiftyPointPilot, fortyFivePointPilot],
-      95,
-    ],
+    ["50 point pilot + 45 point pilot costs 95", [fiftyPointPilot, fortyFivePointPilot], 95],
     // Add more test cases here if needed
   ])("%s", (testName, squad, expectedCost) => {
     const cost = getSquadCost(squad, emptyDummyUpgradeData);
@@ -249,9 +209,9 @@ describe("getPilotEffectiveStats", () => {
   ];
 
   it("throws an error if no pilot is provided", () => {
-    expect(() =>
-      getPilotEffectiveStats(null, stubUpgradesData as Upgrade[]),
-    ).toThrow("pilot required for getPilotEffectiveStats");
+    expect(() => getPilotEffectiveStats(null, stubUpgradesData as Upgrade[])).toThrow(
+      "pilot required for getPilotEffectiveStats",
+    );
   });
 
   it("throws an error if upgrade data is missing for an upgrade ID", () => {
@@ -283,10 +243,7 @@ describe("getPilotEffectiveStats", () => {
     };
     const expectedModifiedShieldValue = 3;
 
-    const result = getPilotEffectiveStats(
-      pilot as SelectedPilotThatAllowsMutations,
-      stubUpgradesData as Upgrade[],
-    );
+    const result = getPilotEffectiveStats(pilot as SelectedPilotThatAllowsMutations, stubUpgradesData as Upgrade[]);
 
     expect(result.pilotShip.shields).toBe(expectedModifiedShieldValue);
   });
@@ -307,10 +264,7 @@ describe("getPilotEffectiveStats", () => {
       },
     };
 
-    const result = getPilotEffectiveStats(
-      pilot as SelectedPilotThatAllowsMutations,
-      stubUpgradesData as Upgrade[],
-    );
+    const result = getPilotEffectiveStats(pilot as SelectedPilotThatAllowsMutations, stubUpgradesData as Upgrade[]);
 
     expect(JSON.stringify(pilot)).toBe(JSON.stringify(result));
   });

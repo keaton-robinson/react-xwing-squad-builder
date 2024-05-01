@@ -74,12 +74,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     squadIncludingNewPilot,
   ): void => {
     if (upgradesToApply) {
-      addUpgrades(
-        appReadyNewPilot,
-        upgradesToApply,
-        squadIncludingNewPilot,
-        upgrades,
-      );
+      addUpgrades(appReadyNewPilot, upgradesToApply, squadIncludingNewPilot, upgrades);
     } else {
       //if no upgrades specified, attach the default auto-equips
       const selectedShip = ships[appReadyNewPilot.ship];
@@ -88,26 +83,17 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
           const configSelUpgradeSlot = appReadyNewPilot.selectedUpgrades.find(
             (selUpgrade) => selUpgrade.slot === slots.Configuration.key,
           );
-          configSelUpgradeSlot.selectedUpgradeId = upgrades.find(
-            (upgrade) => upgrade.name === autoEquipUpgrade,
-          ).id; // TODO: directly mutated state?
+          configSelUpgradeSlot.selectedUpgradeId = upgrades.find((upgrade) => upgrade.name === autoEquipUpgrade).id; // TODO: directly mutated state?
         }
       }
     }
   };
 
-  const addPilot = (
-    pilotToAdd: Pilot,
-    upgradesToApply?: SelectedUpgradeThatAllowsMutations[],
-  ): void => {
+  const addPilot = (pilotToAdd: Pilot, upgradesToApply?: SelectedUpgradeThatAllowsMutations[]): void => {
     const appReadyNewPilot = getAppReadyPilot(pilotToAdd, ships);
     const newSquadAfterAddition = [...state.squad, appReadyNewPilot];
 
-    setUpgradesOnNewPilot(
-      appReadyNewPilot,
-      upgradesToApply,
-      newSquadAfterAddition,
-    );
+    setUpgradesOnNewPilot(appReadyNewPilot, upgradesToApply, newSquadAfterAddition);
     removeInvalidUpgradesAndSetState(newSquadAfterAddition);
   };
 
@@ -116,25 +102,15 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     newPilot: Pilot,
     copyUpgrades: boolean = true,
   ): void => {
-    const appReadyNewPilot = getAppReadyPilot(
-      newPilot,
-      ships,
-      prevSelectedPilot.uiKey,
-    );
+    const appReadyNewPilot = getAppReadyPilot(newPilot, ships, prevSelectedPilot.uiKey);
 
     //get a copy of selected pilots and splice the new pilot into the position that the prev pilot was at
     const squadCopy = [...state.squad];
-    const indexOfPilotToChange = squadCopy.findIndex(
-      (pilot) => pilot.uiKey === prevSelectedPilot.uiKey,
-    );
+    const indexOfPilotToChange = squadCopy.findIndex((pilot) => pilot.uiKey === prevSelectedPilot.uiKey);
     squadCopy.splice(indexOfPilotToChange, 1, appReadyNewPilot);
 
     if (copyUpgrades) {
-      setUpgradesOnNewPilot(
-        appReadyNewPilot,
-        prevSelectedPilot.selectedUpgrades,
-        squadCopy,
-      );
+      setUpgradesOnNewPilot(appReadyNewPilot, prevSelectedPilot.selectedUpgrades, squadCopy);
     } else {
       setUpgradesOnNewPilot(appReadyNewPilot, null, squadCopy);
     }
@@ -142,13 +118,9 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     removeInvalidUpgradesAndSetState(squadCopy);
   };
 
-  const removePilot = (
-    pilotToRemove: SelectedPilotThatAllowsMutations,
-  ): void => {
+  const removePilot = (pilotToRemove: SelectedPilotThatAllowsMutations): void => {
     const squadCopy = [...state.squad];
-    const indexOfPilotToChange = squadCopy.findIndex(
-      (pilot) => pilot.uiKey === pilotToRemove.uiKey,
-    );
+    const indexOfPilotToChange = squadCopy.findIndex((pilot) => pilot.uiKey === pilotToRemove.uiKey);
     squadCopy.splice(indexOfPilotToChange, 1);
 
     removeInvalidUpgradesAndSetState(squadCopy);
@@ -158,13 +130,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     ship: ShipName,
     upgradesToInclude?: SelectedUpgradeThatAllowsMutations[],
   ): void => {
-    const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
-      ship,
-      props.faction,
-      state.squad,
-      upgrades,
-      pilots,
-    );
+    const cheapestAvailablePilot = getCheapestAvailablePilotForShip(ship, props.faction, state.squad, upgrades, pilots);
     if (cheapestAvailablePilot) {
       addPilot(cheapestAvailablePilot, upgradesToInclude);
     } else {
@@ -172,10 +138,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     }
   };
 
-  const changeShip = (
-    shipToChangeTo: ShipName,
-    prevSelectedPilot: SelectedPilotThatAllowsMutations,
-  ): void => {
+  const changeShip = (shipToChangeTo: ShipName, prevSelectedPilot: SelectedPilotThatAllowsMutations): void => {
     const cheapestAvailablePilotForShip = getCheapestAvailablePilotForShip(
       shipToChangeTo,
       props.faction,
@@ -203,19 +166,10 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
     newlySelectedUpgrade: Upgrade,
     pilot: SelectedPilotThatAllowsMutations,
   ): void => {
-    if (
-      newlySelectedUpgrade &&
-      maxPilotOrUpgradeReached(newlySelectedUpgrade, state.squad, upgrades)
-    ) {
+    if (newlySelectedUpgrade && maxPilotOrUpgradeReached(newlySelectedUpgrade, state.squad, upgrades)) {
       alert("Already have max amount of " + newlySelectedUpgrade.name);
     } else {
-      upgradeSquadShip(
-        upgradeSlot,
-        newlySelectedUpgrade,
-        pilot,
-        state.squad,
-        upgrades,
-      );
+      upgradeSquadShip(upgradeSlot, newlySelectedUpgrade, pilot, state.squad, upgrades);
     }
     removeInvalidUpgradesAndSetState(state.squad);
   };
@@ -225,9 +179,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
   };
 
   return (
-    <div
-      style={props.faction !== props.selectedFaction ? { display: "none" } : {}}
-    >
+    <div style={props.faction !== props.selectedFaction ? { display: "none" } : {}}>
       <SquadNamePointsPrint
         squadName={state.squadName}
         squad={state.squad}
@@ -273,12 +225,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderCptProps> = (props) => {
                   (availPilot) =>
                     availPilot.ship === squadPilot.ship &&
                     availPilot.faction === props.faction &&
-                    (!maxPilotOrUpgradeReached(
-                      availPilot,
-                      state.squad,
-                      upgrades,
-                    ) ||
-                      availPilot.id === squadPilot.id),
+                    (!maxPilotOrUpgradeReached(availPilot, state.squad, upgrades) || availPilot.id === squadPilot.id),
                 )
                 .sort((first, second) => first.points - second.points)}
               changePilot={changePilot}

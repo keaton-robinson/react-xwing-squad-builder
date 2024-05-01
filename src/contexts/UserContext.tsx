@@ -23,10 +23,7 @@ export const UserProvider: React.FC<{ children }> = (props) => {
     if (foundUser) {
       const userObj = JSON.parse(foundUser);
       // make sure that login token hasn't expired
-      if (
-        userObj.expiresIn &&
-        Date.now() > userObj.loginTime + ms(userObj.expiresIn)
-      ) {
+      if (userObj.expiresIn && Date.now() > userObj.loginTime + ms(userObj.expiresIn)) {
         localStorage.removeItem("user");
       } else {
         setUser(userObj);
@@ -47,9 +44,5 @@ export const UserProvider: React.FC<{ children }> = (props) => {
     },
   };
 
-  return (
-    <UserContext.Provider value={userContextBundle}>
-      {props.children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={userContextBundle}>{props.children}</UserContext.Provider>;
 };

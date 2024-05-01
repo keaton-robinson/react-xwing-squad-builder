@@ -9,8 +9,7 @@ const UpgradesCpt: React.FC<UpgradesCptProps> = (props) => {
   const getSlotMarkup = (slot) => {
     let slotName = slot[0];
     let numSlotsPerPilot = slot[1].numSlotsPerPilot;
-    let upgradeIsAvailableToAllPilots =
-      slot[1].numPilots === props.pilots.length; //slot count is slot[1].numPilots
+    let upgradeIsAvailableToAllPilots = slot[1].numPilots === props.pilots.length; //slot count is slot[1].numPilots
     let innerHtml = "";
     for (let i = 0; i < numSlotsPerPilot; i++) {
       innerHtml += sloticon[slotName];
@@ -19,12 +18,7 @@ const UpgradesCpt: React.FC<UpgradesCptProps> = (props) => {
     if (!upgradeIsAvailableToAllPilots) {
       innerHtml = "(" + innerHtml + ")";
     }
-    return (
-      <span
-        key={slotName}
-        dangerouslySetInnerHTML={{ __html: innerHtml }}
-      ></span>
-    );
+    return <span key={slotName} dangerouslySetInnerHTML={{ __html: innerHtml }}></span>;
   };
 
   const slotCountAcrossPilots = {};
@@ -53,11 +47,7 @@ const UpgradesCpt: React.FC<UpgradesCptProps> = (props) => {
     }
   }
 
-  return (
-    <span>
-      {Object.entries(slotCountAcrossPilots).map((slot) => getSlotMarkup(slot))}
-    </span>
-  );
+  return <span>{Object.entries(slotCountAcrossPilots).map((slot) => getSlotMarkup(slot))}</span>;
 };
 
 export default UpgradesCpt;

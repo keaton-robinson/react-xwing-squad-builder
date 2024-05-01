@@ -20,12 +20,7 @@ const HeaderComponent: React.FC<HeaderProps> = (props) => {
   const showLogin = () => {
     setModal({
       title: "Login",
-      children: (
-        <LoginModal
-          switchToRegister={showRegister}
-          close={() => setModal(null)}
-        />
-      ),
+      children: <LoginModal switchToRegister={showRegister} close={() => setModal(null)} />,
     });
   };
 
@@ -53,27 +48,19 @@ const HeaderComponent: React.FC<HeaderProps> = (props) => {
       <nav id="navLinks">
         <ul>
           <li>
-            <a href="https://github.com/keaton-robinson/react-xwing-squad-builder">
-              GitHub Repository
-            </a>
+            <a href="https://github.com/keaton-robinson/react-xwing-squad-builder">GitHub Repository</a>
           </li>
           {userContext.user ? (
             <li id="logoutBtn" onClick={userContext.logout}>
               <a style={{ cursor: "pointer" }}>
-                <i
-                  className="fa fa-sign-in-alt"
-                  style={{ marginRight: "5px" }}
-                ></i>
+                <i className="fa fa-sign-in-alt" style={{ marginRight: "5px" }}></i>
                 Log Out
               </a>
             </li>
           ) : (
             <li id="loginBtn" onClick={showLogin}>
               <a style={{ cursor: "pointer" }}>
-                <i
-                  className="fa fa-sign-in-alt"
-                  style={{ marginRight: "5px" }}
-                ></i>
+                <i className="fa fa-sign-in-alt" style={{ marginRight: "5px" }}></i>
                 Log In
               </a>
             </li>

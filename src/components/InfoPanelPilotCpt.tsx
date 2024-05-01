@@ -5,12 +5,7 @@ import StatBlockCpt from "./StatBlockCpt";
 import UpgradesCpt from "./UpgradesCpt";
 import { pilotRules, ships, upgrades } from "../data/xwing_data";
 import { Pilot, SelectedPilotThatAllowsMutations } from "../data/xwing_types";
-import {
-  fixIcons,
-  getAppReadyPilot,
-  getPilotEffectiveStats,
-  getShipBaseSize,
-} from "../data/xwing_utils";
+import { fixIcons, getAppReadyPilot, getPilotEffectiveStats, getShipBaseSize } from "../data/xwing_utils";
 
 interface InfoPanelPilotCptProps {
   isSelectedPilot: boolean;
@@ -55,10 +50,7 @@ const InfoPanelPilotCpt: React.FC<InfoPanelPilotCptProps> = (props) => {
         <span className="info-initiative">{pilotEffectiveStats.skill}</span>
       </div>
       <div>
-        <StatBlockCpt
-          pilot={pilotBaseStats}
-          pilotAfterUpgrades={pilotEffectiveStats}
-        />
+        <StatBlockCpt pilot={pilotBaseStats} pilotAfterUpgrades={pilotEffectiveStats} />
       </div>
       <div>
         <strong>Actions: </strong>

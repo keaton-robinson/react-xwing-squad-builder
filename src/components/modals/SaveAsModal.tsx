@@ -20,13 +20,7 @@ const SaveAsModal: React.FC<SaveAsModalProps> = (props) => {
     <div>
       <div>Save your squad?</div>
       <span>
-        Squad Name:{" "}
-        <input
-          type="text"
-          value={state.squadName}
-          onChange={squadNameChanged}
-          maxLength={30}
-        />
+        Squad Name: <input type="text" value={state.squadName} onChange={squadNameChanged} maxLength={30} />
       </span>
       <hr />
       <div style={{ textAlign: "right" }}>

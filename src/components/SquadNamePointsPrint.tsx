@@ -72,24 +72,15 @@ const SquadNamePointsPrint: React.FC<SquadNamePointsPrintProps> = (props) => {
         ) : (
           <h2 style={{ display: "inline" }}>{props.squadName}</h2>
         )}
-        <i
-          className="far fa-edit"
-          style={{ marginLeft: "5px", fontSize: "1.2rem" }}
-          onClick={editSquadClicked}
-        ></i>
+        <i className="far fa-edit" style={{ marginLeft: "5px", fontSize: "1.2rem" }} onClick={editSquadClicked}></i>
       </div>
       <div className="points-display-container">
         <span>
-          Points: {getSquadCost(props.squad, upgrades)}/200 (
-          {200 - getSquadCost(props.squad, upgrades)} left)
+          Points: {getSquadCost(props.squad, upgrades)}/200 ({200 - getSquadCost(props.squad, upgrades)} left)
         </span>
       </div>
       <div className="printBtn">
-        <button
-          className="btn-info"
-          style={{ margin: "5px" }}
-          onClick={showPrintModal}
-        >
+        <button className="btn-info" style={{ margin: "5px" }} onClick={showPrintModal}>
           Print
         </button>
       </div>

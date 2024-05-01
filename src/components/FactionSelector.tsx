@@ -16,25 +16,14 @@ const factionsOrdered: Faction[] = [
 ];
 
 const FactionSelector: React.FC = () => {
-  const [selectedFaction, setSelectedFaction] = useState<
-    keyof typeof factionNames
-  >(factionNames["Rebel Alliance"]);
+  const [selectedFaction, setSelectedFaction] = useState<keyof typeof factionNames>(factionNames["Rebel Alliance"]);
   const setModal = useModalSetter();
   return (
     <>
-      <HeaderComponent
-        factions={factionsOrdered}
-        selectedFaction={selectedFaction}
-        onClick={setSelectedFaction}
-      />
+      <HeaderComponent factions={factionsOrdered} selectedFaction={selectedFaction} onClick={setSelectedFaction} />
       <main>
         {factionsOrdered.map((faction) => (
-          <SquadBuilderCpt
-            key={faction}
-            selectedFaction={selectedFaction}
-            faction={faction}
-            setModal={setModal}
-          />
+          <SquadBuilderCpt key={faction} selectedFaction={selectedFaction} faction={faction} setModal={setModal} />
         ))}
       </main>
     </>

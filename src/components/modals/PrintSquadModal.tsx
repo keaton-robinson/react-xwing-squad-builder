@@ -12,9 +12,7 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
     let cost = selectedPilot.points;
     for (const selectedUpgrade of selectedPilot.selectedUpgrades) {
       if (selectedUpgrade.selectedUpgradeId) {
-        let upgradeRecord = upgrades.find(
-          (upgr) => upgr.id === selectedUpgrade.selectedUpgradeId,
-        );
+        let upgradeRecord = upgrades.find((upgr) => upgr.id === selectedUpgrade.selectedUpgradeId);
         cost += getUpgradeCost(upgradeRecord, selectedPilot);
       }
     }
@@ -25,15 +23,11 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
     if (!selectedUpgrade.selectedUpgradeId) {
       return null;
     }
-    let upgradeRecord = upgrades.find(
-      (upgr) => upgr.id === selectedUpgrade.selectedUpgradeId,
-    );
+    let upgradeRecord = upgrades.find((upgr) => upgr.id === selectedUpgrade.selectedUpgradeId);
     return (
       <tr key={selectedUpgrade.key}>
         <td style={{ paddingLeft: "1.5rem" }}>{upgradeRecord.name}</td>
-        <td style={{ textAlign: "right" }}>
-          {getUpgradeCost(upgradeRecord, selectedPilot)}
-        </td>
+        <td style={{ textAlign: "right" }}>{getUpgradeCost(upgradeRecord, selectedPilot)}</td>
       </tr>
     );
   };
@@ -45,10 +39,7 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
   return (
     <div>
       {squad.map((selectedPilot) => (
-        <table
-          key={selectedPilot.uiKey}
-          style={{ marginBottom: "30px", minWidth: "500px" }}
-        >
+        <table key={selectedPilot.uiKey} style={{ marginBottom: "30px", minWidth: "500px" }}>
           <tbody>
             <tr>
               <td>
@@ -56,9 +47,7 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
               </td>
               <td style={{ textAlign: "right" }}>{selectedPilot.points}</td>
             </tr>
-            {selectedPilot.selectedUpgrades.map((upgrade) =>
-              renderUpgrade(upgrade, selectedPilot),
-            )}
+            {selectedPilot.selectedUpgrades.map((upgrade) => renderUpgrade(upgrade, selectedPilot))}
             <tr></tr>
             <tr>
               <td>

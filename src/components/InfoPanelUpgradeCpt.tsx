@@ -18,17 +18,11 @@ const InfoPanelUpgradeCpt: React.FC<InfoPanelUpgradeCptProps> = (props) => {
       if (upgrade.faction) {
         let allowedFaction;
         if (Array.isArray(upgrade.faction)) {
-          let orUniqueRestriction = upgrade.restrictions?.find(
-            (restr) => restr[0] === "orUnique",
-          );
+          let orUniqueRestriction = upgrade.restrictions?.find((restr) => restr[0] === "orUnique");
           if (orUniqueRestriction) {
             //or unique only allows one faction or with a unique character (character part handled later)
-            allowedFaction = upgrade.restrictions.find(
-              (restr) => restr[0] === "Faction",
-            )[1];
-            textRestrictions.push(
-              `${allowedFaction} or squad containing ${orUniqueRestriction[1]}`,
-            );
+            allowedFaction = upgrade.restrictions.find((restr) => restr[0] === "Faction")[1];
+            textRestrictions.push(`${allowedFaction} or squad containing ${orUniqueRestriction[1]}`);
           } else {
             for (let faction of upgrade.faction) {
               textRestrictions.push(faction);
@@ -85,9 +79,7 @@ const InfoPanelUpgradeCpt: React.FC<InfoPanelUpgradeCptProps> = (props) => {
               textRestrictions.push(`Shields greater than ${restrictionValue}`);
               break;
             case "InitiativeGreaterThan":
-              textRestrictions.push(
-                `Initiative greater than ${restrictionValue}`,
-              );
+              textRestrictions.push(`Initiative greater than ${restrictionValue}`);
               break;
             case "InitiativeLessThan":
               textRestrictions.push(`Initiative less than ${restrictionValue}`);
@@ -111,16 +103,10 @@ const InfoPanelUpgradeCpt: React.FC<InfoPanelUpgradeCptProps> = (props) => {
           <strong>Restrictions: </strong>
           {textRestrictions.map((restriction, index) => (
             <span key={`${upgrade.id}_${index}`}>
-              {restriction +
-                (index < textRestrictions.length - 1 ||
-                actionRestrictions.length > 0
-                  ? ", "
-                  : "")}
+              {restriction + (index < textRestrictions.length - 1 || actionRestrictions.length > 0 ? ", " : "")}
             </span>
           ))}
-          {actionRestrictions.length > 0 ? (
-            <ActionsCpt actions={actionRestrictions} />
-          ) : null}
+          {actionRestrictions.length > 0 ? <ActionsCpt actions={actionRestrictions} /> : null}
         </i>
       );
     }
@@ -203,17 +189,14 @@ const InfoPanelUpgradeCpt: React.FC<InfoPanelUpgradeCptProps> = (props) => {
     }
     if (upgrade.confersAddons) {
       for (const addonname of upgrade.confersAddons) {
-        addText +=
-          comma +
-          `%${addonname.slot.toUpperCase().replace(/[^a-z0-9]/gi, "")}%`;
+        addText += comma + `%${addonname.slot.toUpperCase().replace(/[^a-z0-9]/gi, "")}%`;
         comma = ", ";
       }
     }
     if (upgrade.unequips_upgrades) {
       comma = "";
       for (const slot of upgrade.unequips_upgrades) {
-        removestext +=
-          comma + `%${slot.toUpperCase().replace(/[^a-z0-9]/gi, "")}%`;
+        removestext += comma + `%${slot.toUpperCase().replace(/[^a-z0-9]/gi, "")}%`;
         comma = ", ";
       }
     }

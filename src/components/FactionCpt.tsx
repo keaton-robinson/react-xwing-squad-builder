@@ -31,18 +31,12 @@ const FactionCpt: React.FC<{
   return (
     <li
       title={props.faction}
-      style={
-        props.faction === props.selectedFaction
-          ? { color: "white", backgroundColor: "#337ab7" }
-          : {}
-      }
+      style={props.faction === props.selectedFaction ? { color: "white", backgroundColor: "#337ab7" } : {}}
       onClick={() => {
         props.onClick(props.faction);
       }}
     >
-      <i
-        className={"xwing-miniatures-font " + getFontClassName(props.faction)}
-      ></i>
+      <i className={"xwing-miniatures-font " + getFontClassName(props.faction)}></i>
     </li>
   );
 };

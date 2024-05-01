@@ -15,10 +15,7 @@ export function isNotNullOrUndefined(value) {
   return value !== null && value !== undefined;
 }
 
-export function createError(
-  message: string,
-  extraProps: Record<string, any>,
-): Error {
+export function createError(message: string, extraProps: Record<string, any>): Error {
   const error = new Error(message);
   Object.assign(error, extraProps);
   return error;
@@ -36,10 +33,7 @@ export const getShipBaseSize = (ship: Ship): ShipBaseSize => {
   }
 };
 
-export function getUpgradeCost(
-  upgrade: Upgrade,
-  pilot: SelectedPilotThatAllowsMutations,
-): number {
+export function getUpgradeCost(upgrade: Upgrade, pilot: SelectedPilotThatAllowsMutations): number {
   if (isNotNullOrUndefined(upgrade.points)) {
     return upgrade.points;
   } else if (upgrade.pointsarray) {
@@ -59,26 +53,19 @@ export function getUpgradeCost(
     }
   }
 
-  throw createError(
-    "Error calculating points on upgrade. Couldn't find point value.",
-    {
-      upgradeVal: upgrade,
-      pilotVal: pilot,
-    },
-  );
+  throw createError("Error calculating points on upgrade. Couldn't find point value.", {
+    upgradeVal: upgrade,
+    pilotVal: pilot,
+  });
 }
 
-export function getPilotCost(
-  pilot: SelectedPilotThatAllowsMutations,
-  upgradesData: Upgrade[],
-): number {
+export function getPilotCost(pilot: SelectedPilotThatAllowsMutations, upgradesData: Upgrade[]): number {
   return (
     pilot.points +
     pilot.selectedUpgrades.reduce((prevPointsSum, selectedUpgrade) => {
       if (isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)) {
         const upgrade = upgradesData.find(
-          (upgradeFromData) =>
-            upgradeFromData.id === selectedUpgrade.selectedUpgradeId,
+          (upgradeFromData) => upgradeFromData.id === selectedUpgrade.selectedUpgradeId,
         );
         if (!upgrade) {
           throw new Error("Invalid upgrade id specified");
@@ -90,10 +77,7 @@ export function getPilotCost(
   );
 }
 
-export function getSquadCost(
-  squad: SelectedPilotThatAllowsMutations[],
-  upgradesData: Upgrade[],
-): number {
+export function getSquadCost(squad: SelectedPilotThatAllowsMutations[], upgradesData: Upgrade[]): number {
   return squad.reduce((prevPointsSum, pilot) => {
     return prevPointsSum + getPilotCost(pilot, upgradesData);
   }, 0);
@@ -114,16 +98,11 @@ export function getPilotEffectiveStats(
   for (const selectedUpgrade of pilotCopy.selectedUpgrades) {
     //gotta get the upgrade data
     if (isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)) {
-      const upgradeData = upgradesData.find(
-        (upgrade) => upgrade.id === selectedUpgrade.selectedUpgradeId,
-      );
+      const upgradeData = upgradesData.find((upgrade) => upgrade.id === selectedUpgrade.selectedUpgradeId);
       if (!upgradeData) {
-        throw createError(
-          `Failed to find upgrade record for upgrade record id: ${selectedUpgrade.selectedUpgradeId}`,
-          {
-            selectedUpgradeVal: selectedUpgrade,
-          },
-        );
+        throw createError(`Failed to find upgrade record for upgrade record id: ${selectedUpgrade.selectedUpgradeId}`, {
+          selectedUpgradeVal: selectedUpgrade,
+        });
       } else {
         if (upgradeData.modifier_func) {
           upgradeData.modifier_func(pilotCopy.pilotShip);
@@ -135,11 +114,7 @@ export function getPilotEffectiveStats(
 }
 
 //returns true if unique or max_per_squad pilot has already been selected max_times in the squad already
-export function maxPilotOrUpgradeReached(
-  cardToCheck: Pilot | Upgrade,
-  squad,
-  upgradesData,
-): boolean {
+export function maxPilotOrUpgradeReached(cardToCheck: Pilot | Upgrade, squad, upgradesData): boolean {
   if (cardToCheck.max_per_squad) {
     if ("slot" in cardToCheck) {
       //we're looking at an upgrade card
@@ -167,9 +142,7 @@ export function maxPilotOrUpgradeReached(
       }
     } else {
       //we're looking at a pilot card
-      let numberOfPilotInSquad: number = squad.filter(
-        (squadPilot) => squadPilot.id === cardToCheck.id,
-      ).length;
+      let numberOfPilotInSquad: number = squad.filter((squadPilot) => squadPilot.id === cardToCheck.id).length;
       if (numberOfPilotInSquad === cardToCheck.max_per_squad) {
         return true;
       } else if (numberOfPilotInSquad > cardToCheck.max_per_squad) {
@@ -188,13 +161,7 @@ export function maxPilotOrUpgradeReached(
 
   if (cardToCheck.unique) {
     if (
-      isUniqueInSquad(
-        cardToCheck.canonical_name
-          ? cardToCheck.canonical_name
-          : cardToCheck.name,
-        squad,
-        upgradesData,
-      )
+      isUniqueInSquad(cardToCheck.canonical_name ? cardToCheck.canonical_name : cardToCheck.name, squad, upgradesData)
     ) {
       return true;
     }
@@ -221,8 +188,7 @@ function isUniqueInSquad(
           //gotta go get the upgrade...
           if (isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)) {
             const upgradeData = upgradesData.find(
-              (upgradeRecord) =>
-                upgradeRecord.id === selectedUpgrade.selectedUpgradeId,
+              (upgradeRecord) => upgradeRecord.id === selectedUpgrade.selectedUpgradeId,
             );
             if (upgradeData.name.includes(uniqueCanonName)) {
               uniqueFound = true;
@@ -247,15 +213,12 @@ export function isUpgradeAllowed(
   upgradesData: Upgrade[],
 ): boolean {
   if (!selectedUpgradeSlot || !upgrade || !pilot || !squad) {
-    createError(
-      "selectedUpgradeSlot, upgrade, pilot, and squad arguments are required for isUpgradeAllowed function",
-      {
-        selectedUpgradeSlotVal: selectedUpgradeSlot,
-        upgradeVal: upgrade,
-        pilotVal: pilot,
-        squadVal: squad,
-      },
-    );
+    createError("selectedUpgradeSlot, upgrade, pilot, and squad arguments are required for isUpgradeAllowed function", {
+      selectedUpgradeSlotVal: selectedUpgradeSlot,
+      upgradeVal: upgrade,
+      pilotVal: pilot,
+      squadVal: squad,
+    });
   }
 
   const effectivePilot = getPilotEffectiveStats(pilot, upgradesData);
@@ -277,10 +240,7 @@ export function isUpgradeAllowed(
     }
   }
   if (upgrade.ship) {
-    if (
-      typeof upgrade.ship == "string" &&
-      upgrade.ship !== effectivePilot.ship
-    ) {
+    if (typeof upgrade.ship == "string" && upgrade.ship !== effectivePilot.ship) {
       return false;
     } else if (!upgrade.ship.includes(effectivePilot.ship)) {
       return false;
@@ -330,12 +290,7 @@ export function isUpgradeAllowedByRestrictions(
 
     switch (restriction[0]) {
       case "Base":
-        if (
-          restriction[1] === "Small" &&
-          (pilot.pilotShip.medium ||
-            pilot.pilotShip.large ||
-            pilot.pilotShip.huge)
-        ) {
+        if (restriction[1] === "Small" && (pilot.pilotShip.medium || pilot.pilotShip.large || pilot.pilotShip.huge)) {
           return false;
         }
         if (restriction[1] === "Large" && !pilot.pilotShip.large) {
@@ -344,16 +299,10 @@ export function isUpgradeAllowedByRestrictions(
         if (restriction[1] === "Huge" && !pilot.pilotShip.huge) {
           return false;
         }
-        if (
-          restriction[1] === "Small or Medium" &&
-          (pilot.pilotShip.large || pilot.pilotShip.huge)
-        ) {
+        if (restriction[1] === "Small or Medium" && (pilot.pilotShip.large || pilot.pilotShip.huge)) {
           return false;
         }
-        if (
-          restriction[1] === "Medium or Large" &&
-          !(pilot.pilotShip.medium || pilot.pilotShip.large)
-        ) {
+        if (restriction[1] === "Medium or Large" && !(pilot.pilotShip.medium || pilot.pilotShip.large)) {
           return false;
         }
         if (restriction[1] === "Standard" && pilot.pilotShip.huge) {
@@ -398,10 +347,7 @@ export function isUpgradeAllowedByRestrictions(
           //that has its "parent" set to this selectedUpgrade's key ...ahh fukc that could mess up if something starts adding / removing a slot a bunch
           //which will make the order that I apply UI keys important probably..they aren't very "UI" specific anymore
           if (
-            !pilot.selectedUpgrades.find(
-              (selUpgrade) =>
-                selUpgrade.parentUpgradeSlotKey === selectedUpgradeSlot.key,
-            )
+            !pilot.selectedUpgrades.find((selUpgrade) => selUpgrade.parentUpgradeSlotKey === selectedUpgradeSlot.key)
           ) {
             return false;
           }
@@ -413,29 +359,19 @@ export function isUpgradeAllowedByRestrictions(
 
         //the "Or" part is handled here...
         if (restrictions.length < 1) {
-          throw createError(
-            "OrUnique requirement couldn't find the second restriction to check",
-            {
-              restrictionsVal: restrictions,
-              upgradeVal: upgrade,
-              pilotVal: pilot,
-              squadVal: squad,
-            },
-          );
+          throw createError("OrUnique requirement couldn't find the second restriction to check", {
+            restrictionsVal: restrictions,
+            upgradeVal: upgrade,
+            pilotVal: pilot,
+            squadVal: squad,
+          });
         }
         const nextRestriction = restrictions.shift();
         //evaluate next restriction by itself by putting it in its own array
         if (
           !(
             uniqueFound ||
-            isUpgradeAllowedByRestrictions(
-              selectedUpgradeSlot,
-              [nextRestriction],
-              upgrade,
-              pilot,
-              squad,
-              upgradesData,
-            )
+            isUpgradeAllowedByRestrictions(selectedUpgradeSlot, [nextRestriction], upgrade, pilot, squad, upgradesData)
           )
         ) {
           return false;
@@ -485,31 +421,22 @@ export function isUpgradeAllowedByRestrictions(
         break;
       }
       case "isUnique":
-        if (
-          (restriction[1] && !pilot.unique) ||
-          (!restriction[1] && pilot.unique)
-        ) {
+        if ((restriction[1] && !pilot.unique) || (!restriction[1] && pilot.unique)) {
           return false;
         }
         break;
       case "Equipped": {
-        const selectedUpgradeForSlot = pilot.selectedUpgrades.find(
-          (selUpgrade) => selUpgrade.slot === restriction[1],
-        );
+        const selectedUpgradeForSlot = pilot.selectedUpgrades.find((selUpgrade) => selUpgrade.slot === restriction[1]);
         if (
           !selectedUpgradeForSlot ||
-          (selectedUpgradeForSlot.selectedUpgradeId !== 0 &&
-            !selectedUpgradeForSlot.selectedUpgradeId)
+          (selectedUpgradeForSlot.selectedUpgradeId !== 0 && !selectedUpgradeForSlot.selectedUpgradeId)
         ) {
           return false;
         }
         break;
       }
       case "ShieldsGreaterThan":
-        if (
-          !pilot.pilotShip.shields ||
-          !(pilot.pilotShip.shields > restriction[1])
-        ) {
+        if (!pilot.pilotShip.shields || !(pilot.pilotShip.shields > restriction[1])) {
           return false;
         }
         break;
@@ -535,14 +462,7 @@ export function isUpgradeAllowedByRestrictions(
         break;
     }
 
-    return isUpgradeAllowedByRestrictions(
-      selectedUpgradeSlot,
-      restrictions,
-      upgrade,
-      pilot,
-      squad,
-      upgradesData,
-    );
+    return isUpgradeAllowedByRestrictions(selectedUpgradeSlot, restrictions, upgrade, pilot, squad, upgradesData);
   }
   return true;
 }
@@ -555,14 +475,11 @@ export function addUpgrades(
   upgradesData: Upgrade[],
 ): void {
   if (!newPilot || !upgradesToAdd || !squad) {
-    throw createError(
-      "newPilot, upgradesToAdd, and squad must be provided to addUpgrades function",
-      {
-        newPilotVal: newPilot,
-        upgradesToAddVal: upgradesToAdd,
-        squadVal: squad,
-      },
-    );
+    throw createError("newPilot, upgradesToAdd, and squad must be provided to addUpgrades function", {
+      newPilotVal: newPilot,
+      upgradesToAddVal: upgradesToAdd,
+      squadVal: squad,
+    });
   }
 
   upgradesToAdd.forEach((upgradeToAdd) => {
@@ -570,14 +487,9 @@ export function addUpgrades(
       const newPilotUpgradeSlot = newPilot.selectedUpgrades.find(
         (newPilotUpgrade) => newPilotUpgrade.key === upgradeToAdd.key,
       );
-      const upgradeData = upgradesData.find(
-        (upgrade) => upgrade.id === upgradeToAdd.selectedUpgradeId,
-      );
+      const upgradeData = upgradesData.find((upgrade) => upgrade.id === upgradeToAdd.selectedUpgradeId);
 
-      if (
-        newPilotUpgradeSlot &&
-        !maxPilotOrUpgradeReached(upgradeData, squad, upgradesData)
-      ) {
+      if (newPilotUpgradeSlot && !maxPilotOrUpgradeReached(upgradeData, squad, upgradesData)) {
         setUpgrade(newPilotUpgradeSlot, upgradeData, newPilot, upgradesData);
       }
     }
@@ -638,9 +550,7 @@ export function getAppReadyPilot(
   });
 
   //sets UI keys for upgrades...doesn't actually 'select' any upgrades
-  pilotCopy.selectedUpgrades = getSelectedUpgradesWithKeys(
-    pilotCopy.selectedUpgrades,
-  );
+  pilotCopy.selectedUpgrades = getSelectedUpgradesWithKeys(pilotCopy.selectedUpgrades);
 
   return pilotCopy;
 }
@@ -661,8 +571,7 @@ function getSelectedUpgradesWithKeys(
     }
 
     // Set the key on the new object
-    newSelectedUpgrade.key =
-      newSelectedUpgrade.slot + slotNameUsedTracker[newSelectedUpgrade.slot];
+    newSelectedUpgrade.key = newSelectedUpgrade.slot + slotNameUsedTracker[newSelectedUpgrade.slot];
 
     return newSelectedUpgrade;
   });
@@ -679,21 +588,16 @@ export function getCheapestAvailablePilotForShip(
   pilotsData: Pilot[],
 ): Pilot {
   if (!ship || !faction || !squad) {
-    throw createError(
-      "You must provide ship, faction, and squad to the getCheapestAvailablePilotForShip function.",
-      {
-        shipValue: ship,
-        factionValue: faction,
-        squadValue: squad,
-      },
-    );
+    throw createError("You must provide ship, faction, and squad to the getCheapestAvailablePilotForShip function.", {
+      shipValue: ship,
+      factionValue: faction,
+      squadValue: squad,
+    });
   }
 
   const availablePilotsForShip = pilotsData.filter(
     (pilot) =>
-      pilot.ship === ship &&
-      pilot.faction === faction &&
-      !maxPilotOrUpgradeReached(pilot, squad, upgradesData),
+      pilot.ship === ship && pilot.faction === faction && !maxPilotOrUpgradeReached(pilot, squad, upgradesData),
   );
 
   if (!availablePilotsForShip.length) {
@@ -701,8 +605,7 @@ export function getCheapestAvailablePilotForShip(
   }
   const cheapnessComparator = (prevPilot, currentPilot) =>
     currentPilot.points < prevPilot.points ? currentPilot : prevPilot;
-  const cheapestPilotForShip =
-    availablePilotsForShip.reduce(cheapnessComparator);
+  const cheapestPilotForShip = availablePilotsForShip.reduce(cheapnessComparator);
   return cheapestPilotForShip;
 }
 
@@ -718,18 +621,8 @@ export function removeInvalidUpgrades(
     for (const pilot of squad) {
       for (const selectedUpgrade of pilot.selectedUpgrades) {
         if (isNotNullOrUndefined(selectedUpgrade.selectedUpgradeId)) {
-          const upgradeRecord = upgradesData.find(
-            (upgrade) => upgrade.id === selectedUpgrade.selectedUpgradeId,
-          );
-          if (
-            !isUpgradeAllowed(
-              selectedUpgrade,
-              upgradeRecord,
-              pilot,
-              squad,
-              upgradesData,
-            )
-          ) {
+          const upgradeRecord = upgradesData.find((upgrade) => upgrade.id === selectedUpgrade.selectedUpgradeId);
+          if (!isUpgradeAllowed(selectedUpgrade, upgradeRecord, pilot, squad, upgradesData)) {
             needToSearchForInvalidUpgrades = true;
             removeUpgrade(selectedUpgrade, pilot, upgradesData);
           }
@@ -747,9 +640,7 @@ function removeUpgrade(
   upgradesData: Upgrade[],
 ) {
   if (isNotNullOrUndefined(selectedUpgradeSlot.selectedUpgradeId)) {
-    const upgradeRecord = upgradesData.find(
-      (upgrade) => upgrade.id === selectedUpgradeSlot.selectedUpgradeId,
-    );
+    const upgradeRecord = upgradesData.find((upgrade) => upgrade.id === selectedUpgradeSlot.selectedUpgradeId);
     selectedUpgradeSlot.selectedUpgradeId = null;
 
     if (upgradeRecord.confersAddons) {
@@ -781,34 +672,21 @@ export function upgradeSquadShip(
   squad: SelectedPilotThatAllowsMutations[],
   upgradesData: Upgrade[],
 ): void {
-  const prevUpgradeRecord = upgradesData.find(
-    (upgrade) => upgrade.id === upgradeSlot.selectedUpgradeId,
-  );
+  const prevUpgradeRecord = upgradesData.find((upgrade) => upgrade.id === upgradeSlot.selectedUpgradeId);
   const shipType = pilot.pilotShip.name;
-  const shipsOfSameType = squad.filter(
-    (squadPilot) => squadPilot.pilotShip.name === shipType,
-  );
+  const shipsOfSameType = squad.filter((squadPilot) => squadPilot.pilotShip.name === shipType);
 
   if (prevUpgradeRecord && prevUpgradeRecord.standardized) {
     for (const squadPilot of shipsOfSameType) {
-      const squadPilotUpgradeSlot = squadPilot.selectedUpgrades.find(
-        (slot) => slot.key === upgradeSlot.key,
-      );
+      const squadPilotUpgradeSlot = squadPilot.selectedUpgrades.find((slot) => slot.key === upgradeSlot.key);
       removeUpgrade(squadPilotUpgradeSlot, squadPilot, upgradesData);
     }
   }
 
   if (newlySelectedUpgrade && newlySelectedUpgrade.standardized) {
     for (const squadPilot of shipsOfSameType) {
-      const squadPilotUpgradeSlot = squadPilot.selectedUpgrades.find(
-        (slot) => slot.key === upgradeSlot.key,
-      );
-      setUpgrade(
-        squadPilotUpgradeSlot,
-        newlySelectedUpgrade,
-        squadPilot,
-        upgradesData,
-      );
+      const squadPilotUpgradeSlot = squadPilot.selectedUpgrades.find((slot) => slot.key === upgradeSlot.key);
+      setUpgrade(squadPilotUpgradeSlot, newlySelectedUpgrade, squadPilot, upgradesData);
     }
   } else {
     setUpgrade(upgradeSlot, newlySelectedUpgrade, pilot, upgradesData);
@@ -832,19 +710,13 @@ function setUpgrade(
     });
   }
 
-  if (
-    newlySelectedUpgrade &&
-    upgradeSlot.selectedUpgradeId === newlySelectedUpgrade.id
-  ) {
+  if (newlySelectedUpgrade && upgradeSlot.selectedUpgradeId === newlySelectedUpgrade.id) {
     const error = new Error();
-    throw createError(
-      "changeUpgrade doesn't allow 'changing' to the same upgrade id",
-      {
-        upgradeSlotVal: upgradeSlot,
-        newlySelectedUpgradeVal: newlySelectedUpgrade,
-        error: error,
-      },
-    );
+    throw createError("changeUpgrade doesn't allow 'changing' to the same upgrade id", {
+      upgradeSlotVal: upgradeSlot,
+      newlySelectedUpgradeVal: newlySelectedUpgrade,
+      error: error,
+    });
   }
 
   if (upgradeSlot.parentUpgradeSlotKey) {
@@ -881,21 +753,16 @@ function setUpgrade(
       //also occupies first available slot
       for (const slot of newlySelectedUpgrade.also_occupies_upgrades) {
         const slotToOccupy = pilot.selectedUpgrades.find(
-          (selUpgrade) =>
-            selUpgrade.slot === slot &&
-            !isNotNullOrUndefined(selUpgrade.selectedUpgradeId),
+          (selUpgrade) => selUpgrade.slot === slot && !isNotNullOrUndefined(selUpgrade.selectedUpgradeId),
         );
         if (!slotToOccupy) {
           const error = new Error();
-          throw createError(
-            `changeUpgrade function failed to find required slot to occupy:  ${slot}`,
-            {
-              upgradeSlotVal: upgradeSlot,
-              newlySelectedUpgradeVal: newlySelectedUpgrade,
-              pilotVal: pilot,
-              error: error,
-            },
-          );
+          throw createError(`changeUpgrade function failed to find required slot to occupy:  ${slot}`, {
+            upgradeSlotVal: upgradeSlot,
+            newlySelectedUpgradeVal: newlySelectedUpgrade,
+            pilotVal: pilot,
+            error: error,
+          });
         }
         slotToOccupy.parentUpgradeSlotKey = upgradeSlot.key;
       }
@@ -910,9 +777,7 @@ function setUpgrade(
           selectedUpgradeId: null,
         });
       }
-      pilot.selectedUpgrades = getSelectedUpgradesWithKeys(
-        pilot.selectedUpgrades,
-      );
+      pilot.selectedUpgrades = getSelectedUpgradesWithKeys(pilot.selectedUpgrades);
     }
   }
 }
@@ -930,9 +795,7 @@ export function squadContainsAnotherSolitaryCardForThisSlot(
         squadPilotUpgrade.slot === upgradeSlot.slot &&
         isNotNullOrUndefined(squadPilotUpgrade.selectedUpgradeId)
       ) {
-        const upgradeRecord = upgradesData.find(
-          (upgrade) => upgrade.id === squadPilotUpgrade.selectedUpgradeId,
-        );
+        const upgradeRecord = upgradesData.find((upgrade) => upgrade.id === squadPilotUpgrade.selectedUpgradeId);
         if (upgradeRecord.solitary) {
           return true;
         }
@@ -945,8 +808,7 @@ export function squadContainsAnotherSolitaryCardForThisSlot(
 // TODO: get rid of this
 function makeidThatShouldGoAway(length: number): string {
   var result = "";
-  var characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   var charactersLength = characters.length;
   for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -956,8 +818,7 @@ function makeidThatShouldGoAway(length: number): string {
 
 function makeUniqueKey(length: number): UniqueKey {
   let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
   for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -968,311 +829,83 @@ function makeUniqueKey(length: number): UniqueKey {
 export const fixIcons = (text) => {
   if (text != null) {
     return text
-      .replace(
-        /%BULLSEYEARC%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-bullseyearc"></i>',
-      )
-      .replace(
-        /%SINGLETURRETARC%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-singleturretarc"></i>',
-      )
-      .replace(
-        /%DOUBLETURRETARC%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-doubleturretarc"></i>',
-      )
-      .replace(
-        /%FRONTARC%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-frontarc"></i>',
-      )
-      .replace(
-        /%REARARC%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-reararc"></i>',
-      )
-      .replace(
-        /%LEFTARC%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-leftarc"></i>',
-      )
-      .replace(
-        /%RIGHTARC%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-rightarc"></i>',
-      )
-      .replace(
-        /%ROTATEARC%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-rotatearc"></i>',
-      )
-      .replace(
-        /%FULLFRONTARC%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-fullfrontarc"></i>',
-      )
-      .replace(
-        /%FULLREARARC%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-fullreararc"></i>',
-      )
-      .replace(
-        /%DEVICE%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-device"></i>',
-      )
-      .replace(
-        /%MODIFICATION%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-modification"></i>',
-      )
-      .replace(
-        /%RELOAD%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-reload"></i>',
-      )
-      .replace(
-        /%FORCE%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-forcecharge"></i>',
-      )
-      .replace(
-        /%CHARGE%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-charge"></i>',
-      )
-      .replace(
-        /%ENERGY%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-energy"></i>',
-      )
-      .replace(
-        /%CALCULATE%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-calculate"></i>',
-      )
-      .replace(
-        /%BANKLEFT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-bankleft"></i>',
-      )
-      .replace(
-        /%BANKRIGHT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-bankright"></i>',
-      )
-      .replace(
-        /%BARRELROLL%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-barrelroll"></i>',
-      )
-      .replace(
-        /%BOOST%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-boost"></i>',
-      )
-      .replace(
-        /%CANNON%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-cannon"></i>',
-      )
-      .replace(
-        /%CARGO%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-cargo"></i>',
-      )
-      .replace(
-        /%CLOAK%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-cloak"></i>',
-      )
-      .replace(
-        /%F-COORDINATE%/g,
-        '<i class="xwing-miniatures-font force xwing-miniatures-font-coordinate"></i>',
-      )
-      .replace(
-        /%COORDINATE%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-coordinate"></i>',
-      )
-      .replace(
-        /%CRIT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-crit"></i>',
-      )
-      .replace(
-        /%ASTROMECH%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-astromech"></i>',
-      )
-      .replace(
-        /%GUNNER%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-gunner"></i>',
-      )
-      .replace(
-        /%CREW%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-crew"></i>',
-      )
-      .replace(
-        /%DUALCARD%/g,
-        '<span class="card-restriction">Dual card.</span>',
-      )
-      .replace(
-        /%ELITE%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-elite"></i>',
-      )
-      .replace(
-        /%TACTICALRELAY%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-tacticalrelay"></i>',
-      )
-      .replace(
-        /%SALVAGEDASTROMECH%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-salvagedastromech"></i>',
-      )
-      .replace(
-        /%HARDPOINT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-hardpoint"></i>',
-      )
-      .replace(
-        /%EVADE%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-evade"></i>',
-      )
-      .replace(
-        /%FOCUS%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-focus"></i>',
-      )
-      .replace(
-        /%HIT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-hit"></i>',
-      )
-      .replace(
-        /%ILLICIT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-illicit"></i>',
-      )
-      .replace(
-        /%JAM%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-jam"></i>',
-      )
-      .replace(
-        /%KTURN%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-kturn"></i>',
-      )
-      .replace(
-        /%MISSILE%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-missile"></i>',
-      )
-      .replace(
-        /%RECOVER%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-recover"></i>',
-      )
-      .replace(
-        /%F-REINFORCE%/g,
-        '<i class="xwing-miniatures-font force xwing-miniatures-font-reinforce"></i>',
-      )
-      .replace(
-        /%REINFORCE%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-reinforce"></i>',
-      )
-      .replace(
-        /%REVERSESTRAIGHT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-reversestraight"></i>',
-      )
-      .replace(
-        /%REVERSEBANKLEFT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-reversebankleft"></i>',
-      )
-      .replace(
-        /%REVERSEBANKRIGHT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-reversebankright"></i>',
-      )
-      .replace(
-        /%SHIELD%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-shield"></i>',
-      )
-      .replace(
-        /%SLAM%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-slam"></i>',
-      )
-      .replace(
-        /%SLOOPLEFT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-sloopleft"></i>',
-      )
-      .replace(
-        /%SLOOPRIGHT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-sloopright"></i>',
-      )
-      .replace(
-        /%STRAIGHT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-straight"></i>',
-      )
-      .replace(
-        /%STOP%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-stop"></i>',
-      )
-      .replace(
-        /%SENSOR%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-sensor"></i>',
-      )
-      .replace(
-        /%LOCK%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-lock"></i>',
-      )
-      .replace(
-        /%TORPEDO%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-torpedo"></i>',
-      )
-      .replace(
-        /%TROLLLEFT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-trollleft"></i>',
-      )
-      .replace(
-        /%TROLLRIGHT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-trollright"></i>',
-      )
-      .replace(
-        /%TURNLEFT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-turnleft"></i>',
-      )
-      .replace(
-        /%TURNRIGHT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-turnright"></i>',
-      )
-      .replace(
-        /%TURRET%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-turret"></i>',
-      )
-      .replace(
-        /%UTURN%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-kturn"></i>',
-      )
-      .replace(
-        /%TALENT%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-talent"></i>',
-      )
-      .replace(
-        /%TITLE%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-title"></i>',
-      )
-      .replace(
-        /%TEAM%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-team"></i>',
-      )
-      .replace(
-        /%TECH%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-tech"></i>',
-      )
-      .replace(
-        /%FORCEPOWER%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-forcepower"></i>',
-      )
-      .replace(
-        /%LARGESHIPONLY%/g,
-        '<span class="card-restriction">Large ship only.</span>',
-      )
-      .replace(
-        /%SMALLSHIPONLY%/g,
-        '<span class="card-restriction">Small ship only.</span>',
-      )
-      .replace(
-        /%REBELONLY%/g,
-        '<span class="card-restriction">Rebel only.</span>',
-      )
-      .replace(
-        /%IMPERIALONLY%/g,
-        '<span class="card-restriction">Imperial only.</span>',
-      )
-      .replace(
-        /%SCUMONLY%/g,
-        '<span class="card-restriction">Scum only.</span>',
-      )
+      .replace(/%BULLSEYEARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-bullseyearc"></i>')
+      .replace(/%SINGLETURRETARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-singleturretarc"></i>')
+      .replace(/%DOUBLETURRETARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-doubleturretarc"></i>')
+      .replace(/%FRONTARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-frontarc"></i>')
+      .replace(/%REARARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-reararc"></i>')
+      .replace(/%LEFTARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-leftarc"></i>')
+      .replace(/%RIGHTARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-rightarc"></i>')
+      .replace(/%ROTATEARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-rotatearc"></i>')
+      .replace(/%FULLFRONTARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-fullfrontarc"></i>')
+      .replace(/%FULLREARARC%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-fullreararc"></i>')
+      .replace(/%DEVICE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-device"></i>')
+      .replace(/%MODIFICATION%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-modification"></i>')
+      .replace(/%RELOAD%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-reload"></i>')
+      .replace(/%FORCE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-forcecharge"></i>')
+      .replace(/%CHARGE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-charge"></i>')
+      .replace(/%ENERGY%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-energy"></i>')
+      .replace(/%CALCULATE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-calculate"></i>')
+      .replace(/%BANKLEFT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-bankleft"></i>')
+      .replace(/%BANKRIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-bankright"></i>')
+      .replace(/%BARRELROLL%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-barrelroll"></i>')
+      .replace(/%BOOST%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-boost"></i>')
+      .replace(/%CANNON%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-cannon"></i>')
+      .replace(/%CARGO%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-cargo"></i>')
+      .replace(/%CLOAK%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-cloak"></i>')
+      .replace(/%F-COORDINATE%/g, '<i class="xwing-miniatures-font force xwing-miniatures-font-coordinate"></i>')
+      .replace(/%COORDINATE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-coordinate"></i>')
+      .replace(/%CRIT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-crit"></i>')
+      .replace(/%ASTROMECH%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-astromech"></i>')
+      .replace(/%GUNNER%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-gunner"></i>')
+      .replace(/%CREW%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-crew"></i>')
+      .replace(/%DUALCARD%/g, '<span class="card-restriction">Dual card.</span>')
+      .replace(/%ELITE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-elite"></i>')
+      .replace(/%TACTICALRELAY%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-tacticalrelay"></i>')
+      .replace(/%SALVAGEDASTROMECH%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-salvagedastromech"></i>')
+      .replace(/%HARDPOINT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-hardpoint"></i>')
+      .replace(/%EVADE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-evade"></i>')
+      .replace(/%FOCUS%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-focus"></i>')
+      .replace(/%HIT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-hit"></i>')
+      .replace(/%ILLICIT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-illicit"></i>')
+      .replace(/%JAM%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-jam"></i>')
+      .replace(/%KTURN%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-kturn"></i>')
+      .replace(/%MISSILE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-missile"></i>')
+      .replace(/%RECOVER%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-recover"></i>')
+      .replace(/%F-REINFORCE%/g, '<i class="xwing-miniatures-font force xwing-miniatures-font-reinforce"></i>')
+      .replace(/%REINFORCE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-reinforce"></i>')
+      .replace(/%REVERSESTRAIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-reversestraight"></i>')
+      .replace(/%REVERSEBANKLEFT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-reversebankleft"></i>')
+      .replace(/%REVERSEBANKRIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-reversebankright"></i>')
+      .replace(/%SHIELD%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-shield"></i>')
+      .replace(/%SLAM%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-slam"></i>')
+      .replace(/%SLOOPLEFT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-sloopleft"></i>')
+      .replace(/%SLOOPRIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-sloopright"></i>')
+      .replace(/%STRAIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-straight"></i>')
+      .replace(/%STOP%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-stop"></i>')
+      .replace(/%SENSOR%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-sensor"></i>')
+      .replace(/%LOCK%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-lock"></i>')
+      .replace(/%TORPEDO%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-torpedo"></i>')
+      .replace(/%TROLLLEFT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-trollleft"></i>')
+      .replace(/%TROLLRIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-trollright"></i>')
+      .replace(/%TURNLEFT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-turnleft"></i>')
+      .replace(/%TURNRIGHT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-turnright"></i>')
+      .replace(/%TURRET%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-turret"></i>')
+      .replace(/%UTURN%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-kturn"></i>')
+      .replace(/%TALENT%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-talent"></i>')
+      .replace(/%TITLE%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-title"></i>')
+      .replace(/%TEAM%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-team"></i>')
+      .replace(/%TECH%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-tech"></i>')
+      .replace(/%FORCEPOWER%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-forcepower"></i>')
+      .replace(/%LARGESHIPONLY%/g, '<span class="card-restriction">Large ship only.</span>')
+      .replace(/%SMALLSHIPONLY%/g, '<span class="card-restriction">Small ship only.</span>')
+      .replace(/%REBELONLY%/g, '<span class="card-restriction">Rebel only.</span>')
+      .replace(/%IMPERIALONLY%/g, '<span class="card-restriction">Imperial only.</span>')
+      .replace(/%SCUMONLY%/g, '<span class="card-restriction">Scum only.</span>')
       .replace(/%LIMITED%/g, '<span class="card-restriction">Limited.</span>')
-      .replace(
-        /%CONFIGURATION%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-config"></i>',
-      )
-      .replace(
-        /%AGILITY%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-agility"></i>',
-      )
-      .replace(
-        /%HULL%/g,
-        '<i class="xwing-miniatures-font xwing-miniatures-font-hull"></i>',
-      )
+      .replace(/%CONFIGURATION%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-config"></i>')
+      .replace(/%AGILITY%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-agility"></i>')
+      .replace(/%HULL%/g, '<i class="xwing-miniatures-font xwing-miniatures-font-hull"></i>')
       .replace(/%LINEBREAK%/g, "<br /><br />");
   }
 };

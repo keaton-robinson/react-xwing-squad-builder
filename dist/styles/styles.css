@@ -204,11 +204,7 @@ table.info-stats > tbody > tr > td:nth-child(1) {
 
 .info-maneuvers > tbody > tr > td:first-child {
   background-color: #888888;
-  background-image: linear-gradient(
-    rgba(45, 45, 45, 0.2) 50%,
-    transparent 50%,
-    transparent 100%
-  );
+  background-image: linear-gradient(rgba(45, 45, 45, 0.2) 50%, transparent 50%, transparent 100%);
   background-size: 5px 5px;
   padding: 5px;
   text-align: center;

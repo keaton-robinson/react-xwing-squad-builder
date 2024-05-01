@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as yup from "yup";
 import { Formik } from "formik";
-import {
-  XwingTextInput,
-  XwingFormSubmitButton,
-  XwingForm,
-} from "../CustomFormikControls/XwingFormikCustomControls";
+import { XwingTextInput, XwingFormSubmitButton, XwingForm } from "../CustomFormikControls/XwingFormikCustomControls";
 import { useUserContext } from "../../contexts/UserContext";
 
 interface LoginModalProps {
@@ -71,42 +67,26 @@ const LoginModal: React.FC<LoginModalProps> = (props) => {
         username: yup.string().required("Required"),
         password: yup.string().required("Required"),
       })}
-      onSubmit={(values, { setSubmitting }) =>
-        handleSubmit(values, { setSubmitting })
-      }
+      onSubmit={(values, { setSubmitting }) => handleSubmit(values, { setSubmitting })}
     >
       <div className="loginRegisterForm">
-        <span style={{ color: successfullyLoggedIn ? "black" : "red" }}>
-          {statusMessage}
-        </span>
+        <span style={{ color: successfullyLoggedIn ? "black" : "red" }}>{statusMessage}</span>
         {!successfullyLoggedIn ? (
           <XwingForm>
-            <XwingTextInput
-              type="text"
-              name="username"
-              style={{ marginTop: "0px" }}
-            />
+            <XwingTextInput type="text" name="username" style={{ marginTop: "0px" }} />
             <XwingTextInput type="password" name="password" />
-            <XwingFormSubmitButton className="btn-primary loginRegisterBtn">
-              Login
-            </XwingFormSubmitButton>
+            <XwingFormSubmitButton className="btn-primary loginRegisterBtn">Login</XwingFormSubmitButton>
             <div className="loginDivider">
               <span className="loginDividerText">or</span>
             </div>
-            <button
-              className="btn-info loginRegisterBtn"
-              onClick={() => props.switchToRegister()}
-            >
+            <button className="btn-info loginRegisterBtn" onClick={() => props.switchToRegister()}>
               Register
             </button>
           </XwingForm>
         ) : (
           <div>
             {/* todo: make sure this works */}
-            <button
-              className="btn-primary loginRegisterBtn"
-              onClick={props.close}
-            >
+            <button className="btn-primary loginRegisterBtn" onClick={props.close}>
               Ok
             </button>
           </div>

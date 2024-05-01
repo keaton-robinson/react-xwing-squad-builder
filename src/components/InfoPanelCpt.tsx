@@ -14,28 +14,16 @@ const InfoPanelCpt: React.FC<InfoPanelCptProps> = (props) => {
 
   switch (props.card.type) {
     case "Ship":
-      childPanel = (
-        <InfoPanelShipCpt ship={props.card.cardData} faction={props.faction} />
-      );
+      childPanel = <InfoPanelShipCpt ship={props.card.cardData} faction={props.faction} />;
       break;
     case "Upgrade":
       childPanel = <InfoPanelUpgradeCpt upgrade={props.card.cardData} />;
       break;
     case "Pilot":
-      childPanel = (
-        <InfoPanelPilotCpt
-          pilot={props.card.cardData}
-          isSelectedPilot={false}
-        />
-      );
+      childPanel = <InfoPanelPilotCpt pilot={props.card.cardData} isSelectedPilot={false} />;
       break;
     case "SelectedPilot":
-      childPanel = (
-        <InfoPanelPilotCpt
-          selectedPilot={props.card.cardData}
-          isSelectedPilot={true}
-        />
-      );
+      childPanel = <InfoPanelPilotCpt selectedPilot={props.card.cardData} isSelectedPilot={true} />;
       break;
   }
 

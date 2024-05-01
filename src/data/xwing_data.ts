@@ -16,8 +16,7 @@ import {
 const __indexOf =
   [].indexOf ||
   function (a) {
-    for (var b = 0, c = this.length; b < c; b++)
-      if (b in this && this[b] === a) return b;
+    for (var b = 0, c = this.length; b < c; b++) if (b in this && this[b] === a) return b;
     return -1;
   };
 
@@ -209,15 +208,7 @@ export const ships: Record<string, Ship> = {
     hull: 3,
     shields: 2,
     keyword: ["Freighter"],
-    actions: [
-      "Focus",
-      "R-> Rotate Arc",
-      "Lock",
-      "R-> Rotate Arc",
-      "Rotate Arc",
-      "R-Boost",
-      "R-Jam",
-    ],
+    actions: ["Focus", "R-> Rotate Arc", "Lock", "R-> Rotate Arc", "Rotate Arc", "R-Boost", "R-Jam"],
     maneuvers: [
       [0, 0, 3, 0, 0],
       [0, 1, 1, 1, 0],
@@ -322,15 +313,7 @@ export const ships: Record<string, Ship> = {
     agility: 3,
     hull: 3,
     shields: 3,
-    actions: [
-      "Focus",
-      "Evade",
-      "Lock",
-      "Barrel Roll",
-      "R-> Lock",
-      "Boost",
-      "R-> Lock",
-    ],
+    actions: ["Focus", "Evade", "Lock", "Barrel Roll", "R-> Lock", "Boost", "R-> Lock"],
     maneuvers: [
       [0, 0, 0, 0, 0, 0, 0, 0],
       [3, 1, 1, 1, 3, 0, 0, 0],
@@ -402,14 +385,7 @@ export const ships: Record<string, Ship> = {
     agility: 3,
     hull: 4,
     shields: 1,
-    actions: [
-      "Focus",
-      "Lock",
-      "Barrel Roll",
-      "R-> Focus",
-      "Boost",
-      "R-> Focus",
-    ],
+    actions: ["Focus", "Lock", "Barrel Roll", "R-> Focus", "Boost", "R-> Focus"],
     maneuvers: [
       [0, 0, 0, 0, 0, 0, 0, 0],
       [2, 1, 1, 1, 2, 0, 0, 0],
@@ -568,15 +544,7 @@ export const ships: Record<string, Ship> = {
     agility: 3,
     hull: 2,
     shields: 2,
-    actions: [
-      "Focus",
-      "Evade",
-      "Lock",
-      "Barrel Roll",
-      "R-> Focus",
-      "Boost",
-      "R-> Focus",
-    ],
+    actions: ["Focus", "Evade", "Lock", "Barrel Roll", "R-> Focus", "Boost", "R-> Focus"],
     maneuvers: [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [1, 1, 0, 1, 1, 0, 0, 0, 0, 0],
@@ -613,13 +581,7 @@ export const ships: Record<string, Ship> = {
     agility: 2,
     hull: 6,
     shields: 3,
-    actions: [
-      "Focus",
-      "R-> Rotate Arc",
-      "Lock",
-      "R-> Rotate Arc",
-      "R-Barrel Roll",
-    ],
+    actions: ["Focus", "R-> Rotate Arc", "Lock", "R-> Rotate Arc", "R-Barrel Roll"],
     maneuvers: [
       [0, 0, 0, 0, 0, 0, 0, 0],
       [2, 1, 1, 2, 3, 0, 0, 0],
@@ -656,14 +618,7 @@ export const ships: Record<string, Ship> = {
     agility: 3,
     hull: 4,
     shields: 0,
-    actions: [
-      "Focus",
-      "Lock",
-      "Barrel Roll",
-      "R-> Focus",
-      "Boost",
-      "R-> Focus",
-    ],
+    actions: ["Focus", "Lock", "Barrel Roll", "R-> Focus", "Boost", "R-> Focus"],
     maneuvers: [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [2, 0, 0, 0, 2, 0, 0, 0, 0, 0],
@@ -964,16 +919,7 @@ export const ships: Record<string, Ship> = {
     agility: 2,
     hull: 3,
     shields: 3,
-    actions: [
-      "Focus",
-      "> Rotate Arc",
-      "Evade",
-      "> Rotate Arc",
-      "Lock",
-      "> Rotate Arc",
-      "Barrel Roll",
-      "> Rotate Arc",
-    ],
+    actions: ["Focus", "> Rotate Arc", "Evade", "> Rotate Arc", "Lock", "> Rotate Arc", "Barrel Roll", "> Rotate Arc"],
     maneuvers: [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [3, 1, 1, 1, 3, 0, 0, 0, 0, 0],
@@ -1142,14 +1088,7 @@ export const ships: Record<string, Ship> = {
     agility: 2,
     hull: 3,
     shields: 2,
-    actions: [
-      "Focus",
-      "Lock",
-      "Barrel Roll",
-      "R-> Focus",
-      "Boost",
-      "R-> Focus",
-    ],
+    actions: ["Focus", "Lock", "Barrel Roll", "R-> Focus", "Boost", "R-> Focus"],
     maneuvers: [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [2, 2, 0, 2, 2, 0, 0, 0, 0, 0],
@@ -1368,14 +1307,7 @@ export const ships: Record<string, Ship> = {
     hull: 8,
     shields: 0,
     medium: !0,
-    actions: [
-      "Focus",
-      "Reinforce",
-      "Lock",
-      "R-Barrel Roll",
-      "Rotate Arc",
-      "R-> Calculate",
-    ],
+    actions: ["Focus", "Reinforce", "Lock", "R-Barrel Roll", "Rotate Arc", "R-> Calculate"],
     maneuvers: [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [3, 2, 1, 2, 3, 0, 0, 0, 0, 0],
@@ -1394,15 +1326,7 @@ export const ships: Record<string, Ship> = {
     hull: 3,
     shields: 0,
     keyword: ["Networked Calculations"],
-    actions: [
-      "Calculate",
-      "Evade",
-      "Lock",
-      "Barrel Roll",
-      "R-> Evade",
-      "Boost",
-      "R-> Calculate",
-    ],
+    actions: ["Calculate", "Evade", "Lock", "Barrel Roll", "R-> Evade", "Boost", "R-> Calculate"],
     maneuvers: [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [2, 0, 0, 0, 2, 0, 0, 0, 3, 3],
@@ -1707,14 +1631,7 @@ export const pilots: Pilot[] = [
     skill: 3,
     points: 43,
     keyword: ["Partisan"],
-    slots: [
-      "Illicit",
-      "Talent",
-      "Torpedo",
-      "Astromech",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Illicit", "Talent", "Torpedo", "Astromech", "Modification", "Configuration"],
   },
   {
     name: "Kullbee Sperado",
@@ -1725,14 +1642,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     points: 45,
     keyword: ["Partisan"],
-    slots: [
-      "Illicit",
-      "Talent",
-      "Torpedo",
-      "Astromech",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Illicit", "Talent", "Torpedo", "Astromech", "Modification", "Configuration"],
   },
   {
     name: "Sabine Wren (TIE Fighter)",
@@ -1794,16 +1704,7 @@ export const pilots: Pilot[] = [
     ship: "K-Wing",
     skill: 4,
     points: 40,
-    slots: [
-      "Torpedo",
-      "Missile",
-      "Missile",
-      "Gunner",
-      "Crew",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Torpedo", "Missile", "Missile", "Gunner", "Crew", "Device", "Device", "Modification"],
   },
   {
     name: "Esege Tuketu",
@@ -1813,16 +1714,7 @@ export const pilots: Pilot[] = [
     ship: "K-Wing",
     skill: 3,
     points: 44,
-    slots: [
-      "Torpedo",
-      "Missile",
-      "Missile",
-      "Gunner",
-      "Crew",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Torpedo", "Missile", "Missile", "Gunner", "Crew", "Device", "Device", "Modification"],
   },
   {
     name: "Warden Squadron Pilot",
@@ -1831,16 +1723,7 @@ export const pilots: Pilot[] = [
     ship: "K-Wing",
     skill: 2,
     points: 38,
-    slots: [
-      "Torpedo",
-      "Missile",
-      "Missile",
-      "Gunner",
-      "Crew",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Torpedo", "Missile", "Missile", "Gunner", "Crew", "Device", "Device", "Modification"],
   },
   {
     name: "Corran Horn",
@@ -1890,15 +1773,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 5,
     points: 41,
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Astromech",
-      "Modification",
-      "Device",
-      "Gunner",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Astromech", "Modification", "Device", "Gunner"],
   },
   {
     name: "Horton Salm",
@@ -1908,15 +1783,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 4,
     points: 37,
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Astromech",
-      "Modification",
-      "Device",
-      "Gunner",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Astromech", "Modification", "Device", "Gunner"],
   },
   {
     name: '"Dutch" Vander',
@@ -1926,15 +1793,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 4,
     points: 40,
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Astromech",
-      "Modification",
-      "Device",
-      "Gunner",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Astromech", "Modification", "Device", "Gunner"],
   },
   {
     name: "Evaan Verlaine",
@@ -1944,15 +1803,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 3,
     points: 35,
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Astromech",
-      "Modification",
-      "Device",
-      "Gunner",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Astromech", "Modification", "Device", "Gunner"],
   },
   {
     name: "Gold Squadron Veteran",
@@ -1961,15 +1812,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 3,
     points: 32,
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Astromech",
-      "Modification",
-      "Device",
-      "Gunner",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Astromech", "Modification", "Device", "Gunner"],
   },
   {
     name: "Gray Squadron Bomber",
@@ -1978,14 +1821,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 2,
     points: 30,
-    slots: [
-      "Turret",
-      "Torpedo",
-      "Astromech",
-      "Modification",
-      "Device",
-      "Gunner",
-    ],
+    slots: ["Turret", "Torpedo", "Astromech", "Modification", "Device", "Gunner"],
   },
   {
     name: "Bodhi Rook",
@@ -1995,14 +1831,7 @@ export const pilots: Pilot[] = [
     ship: "U-Wing",
     skill: 4,
     points: 48,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Talent", "Sensor", "Crew", "Crew", "Modification", "Configuration"],
   },
   {
     name: "Cassian Andor",
@@ -2012,14 +1841,7 @@ export const pilots: Pilot[] = [
     ship: "U-Wing",
     skill: 3,
     points: 51,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Talent", "Sensor", "Crew", "Crew", "Modification", "Configuration"],
   },
   {
     name: "Heff Tobber",
@@ -2029,14 +1851,7 @@ export const pilots: Pilot[] = [
     ship: "U-Wing",
     skill: 2,
     points: 44,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Talent", "Sensor", "Crew", "Crew", "Modification", "Configuration"],
   },
   {
     name: "Magva Yarro",
@@ -2047,15 +1862,7 @@ export const pilots: Pilot[] = [
     skill: 3,
     points: 50,
     keyword: ["Partisan"],
-    slots: [
-      "Talent",
-      "Sensor",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Configuration",
-      "Illicit",
-    ],
+    slots: ["Talent", "Sensor", "Crew", "Crew", "Modification", "Configuration", "Illicit"],
   },
   {
     name: "Saw Gerrera",
@@ -2066,15 +1873,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     points: 52,
     keyword: ["Partisan"],
-    slots: [
-      "Talent",
-      "Sensor",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Configuration",
-      "Illicit",
-    ],
+    slots: ["Talent", "Sensor", "Crew", "Crew", "Modification", "Configuration", "Illicit"],
   },
   {
     name: "Benthic Two Tubes",
@@ -2085,14 +1884,7 @@ export const pilots: Pilot[] = [
     skill: 2,
     points: 46,
     keyword: ["Partisan"],
-    slots: [
-      "Illicit",
-      "Sensor",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Illicit", "Sensor", "Crew", "Crew", "Modification", "Configuration"],
   },
   {
     name: "Blue Squadron Scout",
@@ -2111,14 +1903,7 @@ export const pilots: Pilot[] = [
     skill: 1,
     points: 43,
     keyword: ["Partisan"],
-    slots: [
-      "Illicit",
-      "Sensor",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Illicit", "Sensor", "Crew", "Crew", "Modification", "Configuration"],
   },
   {
     name: "Dash Rendar",
@@ -2128,15 +1913,7 @@ export const pilots: Pilot[] = [
     ship: "YT-2400",
     skill: 5,
     points: 85,
-    slots: [
-      "Talent",
-      "Missile",
-      "Gunner",
-      "Crew",
-      "Modification",
-      "Title",
-      "Illicit",
-    ],
+    slots: ["Talent", "Missile", "Gunner", "Crew", "Modification", "Title", "Illicit"],
   },
   {
     name: '"Leebo"',
@@ -2167,16 +1944,7 @@ export const pilots: Pilot[] = [
     ship: "YT-1300",
     skill: 6,
     points: 79,
-    slots: [
-      "Talent",
-      "Missile",
-      "Gunner",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Missile", "Gunner", "Crew", "Crew", "Modification", "Modification", "Title"],
   },
   {
     name: "Lando Calrissian",
@@ -2187,16 +1955,7 @@ export const pilots: Pilot[] = [
     ship: "YT-1300",
     skill: 5,
     points: 78,
-    slots: [
-      "Talent",
-      "Missile",
-      "Gunner",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Missile", "Gunner", "Crew", "Crew", "Modification", "Modification", "Title"],
   },
   {
     name: "Chewbacca",
@@ -2208,16 +1967,7 @@ export const pilots: Pilot[] = [
     charge: 1,
     recurring: 1,
     points: 70,
-    slots: [
-      "Talent",
-      "Missile",
-      "Gunner",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Missile", "Gunner", "Crew", "Crew", "Modification", "Modification", "Title"],
   },
   {
     name: "Outer Rim Smuggler",
@@ -2226,15 +1976,7 @@ export const pilots: Pilot[] = [
     ship: "YT-1300",
     skill: 1,
     points: 67,
-    slots: [
-      "Missile",
-      "Gunner",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Missile", "Gunner", "Crew", "Crew", "Modification", "Modification", "Title"],
   },
   {
     name: "Jan Ors",
@@ -2244,14 +1986,7 @@ export const pilots: Pilot[] = [
     ship: "HWK-290",
     skill: 5,
     points: 41,
-    slots: [
-      "Talent",
-      "Device",
-      "Crew",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Device", "Crew", "Modification", "Modification", "Title"],
   },
   {
     name: "Roark Garnet",
@@ -2261,14 +1996,7 @@ export const pilots: Pilot[] = [
     ship: "HWK-290",
     skill: 4,
     points: 38,
-    slots: [
-      "Talent",
-      "Device",
-      "Crew",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Device", "Crew", "Modification", "Modification", "Title"],
   },
   {
     name: "Kyle Katarn",
@@ -2278,14 +2006,7 @@ export const pilots: Pilot[] = [
     ship: "HWK-290",
     skill: 3,
     points: 31,
-    slots: [
-      "Talent",
-      "Device",
-      "Crew",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Device", "Crew", "Modification", "Modification", "Title"],
   },
   {
     name: "Rebel Scout",
@@ -2412,17 +2133,7 @@ export const pilots: Pilot[] = [
     skill: 5,
     points: 72,
     keyword: ["Spectre"],
-    slots: [
-      "Talent",
-      "Sensor",
-      "Torpedo",
-      "Turret",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Gunner",
-      "Title",
-    ],
+    slots: ["Talent", "Sensor", "Torpedo", "Turret", "Crew", "Crew", "Modification", "Gunner", "Title"],
   },
   {
     name: "Kanan Jarrus",
@@ -2434,17 +2145,7 @@ export const pilots: Pilot[] = [
     keyword: ["Light Side", "Jedi", "Spectre"],
     force: 2,
     points: 76,
-    slots: [
-      "Force",
-      "Sensor",
-      "Torpedo",
-      "Turret",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Gunner",
-      "Title",
-    ],
+    slots: ["Force", "Sensor", "Torpedo", "Turret", "Crew", "Crew", "Modification", "Gunner", "Title"],
   },
   {
     name: '"Chopper"',
@@ -2455,16 +2156,7 @@ export const pilots: Pilot[] = [
     skill: 2,
     points: 67,
     keyword: ["Droid", "Spectre"],
-    slots: [
-      "Torpedo",
-      "Sensor",
-      "Turret",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Gunner",
-      "Title",
-    ],
+    slots: ["Torpedo", "Sensor", "Turret", "Crew", "Crew", "Modification", "Gunner", "Title"],
   },
   {
     name: "Lothal Rebel",
@@ -2473,16 +2165,7 @@ export const pilots: Pilot[] = [
     ship: "VCX-100",
     skill: 2,
     points: 67,
-    slots: [
-      "Torpedo",
-      "Sensor",
-      "Turret",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Gunner",
-      "Title",
-    ],
+    slots: ["Torpedo", "Sensor", "Turret", "Crew", "Crew", "Modification", "Gunner", "Title"],
   },
   {
     name: "Hera Syndulla",
@@ -2588,16 +2271,7 @@ export const pilots: Pilot[] = [
     ship: "B-Wing",
     skill: 4,
     points: 52,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Cannon",
-      "Cannon",
-      "Torpedo",
-      "Modification",
-      "Configuration",
-      "Title",
-    ],
+    slots: ["Talent", "Sensor", "Cannon", "Cannon", "Torpedo", "Modification", "Configuration", "Title"],
   },
   {
     name: "Ten Numb",
@@ -2607,16 +2281,7 @@ export const pilots: Pilot[] = [
     ship: "B-Wing",
     skill: 4,
     points: 48,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Cannon",
-      "Cannon",
-      "Torpedo",
-      "Modification",
-      "Configuration",
-      "Title",
-    ],
+    slots: ["Talent", "Sensor", "Cannon", "Cannon", "Torpedo", "Modification", "Configuration", "Title"],
   },
   {
     name: "Blade Squadron Veteran",
@@ -2625,16 +2290,7 @@ export const pilots: Pilot[] = [
     ship: "B-Wing",
     skill: 3,
     points: 42,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Cannon",
-      "Cannon",
-      "Torpedo",
-      "Modification",
-      "Configuration",
-      "Title",
-    ],
+    slots: ["Talent", "Sensor", "Cannon", "Cannon", "Torpedo", "Modification", "Configuration", "Title"],
   },
   {
     name: "Blue Squadron Pilot",
@@ -2643,15 +2299,7 @@ export const pilots: Pilot[] = [
     ship: "B-Wing",
     skill: 2,
     points: 41,
-    slots: [
-      "Sensor",
-      "Cannon",
-      "Cannon",
-      "Torpedo",
-      "Modification",
-      "Configuration",
-      "Title",
-    ],
+    slots: ["Sensor", "Cannon", "Cannon", "Torpedo", "Modification", "Configuration", "Title"],
   },
   {
     name: "Norra Wexley",
@@ -2702,16 +2350,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     points: 66,
     keyword: ["Bounty Hunter", "Droid"],
-    slots: [
-      "Talent",
-      "Sensor",
-      "Cannon",
-      "Cannon",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Sensor", "Cannon", "Cannon", "Device", "Illicit", "Modification", "Title"],
   },
   {
     name: "IG-88B",
@@ -2722,16 +2361,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     points: 62,
     keyword: ["Bounty Hunter", "Droid"],
-    slots: [
-      "Talent",
-      "Sensor",
-      "Cannon",
-      "Cannon",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Sensor", "Cannon", "Cannon", "Device", "Illicit", "Modification", "Title"],
   },
   {
     name: "IG-88C",
@@ -2742,16 +2372,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     points: 63,
     keyword: ["Bounty Hunter", "Droid"],
-    slots: [
-      "Talent",
-      "Sensor",
-      "Cannon",
-      "Cannon",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Sensor", "Cannon", "Cannon", "Device", "Illicit", "Modification", "Title"],
   },
   {
     name: "IG-88D",
@@ -2762,16 +2383,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     points: 62,
     keyword: ["Bounty Hunter", "Droid"],
-    slots: [
-      "Talent",
-      "Sensor",
-      "Cannon",
-      "Cannon",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Sensor", "Cannon", "Cannon", "Device", "Illicit", "Modification", "Title"],
   },
   {
     name: "Kavil",
@@ -2781,16 +2393,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 5,
     points: 43,
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-      "Illicit",
-      "Modification",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Gunner", "Astromech", "Device", "Illicit", "Modification"],
   },
   {
     name: "Drea Renthal",
@@ -2800,16 +2403,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 4,
     points: 46,
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-      "Illicit",
-      "Modification",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Gunner", "Astromech", "Device", "Illicit", "Modification"],
   },
   {
     name: "Hired Gun",
@@ -2818,16 +2412,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 2,
     points: 32,
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-      "Illicit",
-      "Modification",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Gunner", "Astromech", "Device", "Illicit", "Modification"],
   },
   {
     name: "Crymorah Goon",
@@ -2836,15 +2421,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 1,
     points: 30,
-    slots: [
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-      "Illicit",
-      "Modification",
-    ],
+    slots: ["Turret", "Torpedo", "Gunner", "Astromech", "Device", "Illicit", "Modification"],
   },
   {
     name: "Han Solo (Scum)",
@@ -2855,16 +2432,7 @@ export const pilots: Pilot[] = [
     ship: "Customized YT-1300",
     skill: 6,
     points: 48,
-    slots: [
-      "Talent",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Missile", "Crew", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Lando Calrissian (Scum)",
@@ -2875,16 +2443,7 @@ export const pilots: Pilot[] = [
     ship: "Customized YT-1300",
     skill: 4,
     points: 42,
-    slots: [
-      "Talent",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Missile", "Crew", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "L3-37",
@@ -2895,15 +2454,7 @@ export const pilots: Pilot[] = [
     skill: 2,
     points: 41,
     keyword: ["Droid"],
-    slots: [
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Missile", "Crew", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Freighter Captain",
@@ -2912,15 +2463,7 @@ export const pilots: Pilot[] = [
     ship: "Customized YT-1300",
     skill: 1,
     points: 41,
-    slots: [
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Missile", "Crew", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Lando Calrissian (Scum) (Escape Craft)",
@@ -3042,16 +2585,7 @@ export const pilots: Pilot[] = [
     skill: 5,
     points: 86,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Talent",
-      "Cannon",
-      "Missile",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Cannon", "Missile", "Device", "Illicit", "Modification", "Modification", "Title"],
   },
   {
     name: "Emon Azzameen",
@@ -3061,16 +2595,7 @@ export const pilots: Pilot[] = [
     ship: "Firespray-31",
     skill: 4,
     points: 71,
-    slots: [
-      "Talent",
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Cannon", "Missile", "Crew", "Device", "Illicit", "Modification", "Title"],
   },
   {
     name: "Kath Scarlet",
@@ -3080,16 +2605,7 @@ export const pilots: Pilot[] = [
     ship: "Firespray-31",
     skill: 4,
     points: 72,
-    slots: [
-      "Talent",
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Cannon", "Missile", "Crew", "Device", "Illicit", "Modification", "Title"],
   },
   {
     name: "Koshka Frost",
@@ -3100,16 +2616,7 @@ export const pilots: Pilot[] = [
     skill: 3,
     points: 70,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Talent",
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Cannon", "Missile", "Crew", "Device", "Illicit", "Modification", "Title"],
   },
   {
     name: "Krassis Trelix",
@@ -3119,16 +2626,7 @@ export const pilots: Pilot[] = [
     ship: "Firespray-31",
     skill: 3,
     points: 65,
-    slots: [
-      "Talent",
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Cannon", "Missile", "Crew", "Device", "Illicit", "Modification", "Title"],
   },
   {
     name: "Bounty Hunter",
@@ -3138,15 +2636,7 @@ export const pilots: Pilot[] = [
     skill: 2,
     points: 62,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Cannon", "Missile", "Crew", "Device", "Illicit", "Modification", "Title"],
   },
   {
     name: "4-LOM",
@@ -3188,15 +2678,7 @@ export const pilots: Pilot[] = [
     ship: "HWK-290",
     skill: 3,
     points: 40,
-    slots: [
-      "Talent",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Crew", "Device", "Illicit", "Modification", "Modification", "Title"],
   },
   {
     name: "Dace Bonearm",
@@ -3208,15 +2690,7 @@ export const pilots: Pilot[] = [
     charge: 3,
     recurring: 1,
     points: 31,
-    slots: [
-      "Talent",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Crew", "Device", "Illicit", "Modification", "Modification", "Title"],
   },
   {
     name: "Torkil Mux",
@@ -3226,14 +2700,7 @@ export const pilots: Pilot[] = [
     ship: "HWK-290",
     skill: 2,
     points: 38,
-    slots: [
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Crew", "Device", "Illicit", "Modification", "Modification", "Title"],
   },
   {
     name: "Dengar",
@@ -3246,16 +2713,7 @@ export const pilots: Pilot[] = [
     recurring: 1,
     points: 53,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Cannon",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Torpedo", "Cannon", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Tel Trevura",
@@ -3266,16 +2724,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     charge: 1,
     points: 44,
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Cannon",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Torpedo", "Cannon", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Manaroo",
@@ -3286,16 +2735,7 @@ export const pilots: Pilot[] = [
     skill: 3,
     points: 45,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Cannon",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Torpedo", "Cannon", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Contracted Scout",
@@ -3304,15 +2744,7 @@ export const pilots: Pilot[] = [
     ship: "JumpMaster 5000",
     skill: 2,
     points: 41,
-    slots: [
-      "Torpedo",
-      "Cannon",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Torpedo", "Cannon", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Talonbane Cobra",
@@ -3322,14 +2754,7 @@ export const pilots: Pilot[] = [
     ship: "Kihraxz Fighter",
     skill: 5,
     points: 48,
-    slots: [
-      "Talent",
-      "Missile",
-      "Illicit",
-      "Illicit",
-      "Modification",
-      "Modification",
-    ],
+    slots: ["Talent", "Missile", "Illicit", "Illicit", "Modification", "Modification"],
   },
   {
     name: "Graz",
@@ -3340,14 +2765,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     points: 45,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Talent",
-      "Missile",
-      "Illicit",
-      "Illicit",
-      "Modification",
-      "Modification",
-    ],
+    slots: ["Talent", "Missile", "Illicit", "Illicit", "Modification", "Modification"],
   },
   {
     name: "Viktor Hel",
@@ -3358,14 +2776,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     points: 43,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Talent",
-      "Missile",
-      "Illicit",
-      "Illicit",
-      "Modification",
-      "Modification",
-    ],
+    slots: ["Talent", "Missile", "Illicit", "Illicit", "Modification", "Modification"],
   },
   {
     name: "Captain Jostero",
@@ -3384,14 +2795,7 @@ export const pilots: Pilot[] = [
     ship: "Kihraxz Fighter",
     skill: 3,
     points: 38,
-    slots: [
-      "Talent",
-      "Missile",
-      "Illicit",
-      "Illicit",
-      "Modification",
-      "Modification",
-    ],
+    slots: ["Talent", "Missile", "Illicit", "Illicit", "Modification", "Modification"],
   },
   {
     name: "Cartel Marauder",
@@ -3456,14 +2860,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     points: 48,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Missile",
-      "Astromech",
-      "Illicit",
-      "Modification",
-    ],
+    slots: ["Talent", "Torpedo", "Missile", "Astromech", "Illicit", "Modification"],
   },
   {
     name: "Dalan Oberos",
@@ -3475,14 +2872,7 @@ export const pilots: Pilot[] = [
     charge: 2,
     points: 45,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Missile",
-      "Astromech",
-      "Illicit",
-      "Modification",
-    ],
+    slots: ["Talent", "Torpedo", "Missile", "Astromech", "Illicit", "Modification"],
   },
   {
     name: "Cartel Executioner",
@@ -3491,14 +2881,7 @@ export const pilots: Pilot[] = [
     ship: "M12-L Kimogila Fighter",
     skill: 3,
     points: 41,
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Missile",
-      "Astromech",
-      "Illicit",
-      "Modification",
-    ],
+    slots: ["Talent", "Torpedo", "Missile", "Astromech", "Illicit", "Modification"],
   },
   {
     name: "Serissu",
@@ -3629,16 +3012,7 @@ export const pilots: Pilot[] = [
     charge: 1,
     recurring: 1,
     points: 47,
-    slots: [
-      "Talent",
-      "Turret",
-      "Crew",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Turret", "Crew", "Gunner", "Device", "Device", "Modification", "Title"],
   },
   {
     name: "Sol Sixxa",
@@ -3648,16 +3022,7 @@ export const pilots: Pilot[] = [
     ship: "Scurrg H-6 Bomber",
     skill: 3,
     points: 46,
-    slots: [
-      "Talent",
-      "Turret",
-      "Crew",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Turret", "Crew", "Gunner", "Device", "Device", "Modification", "Title"],
   },
   {
     name: "Lok Revenant",
@@ -3666,15 +3031,7 @@ export const pilots: Pilot[] = [
     ship: "Scurrg H-6 Bomber",
     skill: 2,
     points: 45,
-    slots: [
-      "Turret",
-      "Crew",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Turret", "Crew", "Gunner", "Device", "Device", "Modification", "Title"],
   },
   {
     name: "Guri",
@@ -3737,17 +3094,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     charge: 2,
     points: 66,
-    slots: [
-      "Talent",
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Cannon", "Missile", "Crew", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Bossk",
@@ -3758,17 +3105,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     points: 60,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Talent",
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Cannon", "Missile", "Crew", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Latts Razzi",
@@ -3779,17 +3116,7 @@ export const pilots: Pilot[] = [
     skill: 3,
     points: 56,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Talent",
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Cannon", "Missile", "Crew", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Trandoshan Slaver",
@@ -3798,16 +3125,7 @@ export const pilots: Pilot[] = [
     ship: "YV-666",
     skill: 2,
     points: 51,
-    slots: [
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Cannon", "Missile", "Crew", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "N'dru Suhlak",
@@ -3899,14 +3217,7 @@ export const pilots: Pilot[] = [
     ship: "Alpha-Class Star Wing",
     skill: 4,
     points: 40,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Torpedo",
-      "Missile",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Talent", "Sensor", "Torpedo", "Missile", "Modification", "Configuration"],
   },
   {
     name: "Lieutenant Karsabi",
@@ -3916,14 +3227,7 @@ export const pilots: Pilot[] = [
     ship: "Alpha-Class Star Wing",
     skill: 3,
     points: 36,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Torpedo",
-      "Missile",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Talent", "Sensor", "Torpedo", "Missile", "Modification", "Configuration"],
   },
   {
     name: "Rho Squadron Pilot",
@@ -3932,14 +3236,7 @@ export const pilots: Pilot[] = [
     ship: "Alpha-Class Star Wing",
     skill: 3,
     points: 34,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Torpedo",
-      "Missile",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Talent", "Sensor", "Torpedo", "Missile", "Modification", "Configuration"],
   },
   {
     name: "Nu Squadron Pilot",
@@ -4217,16 +3514,7 @@ export const pilots: Pilot[] = [
     ship: "TIE Punisher",
     skill: 5,
     points: 51,
-    slots: [
-      "Sensor",
-      "Torpedo",
-      "Missile",
-      "Missile",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Sensor", "Torpedo", "Missile", "Missile", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: '"Deathrain"',
@@ -4236,16 +3524,7 @@ export const pilots: Pilot[] = [
     ship: "TIE Punisher",
     skill: 4,
     points: 43,
-    slots: [
-      "Sensor",
-      "Torpedo",
-      "Missile",
-      "Missile",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Sensor", "Torpedo", "Missile", "Missile", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: "Cutlass Squadron Pilot",
@@ -4254,16 +3533,7 @@ export const pilots: Pilot[] = [
     ship: "TIE Punisher",
     skill: 2,
     points: 35,
-    slots: [
-      "Sensor",
-      "Torpedo",
-      "Missile",
-      "Missile",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Sensor", "Torpedo", "Missile", "Missile", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: "Colonel Vessery",
@@ -4359,16 +3629,7 @@ export const pilots: Pilot[] = [
     ship: "TIE Bomber",
     skill: 4,
     points: 45,
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Missile",
-      "Missile",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Talent", "Torpedo", "Missile", "Missile", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: "Major Rhymer",
@@ -4378,16 +3639,7 @@ export const pilots: Pilot[] = [
     ship: "TIE Bomber",
     skill: 4,
     points: 37,
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Missile",
-      "Missile",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Talent", "Torpedo", "Missile", "Missile", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: "Tomax Bren",
@@ -4397,16 +3649,7 @@ export const pilots: Pilot[] = [
     ship: "TIE Bomber",
     skill: 5,
     points: 35,
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Missile",
-      "Missile",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Talent", "Torpedo", "Missile", "Missile", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: '"Deathfire"',
@@ -4416,15 +3659,7 @@ export const pilots: Pilot[] = [
     ship: "TIE Bomber",
     skill: 2,
     points: 32,
-    slots: [
-      "Torpedo",
-      "Missile",
-      "Missile",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Torpedo", "Missile", "Missile", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: "Gamma Squadron Ace",
@@ -4433,16 +3668,7 @@ export const pilots: Pilot[] = [
     ship: "TIE Bomber",
     skill: 3,
     points: 30,
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Missile",
-      "Missile",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Talent", "Torpedo", "Missile", "Missile", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: "Scimitar Squadron Pilot",
@@ -4451,15 +3677,7 @@ export const pilots: Pilot[] = [
     ship: "TIE Bomber",
     skill: 2,
     points: 27,
-    slots: [
-      "Torpedo",
-      "Missile",
-      "Missile",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Torpedo", "Missile", "Missile", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: '"Countdown"',
@@ -4517,17 +3735,7 @@ export const pilots: Pilot[] = [
     ship: "VT-49 Decimator",
     skill: 5,
     points: 76,
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Crew",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Device",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Torpedo", "Crew", "Crew", "Crew", "Gunner", "Device", "Modification", "Title"],
   },
   {
     name: "Captain Oicunn",
@@ -4537,17 +3745,7 @@ export const pilots: Pilot[] = [
     ship: "VT-49 Decimator",
     skill: 3,
     points: 74,
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Crew",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Device",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Torpedo", "Crew", "Crew", "Crew", "Gunner", "Device", "Modification", "Title"],
   },
   {
     name: "Patrol Leader",
@@ -4556,16 +3754,7 @@ export const pilots: Pilot[] = [
     ship: "VT-49 Decimator",
     skill: 2,
     points: 67,
-    slots: [
-      "Torpedo",
-      "Crew",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Device",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Torpedo", "Crew", "Crew", "Crew", "Gunner", "Device", "Modification", "Title"],
   },
   {
     name: '"Howlrunner"',
@@ -4704,14 +3893,7 @@ export const pilots: Pilot[] = [
     ship: "HWK-290",
     skill: 1,
     points: 28,
-    slots: [
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Crew", "Device", "Illicit", "Modification", "Modification", "Title"],
   },
   {
     name: "Poe Dameron",
@@ -4723,15 +3905,7 @@ export const pilots: Pilot[] = [
     points: 62,
     charge: 1,
     recurring: 1,
-    slots: [
-      "Talent",
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: '"Midnight"',
@@ -4784,16 +3958,7 @@ export const pilots: Pilot[] = [
     ship: "Upsilon-Class Command Shuttle",
     skill: 2,
     points: 66,
-    slots: [
-      "Tech",
-      "Tech",
-      "Crew",
-      "Crew",
-      "Crew",
-      "Cannon",
-      "Sensor",
-      "Modification",
-    ],
+    slots: ["Tech", "Tech", "Crew", "Crew", "Crew", "Cannon", "Sensor", "Modification"],
   },
   {
     name: "L'ulo L'ampar",
@@ -4849,16 +4014,7 @@ export const pilots: Pilot[] = [
     skill: 5,
     points: 68,
     force: 2,
-    slots: [
-      "Force",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Force", "Missile", "Crew", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Han Solo (Resistance)",
@@ -4869,16 +4025,7 @@ export const pilots: Pilot[] = [
     ship: "Scavenged YT-1300",
     skill: 6,
     points: 62,
-    slots: [
-      "Talent",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Missile", "Crew", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Chewbacca (Resistance)",
@@ -4889,16 +4036,7 @@ export const pilots: Pilot[] = [
     ship: "Scavenged YT-1300",
     skill: 4,
     points: 60,
-    slots: [
-      "Talent",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Missile", "Crew", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Captain Seevor",
@@ -4939,16 +4077,7 @@ export const pilots: Pilot[] = [
     ship: "MG-100 StarFortress",
     skill: 4,
     points: 56,
-    slots: [
-      "Sensor",
-      "Tech",
-      "Crew",
-      "Gunner",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Sensor", "Tech", "Crew", "Gunner", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: "Major Stridan",
@@ -4958,16 +4087,7 @@ export const pilots: Pilot[] = [
     ship: "Upsilon-Class Command Shuttle",
     skill: 4,
     points: 61,
-    slots: [
-      "Tech",
-      "Tech",
-      "Crew",
-      "Crew",
-      "Crew",
-      "Cannon",
-      "Sensor",
-      "Modification",
-    ],
+    slots: ["Tech", "Tech", "Crew", "Crew", "Crew", "Cannon", "Sensor", "Modification"],
   },
   {
     name: "Kare Kun",
@@ -4977,15 +4097,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 4,
     points: 50,
-    slots: [
-      "Talent",
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Joph Seastriker",
@@ -4995,15 +4107,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 3,
     points: 48,
-    slots: [
-      "Talent",
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Lieutenant Bastian",
@@ -5013,14 +4117,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 2,
     points: 47,
-    slots: [
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Jaycris Tubbs",
@@ -5030,14 +4127,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 1,
     points: 47,
-    slots: [
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Black Squadron Ace (T-70)",
@@ -5047,15 +4137,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 4,
     points: 46,
-    slots: [
-      "Talent",
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Red Squadron Expert",
@@ -5064,15 +4146,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 3,
     points: 43,
-    slots: [
-      "Talent",
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Blue Squadron Rookie",
@@ -5081,14 +4155,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 1,
     points: 41,
-    slots: [
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Zeta Squadron Survivor",
@@ -5106,16 +4173,7 @@ export const pilots: Pilot[] = [
     ship: "MG-100 StarFortress",
     skill: 1,
     points: 51,
-    slots: [
-      "Sensor",
-      "Tech",
-      "Crew",
-      "Gunner",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Sensor", "Tech", "Crew", "Gunner", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: "TN-3465",
@@ -5235,17 +4293,7 @@ export const pilots: Pilot[] = [
     force: 3,
     keyword: ["Dark Side", "Sith"],
     points: 65,
-    slots: [
-      "Force",
-      "Cannon",
-      "Torpedo",
-      "Crew",
-      "Crew",
-      "Device",
-      "Modification",
-      "Title",
-      "Tactical Relay",
-    ],
+    slots: ["Force", "Cannon", "Torpedo", "Crew", "Crew", "Device", "Modification", "Title", "Tactical Relay"],
   },
   {
     name: "Anakin Skywalker",
@@ -5349,16 +4397,7 @@ export const pilots: Pilot[] = [
     points: 59,
     charge: 1,
     recurring: 1,
-    slots: [
-      "Tech",
-      "Tech",
-      "Crew",
-      "Crew",
-      "Crew",
-      "Cannon",
-      "Sensor",
-      "Modification",
-    ],
+    slots: ["Tech", "Tech", "Crew", "Crew", "Crew", "Cannon", "Sensor", "Modification"],
   },
   {
     name: "Captain Cardinal",
@@ -5369,16 +4408,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     points: 62,
     charge: 2,
-    slots: [
-      "Tech",
-      "Tech",
-      "Crew",
-      "Crew",
-      "Crew",
-      "Cannon",
-      "Sensor",
-      "Modification",
-    ],
+    slots: ["Tech", "Tech", "Crew", "Crew", "Crew", "Cannon", "Sensor", "Modification"],
   },
   {
     name: '"Avenger"',
@@ -5434,16 +4464,7 @@ export const pilots: Pilot[] = [
     ship: "Upsilon-Class Command Shuttle",
     skill: 2,
     points: 58,
-    slots: [
-      "Tech",
-      "Tech",
-      "Crew",
-      "Crew",
-      "Crew",
-      "Cannon",
-      "Sensor",
-      "Modification",
-    ],
+    slots: ["Tech", "Tech", "Crew", "Crew", "Crew", "Cannon", "Sensor", "Modification"],
   },
   {
     name: "Lieutenant Tavson",
@@ -5455,16 +4476,7 @@ export const pilots: Pilot[] = [
     charge: 2,
     recurring: 1,
     points: 64,
-    slots: [
-      "Tech",
-      "Tech",
-      "Crew",
-      "Crew",
-      "Crew",
-      "Cannon",
-      "Sensor",
-      "Modification",
-    ],
+    slots: ["Tech", "Tech", "Crew", "Crew", "Crew", "Cannon", "Sensor", "Modification"],
   },
   {
     name: '"Null"',
@@ -5484,16 +4496,7 @@ export const pilots: Pilot[] = [
     ship: "MG-100 StarFortress",
     skill: 1,
     points: 52,
-    slots: [
-      "Sensor",
-      "Tech",
-      "Crew",
-      "Gunner",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Sensor", "Tech", "Crew", "Gunner", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: "Ben Teene",
@@ -5503,16 +4506,7 @@ export const pilots: Pilot[] = [
     ship: "MG-100 StarFortress",
     skill: 3,
     points: 54,
-    slots: [
-      "Sensor",
-      "Tech",
-      "Crew",
-      "Gunner",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Sensor", "Tech", "Crew", "Gunner", "Gunner", "Device", "Device", "Modification"],
     applies_condition: "Rattled",
   },
   {
@@ -5523,16 +4517,7 @@ export const pilots: Pilot[] = [
     ship: "MG-100 StarFortress",
     skill: 3,
     points: 56,
-    slots: [
-      "Sensor",
-      "Tech",
-      "Crew",
-      "Gunner",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Sensor", "Tech", "Crew", "Gunner", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: "Vennie",
@@ -5542,16 +4527,7 @@ export const pilots: Pilot[] = [
     ship: "MG-100 StarFortress",
     skill: 2,
     points: 54,
-    slots: [
-      "Sensor",
-      "Tech",
-      "Crew",
-      "Gunner",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Sensor", "Tech", "Crew", "Gunner", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: "Resistance Sympathizer",
@@ -5560,15 +4536,7 @@ export const pilots: Pilot[] = [
     ship: "Scavenged YT-1300",
     skill: 2,
     points: 58,
-    slots: [
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Missile", "Crew", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "Jessika Pava",
@@ -5580,14 +4548,7 @@ export const pilots: Pilot[] = [
     points: 51,
     charge: 1,
     recurring: 1,
-    slots: [
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Temmin Wexley",
@@ -5597,15 +4558,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 4,
     points: 52,
-    slots: [
-      "Talent",
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Nien Nunb",
@@ -5615,15 +4568,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 5,
     points: 55,
-    slots: [
-      "Talent",
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Ello Asty",
@@ -5633,15 +4578,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 5,
     points: 54,
-    slots: [
-      "Talent",
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Green Squadron Expert",
@@ -6020,17 +4957,7 @@ export const pilots: Pilot[] = [
     force: 3,
     keyword: ["Dark Side", "Sith"],
     points: 63,
-    slots: [
-      "Force",
-      "Cannon",
-      "Torpedo",
-      "Crew",
-      "Crew",
-      "Device",
-      "Modification",
-      "Title",
-      "Tactical Relay",
-    ],
+    slots: ["Force", "Cannon", "Torpedo", "Crew", "Crew", "Device", "Modification", "Title", "Tactical Relay"],
   },
   {
     name: "0-66",
@@ -6041,17 +4968,7 @@ export const pilots: Pilot[] = [
     skill: 3,
     points: 49,
     keyword: ["Droid"],
-    slots: [
-      "Talent",
-      "Cannon",
-      "Torpedo",
-      "Crew",
-      "Crew",
-      "Device",
-      "Modification",
-      "Title",
-      "Tactical Relay",
-    ],
+    slots: ["Talent", "Cannon", "Torpedo", "Crew", "Crew", "Device", "Modification", "Title", "Tactical Relay"],
   },
   {
     name: "Dark Courier",
@@ -6060,16 +4977,7 @@ export const pilots: Pilot[] = [
     ship: "Sith Infiltrator",
     skill: 2,
     points: 51,
-    slots: [
-      "Cannon",
-      "Torpedo",
-      "Crew",
-      "Crew",
-      "Device",
-      "Modification",
-      "Title",
-      "Tactical Relay",
-    ],
+    slots: ["Cannon", "Torpedo", "Crew", "Crew", "Device", "Modification", "Title", "Tactical Relay"],
   },
   {
     name: "DFS-311",
@@ -6174,15 +5082,7 @@ export const pilots: Pilot[] = [
     ship: "Resistance Transport",
     skill: 1,
     points: 32,
-    slots: [
-      "Tech",
-      "Cannon",
-      "Torpedo",
-      "Crew",
-      "Crew",
-      "Astromech",
-      "Modification",
-    ],
+    slots: ["Tech", "Cannon", "Torpedo", "Crew", "Crew", "Astromech", "Modification"],
   },
   {
     name: "Pammich Nerro Goode",
@@ -6192,15 +5092,7 @@ export const pilots: Pilot[] = [
     ship: "Resistance Transport",
     skill: 3,
     points: 34,
-    slots: [
-      "Tech",
-      "Cannon",
-      "Torpedo",
-      "Crew",
-      "Crew",
-      "Astromech",
-      "Modification",
-    ],
+    slots: ["Tech", "Cannon", "Torpedo", "Crew", "Crew", "Astromech", "Modification"],
   },
   {
     name: "Vi Moradi",
@@ -6242,16 +5134,7 @@ export const pilots: Pilot[] = [
     ship: "Resistance Transport",
     skill: 4,
     points: 38,
-    slots: [
-      "Talent",
-      "Tech",
-      "Cannon",
-      "Torpedo",
-      "Crew",
-      "Crew",
-      "Astromech",
-      "Modification",
-    ],
+    slots: ["Talent", "Tech", "Cannon", "Torpedo", "Crew", "Crew", "Astromech", "Modification"],
   },
   {
     name: "Nodin Chavdri",
@@ -6261,15 +5144,7 @@ export const pilots: Pilot[] = [
     ship: "Resistance Transport",
     skill: 2,
     points: 35,
-    slots: [
-      "Tech",
-      "Cannon",
-      "Torpedo",
-      "Crew",
-      "Crew",
-      "Astromech",
-      "Modification",
-    ],
+    slots: ["Tech", "Cannon", "Torpedo", "Crew", "Crew", "Astromech", "Modification"],
   },
   {
     name: "Stalgasin Hive Guard",
@@ -6341,15 +5216,7 @@ export const pilots: Pilot[] = [
     force: 3,
     points: 53,
     keyword: ["Jedi", "Light Side"],
-    slots: [
-      "Force",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Force", "Turret", "Torpedo", "Gunner", "Astromech", "Device", "Modification"],
   },
   {
     name: "Shadow Squadron Veteran",
@@ -6359,15 +5226,7 @@ export const pilots: Pilot[] = [
     skill: 3,
     points: 31,
     keyword: ["Clone"],
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Gunner", "Astromech", "Device", "Modification"],
   },
   {
     name: "Red Squadron Bomber",
@@ -6377,14 +5236,7 @@ export const pilots: Pilot[] = [
     skill: 2,
     points: 29,
     keyword: ["Clone"],
-    slots: [
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Turret", "Torpedo", "Gunner", "Astromech", "Device", "Modification"],
   },
   {
     name: "R2-D2",
@@ -6395,15 +5247,7 @@ export const pilots: Pilot[] = [
     skill: 2,
     points: 31,
     keyword: ["Droid"],
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Crew",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Gunner", "Crew", "Device", "Modification"],
   },
   {
     name: '"Goji"',
@@ -6414,14 +5258,7 @@ export const pilots: Pilot[] = [
     skill: 2,
     points: 29,
     keyword: ["Clone"],
-    slots: [
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Turret", "Torpedo", "Gunner", "Astromech", "Device", "Modification"],
   },
   {
     name: '"Broadside"',
@@ -6432,15 +5269,7 @@ export const pilots: Pilot[] = [
     skill: 3,
     points: 36,
     keyword: ["Clone"],
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Gunner", "Astromech", "Device", "Modification"],
   },
   {
     name: '"Matchstick"',
@@ -6451,15 +5280,7 @@ export const pilots: Pilot[] = [
     skill: 4,
     points: 42,
     keyword: ["Clone"],
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Gunner", "Astromech", "Device", "Modification"],
   },
   {
     name: '"Odd Ball" (Y-Wing)',
@@ -6472,15 +5293,7 @@ export const pilots: Pilot[] = [
     skill: 5,
     points: 40,
     keyword: ["Clone"],
-    slots: [
-      "Talent",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Talent", "Turret", "Torpedo", "Gunner", "Astromech", "Device", "Modification"],
   },
   {
     name: "Republic Judiciary",
@@ -6490,17 +5303,7 @@ export const pilots: Pilot[] = [
     skill: 8,
     engagement: 0,
     points: 146,
-    slots: [
-      "Command",
-      "Hardpoint",
-      "Hardpoint",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Team",
-      "Team",
-      "Cargo",
-    ],
+    slots: ["Command", "Hardpoint", "Hardpoint", "Crew", "Crew", "Gunner", "Team", "Team", "Cargo"],
   },
   {
     name: "Alderaanian Guard",
@@ -6510,18 +5313,7 @@ export const pilots: Pilot[] = [
     skill: 8,
     engagement: 0,
     points: 146,
-    slots: [
-      "Command",
-      "Hardpoint",
-      "Hardpoint",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Team",
-      "Team",
-      "Cargo",
-      "Title",
-    ],
+    slots: ["Command", "Hardpoint", "Hardpoint", "Crew", "Crew", "Gunner", "Team", "Team", "Cargo", "Title"],
   },
   {
     name: "Outer Rim Patrol",
@@ -6531,18 +5323,7 @@ export const pilots: Pilot[] = [
     skill: 8,
     engagement: 0,
     points: 146,
-    slots: [
-      "Command",
-      "Torpedo",
-      "Missile",
-      "Hardpoint",
-      "Hardpoint",
-      "Crew",
-      "Team",
-      "Team",
-      "Cargo",
-      "Title",
-    ],
+    slots: ["Command", "Torpedo", "Missile", "Hardpoint", "Hardpoint", "Crew", "Team", "Team", "Cargo", "Title"],
   },
   {
     name: "First Order Collaborators",
@@ -6552,17 +5333,7 @@ export const pilots: Pilot[] = [
     skill: 8,
     engagement: 0,
     points: 146,
-    slots: [
-      "Command",
-      "Torpedo",
-      "Missile",
-      "Hardpoint",
-      "Hardpoint",
-      "Crew",
-      "Team",
-      "Team",
-      "Cargo",
-    ],
+    slots: ["Command", "Torpedo", "Missile", "Hardpoint", "Hardpoint", "Crew", "Team", "Team", "Cargo"],
   },
   {
     name: "Echo Base Evacuees",
@@ -6572,17 +5343,7 @@ export const pilots: Pilot[] = [
     skill: 7,
     engagement: 1,
     points: 55,
-    slots: [
-      "Command",
-      "Hardpoint",
-      "Turret",
-      "Crew",
-      "Crew",
-      "Team",
-      "Cargo",
-      "Cargo",
-      "Title",
-    ],
+    slots: ["Command", "Hardpoint", "Turret", "Crew", "Crew", "Team", "Cargo", "Cargo", "Title"],
   },
   {
     name: "New Republic Volunteers",
@@ -6592,16 +5353,7 @@ export const pilots: Pilot[] = [
     skill: 7,
     engagement: 1,
     points: 55,
-    slots: [
-      "Command",
-      "Hardpoint",
-      "Turret",
-      "Crew",
-      "Crew",
-      "Team",
-      "Cargo",
-      "Cargo",
-    ],
+    slots: ["Command", "Hardpoint", "Turret", "Crew", "Crew", "Team", "Cargo", "Cargo"],
   },
   {
     name: "Outer Rim Garrison",
@@ -6611,17 +5363,7 @@ export const pilots: Pilot[] = [
     skill: 7,
     engagement: 1,
     points: 60,
-    slots: [
-      "Command",
-      "Hardpoint",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Team",
-      "Cargo",
-      "Cargo",
-      "Title",
-    ],
+    slots: ["Command", "Hardpoint", "Crew", "Crew", "Gunner", "Team", "Cargo", "Cargo", "Title"],
   },
   {
     name: "First Order Sympathizers",
@@ -6631,16 +5373,7 @@ export const pilots: Pilot[] = [
     skill: 7,
     engagement: 1,
     points: 60,
-    slots: [
-      "Command",
-      "Hardpoint",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Team",
-      "Cargo",
-      "Cargo",
-    ],
+    slots: ["Command", "Hardpoint", "Crew", "Crew", "Gunner", "Team", "Cargo", "Cargo"],
   },
   {
     name: "Separatist Privateers",
@@ -6650,17 +5383,7 @@ export const pilots: Pilot[] = [
     skill: 7,
     engagement: 1,
     points: 58,
-    slots: [
-      "Command",
-      "Hardpoint",
-      "Crew",
-      "Crew",
-      "Tactical Relay",
-      "Team",
-      "Cargo",
-      "Device",
-      "Configuration",
-    ],
+    slots: ["Command", "Hardpoint", "Crew", "Crew", "Tactical Relay", "Team", "Cargo", "Device", "Configuration"],
   },
   {
     name: "Syndicate Smugglers",
@@ -6670,18 +5393,7 @@ export const pilots: Pilot[] = [
     skill: 7,
     engagement: 1,
     points: 58,
-    slots: [
-      "Command",
-      "Hardpoint",
-      "Crew",
-      "Crew",
-      "Team",
-      "Cargo",
-      "Device",
-      "Illicit",
-      "Title",
-      "Configuration",
-    ],
+    slots: ["Command", "Hardpoint", "Crew", "Crew", "Team", "Cargo", "Device", "Illicit", "Title", "Configuration"],
   },
   {
     name: "Jarek Yeager",
@@ -6691,15 +5403,7 @@ export const pilots: Pilot[] = [
     ship: "Fireball",
     skill: 5,
     points: 32,
-    slots: [
-      "Talent",
-      "Missile",
-      "Astromech",
-      "Illicit",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Missile", "Astromech", "Illicit", "Modification", "Modification", "Title"],
   },
   {
     name: "Kazuda Xiono",
@@ -6709,15 +5413,7 @@ export const pilots: Pilot[] = [
     ship: "Fireball",
     skill: 4,
     points: 39,
-    slots: [
-      "Talent",
-      "Missile",
-      "Astromech",
-      "Illicit",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Missile", "Astromech", "Illicit", "Modification", "Modification", "Title"],
   },
   {
     name: "R1-J5",
@@ -6728,14 +5424,7 @@ export const pilots: Pilot[] = [
     skill: 1,
     points: 28,
     keyword: ["Droid"],
-    slots: [
-      "Missile",
-      "Crew",
-      "Illicit",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Missile", "Crew", "Illicit", "Modification", "Modification", "Title"],
   },
   {
     name: "Colossus Station Mechanic",
@@ -6744,14 +5433,7 @@ export const pilots: Pilot[] = [
     ship: "Fireball",
     skill: 2,
     points: 26,
-    slots: [
-      "Missile",
-      "Astromech",
-      "Illicit",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Missile", "Astromech", "Illicit", "Modification", "Modification", "Title"],
   },
   {
     name: "Major Vonreg",
@@ -6844,17 +5526,7 @@ export const pilots: Pilot[] = [
     points: 56,
     charge: 1,
     recurring: 1,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Tech",
-      "Crew",
-      "Gunner",
-      "Gunner",
-      "Device",
-      "Device",
-      "Modification",
-    ],
+    slots: ["Talent", "Sensor", "Tech", "Crew", "Gunner", "Gunner", "Device", "Device", "Modification"],
   },
   {
     name: "K-2SO",
@@ -6865,14 +5537,7 @@ export const pilots: Pilot[] = [
     ship: "U-Wing",
     points: 46,
     keyword: ["Droid"],
-    slots: [
-      "Talent",
-      "Sensor",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Talent", "Sensor", "Crew", "Crew", "Modification", "Configuration"],
   },
   {
     name: "Gina Moonsong",
@@ -6882,16 +5547,7 @@ export const pilots: Pilot[] = [
     skill: 5,
     ship: "B-Wing",
     points: 50,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Cannon",
-      "Cannon",
-      "Torpedo",
-      "Modification",
-      "Configuration",
-      "Title",
-    ],
+    slots: ["Talent", "Sensor", "Cannon", "Cannon", "Torpedo", "Modification", "Configuration", "Title"],
   },
   {
     name: "Alexsandr Kallus",
@@ -6902,17 +5558,7 @@ export const pilots: Pilot[] = [
     ship: "VCX-100",
     points: 68,
     keyword: ["Spectre"],
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Sensor",
-      "Turret",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Gunner",
-      "Title",
-    ],
+    slots: ["Talent", "Torpedo", "Sensor", "Turret", "Crew", "Crew", "Modification", "Gunner", "Title"],
   },
   {
     name: "Leia Organa",
@@ -6924,16 +5570,7 @@ export const pilots: Pilot[] = [
     keyword: ["Light Side"],
     points: 77,
     force: 1,
-    slots: [
-      "Force",
-      "Missile",
-      "Gunner",
-      "Crew",
-      "Crew",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Force", "Missile", "Gunner", "Crew", "Crew", "Modification", "Modification", "Title"],
   },
   {
     name: "Fifth Brother",
@@ -6966,17 +5603,7 @@ export const pilots: Pilot[] = [
     ship: "VT-49 Decimator",
     points: 75,
     charge: 3,
-    slots: [
-      "Talent",
-      "Torpedo",
-      "Crew",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Device",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Torpedo", "Crew", "Crew", "Crew", "Gunner", "Device", "Modification", "Title"],
   },
   {
     name: "Lieutenant LeHuse",
@@ -7021,15 +5648,7 @@ export const pilots: Pilot[] = [
     ship: "JumpMaster 5000",
     points: 38,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Torpedo",
-      "Cannon",
-      "Crew",
-      "Gunner",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Torpedo", "Cannon", "Crew", "Gunner", "Illicit", "Modification", "Title"],
   },
   {
     name: "First Order Courier",
@@ -7048,17 +5667,7 @@ export const pilots: Pilot[] = [
     skill: 3,
     ship: "Xi-class Light Shuttle",
     points: 42,
-    slots: [
-      "Talent",
-      "Tech",
-      "Tech",
-      "Crew",
-      "Crew",
-      "Illicit",
-      "Illicit",
-      "Illicit",
-      "Modification",
-    ],
+    slots: ["Talent", "Tech", "Tech", "Crew", "Crew", "Illicit", "Illicit", "Illicit", "Modification"],
   },
   {
     name: "Gideon Hask (Xi Shuttle)",
@@ -7092,15 +5701,7 @@ export const pilots: Pilot[] = [
     ship: "HMP Droid Gunship",
     points: 34,
     keyword: ["Droid"],
-    slots: [
-      "Missile",
-      "Missile",
-      "Tactical Relay",
-      "Crew",
-      "Device",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Missile", "Missile", "Tactical Relay", "Crew", "Device", "Modification", "Configuration"],
   },
   // {
   //   name: "TransGalMeg Control Link",
@@ -7119,15 +5720,7 @@ export const pilots: Pilot[] = [
     ship: "HMP Droid Gunship",
     points: 36,
     keyword: ["Droid"],
-    slots: [
-      "Missile",
-      "Missile",
-      "Tactical Relay",
-      "Crew",
-      "Device",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Missile", "Missile", "Tactical Relay", "Crew", "Device", "Modification", "Configuration"],
   },
   {
     name: "Geonosian Prototype",
@@ -7138,15 +5731,7 @@ export const pilots: Pilot[] = [
     ship: "HMP Droid Gunship",
     points: 35,
     keyword: ["Droid"],
-    slots: [
-      "Missile",
-      "Missile",
-      "Cannon",
-      "Cannon",
-      "Tactical Relay",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Missile", "Missile", "Cannon", "Cannon", "Tactical Relay", "Modification", "Configuration"],
   },
   {
     name: "DGS-047",
@@ -7157,15 +5742,7 @@ export const pilots: Pilot[] = [
     ship: "HMP Droid Gunship",
     points: 35,
     keyword: ["Droid"],
-    slots: [
-      "Missile",
-      "Missile",
-      "Tactical Relay",
-      "Crew",
-      "Device",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Missile", "Missile", "Tactical Relay", "Crew", "Device", "Modification", "Configuration"],
   },
   {
     name: "DGS-286",
@@ -7176,15 +5753,7 @@ export const pilots: Pilot[] = [
     ship: "HMP Droid Gunship",
     points: 42,
     keyword: ["Droid"],
-    slots: [
-      "Missile",
-      "Missile",
-      "Tactical Relay",
-      "Crew",
-      "Device",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Missile", "Missile", "Tactical Relay", "Crew", "Device", "Modification", "Configuration"],
   },
   {
     name: "Onderon Oppressor",
@@ -7195,15 +5764,7 @@ export const pilots: Pilot[] = [
     ship: "HMP Droid Gunship",
     points: 40,
     keyword: ["Droid"],
-    slots: [
-      "Missile",
-      "Missile",
-      "Tactical Relay",
-      "Crew",
-      "Device",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Missile", "Missile", "Tactical Relay", "Crew", "Device", "Modification", "Configuration"],
   },
   {
     name: "212th Battalion Pilot",
@@ -7215,15 +5776,7 @@ export const pilots: Pilot[] = [
     ship: "LAAT/i Gunship",
     points: 49,
     keyword: ["Clone"],
-    slots: [
-      "Missile",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Gunner",
-      "Modification",
-    ],
+    slots: ["Missile", "Missile", "Crew", "Crew", "Gunner", "Gunner", "Modification"],
   },
   {
     name: '"Hound"',
@@ -7236,15 +5789,7 @@ export const pilots: Pilot[] = [
     ship: "LAAT/i Gunship",
     points: 50,
     keyword: ["Clone"],
-    slots: [
-      "Missile",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Gunner",
-      "Modification",
-    ],
+    slots: ["Missile", "Missile", "Crew", "Crew", "Gunner", "Gunner", "Modification"],
   },
   {
     name: '"Warthog"',
@@ -7257,15 +5802,7 @@ export const pilots: Pilot[] = [
     ship: "LAAT/i Gunship",
     points: 54,
     keyword: ["Clone"],
-    slots: [
-      "Missile",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Gunner",
-      "Modification",
-    ],
+    slots: ["Missile", "Missile", "Crew", "Crew", "Gunner", "Gunner", "Modification"],
   },
   {
     name: '"Hawk"',
@@ -7278,16 +5815,7 @@ export const pilots: Pilot[] = [
     ship: "LAAT/i Gunship",
     points: 54,
     keyword: ["Clone"],
-    slots: [
-      "Talent",
-      "Missile",
-      "Missile",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Gunner",
-      "Modification",
-    ],
+    slots: ["Talent", "Missile", "Missile", "Crew", "Crew", "Gunner", "Gunner", "Modification"],
   },
   {
     name: "Carida Academy Cadet",
@@ -7296,13 +5824,7 @@ export const pilots: Pilot[] = [
     skill: 1,
     ship: "TIE/rb Heavy",
     points: 34,
-    slots: [
-      "Cannon",
-      "Cannon",
-      "Modification",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Cannon", "Cannon", "Modification", "Modification", "Configuration"],
   },
   {
     name: "Onyx Squadron Sentry",
@@ -7311,14 +5833,7 @@ export const pilots: Pilot[] = [
     skill: 3,
     ship: "TIE/rb Heavy",
     points: 36,
-    slots: [
-      "Talent",
-      "Cannon",
-      "Cannon",
-      "Modification",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Talent", "Cannon", "Cannon", "Modification", "Modification", "Configuration"],
   },
   {
     name: "Lyttan Dree",
@@ -7328,13 +5843,7 @@ export const pilots: Pilot[] = [
     unique: !0,
     ship: "TIE/rb Heavy",
     points: 37,
-    slots: [
-      "Cannon",
-      "Cannon",
-      "Modification",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Cannon", "Cannon", "Modification", "Modification", "Configuration"],
   },
   {
     name: '"Rampage"',
@@ -7344,14 +5853,7 @@ export const pilots: Pilot[] = [
     unique: !0,
     ship: "TIE/rb Heavy",
     points: 39,
-    slots: [
-      "Talent",
-      "Cannon",
-      "Cannon",
-      "Modification",
-      "Modification",
-      "Configuration",
-    ],
+    slots: ["Talent", "Cannon", "Cannon", "Modification", "Modification", "Configuration"],
   },
   {
     name: "Fearsome Predator",
@@ -7419,15 +5921,7 @@ export const pilots: Pilot[] = [
     skill: 2,
     ship: "Firespray-31",
     points: 64,
-    slots: [
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Cannon", "Missile", "Crew", "Device", "Illicit", "Modification", "Title"],
   },
   {
     name: "Boba Fett (Separatist)",
@@ -7440,15 +5934,7 @@ export const pilots: Pilot[] = [
     ship: "Firespray-31",
     points: 70,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Cannon", "Missile", "Crew", "Device", "Illicit", "Modification", "Title"],
   },
   {
     name: "Zam Wesell",
@@ -7460,16 +5946,7 @@ export const pilots: Pilot[] = [
     ship: "Firespray-31",
     points: 76,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Talent",
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Cannon", "Missile", "Crew", "Device", "Illicit", "Modification", "Title"],
     applies_condition: ["You'd Better Mean Business", "You Should Thank Me"],
   },
   {
@@ -7481,16 +5958,7 @@ export const pilots: Pilot[] = [
     ship: "Firespray-31",
     points: 79,
     keyword: ["Bounty Hunter"],
-    slots: [
-      "Talent",
-      "Cannon",
-      "Missile",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Cannon", "Missile", "Crew", "Device", "Illicit", "Modification", "Title"],
   },
   {
     name: "Loyalist Volunteer",
@@ -7645,15 +6113,7 @@ export const pilots: Pilot[] = [
     points: 60,
     charge: 2,
     recurring: 1,
-    slots: [
-      "Talent",
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Temmin Wexley (HoH)",
@@ -7665,15 +6125,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 4,
     points: 53,
-    slots: [
-      "Talent",
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Merl Cobben",
@@ -7723,14 +6175,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 2,
     points: 49,
-    slots: [
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "C'ai Threnalli",
@@ -7740,15 +6185,7 @@ export const pilots: Pilot[] = [
     ship: "T-70 X-Wing",
     skill: 4,
     points: 48,
-    slots: [
-      "Talent",
-      "Astromech",
-      "Tech",
-      "Modification",
-      "Configuration",
-      "Title",
-      "HardpointShip",
-    ],
+    slots: ["Talent", "Astromech", "Tech", "Modification", "Configuration", "Title", "HardpointShip"],
   },
   {
     name: "Hera Syndulla (B-Wing)",
@@ -7761,16 +6198,7 @@ export const pilots: Pilot[] = [
     ship: "B-Wing",
     skill: 6,
     points: 55,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Cannon",
-      "Cannon",
-      "Torpedo",
-      "Modification",
-      "Configuration",
-      "Title",
-    ],
+    slots: ["Talent", "Sensor", "Cannon", "Cannon", "Torpedo", "Modification", "Configuration", "Title"],
   },
   {
     name: "Hera Syndulla (A-Wing)",
@@ -7856,15 +6284,7 @@ export const pilots: Pilot[] = [
     skill: 3,
     force: 1,
     points: 42,
-    slots: [
-      "Force",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Force", "Crew", "Device", "Illicit", "Modification", "Modification", "Title"],
   },
   {
     name: "Leema Kai",
@@ -7874,15 +6294,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 5,
     points: 40,
-    slots: [
-      "Talent",
-      "Tech",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-    ],
+    slots: ["Talent", "Tech", "Turret", "Torpedo", "Gunner", "Astromech", "Device"],
   },
   {
     name: "Arliz Hadrassian",
@@ -7892,15 +6304,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 4,
     points: 39,
-    slots: [
-      "Talent",
-      "Tech",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-    ],
+    slots: ["Talent", "Tech", "Turret", "Torpedo", "Gunner", "Astromech", "Device"],
   },
   {
     name: "Padric",
@@ -7910,15 +6314,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 3,
     points: 36,
-    slots: [
-      "Talent",
-      "Tech",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-    ],
+    slots: ["Talent", "Tech", "Turret", "Torpedo", "Gunner", "Astromech", "Device"],
   },
   {
     name: "Derek Klivian",
@@ -7964,16 +6360,7 @@ export const pilots: Pilot[] = [
     ship: "B-Wing",
     skill: 3,
     points: 46,
-    slots: [
-      "Talent",
-      "Sensor",
-      "Cannon",
-      "Cannon",
-      "Torpedo",
-      "Modification",
-      "Configuration",
-      "Title",
-    ],
+    slots: ["Talent", "Sensor", "Cannon", "Cannon", "Torpedo", "Modification", "Configuration", "Title"],
   },
   {
     name: "Commandant Goran",
@@ -8061,15 +6448,7 @@ export const pilots: Pilot[] = [
     ship: "Y-Wing",
     skill: 3,
     points: 33,
-    slots: [
-      "Talent",
-      "Tech",
-      "Turret",
-      "Torpedo",
-      "Gunner",
-      "Astromech",
-      "Device",
-    ],
+    slots: ["Talent", "Tech", "Turret", "Torpedo", "Gunner", "Astromech", "Device"],
   },
   {
     name: "Gamut Key",
@@ -8081,15 +6460,7 @@ export const pilots: Pilot[] = [
     charge: 2,
     recurring: 1,
     points: 34,
-    slots: [
-      "Talent",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Crew", "Device", "Illicit", "Modification", "Modification", "Title"],
   },
   {
     name: "Tápusk",
@@ -8102,15 +6473,7 @@ export const pilots: Pilot[] = [
     charge: 2,
     recurring: 1,
     points: 36,
-    slots: [
-      "Talent",
-      "Crew",
-      "Device",
-      "Illicit",
-      "Modification",
-      "Modification",
-      "Title",
-    ],
+    slots: ["Talent", "Crew", "Device", "Illicit", "Modification", "Modification", "Title"],
   },
   {
     name: "Colicoid Destroyer",
@@ -8120,18 +6483,7 @@ export const pilots: Pilot[] = [
     skill: 8,
     engagement: 0,
     points: 90,
-    slots: [
-      "Command",
-      "Torpedo",
-      "Hardpoint",
-      "Hardpoint",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Team",
-      "Cargo",
-      "Title",
-    ],
+    slots: ["Command", "Torpedo", "Hardpoint", "Hardpoint", "Crew", "Crew", "Gunner", "Team", "Cargo", "Title"],
   },
   {
     name: "Lawless Pirates",
@@ -8141,18 +6493,7 @@ export const pilots: Pilot[] = [
     skill: 8,
     engagement: 0,
     points: 90,
-    slots: [
-      "Command",
-      "Torpedo",
-      "Hardpoint",
-      "Hardpoint",
-      "Crew",
-      "Crew",
-      "Gunner",
-      "Team",
-      "Cargo",
-      "Title",
-    ],
+    slots: ["Command", "Torpedo", "Hardpoint", "Hardpoint", "Crew", "Crew", "Gunner", "Team", "Cargo", "Title"],
   },
 ];
 
@@ -9978,16 +8319,10 @@ export const upgrades: Upgrade[] = [
     modifier_func: function (a) {
       var b, c, d, e;
       if (null != a.maneuvers[1]) {
-        for (
-          e = [], b = c = 0, d = a.maneuvers[1].length;
-          0 <= d ? c < d : c > d;
-          b = 0 <= d ? ++c : --c
-        )
+        for (e = [], b = c = 0, d = a.maneuvers[1].length; 0 <= d ? c < d : c > d; b = 0 <= d ? ++c : --c)
           b > 4 ||
             (a.maneuvers[1][b] > 1 && a.maneuvers[1][b]--,
-            a.maneuvers[2][b] > 1
-              ? e.push(a.maneuvers[2][b]--)
-              : e.push(void 0));
+            a.maneuvers[2][b] > 1 ? e.push(a.maneuvers[2][b]--) : e.push(void 0));
         return e;
       }
     },
@@ -10098,8 +8433,7 @@ export const upgrades: Upgrade[] = [
     unique: !0,
     faction: "Rebel Alliance",
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Calculate") < 0)
-        return a.actions.push("Calculate");
+      if (__indexOf.call(a.actions, "Calculate") < 0) return a.actions.push("Calculate");
     },
   },
   {
@@ -10278,8 +8612,7 @@ export const upgrades: Upgrade[] = [
     unique: !0,
     faction: "Scum and Villainy",
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Calculate") < 0)
-        return a.actions.push("Calculate");
+      if (__indexOf.call(a.actions, "Calculate") < 0) return a.actions.push("Calculate");
     },
   },
   {
@@ -10438,9 +8771,7 @@ export const upgrades: Upgrade[] = [
       var b, c, d, e, f;
       if (null != a.maneuvers[1]) {
         for (e = a.maneuvers, f = [], c = 0, d = e.length; c < d; c++)
-          (b = e[c]),
-            b[1] > 1 && b[1]--,
-            b[3] > 1 ? f.push(b[3]--) : f.push(void 0);
+          (b = e[c]), b[1] > 1 && b[1]--, b[3] > 1 ? f.push(b[3]--) : f.push(void 0);
         return f;
       }
     },
@@ -10517,8 +8848,7 @@ export const upgrades: Upgrade[] = [
     points: 6,
     restrictions: [["Action", "R-Coordinate"]],
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Coordinate") < 0)
-        return a.actions.push("Coordinate");
+      if (__indexOf.call(a.actions, "Coordinate") < 0) return a.actions.push("Coordinate");
     },
   },
   {
@@ -10918,8 +9248,7 @@ export const upgrades: Upgrade[] = [
     variablebase: !0,
     restrictions: [["Action", "R-Boost"]],
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Boost") < 0)
-        return a.actions.push("Boost");
+      if (__indexOf.call(a.actions, "Boost") < 0) return a.actions.push("Boost");
     },
   },
   {
@@ -10997,8 +9326,7 @@ export const upgrades: Upgrade[] = [
     points: 4,
     restrictions: [["Base", "Small or Medium"]],
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "R-Evade") < 0)
-        return a.actions.push("R-Evade");
+      if (__indexOf.call(a.actions, "R-Evade") < 0) return a.actions.push("R-Evade");
     },
   },
   {
@@ -11017,8 +9345,7 @@ export const upgrades: Upgrade[] = [
     variablebase: !0,
     restrictions: [["Action", "R-Barrel Roll"]],
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Barrel Roll") < 0)
-        return a.actions.push("Barrel Roll");
+      if (__indexOf.call(a.actions, "Barrel Roll") < 0) return a.actions.push("Barrel Roll");
     },
   },
   {
@@ -11097,8 +9424,7 @@ export const upgrades: Upgrade[] = [
     variableinit: !0,
     unique: !0,
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "R-Coordinate") < 0)
-        return a.actions.push("R-Coordinate");
+      if (__indexOf.call(a.actions, "R-Coordinate") < 0) return a.actions.push("R-Coordinate");
     },
   },
   {
@@ -11152,8 +9478,7 @@ export const upgrades: Upgrade[] = [
     attackt: 2,
     range: "1-2",
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Rotate Arc") < 0)
-        return a.actions.push("Rotate Arc");
+      if (__indexOf.call(a.actions, "Rotate Arc") < 0) return a.actions.push("Rotate Arc");
     },
   },
   {
@@ -11164,8 +9489,7 @@ export const upgrades: Upgrade[] = [
     attackt: 3,
     range: "1-2",
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Rotate Arc") < 0)
-        return a.actions.push("Rotate Arc");
+      if (__indexOf.call(a.actions, "Rotate Arc") < 0) return a.actions.push("Rotate Arc");
     },
   },
   {
@@ -11199,11 +9523,7 @@ export const upgrades: Upgrade[] = [
     slot: "Configuration",
     ship: "X-Wing",
     modifier_func: function (a) {
-      return (
-        a.actions.push("Boost"),
-        a.actions.push("*Focus"),
-        a.actions.push("R-> Boost")
-      );
+      return a.actions.push("Boost"), a.actions.push("*Focus"), a.actions.push("R-> Boost");
     },
   },
   {
@@ -11234,8 +9554,7 @@ export const upgrades: Upgrade[] = [
       },
     ],
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Reload") < 0)
-        return a.actions.push("Reload");
+      if (__indexOf.call(a.actions, "Reload") < 0) return a.actions.push("Reload");
     },
   },
   {
@@ -11327,8 +9646,7 @@ export const upgrades: Upgrade[] = [
     faction: "Rebel Alliance",
     ship: "YT-1300",
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Evade") < 0)
-        return a.actions.push("Evade");
+      if (__indexOf.call(a.actions, "Evade") < 0) return a.actions.push("Evade");
     },
   },
   {
@@ -11340,8 +9658,7 @@ export const upgrades: Upgrade[] = [
     faction: "Scum and Villainy",
     ship: "G-1A Starfighter",
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Barrel Roll") < 0)
-        return a.actions.push("Barrel Roll");
+      if (__indexOf.call(a.actions, "Barrel Roll") < 0) return a.actions.push("Barrel Roll");
     },
     confersAddons: [
       {
@@ -11520,11 +9837,7 @@ export const upgrades: Upgrade[] = [
     points: 0,
     ship: "T-70 X-Wing",
     modifier_func: function (a) {
-      return (
-        a.actions.push("Barrel Roll"),
-        a.actions.push("*Focus"),
-        a.actions.push("R-> Barrel Roll")
-      );
+      return a.actions.push("Barrel Roll"), a.actions.push("*Focus"), a.actions.push("R-> Barrel Roll");
     },
   },
   {
@@ -11668,8 +9981,7 @@ export const upgrades: Upgrade[] = [
     faction: "Resistance",
     modifier_func: function (a) {
       if (
-        (__indexOf.call(a.actions, "Calculate") < 0 &&
-          a.actions.push("Calculate"),
+        (__indexOf.call(a.actions, "Calculate") < 0 && a.actions.push("Calculate"),
         __indexOf.call(a.actions, "R-Coordinate") < 0)
       )
         return a.actions.push("R-Coordinate");
@@ -11684,8 +9996,7 @@ export const upgrades: Upgrade[] = [
     unique: !0,
     faction: "Resistance",
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "R-Evade") < 0)
-        return a.actions.push("R-Evade");
+      if (__indexOf.call(a.actions, "R-Evade") < 0) return a.actions.push("R-Evade");
     },
   },
   {
@@ -11857,8 +10168,7 @@ export const upgrades: Upgrade[] = [
     pointsarray: [3, 3, 3, 3, 4, 6, 8],
     variableinit: !0,
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "F-Coordinate") < 0)
-        return a.actions.push("F-Coordinate");
+      if (__indexOf.call(a.actions, "F-Coordinate") < 0) return a.actions.push("F-Coordinate");
     },
   },
   {
@@ -11895,10 +10205,7 @@ export const upgrades: Upgrade[] = [
     faction: "Separatist Alliance",
     points: 4,
     modifier_func: function (a) {
-      if (
-        (__indexOf.call(a.actions, "R-Cloak") < 0 && a.actions.push("R-Cloak"),
-        __indexOf.call(a.actions, "Jam") < 0)
-      )
+      if ((__indexOf.call(a.actions, "R-Cloak") < 0 && a.actions.push("R-Cloak"), __indexOf.call(a.actions, "Jam") < 0))
         return a.actions.push("Jam");
     },
   },
@@ -11911,8 +10218,7 @@ export const upgrades: Upgrade[] = [
     force: 1,
     points: 14,
     modifier_func: function (a) {
-      if (((a.force += 1), __indexOf.call(a.actions, "F-Coordinate") < 0))
-        return a.actions.push("F-Coordinate");
+      if (((a.force += 1), __indexOf.call(a.actions, "F-Coordinate") < 0)) return a.actions.push("F-Coordinate");
     },
   },
   {
@@ -11964,8 +10270,7 @@ export const upgrades: Upgrade[] = [
     faction: "Separatist Alliance",
     points: 11,
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Calculate") < 0)
-        return a.actions.push("Calculate");
+      if (__indexOf.call(a.actions, "Calculate") < 0) return a.actions.push("Calculate");
     },
   },
   {
@@ -12042,8 +10347,7 @@ export const upgrades: Upgrade[] = [
     unique: !0,
     modifier_func: function (a) {
       return (
-        __indexOf.call(a.actions, "Calculate") < 0 &&
-          a.actions.push("Calculate"),
+        __indexOf.call(a.actions, "Calculate") < 0 && a.actions.push("Calculate"),
         {
           applies_condition: "It's the Resistance",
         }
@@ -12187,8 +10491,7 @@ export const upgrades: Upgrade[] = [
     },
     also_occupies_upgrades: ["Crew"],
     modifier_func: function (a) {
-      if (((a.force += 1), __indexOf.call(a.actions, "F-Coordinate") < 0))
-        return a.actions.push("F-Coordinate");
+      if (((a.force += 1), __indexOf.call(a.actions, "F-Coordinate") < 0)) return a.actions.push("F-Coordinate");
     },
   },
   {
@@ -12207,8 +10510,7 @@ export const upgrades: Upgrade[] = [
     faction: "Resistance",
     points: 5,
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Calculate") < 0)
-        return a.actions.push("Calculate");
+      if (__indexOf.call(a.actions, "Calculate") < 0) return a.actions.push("Calculate");
     },
   },
   {
@@ -12222,8 +10524,7 @@ export const upgrades: Upgrade[] = [
       ["Base", "Small or Medium"],
     ],
     modifier_func: function (a) {
-      if (((a.shields -= 1), __indexOf.call(a.actions, "Reinforce") < 0))
-        return a.actions.push("Reinforce");
+      if (((a.shields -= 1), __indexOf.call(a.actions, "Reinforce") < 0)) return a.actions.push("Reinforce");
     },
   },
   {
@@ -12291,8 +10592,7 @@ export const upgrades: Upgrade[] = [
     points: 8,
     faction: "Galactic Republic",
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Calculate") < 0)
-        return a.actions.push("Calculate");
+      if (__indexOf.call(a.actions, "Calculate") < 0) return a.actions.push("Calculate");
     },
   },
   {
@@ -12486,8 +10786,7 @@ export const upgrades: Upgrade[] = [
     attackt: 4,
     range: "2-4",
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Rotate Arc") < 0)
-        return a.actions.push("Rotate Arc");
+      if (__indexOf.call(a.actions, "Rotate Arc") < 0) return a.actions.push("Rotate Arc");
     },
   },
   {
@@ -12498,8 +10797,7 @@ export const upgrades: Upgrade[] = [
     attackt: 3,
     range: "2-5",
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Rotate Arc") < 0)
-        return a.actions.push("Rotate Arc");
+      if (__indexOf.call(a.actions, "Rotate Arc") < 0) return a.actions.push("Rotate Arc");
     },
   },
   {
@@ -12516,8 +10814,7 @@ export const upgrades: Upgrade[] = [
     attackdt: 2,
     range: "1-2",
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Rotate Arc") < 0)
-        return a.actions.push("Rotate Arc");
+      if (__indexOf.call(a.actions, "Rotate Arc") < 0) return a.actions.push("Rotate Arc");
     },
   },
   {
@@ -12529,8 +10826,7 @@ export const upgrades: Upgrade[] = [
     range: "3-5",
     restrictions: [["EnergyGreaterThan", 4]],
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Rotate Arc") < 0)
-        return a.actions.push("Rotate Arc");
+      if (__indexOf.call(a.actions, "Rotate Arc") < 0) return a.actions.push("Rotate Arc");
     },
   },
   {
@@ -12593,8 +10889,7 @@ export const upgrades: Upgrade[] = [
     faction: "Scum and Villainy",
     points: 2,
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Calculate") < 0)
-        return a.actions.push("Calculate");
+      if (__indexOf.call(a.actions, "Calculate") < 0) return a.actions.push("Calculate");
     },
   },
   {
@@ -13136,8 +11431,7 @@ export const upgrades: Upgrade[] = [
     faction: "Galactic Republic",
     points: 15,
     modifier_func: function (a) {
-      if (((a.force += 2), __indexOf.call(a.actions, "F-Coordinate") < 0))
-        return a.actions.push("F-Coordinate");
+      if (((a.force += 2), __indexOf.call(a.actions, "F-Coordinate") < 0)) return a.actions.push("F-Coordinate");
     },
   },
   {
@@ -13165,8 +11459,7 @@ export const upgrades: Upgrade[] = [
     faction: "Galactic Republic",
     points: 10,
     modifier_func: function (a) {
-      if (((a.force += 1), __indexOf.call(a.actions, "F-Reinforce") < 0))
-        return a.actions.push("F-Reinforce");
+      if (((a.force += 1), __indexOf.call(a.actions, "F-Reinforce") < 0)) return a.actions.push("F-Reinforce");
     },
   },
   {
@@ -13193,8 +11486,7 @@ export const upgrades: Upgrade[] = [
     faction: "Galactic Republic",
     points: 9,
     modifier_func: function (a) {
-      if (((a.force += 1), __indexOf.call(a.actions, "F-Evade") < 0))
-        return a.actions.push("F-Evade");
+      if (((a.force += 1), __indexOf.call(a.actions, "F-Evade") < 0)) return a.actions.push("F-Evade");
     },
   },
   {
@@ -13206,11 +11498,7 @@ export const upgrades: Upgrade[] = [
     faction: "Galactic Republic",
     points: 16,
     modifier_func: function (a) {
-      return (
-        (a.force += 1),
-        a.actions.push("*Focus"),
-        a.actions.push("> F-Coordinate")
-      );
+      return (a.force += 1), a.actions.push("*Focus"), a.actions.push("> F-Coordinate");
     },
   },
   {
@@ -13228,8 +11516,7 @@ export const upgrades: Upgrade[] = [
         a.actions.push("*R-> Calculate"),
         null != a.maneuvers[3])
       ) {
-        for (d = [], b = c = 1; c < 4; b = ++c)
-          a.maneuvers[3][b] > 1 ? d.push(a.maneuvers[3][b]--) : d.push(void 0);
+        for (d = [], b = c = 1; c < 4; b = ++c) a.maneuvers[3][b] > 1 ? d.push(a.maneuvers[3][b]--) : d.push(void 0);
         return d;
       }
     },
@@ -13460,8 +11747,7 @@ export const upgrades: Upgrade[] = [
     faction: "Separatist Alliance",
     points: 5,
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Calculate") < 0)
-        return a.actions.push("Calculate");
+      if (__indexOf.call(a.actions, "Calculate") < 0) return a.actions.push("Calculate");
     },
   },
   {
@@ -13493,11 +11779,7 @@ export const upgrades: Upgrade[] = [
     faction: "Galactic Empire",
     points: 3,
     modifier_func: function (a) {
-      return (
-        a.actions.push("Calculate"),
-        a.actions.push("*Rotate Arc"),
-        a.actions.push("> Calculate")
-      );
+      return a.actions.push("Calculate"), a.actions.push("*Rotate Arc"), a.actions.push("> Calculate");
     },
   },
   {
@@ -13539,8 +11821,7 @@ export const upgrades: Upgrade[] = [
     faction: "Resistance",
     restrictions: [["Keyword", "X-Wing"]],
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "Rotate Arc") < 0)
-        return a.actions.push("Rotate Arc");
+      if (__indexOf.call(a.actions, "Rotate Arc") < 0) return a.actions.push("Rotate Arc");
     },
   },
   {
@@ -13667,10 +11948,7 @@ export const upgrades: Upgrade[] = [
       var b, c, d, e, f;
       if (null != a.maneuvers[1]) {
         for (e = a.maneuvers, f = [], c = 0, d = e.length; c < d; c++)
-          (b = e[c]),
-            b[0] > 1 && b[0]--,
-            b[4] > 1 && b[4]--,
-            b[5] < 3 && 0 !== b[5] ? f.push(b[5]++) : f.push(void 0);
+          (b = e[c]), b[0] > 1 && b[0]--, b[4] > 1 && b[4]--, b[5] < 3 && 0 !== b[5] ? f.push(b[5]++) : f.push(void 0);
         return f;
       }
     },
@@ -13819,8 +12097,7 @@ export const upgrades: Upgrade[] = [
     slot: "Crew",
     faction: ["Galactic Empire", "First Order", "Scum and Villainy"],
     modifier_func: function (a) {
-      if (__indexOf.call(a.actions, "R-Coordinate") < 0)
-        return a.actions.push("R-Coordinate");
+      if (__indexOf.call(a.actions, "R-Coordinate") < 0) return a.actions.push("R-Coordinate");
     },
   },
   {
@@ -13848,11 +12125,7 @@ export const upgrades: Upgrade[] = [
     also_occupies_upgrades: ["Crew"],
     force: 1,
     modifier_func: function (a) {
-      return (
-        (a.force += 1),
-        a.actions.push("*Focus"),
-        a.actions.push("F-> Coordinate")
-      );
+      return (a.force += 1), a.actions.push("*Focus"), a.actions.push("F-> Coordinate");
     },
   },
   {
@@ -15633,40 +13906,29 @@ export const slots: Record<string, Slot> = {
 };
 
 export const sloticon: Partial<Record<SlotName, string>> = {
-  Astromech:
-    '<i class="xwing-miniatures-font xwing-miniatures-font-astromech"></i>',
-  Force:
-    '<i class="xwing-miniatures-font xwing-miniatures-font-forcepower"></i>',
+  Astromech: '<i class="xwing-miniatures-font xwing-miniatures-font-astromech"></i>',
+  Force: '<i class="xwing-miniatures-font xwing-miniatures-font-forcepower"></i>',
   Bomb: '<i class="xwing-miniatures-font xwing-miniatures-font-bomb"></i>',
   Cannon: '<i class="xwing-miniatures-font xwing-miniatures-font-cannon"></i>',
   Crew: '<i class="xwing-miniatures-font xwing-miniatures-font-crew"></i>',
   Talent: '<i class="xwing-miniatures-font xwing-miniatures-font-talent"></i>',
-  Missile:
-    '<i class="xwing-miniatures-font xwing-miniatures-font-missile"></i>',
+  Missile: '<i class="xwing-miniatures-font xwing-miniatures-font-missile"></i>',
   Sensor: '<i class="xwing-miniatures-font xwing-miniatures-font-sensor"></i>',
-  Torpedo:
-    '<i class="xwing-miniatures-font xwing-miniatures-font-torpedo"></i>',
+  Torpedo: '<i class="xwing-miniatures-font xwing-miniatures-font-torpedo"></i>',
   Turret: '<i class="xwing-miniatures-font xwing-miniatures-font-turret"></i>',
-  Illicit:
-    '<i class="xwing-miniatures-font xwing-miniatures-font-illicit"></i>',
-  Configuration:
-    '<i class="xwing-miniatures-font xwing-miniatures-font-configuration"></i>',
-  Modification:
-    '<i class="xwing-miniatures-font xwing-miniatures-font-modification"></i>',
+  Illicit: '<i class="xwing-miniatures-font xwing-miniatures-font-illicit"></i>',
+  Configuration: '<i class="xwing-miniatures-font xwing-miniatures-font-configuration"></i>',
+  Modification: '<i class="xwing-miniatures-font xwing-miniatures-font-modification"></i>',
   Gunner: '<i class="xwing-miniatures-font xwing-miniatures-font-gunner"></i>',
   Device: '<i class="xwing-miniatures-font xwing-miniatures-font-device"></i>',
   Tech: '<i class="xwing-miniatures-font xwing-miniatures-font-tech"></i>',
   Title: '<i class="xwing-miniatures-font xwing-miniatures-font-title"></i>',
-  Hardpoint:
-    '<i class="xwing-miniatures-font xwing-miniatures-font-hardpoint"></i>',
+  Hardpoint: '<i class="xwing-miniatures-font xwing-miniatures-font-hardpoint"></i>',
   Team: '<i class="xwing-miniatures-font xwing-miniatures-font-team"></i>',
   Cargo: '<i class="xwing-miniatures-font xwing-miniatures-font-cargo"></i>',
-  Command:
-    '<i class="xwing-miniatures-font xwing-miniatures-font-command"></i>',
-  HardpointShip:
-    '<i class="xwing-miniatures-font xwing-miniatures-font-hardpoint"></i>',
-  "Tactical Relay":
-    '<i class="xwing-miniatures-font xwing-miniatures-font-tacticalrelay"></i>',
+  Command: '<i class="xwing-miniatures-font xwing-miniatures-font-command"></i>',
+  HardpointShip: '<i class="xwing-miniatures-font xwing-miniatures-font-hardpoint"></i>',
+  "Tactical Relay": '<i class="xwing-miniatures-font xwing-miniatures-font-tacticalrelay"></i>',
 };
 
 export const difficulties: Record<DifficultyName, Difficulty> = {

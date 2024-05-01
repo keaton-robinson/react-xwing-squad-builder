@@ -1,9 +1,4 @@
-import React, {
-  ReactElement,
-  useState,
-  createContext,
-  useContext,
-} from "react";
+import React, { ReactElement, useState, createContext, useContext } from "react";
 import ModalContainer from "../components/modals/ModalContainer";
 
 interface ModalConfig {
@@ -11,8 +6,7 @@ interface ModalConfig {
   children: ReactElement;
 }
 
-const SetModalContext =
-  createContext<(content: ModalConfig) => void | undefined>(undefined);
+const SetModalContext = createContext<(content: ModalConfig) => void | undefined>(undefined);
 
 export const useModalSetter = () => {
   const context = useContext(SetModalContext);
@@ -25,10 +19,7 @@ const ModalProvider: React.FC<{ children }> = (props) => {
 
   const setModal = (modalConfig: ModalConfig) => {
     const newModalToShow = !modalConfig ? null : (
-      <ModalContainer
-        handleClose={() => setModalToShow(null)}
-        headerTitle={modalConfig.title}
-      >
+      <ModalContainer handleClose={() => setModalToShow(null)} headerTitle={modalConfig.title}>
         {modalConfig.children}
       </ModalContainer>
     );

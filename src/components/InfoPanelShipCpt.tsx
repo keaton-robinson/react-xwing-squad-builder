@@ -23,10 +23,7 @@ const InfoPanelShipCpt: React.FC<InfoPanelShipCptProps> = (props) => {
   const getShipData = (): ShipData => {
     //make a copy of the pilot so I don't have side effects on my "data repo"
     const shipData: ShipData = JSON.parse(JSON.stringify(props.ship));
-    shipData.pilotsForShip = pilots.filter(
-      (pilot) =>
-        pilot.ship === shipData.name && pilot.faction === props.faction,
-    );
+    shipData.pilotsForShip = pilots.filter((pilot) => pilot.ship === shipData.name && pilot.faction === props.faction);
 
     shipData.pilotSkills = [];
     shipData.minPilotCost = shipData.pilotsForShip[0].points;
