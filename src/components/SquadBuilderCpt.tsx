@@ -1,6 +1,6 @@
 import React from "react";
 import { Squad } from "../data/xwing_types";
-import SquadNamePointsPrint from "./SquadNamePointsPrint";
+import SquadHeader from "./SquadHeader";
 
 interface SquadBuilderProps {
   squad: Squad;
@@ -9,7 +9,7 @@ interface SquadBuilderProps {
 const SquadBuilderCpt: React.FC<SquadBuilderProps> = ({ squad }) => {
   return (
     <div>
-      <SquadNamePointsPrint squad={squad} />
+      <SquadHeader squad={squad} />
       {/* <SaveLoad
         faction={props.faction}
         squad={state.squad}

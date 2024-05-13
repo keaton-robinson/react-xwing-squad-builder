@@ -5,11 +5,11 @@ import { Squad } from "../data/xwing_types";
 import { getSquadCost } from "../data/xwing_utils";
 import { useSquadsDispatch } from "../contexts/SquadContext";
 
-interface SquadNamePointsPrintProps {
+interface SquadHeaderProps {
   squad: Squad;
 }
 
-const SquadNamePointsPrint: React.FC<SquadNamePointsPrintProps> = ({ squad }) => {
+const SquadHeader: React.FC<SquadHeaderProps> = ({ squad }) => {
   const [editingSquadName, setEditingSquadName] = useState(false);
   const setModal = useModalSetter();
   const squadsDispatch = useSquadsDispatch();
@@ -85,4 +85,4 @@ const SquadNamePointsPrint: React.FC<SquadNamePointsPrintProps> = ({ squad }) =>
   );
 };
 
-export default SquadNamePointsPrint;
+export default SquadHeader;
