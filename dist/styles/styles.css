@@ -90,7 +90,7 @@ nav ul li {
   display: flex;
 }
 
-.shipAndInfoContainer .shipAndObstacleSelectors {
+.shipAndInfoContainer .shipSelectors {
   flex: 3;
 }
 

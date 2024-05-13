@@ -213,7 +213,7 @@
 //         }}
 //       />
 //       <div className="shipAndInfoContainer">
-//         <div className="shipAndObstacleSelectors">
+//         <div className="shipSelectors">
 //           {state.squad.map((squadPilot) => (
 //             <PilotRowCpt
 //               key={squadPilot.uiKey}
