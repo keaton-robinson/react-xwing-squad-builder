@@ -40,7 +40,7 @@ const InfoPanelPilotCpt: React.FC<InfoPanelPilotCptProps> = (props) => {
         <span className="info-initiative">{pilotStatsAfterUpgrades.skill}</span>
       </div>
       <div>
-        <StatBlockCpt pilot={pilotBaseStats} pilotAfterUpgrades={pilotStatsAfterUpgrades} />
+        <StatBlockCpt baseStats={pilotBaseStats} statsAfterUpgrades={pilotStatsAfterUpgrades} />
       </div>
       <div>
         <strong>Actions: </strong>

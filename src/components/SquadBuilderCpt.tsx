@@ -3,6 +3,7 @@ import { InfoPanelCard, Squad } from "../data/xwing_types";
 import SquadHeader from "./SquadHeader";
 import AddShipCpt from "./AddShipCpt";
 import InfoPanelCpt from "./InfoPanelCpt";
+import PilotRowCpt from "./PilotRowCpt";
 
 interface SquadBuilderProps {
   squad: Squad;
@@ -43,30 +44,13 @@ const SquadBuilderCpt: React.FC<SquadBuilderProps> = ({ squad }) => {
       <div className="shipAndInfoContainer">
         <div className="shipSelectors">
           {squad.squadPilots.map((squadPilot) => (
-            <h3>{squadPilot.pilotName}</h3>
-          ))}
-          {/* {state.squad.map((squadPilot) => (
             <PilotRowCpt
-              key={squadPilot.uiKey}
-              factionShips={factionShips}
-              squad={state.squad}
+              key={squadPilot.squadPilotShipId}
+              squad={squad}
               selectedPilot={squadPilot}
-              availablePilots={pilots
-                .filter(
-                  (availPilot) =>
-                    availPilot.ship === squadPilot.ship &&
-                    availPilot.faction === props.faction &&
-                    (!maxPilotOrUpgradeReached(availPilot, state.squad, upgrades) || availPilot.id === squadPilot.id),
-                )
-                .sort((first, second) => first.points - second.points)}
-              changePilot={changePilot}
-              changeShip={changeShip}
-              removePilot={removePilot}
-              clonePilot={clonePilot}
-              changeUpgrade={changeUpgrade}
-              onRecordMouseEnter={showInfoPanelCard}
+              onRecordMouseEnter={setInfoPanelCard}
             />
-          ))} */}
+          ))}
           <AddShipCpt squad={squad} onRecordMouseEnter={setInfoPanelCard} />
         </div>
         {infoPanelCard ? <InfoPanelCpt card={infoPanelCard} /> : <div style={{ flex: 1 }}></div>}

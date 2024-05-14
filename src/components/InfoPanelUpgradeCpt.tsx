@@ -242,7 +242,7 @@ const InfoPanelUpgradeCpt: React.FC<InfoPanelUpgradeCptProps> = (props) => {
       <h3 className="infoName">{upgrade.name}</h3>
       <h4 className="infoType">Upgrade</h4>
       <div>
-        <StatBlockCpt upgrade={upgrade} />
+        <StatBlockCpt baseStats={upgrade} />
       </div>
       {upgrade.range ? (
         <div style={{ marginTop: "5px" }}>

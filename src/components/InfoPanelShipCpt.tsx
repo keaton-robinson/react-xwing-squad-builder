@@ -72,7 +72,7 @@ const InfoPanelShipCpt: React.FC<InfoPanelShipCptProps> = (props) => {
         <span>{`${shipData.minPilotCost} - ${shipData.maxPilotCost}`}</span>
       </div>
       <div>
-        <StatBlockCpt ship={shipData} />
+        <StatBlockCpt baseStats={shipData} />
       </div>
       <div>
         <strong>Actions:</strong>

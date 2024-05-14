@@ -24,7 +24,8 @@ export const SquadsProvider = ({ children }) => {
 
 type SquadsDispatchAction =
   | { type: "renameSquad"; squad: Squad; newName: string }
-  | { type: "addToSquad"; squad: Squad; newPilot: SquadPilotShip };
+  | { type: "addToSquad"; squad: Squad; newPilot: SquadPilotShip }
+  | { type: "removeFromSquad"; squad: Squad; pilotToRemove: SquadPilotShip };
 
 const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction) => {
   switch (action.type) {
@@ -42,6 +43,17 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
         return {
           ...squadInState,
           squadPilots: [...squadInState.squadPilots, action.newPilot],
+        };
+      });
+    case "removeFromSquad":
+      //TODO: need to remove upgrades that become invalid due to losing a pre-req during / after this operation
+      return squads.map((squadInState) => {
+        if (action.squad !== squadInState) return squadInState;
+        return {
+          ...squadInState,
+          squadPilots: squadInState.squadPilots.filter(
+            (squadPilot) => squadPilot.squadPilotShipId !== action.pilotToRemove.squadPilotShipId,
+          ),
         };
       });
   }
