@@ -11,7 +11,7 @@ export type Faction =
   | "Galactic Republic"
   | "Separatist Alliance";
 
-interface BaseShip {
+export interface BaseShip {
   readonly factions: Faction[];
   readonly attack?: number;
   readonly attackf?: number;
@@ -42,7 +42,7 @@ export interface Ship extends BaseShip {
   readonly keyword?: string[];
 }
 
-interface BasePilot {
+export interface BasePilot {
   readonly faction: Faction;
   readonly ship: ShipName;
   readonly skill: number;
@@ -129,12 +129,12 @@ export interface SquadPilotShip extends BasePilot, BaseShip {
   readonly upgrades: SquadPilotShipUpgradeSlot[];
 
   // properties from pilot and ship that need to be renamed to avoid name conflict
-  readonly shipCanonicalName?: string;
-  readonly ship_keyword?: string[];
-  readonly pilotName: string;
-  readonly pilotId: number;
-  readonly pilotKeyword?: string[];
-  readonly pilotCanonicalName?: string;
+  readonly shipCanonicalName: string | null | undefined;
+  readonly ship_keyword: string[] | null | undefined;
+  readonly pilotName: string | null | undefined;
+  readonly pilotId: number | null | undefined;
+  readonly pilotKeyword: string[] | null | undefined;
+  readonly pilotCanonicalName: string | null | undefined;
 }
 
 /**
@@ -226,12 +226,8 @@ export type Bearing =
 export type ShipName = keyof typeof ships;
 
 export type InfoPanelCard =
-  | { readonly type: "Ship"; readonly cardData: Ship }
-  | { readonly type: "Pilot"; readonly cardData: Pilot }
-  | {
-      readonly type: "SelectedPilot";
-      readonly cardData: SelectedPilotThatAllowsMutations;
-    }
+  | { readonly type: "Ship"; readonly cardData: Ship; readonly faction: Faction }
+  | { readonly type: "Pilot"; readonly cardData: SquadPilotShip }
   | { readonly type: "Upgrade"; readonly cardData: Upgrade };
 
 export type ShipBaseSize = "Small" | "Medium" | "Large" | "Huge";

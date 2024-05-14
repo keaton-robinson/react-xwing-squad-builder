@@ -1,32 +1,55 @@
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { Dropdown } from "@keatonr06/reactjs-dropdown-component";
 import { DropDownStyles } from "../styleData/styleData";
-import { ships } from "../data/xwing_data";
-import { ShipName, InfoPanelCard } from "../data/xwing_types";
+import { pilots, ships, upgrades } from "../data/xwing_data";
+import { InfoPanelCard, ShipName, Squad } from "../data/xwing_types";
+import { useSquadsDispatch } from "../contexts/SquadContext";
+import { getSquadPilotShip, getCheapestAvailablePilotForShip } from "../data/xwing_utils";
 
 interface AddShipCptProps {
-  factionShips: ShipName[];
-  onShipSelected: (ship: ShipName) => void;
+  squad: Squad;
   onRecordMouseEnter: (infoPanelCard: InfoPanelCard) => void;
 }
 
 const AddShipCpt: React.FC<AddShipCptProps> = (props) => {
-  const shipsForCustomDropdown = props.factionShips.map((ship) => ({
-    label: ship,
-    value: ship,
-  }));
+  const squadsDispatch = useSquadsDispatch();
+
+  const shipsForCustomDropdown = useMemo(() => {
+    const factionShipName = Object.keys(ships)
+      .filter((ship) => ships[ship].factions.includes(props.squad.faction))
+      .sort() as ShipName[];
+    const shipsMapped = factionShipName.map((shipName) => ({
+      label: shipName,
+      value: shipName,
+    }));
+    return shipsMapped;
+  }, [props.squad.faction]);
+
   const ddlAddShipRef = useRef(null);
 
-  const handleShipSelection = (shipSelected) => {
-    if (shipSelected) {
-      props.onShipSelected(shipSelected.value);
+  const handleShipSelection = (selectedDropDownOption: { label: ShipName; value: ShipName }) => {
+    if (selectedDropDownOption) {
+      const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
+        selectedDropDownOption.value,
+        props.squad,
+        upgrades,
+        pilots,
+      );
+      const squadPilot = getSquadPilotShip(cheapestAvailablePilot, ships);
+      if (cheapestAvailablePilot) {
+        squadsDispatch({ type: "addToSquad", squad: props.squad, newPilot: squadPilot });
+      } else {
+        alert("No more pilots available for " + selectedDropDownOption.value);
+      }
+
+      //dispatch things
       ddlAddShipRef.current.clearSelection(); //tell parent component about new ship, but reset this dropdown's value to "none"
     }
   };
 
   const handleMouseEnter = (shipDropDownItem) => {
     const ship = ships[shipDropDownItem.value];
-    props.onRecordMouseEnter({ cardData: ship, type: "Ship" });
+    props.onRecordMouseEnter({ cardData: ship, type: "Ship", faction: props.squad.faction });
   };
 
   return (

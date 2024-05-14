@@ -208,75 +208,49 @@ describe("getSquadCost", () => {
 });
 
 describe("getPilotEffectiveStats", () => {
-  const stubUpgradesData = [
-    {
-      id: 1,
-      modifier_func: (pilotShip) => {
-        pilotShip.shields = pilotShip.shields + 1;
-      },
-    }, // upgrade with modifier function  (basically shield upgrade card)
-    { id: 2 }, // no modifier function in this upgrade
-  ];
+  const stubUpgradeWithModifier: Partial<Upgrade> = {
+    id: 1,
+    modifier_func: (squadPilot) => {
+      squadPilot.shields = squadPilot.shields + 1;
+    },
+  };
+  const stubUpgradeWithoutModifier: Partial<Upgrade> = { id: 2 };
 
   it("throws an error if no pilot is provided", () => {
-    expect(() => getPilotEffectiveStats(null, stubUpgradesData as Upgrade[])).toThrow(
-      "pilot required for getPilotEffectiveStats",
-    );
-  });
-
-  it("throws an error if upgrade data is missing for an upgrade ID", () => {
-    const pilotWithInvalidUpgrade = {
-      selectedUpgrades: [{ selectedUpgradeId: 99 }],
-    };
-    expect(() =>
-      getPilotEffectiveStats(
-        pilotWithInvalidUpgrade as SelectedPilotThatAllowsMutations,
-        stubUpgradesData as Upgrade[],
-      ),
-    ).toThrow("Failed to find upgrade record for upgrade record id: 99");
+    expect(() => getPilotEffectiveStats(null)).toThrow("pilot required for getPilotEffectiveStats");
   });
 
   it("with upgrade that modifies pilot ship, applies modifications to pilot ship", () => {
     const initialShieldValue = 2;
-    const pilot: Partial<SelectedPilotThatAllowsMutations> = {
-      selectedUpgrades: [{ selectedUpgradeId: 1, key: null, slot: null }],
-      pilotShip: {
-        agility: 2,
-        name: "",
-        xws: "",
-        factions: [],
-        hull: 0,
-        shields: initialShieldValue,
-        actions: [],
-        maneuvers: [],
-      },
+    const squadPilot: DeepPartial<SquadPilotShip> = {
+      upgrades: [{ upgrade: stubUpgradeWithModifier }],
+      agility: 2,
+      hull: 0,
+      shields: initialShieldValue,
+      actions: [],
+      maneuvers: [],
     };
     const expectedModifiedShieldValue = 3;
 
-    const result = getPilotEffectiveStats(pilot as SelectedPilotThatAllowsMutations, stubUpgradesData as Upgrade[]);
+    const result = getPilotEffectiveStats(squadPilot as SquadPilotShip);
 
-    expect(result.pilotShip.shields).toBe(expectedModifiedShieldValue);
+    expect(result.shields).toBe(expectedModifiedShieldValue);
   });
 
   it("with upgrade that does not modify pilot ship, does not make modifications to pilot ship", () => {
     const initialShieldValue = 2;
-    const pilot: Partial<SelectedPilotThatAllowsMutations> = {
-      selectedUpgrades: [{ selectedUpgradeId: 2, key: null, slot: null }],
-      pilotShip: {
-        agility: 2,
-        name: "",
-        xws: "",
-        factions: [],
-        hull: 0,
-        shields: initialShieldValue,
-        actions: [],
-        maneuvers: [],
-      },
+    const squadPilot: DeepPartial<SquadPilotShip> = {
+      upgrades: [{ upgrade: stubUpgradeWithoutModifier }],
+      agility: 2,
+      hull: 0,
+      shields: initialShieldValue,
+      actions: [],
+      maneuvers: [],
     };
 
-    const result = getPilotEffectiveStats(pilot as SelectedPilotThatAllowsMutations, stubUpgradesData as Upgrade[]);
+    const result = getPilotEffectiveStats(squadPilot as SquadPilotShip);
 
-    expect(JSON.stringify(pilot)).toBe(JSON.stringify(result));
+    expect(JSON.stringify(squadPilot)).toBe(JSON.stringify(result));
   });
 });
 

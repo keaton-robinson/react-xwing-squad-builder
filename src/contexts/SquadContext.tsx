@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer } from "react";
-import { Faction, Squad } from "../data/xwing_types";
+import { Faction, Squad, SquadPilotShip } from "../data/xwing_types";
 
 const SquadsContext = createContext<ReadonlyArray<Squad>>(null);
 const SquadsDispatchContext = createContext<React.Dispatch<SquadsDispatchAction>>(null);
@@ -22,7 +22,9 @@ export const SquadsProvider = ({ children }) => {
   );
 };
 
-type SquadsDispatchAction = { type: "renameSquad"; squad: Squad; newName: string };
+type SquadsDispatchAction =
+  | { type: "renameSquad"; squad: Squad; newName: string }
+  | { type: "addToSquad"; squad: Squad; newPilot: SquadPilotShip };
 
 const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction) => {
   switch (action.type) {
@@ -34,8 +36,14 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
           name: action.newName,
         };
       });
-    default:
-      throw Error("Unknown action: " + action.type);
+    case "addToSquad":
+      return squads.map((squadInState) => {
+        if (action.squad !== squadInState) return squadInState;
+        return {
+          ...squadInState,
+          squadPilots: [...squadInState.squadPilots, action.newPilot],
+        };
+      });
   }
 };
 

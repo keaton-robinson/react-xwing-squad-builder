@@ -6,7 +6,6 @@ import { InfoPanelCard, Faction } from "../data/xwing_types";
 
 interface InfoPanelCptProps {
   card: InfoPanelCard;
-  faction: Faction;
 }
 
 const InfoPanelCpt: React.FC<InfoPanelCptProps> = (props) => {
@@ -14,16 +13,13 @@ const InfoPanelCpt: React.FC<InfoPanelCptProps> = (props) => {
 
   switch (props.card.type) {
     case "Ship":
-      childPanel = <InfoPanelShipCpt ship={props.card.cardData} faction={props.faction} />;
+      childPanel = <InfoPanelShipCpt ship={props.card.cardData} faction={props.card.faction} />;
       break;
     case "Upgrade":
       childPanel = <InfoPanelUpgradeCpt upgrade={props.card.cardData} />;
       break;
     case "Pilot":
-      childPanel = <InfoPanelPilotCpt pilot={props.card.cardData} isSelectedPilot={false} />;
-      break;
-    case "SelectedPilot":
-      childPanel = <InfoPanelPilotCpt selectedPilot={props.card.cardData} isSelectedPilot={true} />;
+      childPanel = <InfoPanelPilotCpt pilot={props.card.cardData} />;
       break;
   }
 

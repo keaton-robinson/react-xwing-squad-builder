@@ -3,14 +3,12 @@ import ActionsCpt from "./ActionsCpt";
 import ManeuversCpt from "./ManeuversCpt";
 import StatBlockCpt from "./StatBlockCpt";
 import UpgradesCpt from "./UpgradesCpt";
-import { pilotRules, ships, upgrades } from "../data/xwing_data";
-import { Pilot, SelectedPilotThatAllowsMutations } from "../data/xwing_types";
-import { fixIcons, getAppReadyPilot, getPilotEffectiveStats, getShipBaseSize } from "../data/xwing_utils";
+import { pilotRules } from "../data/xwing_data";
+import { SquadPilotShip } from "../data/xwing_types";
+import { fixIcons, getPilotEffectiveStats, getShipBaseSize } from "../data/xwing_utils";
 
 interface InfoPanelPilotCptProps {
-  isSelectedPilot: boolean;
-  pilot?: Pilot;
-  selectedPilot?: SelectedPilotThatAllowsMutations;
+  pilot?: SquadPilotShip;
 }
 
 const InfoPanelPilotCpt: React.FC<InfoPanelPilotCptProps> = (props) => {
@@ -22,55 +20,44 @@ const InfoPanelPilotCpt: React.FC<InfoPanelPilotCptProps> = (props) => {
     return null;
   };
 
-  //const pilot = props.isSelectedPilot ? props.dataKey  ;
-  let pilotBaseStats;
-
-  if (props.isSelectedPilot) {
-    pilotBaseStats = props.selectedPilot;
-  } else {
-    pilotBaseStats = getAppReadyPilot(props.pilot, ships);
-  }
-
-  const pilotEffectiveStats = getPilotEffectiveStats(pilotBaseStats, upgrades);
+  const pilotBaseStats = props.pilot;
+  const pilotStatsAfterUpgrades: SquadPilotShip = getPilotEffectiveStats(props.pilot);
 
   return (
     <div>
-      <h3 className="infoName">{pilotEffectiveStats.name}</h3>
+      <h3 className="infoName">{pilotStatsAfterUpgrades.pilotName}</h3>
       <h4 className="infoType">Pilot</h4>
       <div>
         <strong>Ship: </strong>
-        <span>{pilotEffectiveStats.pilotShip.name}</span>
+        <span>{pilotStatsAfterUpgrades.ship}</span>
       </div>
       <div>
         <strong>Base: </strong>
-        <span>{getShipBaseSize(pilotEffectiveStats.pilotShip)}</span>
+        <span>{getShipBaseSize(pilotStatsAfterUpgrades)}</span>
       </div>
       <div>
         <strong>Initiative: </strong>
-        <span className="info-initiative">{pilotEffectiveStats.skill}</span>
+        <span className="info-initiative">{pilotStatsAfterUpgrades.skill}</span>
       </div>
       <div>
-        <StatBlockCpt pilot={pilotBaseStats} pilotAfterUpgrades={pilotEffectiveStats} />
+        <StatBlockCpt pilot={pilotBaseStats} pilotAfterUpgrades={pilotStatsAfterUpgrades} />
       </div>
       <div>
         <strong>Actions: </strong>
-        <ActionsCpt actions={pilotEffectiveStats.pilotShip.actions} />
+        <ActionsCpt actions={pilotStatsAfterUpgrades.actions} />
       </div>
       <div>
         <strong>Upgrades: </strong>
-        <UpgradesCpt pilots={[pilotEffectiveStats]} />
+        <UpgradesCpt pilots={[pilotStatsAfterUpgrades]} />
       </div>
       <div
         className="info-text"
         dangerouslySetInnerHTML={{
-          __html: getRulesMarkupForPilot(pilotEffectiveStats),
+          __html: getRulesMarkupForPilot(pilotStatsAfterUpgrades),
         }}
       />
       <div>
-        <ManeuversCpt
-          maneuvers={pilotBaseStats.pilotShip.maneuvers}
-          maneuversAfterUpgrades={pilotEffectiveStats.pilotShip.maneuvers}
-        />
+        <ManeuversCpt maneuvers={pilotBaseStats.maneuvers} maneuversAfterUpgrades={pilotStatsAfterUpgrades.maneuvers} />
       </div>
     </div>
   );
