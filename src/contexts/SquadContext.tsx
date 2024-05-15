@@ -74,11 +74,6 @@ type SquadsDispatchAction =
       squadPilot: SquadPilotShip;
       upgradeSlot: SquadPilotShipUpgradeSlot;
       newlySelectedUpgrade: Upgrade;
-
-      //     upgradeSlot: SelectedUpgradeThatAllowsMutations,
-      //     newlySelectedUpgrade: Upgrade,
-      //     pilot: SelectedPilotThatAllowsMutations,
-      //   ) => void;
     };
 
 const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction): ReadonlyArray<Squad> => {
