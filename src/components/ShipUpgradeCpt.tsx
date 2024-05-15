@@ -3,12 +3,7 @@ import { Dropdown } from "@keatonr06/reactjs-dropdown-component";
 import { DropDownStyles } from "../styleData/styleData";
 import { Upgrade, SquadPilotShipUpgradeSlot, SquadPilotShip, Squad } from "../data/xwing_types";
 import { slots, upgrades } from "../data/xwing_data";
-import {
-  maxPilotOrUpgradeReached,
-  isUpgradeAllowed,
-  squadContainsAnotherSolitaryCardForThisSlot,
-  getUpgradeCost,
-} from "../data/xwing_utils";
+import { maxPilotOrUpgradeReached, isUpgradeAllowed, getUpgradeCost, isNotNullOrUndefined } from "../data/xwing_utils";
 import { useSquadsDispatch } from "../contexts/SquadContext";
 
 interface ShipUpgradeCptProps {
@@ -16,80 +11,65 @@ interface ShipUpgradeCptProps {
   squadPilot: SquadPilotShip;
   squad: Squad;
   onRecordMouseEnter: (upgrade: Upgrade) => void;
-
-  //changeUpgrade: (
-  //     upgradeSlot: SelectedUpgradeThatAllowsMutations,
-  //     newlySelectedUpgrade: Upgrade,
-  //     pilot: SelectedPilotThatAllowsMutations,
-  //   ) => void;
 }
 
 interface UpgradeDropDownItem {
-  value: number;
+  value: Upgrade;
   label: string;
-  upgradeRecord?: Upgrade;
 }
 
 const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
   const ddlSelectedUpgradeRef = useRef(null);
   const squadsDispatch = useSquadsDispatch();
 
-  const upgradeAlreadySelectedOnADifferentSlot = (upgrade) => {
-    return props.squadPilot.upgrades.find(
-      (upgradeSlot) =>
-        upgradeSlot.upgrade?.id === upgrade.id &&
-        upgradeSlot.squadPilotUpgradeSlotId !== props.upgradeSlot.squadPilotUpgradeSlotId,
-    );
-  };
-
   const handleUpgradeSelection = (selectedUpgrade: UpgradeDropDownItem) => {
-    if (selectedUpgrade.value !== props.upgradeSlot.upgrade.id) {
-      const newlySelectedUpgrade = upgrades.find((upgrade) => upgrade.id === selectedUpgrade.value);
-
-      //props.changeUpgrade(props.upgradeSlot, newlySelectedUpgrade, props.squadPilot);
-
-      // dispatch things
+    if (selectedUpgrade.value !== props.upgradeSlot.upgrade) {
+      squadsDispatch({
+        type: "changeUpgrade",
+        newlySelectedUpgrade: selectedUpgrade.value,
+        squad: props.squad,
+        squadPilot: props.squadPilot,
+        upgradeSlot: props.upgradeSlot,
+      });
     }
   };
 
-  const handleMouseEnter = (upgradeDropDownItem) => {
+  const handleMouseEnter = (upgradeDropDownItem: UpgradeDropDownItem) => {
     if (upgradeDropDownItem.value) {
-      props.onRecordMouseEnter(upgradeDropDownItem.upgradeRecord);
+      props.onRecordMouseEnter(upgradeDropDownItem.value);
     }
   };
 
-  const doesSquadContainAnotherSolitaryCardForThisSlot = squadContainsAnotherSolitaryCardForThisSlot(
-    props.upgradeSlot,
-    props.squad,
-  );
-
-  //   if (!doesSquadContainAnotherSolitaryCardForThisSlot) {
-  //     const availableUpgrades = getAvailableUpgrades().sort(
-  //       (upgrade1, upgrade2) => getUpgradeCost(upgrade1, props.squadPilot) - getUpgradeCost(upgrade2, props.squadPilot),
-  //     );
-
-  //     upgradesForCustomDropdown = availableUpgrades.map((availUpgrade) => ({
-  //       label: availUpgrade.name + " (" + getUpgradeCost(availUpgrade, props.squadPilot) + ")",
-  //       value: availUpgrade.id,
-  //       upgradeRecord: availUpgrade,
-  //     }));
-  //     upgradesForCustomDropdown.unshift({
-  //       value: null,
-  //       label: `No ${slots[props.upgradeSlot.slot].displayName} Upgrade`,
-  //     }); // needed so that people can remove upgrades
-  //   }
+  //returns true if there is a solitary upgrade card equiped to another slot of the same type within the squad
+  const squadContainsAnotherSolitaryCardForThisSlot = useMemo(() => {
+    for (const squadPilot of props.squad.squadPilots) {
+      for (const squadPilotUpgrade of squadPilot.upgrades) {
+        if (
+          squadPilotUpgrade !== props.upgradeSlot &&
+          squadPilotUpgrade.slot === props.upgradeSlot.slot &&
+          isNotNullOrUndefined(squadPilotUpgrade.upgrade)
+        ) {
+          if (squadPilotUpgrade.upgrade.solitary) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }, [props.squad.squadPilots, props.upgradeSlot]);
 
   const upgradeRecordsForCustomDropDown: UpgradeDropDownItem[] = useMemo(() => {
-    const availableUpgrades = getAvailableUpgrades(props.upgradeSlot, props.squad, props.squadPilot, upgrades);
+    const availableUpgrades = getAvailableUpgrades(props.upgradeSlot, props.squad, props.squadPilot, upgrades).sort(
+      (upgrade1, upgrade2) => getUpgradeCost(upgrade1, props.squadPilot) - getUpgradeCost(upgrade2, props.squadPilot),
+    );
     const upgradesAsDropDownItmes = availableUpgrades.map((availUpgrade) => ({
       label: availUpgrade.name + " (" + getUpgradeCost(availUpgrade, props.squadPilot) + ")",
-      value: availUpgrade.id,
-      upgradeRecord: availUpgrade,
+      value: availUpgrade,
     }));
 
     return [
       {
-        value: null,
+        value: null, // default value and used for removing upgrades
         label: `No ${slots[props.upgradeSlot.slot].displayName} Upgrade`,
       },
       ...upgradesAsDropDownItmes,
@@ -107,8 +87,8 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
         onChange={handleUpgradeSelection}
         styles={DropDownStyles}
         onMouseEnter={handleMouseEnter}
-        immutable={props.upgradeSlot.parentSquadPilotUpgradeSlotId || doesSquadContainAnotherSolitaryCardForThisSlot}
-        select={{ value: props.upgradeSlot.upgrade?.id }}
+        immutable={props.upgradeSlot.parentSquadPilotUpgradeSlotId || squadContainsAnotherSolitaryCardForThisSlot}
+        select={{ value: props.upgradeSlot.upgrade }}
       />
     </span>
   );
@@ -132,10 +112,23 @@ const getAvailableUpgrades = (
   }
 
   return upgrades.filter(
-    (upgrade) => matchingSlots.includes(upgrade.slot), // upgrade.slot === props.upgradeSlot.slot
-    // && (!maxPilotOrUpgradeReached(upgrade, props.squad, upgrades) || props.upgradeSlot.upgrade.id === upgrade.id) &&
+    (upgrade) =>
+      matchingSlots.includes(upgrade.slot) && // upgrade.slot === props.upgradeSlot.slot
+      (!maxPilotOrUpgradeReached(upgrade, squad, upgrades) || upgradeSlot.upgrade.id === upgrade.id), // &&
     // isUpgradeAllowed(props.upgradeSlot, upgrade, props.squadPilot, props.squad, upgrades) &&
     // !upgradeAlreadySelectedOnADifferentSlot(upgrade),
+  );
+};
+
+const upgradeAlreadySelectedOnADifferentSlot = (
+  upgrade: Upgrade,
+  squadPilot: SquadPilotShip,
+  currentUpgradeSlot: SquadPilotShipUpgradeSlot,
+) => {
+  return squadPilot.upgrades.find(
+    (upgradeSlot) =>
+      upgradeSlot.upgrade?.id === upgrade.id &&
+      upgradeSlot.squadPilotUpgradeSlotId !== currentUpgradeSlot.squadPilotUpgradeSlotId,
   );
 };
 

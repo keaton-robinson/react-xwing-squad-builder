@@ -734,24 +734,6 @@ function removeUpgrade(
 //   }
 // }
 
-//returns true if there is a solitary upgrade card equiped to another slot of the same type within the squad
-export function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot: SquadPilotShipUpgradeSlot, squad: Squad) {
-  for (const squadPilot of squad.squadPilots) {
-    for (const squadPilotUpgrade of squadPilot.upgrades) {
-      if (
-        squadPilotUpgrade !== upgradeSlot &&
-        squadPilotUpgrade.slot === upgradeSlot.slot &&
-        isNotNullOrUndefined(squadPilotUpgrade.upgrade)
-      ) {
-        if (squadPilotUpgrade.upgrade.solitary) {
-          return true;
-        }
-      }
-    }
-  }
-  return false;
-}
-
 function makeUniqueKey(length: number): UniqueKey {
   let result = "";
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

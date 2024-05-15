@@ -1,5 +1,14 @@
 import React, { createContext, useContext, useReducer } from "react";
-import { Faction, Pilot, Ship, ShipName, Squad, SquadPilotShip, Upgrade } from "../data/xwing_types";
+import {
+  Faction,
+  Pilot,
+  Ship,
+  ShipName,
+  Squad,
+  SquadPilotShip,
+  SquadPilotShipUpgradeSlot,
+  Upgrade,
+} from "../data/xwing_types";
 import { getCheapestAvailablePilotForShip, getSquadPilotShip } from "../data/xwing_utils";
 
 const SquadsContext = createContext<ReadonlyArray<Squad>>(null);
@@ -58,6 +67,18 @@ type SquadsDispatchAction =
       newPilot: Pilot;
       upgradesData: Upgrade[];
       shipsData: Record<string, Ship>;
+    }
+  | {
+      type: "changeUpgrade";
+      squad: Squad;
+      squadPilot: SquadPilotShip;
+      upgradeSlot: SquadPilotShipUpgradeSlot;
+      newlySelectedUpgrade: Upgrade;
+
+      //     upgradeSlot: SelectedUpgradeThatAllowsMutations,
+      //     newlySelectedUpgrade: Upgrade,
+      //     pilot: SelectedPilotThatAllowsMutations,
+      //   ) => void;
     };
 
 const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction): ReadonlyArray<Squad> => {
@@ -170,6 +191,30 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
           ),
         };
       });
+    case "changeUpgrade": {
+      return squads.map((squadInState) => {
+        if (action.squad !== squadInState) return squadInState;
+
+        return {
+          ...squadInState,
+          squadPilots: squadInState.squadPilots.map((squadPilotInState) => {
+            if (action.squadPilot !== squadPilotInState) return squadPilotInState;
+
+            return {
+              ...squadPilotInState,
+              upgrades: squadPilotInState.upgrades.map((upgradeSlotInState) => {
+                if (action.upgradeSlot !== upgradeSlotInState) return upgradeSlotInState;
+
+                return {
+                  ...upgradeSlotInState,
+                  upgrade: action.newlySelectedUpgrade,
+                };
+              }),
+            };
+          }),
+        };
+      });
+    }
   }
 };
 
