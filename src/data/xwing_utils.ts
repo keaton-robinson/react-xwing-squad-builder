@@ -465,7 +465,7 @@ export function getSquadPilotShip(
   pilot: Pilot,
   shipsData: Record<string, Ship>,
   upgradesData: Upgrade[],
-  prevUIKey?: UniqueKey,
+  prevSquadPilot?: SquadPilotShip,
 ): SquadPilotShip {
   //makes deep copies so I don't have side effects on my "data repo"
   const shipForPilot = shipsData[pilot.ship];
@@ -478,7 +478,7 @@ export function getSquadPilotShip(
   let squadPilot: SquadPilotShip = {
     ...pilot,
     ...shipForPilot,
-    squadPilotShipId: prevUIKey ?? makeUniqueKey(25),
+    squadPilotShipId: makeUniqueKey(25),
     pilotName: pilot.name,
     pilotId: pilot.id,
     shipCanonicalName: shipForPilot.canonical_name,
@@ -500,13 +500,18 @@ export function getSquadPilotShip(
     attackbull: shipForPilot.attackbull || 0,
     shields: shipForPilot.shields || 0,
 
-    upgrades: getSquadPilotUpgrades({ pilot, autoEquip: shipForPilot.autoequip, upgradesData }),
+    upgrades: getSquadPilotUpgrades({
+      pilot,
+      autoEquip: shipForPilot.autoequip,
+      upgradesData,
+      existingUpgrades: prevSquadPilot?.upgrades,
+    }),
   };
 
   return squadPilot;
 }
 
-export function getSquadPilotUpgrades(params: {
+function getSquadPilotUpgrades(params: {
   pilot: BasePilot;
   upgradesData: Upgrade[];
   autoEquip?: string[];

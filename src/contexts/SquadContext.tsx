@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer } from "react";
 import { Faction, Pilot, Ship, ShipName, Squad, SquadPilotShip, Upgrade } from "../data/xwing_types";
-import { getCheapestAvailablePilotForShip, getSquadPilotShip, getSquadPilotUpgrades } from "../data/xwing_utils";
+import { getCheapestAvailablePilotForShip, getSquadPilotShip } from "../data/xwing_utils";
 
 const SquadsContext = createContext<ReadonlyArray<Squad>>(null);
 const SquadsDispatchContext = createContext<React.Dispatch<SquadsDispatchAction>>(null);
@@ -28,13 +28,29 @@ type SquadsDispatchAction =
   | {
       type: "addShip";
       squad: Squad;
-      shipName: ShipName;
+      newShip: ShipName;
+      shipsData: Record<string, Ship>;
+      upgradesData: Upgrade[];
+      pilotsData: Pilot[];
+    }
+  | {
+      type: "changeShip";
+      squad: Squad;
+      currentPilot: SquadPilotShip;
+      newShip: ShipName;
       shipsData: Record<string, Ship>;
       upgradesData: Upgrade[];
       pilotsData: Pilot[];
     }
   | { type: "removeFromSquad"; squad: Squad; pilotToRemove: SquadPilotShip }
-  | { type: "changePilot"; squad: Squad; currentPilot: SquadPilotShip; newPilot: Pilot; upgradesData: Upgrade[] };
+  | {
+      type: "changePilot";
+      squad: Squad;
+      currentPilot: SquadPilotShip;
+      newPilot: Pilot;
+      upgradesData: Upgrade[];
+      shipsData: Record<string, Ship>;
+    };
 
 const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction): ReadonlyArray<Squad> => {
   console.log(`Squades reducer called with ${action.type} action`);
@@ -49,7 +65,7 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
       });
     case "addShip":
       const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
-        action.shipName,
+        action.newShip,
         action.squad,
         action.upgradesData,
         action.pilotsData,
@@ -64,9 +80,35 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
           };
         });
       }
-      alert(`No pilot available for ${action.shipName}`);
+      alert(`No pilot available for ${action.newShip}`);
       return squads;
-
+    case "changeShip": {
+      const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
+        action.newShip,
+        action.squad,
+        action.upgradesData,
+        action.pilotsData,
+      );
+      if (cheapestAvailablePilot) {
+        const replacementPilot = getSquadPilotShip(
+          cheapestAvailablePilot,
+          action.shipsData,
+          action.upgradesData,
+          action.currentPilot,
+        );
+        return squads.map((squadInState) => {
+          if (action.squad !== squadInState) return squadInState;
+          return {
+            ...squadInState,
+            squadPilots: squadInState.squadPilots.map((squadPilot) =>
+              squadPilot === action.currentPilot ? replacementPilot : squadPilot,
+            ),
+          };
+        });
+      }
+      alert(`No pilot available for ${action.newShip}`);
+      return squads;
+    }
     case "removeFromSquad":
       //TODO: need to remove upgrades that become invalid due to losing a pre-req during / after this operation
       return squads.map((squadInState) => {
@@ -80,32 +122,12 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
       });
     case "changePilot":
       //TODO: this might cause an upgrade pre-req to get removed...fix
-      const pilotRecord = action.newPilot;
-      const replacementPilot: SquadPilotShip = {
-        ...action.currentPilot,
-        skill: pilotRecord.skill,
-        points: pilotRecord.points,
-        unique: pilotRecord.unique,
-        force: pilotRecord.force || 0,
-        applies_condition: pilotRecord.applies_condition,
-        charge: pilotRecord.charge || 0,
-        recurring: pilotRecord.recurring,
-        restrictions: pilotRecord.restrictions,
-        restriction_func: pilotRecord.restriction_func,
-        max_per_squad: pilotRecord.max_per_squad,
-        ship_override: pilotRecord.ship_override,
-        engagement: pilotRecord.engagement,
-        pilotName: pilotRecord.name,
-        pilotId: pilotRecord.id,
-        pilotKeyword: pilotRecord.keyword,
-        pilotCanonicalName: pilotRecord.canonical_name,
-        slots: pilotRecord.slots,
-        upgrades: getSquadPilotUpgrades({
-          pilot: pilotRecord,
-          existingUpgrades: action.currentPilot.upgrades,
-          upgradesData: action.upgradesData,
-        }), // TODO: this ignores some edge cases for sure
-      };
+      const replacementPilot: SquadPilotShip = getSquadPilotShip(
+        action.newPilot,
+        action.shipsData,
+        action.upgradesData,
+        action.currentPilot,
+      );
       return squads.map((squadInState) => {
         if (action.squad !== squadInState) return squadInState;
         return {

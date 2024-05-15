@@ -4,7 +4,6 @@ import { DropDownStyles } from "../styleData/styleData";
 import { pilots, ships, upgrades } from "../data/xwing_data";
 import { InfoPanelCard, ShipName, Squad } from "../data/xwing_types";
 import { useSquadsDispatch } from "../contexts/SquadContext";
-import { getSquadPilotShip, getCheapestAvailablePilotForShip } from "../data/xwing_utils";
 
 interface AddShipCptProps {
   squad: Squad;
@@ -32,7 +31,7 @@ const AddShipCpt: React.FC<AddShipCptProps> = (props) => {
       squadsDispatch({
         type: "addShip",
         squad: props.squad,
-        shipName: selectedDropDownOption.value,
+        newShip: selectedDropDownOption.value,
         pilotsData: pilots,
         shipsData: ships,
         upgradesData: upgrades,

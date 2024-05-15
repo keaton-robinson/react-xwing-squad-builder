@@ -3,7 +3,7 @@ import { Dropdown } from "@keatonr06/reactjs-dropdown-component";
 import { DropDownStyles } from "../styleData/styleData";
 import { InfoPanelCard, Pilot, ShipName, Squad, SquadPilotShip, Upgrade } from "../data/xwing_types";
 import { pilots, ships, upgrades } from "../data/xwing_data";
-import { getPilotCost, getSquadPilotShip, getSquadPilotUpgrades, maxPilotOrUpgradeReached } from "../data/xwing_utils";
+import { getPilotCost, getSquadPilotShip, maxPilotOrUpgradeReached } from "../data/xwing_utils";
 import { useSquadsDispatch } from "../contexts/SquadContext";
 
 // operations to implement:
@@ -61,10 +61,18 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
     }));
   }, [props.selectedPilot, props.squad]);
 
-  const handleShipSelection = (selectedShip) => {
-    // if (selectedShip.value !== props.selectedPilot.ship) {
-    //   props.changeShip(selectedShip.value, props.selectedPilot);
-    // }
+  const handleShipSelection = (selectedRecord: { label: ShipName; value: ShipName }) => {
+    if (selectedRecord.value !== props.selectedPilot.ship) {
+      squadsDispatch({
+        type: "changeShip",
+        squad: props.squad,
+        currentPilot: props.selectedPilot,
+        newShip: selectedRecord.value,
+        upgradesData: upgrades,
+        pilotsData: pilots,
+        shipsData: ships,
+      });
+    }
   };
 
   const handlePilotSelection = (selectedRecord: { label: string; value: number; pilotRecord: Pilot }) => {
@@ -75,6 +83,7 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
         currentPilot: props.selectedPilot,
         newPilot: selectedRecord.pilotRecord,
         upgradesData: upgrades,
+        shipsData: ships,
       });
     }
   };
@@ -106,7 +115,6 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
   };
 
   const delBtnPressed = (e) => {
-    // props.removePilot(props.selectedPilot);
     squadsDispatch({ type: "removeFromSquad", squad: props.squad, pilotToRemove: props.selectedPilot });
   };
 
