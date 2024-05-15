@@ -124,43 +124,18 @@ export function maxPilotOrUpgradeReached(cardToCheck: Pilot | Upgrade, squad: Sq
       let numberOfUpgradeInSquad: number = 0;
       for (const squadPilot of squad.squadPilots) {
         for (const pilotUpgrade of squadPilot.upgrades) {
-          if (pilotUpgrade.upgrade.id === cardToCheck.id) {
+          if (pilotUpgrade.upgrade?.id === cardToCheck.id) {
             numberOfUpgradeInSquad++;
           }
         }
       }
-
-      if (numberOfUpgradeInSquad === cardToCheck.max_per_squad) {
-        return true;
-      } else if (numberOfUpgradeInSquad > cardToCheck.max_per_squad) {
-        const error = new Error();
-        throw createError(
-          `Somehow got more than ${cardToCheck.max_per_squad} instances of ${cardToCheck.name} id: ${cardToCheck.id} in squad. Investigate.`,
-          {
-            upgradeToCheckVal: cardToCheck,
-            squadVal: squad,
-            error: error,
-          },
-        );
-      }
+      return numberOfUpgradeInSquad >= cardToCheck.max_per_squad;
     } else {
       //we're looking at a pilot card
-      let numberOfPilotInSquad: number = squad.squadPilots.filter(
+      const numberOfPilotInSquad: number = squad.squadPilots.filter(
         (squadPilot) => squadPilot.pilotId === cardToCheck.id,
       ).length;
-      if (numberOfPilotInSquad === cardToCheck.max_per_squad) {
-        return true;
-      } else if (numberOfPilotInSquad > cardToCheck.max_per_squad) {
-        const error = new Error();
-        throw createError(
-          `Somehow got more than ${cardToCheck.max_per_squad} instances of ${cardToCheck.name} id: ${cardToCheck.id} in squad. Investigate.`,
-          {
-            pilotToCheckVal: cardToCheck,
-            squadVal: squad,
-            error: error,
-          },
-        );
-      }
+      return numberOfPilotInSquad >= cardToCheck.max_per_squad;
     }
   }
 
@@ -526,27 +501,28 @@ function getSquadPilotUpgrades(params: {
       slotNameUsedTracker[slotName]++;
     }
 
+    const slotKey = `${slotName}${slotNameUsedTracker[slotName]}`;
+
     if (params.existingUpgrades) {
       // TODO: not accounting for when a parent slot goes away or restrictions are violated
       return {
-        squadPilotUpgradeSlotId: slotNameUsedTracker[slotName],
+        squadPilotUpgradeSlotId: slotKey,
         slot: slotName,
-        upgrade: params.existingUpgrades?.find(
-          (existingUpgrade) => existingUpgrade.squadPilotUpgradeSlotId === slotNameUsedTracker[slotName],
-        )?.upgrade,
+        upgrade: params.existingUpgrades?.find((existingUpgrade) => existingUpgrade.squadPilotUpgradeSlotId === slotKey)
+          ?.upgrade,
       };
     }
 
     if (slotName === "Configuration" && params.autoEquip) {
       return {
-        squadPilotUpgradeSlotId: slotNameUsedTracker[slotName],
+        squadPilotUpgradeSlotId: slotKey,
         slot: slotName,
         upgrade: params.upgradesData.find((upgradeRecord) => upgradeRecord.name === params.autoEquip[0]),
       };
     }
 
     return {
-      squadPilotUpgradeSlotId: slotNameUsedTracker[slotName],
+      squadPilotUpgradeSlotId: slotKey,
       slot: slotName,
       upgrade: null,
     };
@@ -759,20 +735,15 @@ function removeUpgrade(
 // }
 
 //returns true if there is a solitary upgrade card equiped to another slot of the same type within the squad
-export function squadContainsAnotherSolitaryCardForThisSlot(
-  upgradeSlot: SelectedUpgradeThatAllowsMutations,
-  squad: SelectedPilotThatAllowsMutations[],
-  upgradesData: Upgrade[],
-) {
-  for (const squadPilot of squad) {
-    for (const squadPilotUpgrade of squadPilot.selectedUpgrades) {
+export function squadContainsAnotherSolitaryCardForThisSlot(upgradeSlot: SquadPilotShipUpgradeSlot, squad: Squad) {
+  for (const squadPilot of squad.squadPilots) {
+    for (const squadPilotUpgrade of squadPilot.upgrades) {
       if (
         squadPilotUpgrade !== upgradeSlot &&
         squadPilotUpgrade.slot === upgradeSlot.slot &&
-        isNotNullOrUndefined(squadPilotUpgrade.selectedUpgradeId)
+        isNotNullOrUndefined(squadPilotUpgrade.upgrade)
       ) {
-        const upgradeRecord = upgradesData.find((upgrade) => upgrade.id === squadPilotUpgrade.selectedUpgradeId);
-        if (upgradeRecord.solitary) {
+        if (squadPilotUpgrade.upgrade.solitary) {
           return true;
         }
       }

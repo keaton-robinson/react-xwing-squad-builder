@@ -5,6 +5,7 @@ import { InfoPanelCard, Pilot, ShipName, Squad, SquadPilotShip, Upgrade } from "
 import { pilots, ships, upgrades } from "../data/xwing_data";
 import { getPilotCost, getSquadPilotShip, maxPilotOrUpgradeReached } from "../data/xwing_utils";
 import { useSquadsDispatch } from "../contexts/SquadContext";
+import ShipUpgradeCpt from "./ShipUpgradeCpt";
 
 // operations to implement:
 
@@ -162,17 +163,15 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
         Upgrades:
       </div>
       <div className="shipUpgrades">
-        {/* {props.selectedPilot.upgrades.map((upgrade) => (
-          <span key={upgrade.squadPilotUpgradeSlotId} data-upgrade-slot={upgrade.squadPilotUpgradeSlotId}>
-            <ShipUpgradeCpt
-              upgradeSlot={upgrade}
-              changeUpgrade={props.changeUpgrade}
-              pilot={props.selectedPilot}
-              squad={props.squad}
-              onRecordMouseEnter={handleUpgradeMouseEnter}
-            />
-          </span>
-        ))} */}
+        {props.selectedPilot.upgrades.map((upgrade) => (
+          <ShipUpgradeCpt
+            key={upgrade.squadPilotUpgradeSlotId}
+            upgradeSlot={upgrade}
+            squadPilot={props.selectedPilot}
+            squad={props.squad}
+            onRecordMouseEnter={handleUpgradeMouseEnter}
+          />
+        ))}
       </div>
       <div className="deleteOrCopyShip" style={{ marginTop: "5px" }}>
         <span className="onlyShowOnMobile">{`Total ship points: ${getPilotCost(props.selectedPilot)}  `}</span>
