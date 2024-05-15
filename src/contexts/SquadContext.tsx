@@ -42,6 +42,14 @@ type SquadsDispatchAction =
       upgradesData: Upgrade[];
       pilotsData: Pilot[];
     }
+  | {
+      type: "clonePilot";
+      squad: Squad;
+      pilotToClone: SquadPilotShip;
+      shipsData: Record<string, Ship>;
+      upgradesData: Upgrade[];
+      pilotsData: Pilot[];
+    }
   | { type: "removeFromSquad"; squad: Squad; pilotToRemove: SquadPilotShip }
   | {
       type: "changePilot";
@@ -107,6 +115,31 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
         });
       }
       alert(`No pilot available for ${action.newShip}`);
+      return squads;
+    }
+    case "clonePilot": {
+      const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
+        action.pilotToClone.ship,
+        action.squad,
+        action.upgradesData,
+        action.pilotsData,
+      );
+      if (cheapestAvailablePilot) {
+        const squadPilot = getSquadPilotShip(
+          cheapestAvailablePilot,
+          action.shipsData,
+          action.upgradesData,
+          action.pilotToClone,
+        );
+        return squads.map((squadInState) => {
+          if (action.squad !== squadInState) return squadInState;
+          return {
+            ...squadInState,
+            squadPilots: [...squadInState.squadPilots, squadPilot],
+          };
+        });
+      }
+      alert(`No pilot available for ${action.pilotToClone.ship}`);
       return squads;
     }
     case "removeFromSquad":

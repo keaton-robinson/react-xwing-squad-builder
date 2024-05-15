@@ -8,10 +8,6 @@ import { useSquadsDispatch } from "../contexts/SquadContext";
 
 // operations to implement:
 
-//  changePilot: (prevSelectedPilot: SelectedPilotThatAllowsMutations, newPilot: Pilot, copyUpgrades?: boolean) => void;
-//  changeShip: (shipToChangeTo: ShipName, prevSelectedPilot: SelectedPilotThatAllowsMutations) => void;
-//  removePilot: (pilotToRemove: SelectedPilotThatAllowsMutations) => void;
-//  clonePilot: (pilot: SelectedPilotThatAllowsMutations) => void;
 // changeUpgrade: (
 //     upgradeSlot: SelectedUpgradeThatAllowsMutations,
 //     newlySelectedUpgrade: Upgrade,
@@ -118,6 +114,17 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
     squadsDispatch({ type: "removeFromSquad", squad: props.squad, pilotToRemove: props.selectedPilot });
   };
 
+  const cloneBtnPressed = (e) => {
+    squadsDispatch({
+      type: "clonePilot",
+      squad: props.squad,
+      pilotToClone: props.selectedPilot,
+      pilotsData: pilots,
+      shipsData: ships,
+      upgradesData: upgrades,
+    });
+  };
+
   return (
     <div className={"shipRow ship-" + getShipBackgroundStylePostFix(props.selectedPilot.ship)}>
       <div className="shipAndPilotSelectorDiv">
@@ -172,9 +179,9 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
         <button className="btn-danger" onClick={delBtnPressed}>
           Delete
         </button>
-        {/* <button className="btn-info" onClick={cloneBtnPressed}>
+        <button className="btn-info" onClick={cloneBtnPressed}>
           Clone
-        </button> */}
+        </button>
       </div>
     </div>
   );
