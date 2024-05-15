@@ -47,7 +47,7 @@ export interface BasePilot {
   readonly ship: ShipName;
   readonly skill: number;
   readonly points: number;
-  readonly slots: string[];
+  readonly slots: SlotName[];
   readonly unique?: boolean;
   readonly force?: number;
   readonly applies_condition?: string | string[];
@@ -72,7 +72,7 @@ export interface Upgrade {
   readonly name: string;
   readonly xws?: string;
   readonly id: number;
-  readonly slot: keyof typeof slots;
+  readonly slot: SlotName;
   readonly canonical_name?: string;
   readonly points?: number;
   readonly pointsarray?: number[];
@@ -144,7 +144,7 @@ export interface SquadPilotShipUpgradeSlot {
   /**
    * Provide unique value for react key prop.
    */
-  readonly squadPilotUpgradeSlotId: UniqueKey;
+  readonly squadPilotUpgradeSlotId: string;
   /**
    * The type of this upgrade slot holds
    */
@@ -156,7 +156,7 @@ export interface SquadPilotShipUpgradeSlot {
   /**
    * For upgrades that take up two slots, this specifies which slot is the 'parent' slot that is causing this slot to be used
    */
-  readonly parentSquadPilotUpgradeSlotId?: UniqueKey;
+  readonly parentSquadPilotUpgradeSlotId?: string;
 }
 
 export interface PilotShip extends Ship {

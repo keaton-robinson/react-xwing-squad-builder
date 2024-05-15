@@ -35,7 +35,7 @@ const AddShipCpt: React.FC<AddShipCptProps> = (props) => {
         upgrades,
         pilots,
       );
-      const squadPilot = getSquadPilotShip(cheapestAvailablePilot, ships);
+      const squadPilot = getSquadPilotShip(cheapestAvailablePilot, ships, upgrades);
       if (cheapestAvailablePilot) {
         squadsDispatch({ type: "addToSquad", squad: props.squad, newPilot: squadPilot });
       } else {

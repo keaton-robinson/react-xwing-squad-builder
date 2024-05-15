@@ -1,5 +1,4 @@
 import {
-  Faction,
   Ship,
   ShipName,
   Pilot,
@@ -12,6 +11,7 @@ import {
   Squad,
   BaseShip,
   SquadPilotShipUpgradeSlot,
+  BasePilot,
 } from "./xwing_types";
 
 //intended to be used for checking if an id is selected
@@ -464,6 +464,7 @@ export function isUpgradeAllowedByRestrictions(
 export function getSquadPilotShip(
   pilot: Pilot,
   shipsData: Record<string, Ship>,
+  upgradesData: Upgrade[],
   prevUIKey?: UniqueKey,
 ): SquadPilotShip {
   //makes deep copies so I don't have side effects on my "data repo"
@@ -499,16 +500,54 @@ export function getSquadPilotShip(
     attackbull: shipForPilot.attackbull || 0,
     shields: shipForPilot.shields || 0,
 
-    upgrades: pilot.slots.map((slotName): SquadPilotShipUpgradeSlot => {
-      return {
-        squadPilotUpgradeSlotId: makeUniqueKey(25),
-        slot: slotName,
-        upgrade: null,
-      };
-    }),
+    upgrades: getSquadPilotUpgrades({ pilot, autoEquip: shipForPilot.autoequip[0], upgradesData }),
   };
 
   return squadPilot;
+}
+
+export function getSquadPilotUpgrades(params: {
+  pilot: BasePilot;
+  upgradesData: Upgrade[];
+  autoEquip?: string;
+  existingUpgrades?: SquadPilotShipUpgradeSlot[];
+}): SquadPilotShipUpgradeSlot[] {
+  let slotNameUsedTracker = {};
+  let newSelectedUpgrades = params.pilot.slots.map((slotName): SquadPilotShipUpgradeSlot => {
+    // Increment or initialize the count for the slot
+    if (!slotNameUsedTracker[slotName]) {
+      slotNameUsedTracker[slotName] = 1;
+    } else {
+      slotNameUsedTracker[slotName]++;
+    }
+
+    if (params.existingUpgrades) {
+      // TODO: not accounting for when a parent slot goes away or restrictions are violated
+      return {
+        squadPilotUpgradeSlotId: slotNameUsedTracker[slotName],
+        slot: slotName,
+        upgrade: params.existingUpgrades?.find(
+          (existingUpgrade) => existingUpgrade.squadPilotUpgradeSlotId === slotNameUsedTracker[slotName],
+        )?.upgrade,
+      };
+    }
+
+    if (slotName === "Configuration" && params.autoEquip) {
+      return {
+        squadPilotUpgradeSlotId: slotNameUsedTracker[slotName],
+        slot: slotName,
+        upgrade: params.upgradesData.find((upgradeRecord) => upgradeRecord.name === params.autoEquip),
+      };
+    }
+
+    return {
+      squadPilotUpgradeSlotId: slotNameUsedTracker[slotName],
+      slot: slotName,
+      upgrade: null,
+    };
+  });
+
+  return newSelectedUpgrades;
 }
 
 //returns cheapest pilot in-faction that hasn't been selected max-times or selected elsewhere with uniqueness
@@ -735,17 +774,6 @@ export function squadContainsAnotherSolitaryCardForThisSlot(
     }
   }
   return false;
-}
-
-// TODO: get rid of this
-function makeidThatShouldGoAway(length: number): string {
-  var result = "";
-  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
 }
 
 function makeUniqueKey(length: number): UniqueKey {
