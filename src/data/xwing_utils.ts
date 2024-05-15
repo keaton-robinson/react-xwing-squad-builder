@@ -500,7 +500,7 @@ export function getSquadPilotShip(
     attackbull: shipForPilot.attackbull || 0,
     shields: shipForPilot.shields || 0,
 
-    upgrades: getSquadPilotUpgrades({ pilot, autoEquip: shipForPilot.autoequip[0], upgradesData }),
+    upgrades: getSquadPilotUpgrades({ pilot, autoEquip: shipForPilot.autoequip, upgradesData }),
   };
 
   return squadPilot;
@@ -509,7 +509,7 @@ export function getSquadPilotShip(
 export function getSquadPilotUpgrades(params: {
   pilot: BasePilot;
   upgradesData: Upgrade[];
-  autoEquip?: string;
+  autoEquip?: string[];
   existingUpgrades?: SquadPilotShipUpgradeSlot[];
 }): SquadPilotShipUpgradeSlot[] {
   let slotNameUsedTracker = {};
@@ -536,7 +536,7 @@ export function getSquadPilotUpgrades(params: {
       return {
         squadPilotUpgradeSlotId: slotNameUsedTracker[slotName],
         slot: slotName,
-        upgrade: params.upgradesData.find((upgradeRecord) => upgradeRecord.name === params.autoEquip),
+        upgrade: params.upgradesData.find((upgradeRecord) => upgradeRecord.name === params.autoEquip[0]),
       };
     }
 

@@ -29,20 +29,15 @@ const AddShipCpt: React.FC<AddShipCptProps> = (props) => {
 
   const handleShipSelection = (selectedDropDownOption: { label: ShipName; value: ShipName }) => {
     if (selectedDropDownOption) {
-      const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
-        selectedDropDownOption.value,
-        props.squad,
-        upgrades,
-        pilots,
-      );
-      const squadPilot = getSquadPilotShip(cheapestAvailablePilot, ships, upgrades);
-      if (cheapestAvailablePilot) {
-        squadsDispatch({ type: "addToSquad", squad: props.squad, newPilot: squadPilot });
-      } else {
-        alert("No more pilots available for " + selectedDropDownOption.value);
-      }
+      squadsDispatch({
+        type: "addShip",
+        squad: props.squad,
+        shipName: selectedDropDownOption.value,
+        pilotsData: pilots,
+        shipsData: ships,
+        upgradesData: upgrades,
+      });
 
-      //dispatch things
       ddlAddShipRef.current.clearSelection(); //tell parent component about new ship, but reset this dropdown's value to "none"
     }
   };

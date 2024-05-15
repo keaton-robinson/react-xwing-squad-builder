@@ -69,38 +69,12 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
 
   const handlePilotSelection = (selectedRecord: { label: string; value: number; pilotRecord: Pilot }) => {
     if (selectedRecord.value !== props.selectedPilot.pilotId) {
-      const pilotRecord = selectedRecord.pilotRecord;
-      const replacementPilot: SquadPilotShip = {
-        ...props.selectedPilot,
-        skill: pilotRecord.skill,
-        points: pilotRecord.points,
-        unique: pilotRecord.unique,
-        force: pilotRecord.force || 0,
-        applies_condition: pilotRecord.applies_condition,
-        charge: pilotRecord.charge || 0,
-        recurring: pilotRecord.recurring,
-        restrictions: pilotRecord.restrictions,
-        restriction_func: pilotRecord.restriction_func,
-        max_per_squad: pilotRecord.max_per_squad,
-        ship_override: pilotRecord.ship_override,
-        engagement: pilotRecord.engagement,
-        pilotName: pilotRecord.name,
-        pilotId: pilotRecord.id,
-        pilotKeyword: pilotRecord.keyword,
-        pilotCanonicalName: pilotRecord.canonical_name,
-        slots: pilotRecord.slots,
-        upgrades: getSquadPilotUpgrades({
-          pilot: pilotRecord,
-          existingUpgrades: props.selectedPilot.upgrades,
-          upgradesData: upgrades,
-        }), // TODO: this ignores some edge cases for sure
-      };
-
       squadsDispatch({
         type: "changePilot",
         squad: props.squad,
         currentPilot: props.selectedPilot,
-        newPilot: replacementPilot,
+        newPilot: selectedRecord.pilotRecord,
+        upgradesData: upgrades,
       });
     }
   };
