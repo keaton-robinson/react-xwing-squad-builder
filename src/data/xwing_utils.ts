@@ -3,8 +3,6 @@ import {
   ShipName,
   Pilot,
   Upgrade,
-  SelectedPilotThatAllowsMutations,
-  SelectedUpgradeThatAllowsMutations,
   ShipBaseSize,
   UniqueKey,
   SquadPilotShip,
@@ -12,6 +10,7 @@ import {
   BaseShip,
   SquadPilotShipUpgradeSlot,
   BasePilot,
+  Restriction,
 } from "./xwing_types";
 
 //intended to be used for checking if an id is selected
@@ -208,11 +207,10 @@ export function isUpgradeAllowed(
     }
   }
   if (upgrade.restrictions) {
-    const restrictionsCopy = [...upgrade.restrictions];
     if (
       !isUpgradeAllowedByRestrictions(
         selectedUpgradeSlot,
-        restrictionsCopy,
+        upgrade.restrictions,
         upgrade,
         effectivePilot,
         squad,
@@ -227,14 +225,15 @@ export function isUpgradeAllowed(
 
 export function isUpgradeAllowedByRestrictions(
   upgradeSlot: SquadPilotShipUpgradeSlot,
-  restrictions: [string, any][],
+  restrictions: Restriction[],
   upgrade: Upgrade,
   squadPilot: SquadPilotShip,
   squad: Squad,
   upgradesData: Upgrade[],
 ): boolean {
-  if (restrictions.length > 0) {
-    const restriction = restrictions.shift();
+  let i = 0;
+  while (i < restrictions.length) {
+    const restriction = restrictions[i];
 
     switch (restriction[0]) {
       case "Base":
@@ -316,7 +315,9 @@ export function isUpgradeAllowedByRestrictions(
             squadVal: squad,
           });
         }
-        const nextRestriction = restrictions.shift();
+        // need to check next restriction and also make sure to skip it on the next iteration
+        i++;
+        const nextRestriction = restrictions[i];
         //evaluate next restriction by itself by putting it in its own array
         if (
           !(
@@ -408,9 +409,9 @@ export function isUpgradeAllowedByRestrictions(
         }
         break;
     }
-
-    return isUpgradeAllowedByRestrictions(upgradeSlot, restrictions, upgrade, squadPilot, squad, upgradesData);
+    i++;
   }
+
   return true;
 }
 

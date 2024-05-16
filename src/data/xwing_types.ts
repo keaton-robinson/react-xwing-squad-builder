@@ -83,7 +83,7 @@ export interface Upgrade {
   readonly variableinit?: boolean;
   readonly force?: number;
   readonly charge?: number;
-  readonly restrictions?: [string, any][];
+  readonly restrictions?: Restriction[];
   readonly modifier_func?: (a: any) => any;
   readonly attack?: number;
   readonly attackf?: number;
@@ -222,6 +222,23 @@ export type Bearing =
   | "reverse_left"
   | "reverse_straight"
   | "reverse_right";
+
+export type Restriction =
+  | ["Base", "Small" | "Large" | "Huge" | "Small or Medium" | "Medium or Large" | "Standard"]
+  | ["Action", string]
+  | ["Slot", string]
+  | ["orUnique", string]
+  | ["Faction", Faction]
+  | ["AttackArc", "Rear Arc"]
+  | ["Keyword", string]
+  | ["isUnique", boolean]
+  | ["Equipped", string]
+  | ["ShieldsGreaterThan", number]
+  | ["InitiativeGreaterThan", number]
+  | ["InitiativeLessThan", number]
+  | ["EnergyGreaterThan", number]
+  | ["EnergyLessThan", number]
+  | ["AgilityEquals", number];
 
 export type ShipName = keyof typeof ships;
 
