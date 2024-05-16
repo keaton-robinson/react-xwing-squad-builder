@@ -31,6 +31,7 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
         squad: props.squad,
         squadPilot: props.squadPilot,
         upgradeSlot: props.upgradeSlot,
+        upgradesData: upgrades,
       });
     }
   };

@@ -9,7 +9,12 @@ import {
   SquadPilotShipUpgradeSlot,
   Upgrade,
 } from "../data/xwing_types";
-import { getCheapestAvailablePilotForShip, getSquadPilotShip, maxPilotOrUpgradeReached } from "../data/xwing_utils";
+import {
+  getCheapestAvailablePilotForShip,
+  getSquadPilotShip,
+  isUpgradeAllowed,
+  maxPilotOrUpgradeReached,
+} from "../data/xwing_utils";
 
 const SquadsContext = createContext<ReadonlyArray<Squad>>(null);
 const SquadsDispatchContext = createContext<React.Dispatch<SquadsDispatchAction>>(null);
@@ -74,6 +79,7 @@ type SquadsDispatchAction =
       squadPilot: SquadPilotShip;
       upgradeSlot: SquadPilotShipUpgradeSlot;
       newlySelectedUpgrade: Upgrade;
+      upgradesData: Upgrade[];
     };
 
 const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction): ReadonlyArray<Squad> => {
@@ -167,13 +173,14 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
         }
       }
 
-      return squads.map((squadInState) => {
-        if (action.squad !== squadInState) return squadInState;
-        return {
-          ...squadInState,
-          squadPilots: [...squadInState.squadPilots, squadPilot],
-        };
-      });
+      const squadWithPilotCloned = {
+        ...action.squad,
+        squadPilots: [...action.squad.squadPilots, squadPilot],
+      };
+
+      const squadWithoutBadUpgrades = getSquadWithInvalidUpgradesRemoved(squadWithPilotCloned, action.upgradesData);
+
+      return squads.map((squadInState) => (action.squad !== squadInState ? squadInState : squadWithoutBadUpgrades));
     }
     case "removeFromSquad":
       //TODO: need to remove upgrades that become invalid due to losing a pre-req during / after this operation...and then other upgrades that become invalid...
@@ -205,30 +212,74 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
       });
     case "changeUpgrade": {
       //TODO: need to remove upgrades that become invalid...and then other upgrades that become invalid...
-      return squads.map((squadInState) => {
-        if (action.squad !== squadInState) return squadInState;
 
-        return {
-          ...squadInState,
-          squadPilots: squadInState.squadPilots.map((squadPilotInState) => {
-            if (action.squadPilot !== squadPilotInState) return squadPilotInState;
+      const squadWithUpgradeChanged: Squad = {
+        ...action.squad,
+        squadPilots: action.squad.squadPilots.map((squadPilotInState) => {
+          if (action.squadPilot !== squadPilotInState) return squadPilotInState;
 
+          return {
+            ...squadPilotInState,
+            upgrades: squadPilotInState.upgrades.map((upgradeSlotInState) => {
+              if (action.upgradeSlot !== upgradeSlotInState) return upgradeSlotInState;
+
+              return {
+                ...upgradeSlotInState,
+                upgrade: action.newlySelectedUpgrade,
+              };
+            }),
+          };
+        }),
+      };
+
+      const squadWithoutBadUpgrades: Squad = getSquadWithInvalidUpgradesRemoved(
+        squadWithUpgradeChanged,
+        action.upgradesData,
+      );
+
+      return squads.map((squadInState) => (squadInState !== action.squad ? squadInState : squadWithoutBadUpgrades));
+    }
+  }
+};
+
+const getSquadWithInvalidUpgradesRemoved = (squad: Squad, upgradesData: Upgrade[]): Squad => {
+  // TODO: not handling max upgrades currently (remove from the back of the list though)
+  console.log("gonna remove some badddd upgrades");
+  for (const squadPilot of squad.squadPilots) {
+    for (const squadPilotUpgrade of squadPilot.upgrades) {
+      if (
+        squadPilotUpgrade.upgrade &&
+        !isUpgradeAllowed(squadPilotUpgrade, squadPilotUpgrade.upgrade, squadPilot, squad, upgradesData)
+      ) {
+        // remove the bad upgrade and then check if the new squad is valid recursively
+        // TODO: removing upgrade needs to get fancier than this
+
+        const invalidSquadPilot = squadPilot;
+        const invalidSquadPilotUpgrade = squadPilotUpgrade;
+        const squadWithoutInvalidUpgrade: Squad = {
+          ...squad,
+          squadPilots: squad.squadPilots.map((innerSquadPilot): SquadPilotShip => {
+            if (innerSquadPilot !== invalidSquadPilot) return innerSquadPilot;
             return {
-              ...squadPilotInState,
-              upgrades: squadPilotInState.upgrades.map((upgradeSlotInState) => {
-                if (action.upgradeSlot !== upgradeSlotInState) return upgradeSlotInState;
-
+              ...invalidSquadPilot,
+              upgrades: invalidSquadPilot.upgrades.map((innerUpgrade) => {
+                if (innerUpgrade !== invalidSquadPilotUpgrade) return innerUpgrade;
                 return {
-                  ...upgradeSlotInState,
-                  upgrade: action.newlySelectedUpgrade,
+                  ...invalidSquadPilotUpgrade,
+                  parentSquadPilotUpgradeSlotId: null,
+                  upgrade: null,
                 };
               }),
             };
           }),
         };
-      });
+
+        return getSquadWithInvalidUpgradesRemoved(squadWithoutInvalidUpgrade, upgradesData);
+      }
     }
   }
+
+  return squad;
 };
 
 export const factionsOrdered: Faction[] = [
