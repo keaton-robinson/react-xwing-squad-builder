@@ -1,12 +1,4 @@
-import {
-  Ship,
-  Pilot,
-  Upgrade,
-  SelectedPilotThatAllowsMutations,
-  ShipBaseSize,
-  SquadPilotShip,
-  Squad,
-} from "./xwing_types";
+import { Ship, Pilot, Upgrade, ShipBaseSize, SquadPilotShip, Squad } from "./xwing_types";
 import {
   isNotNullOrUndefined,
   getShipBaseSize,
@@ -253,5 +245,3 @@ describe("getPilotEffectiveStats", () => {
     expect(JSON.stringify(squadPilot)).toBe(JSON.stringify(result));
   });
 });
-
-// TODO: Could add more unit tests, but I think I've done enough for learning purposes for the moment.

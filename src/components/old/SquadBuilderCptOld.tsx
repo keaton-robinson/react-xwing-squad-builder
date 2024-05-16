@@ -1,3 +1,5 @@
+// TODO: delete this file
+
 // import React, { useEffect, useMemo, useState } from "react";
 // import InfoPanelCpt from "./InfoPanelCpt";
 // import PilotRowCpt from "./PilotRowCpt";
@@ -83,7 +85,7 @@
 //           const configSelUpgradeSlot = appReadyNewPilot.selectedUpgrades.find(
 //             (selUpgrade) => selUpgrade.slot === slots.Configuration.key,
 //           );
-//           configSelUpgradeSlot.selectedUpgradeId = upgrades.find((upgrade) => upgrade.name === autoEquipUpgrade).id; // TODO: directly mutated state?
+//           configSelUpgradeSlot.selectedUpgradeId = upgrades.find((upgrade) => upgrade.name === autoEquipUpgrade).id;
 //         }
 //       }
 //     }

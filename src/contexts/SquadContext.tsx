@@ -134,6 +134,7 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
       return squads;
     }
     case "clonePilot": {
+      //TODO: can this create more of an upgrade or pilot than allowed?
       const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
         action.pilotToClone.ship,
         action.squad,
@@ -159,7 +160,7 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
       return squads;
     }
     case "removeFromSquad":
-      //TODO: need to remove upgrades that become invalid due to losing a pre-req during / after this operation
+      //TODO: need to remove upgrades that become invalid due to losing a pre-req during / after this operation...and then other upgrades that become invalid...
       return squads.map((squadInState) => {
         if (action.squad !== squadInState) return squadInState;
         return {
@@ -170,7 +171,7 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
         };
       });
     case "changePilot":
-      //TODO: this might cause an upgrade pre-req to get removed...fix
+      //TODO: this might cause an upgrade pre-req to get removed...need to remove those...and then other upgrades that become invalid...
       const replacementPilot: SquadPilotShip = getSquadPilotShip(
         action.newPilot,
         action.shipsData,
@@ -187,6 +188,7 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
         };
       });
     case "changeUpgrade": {
+      //TODO: need to remove upgrades that become invalid...and then other upgrades that become invalid...
       return squads.map((squadInState) => {
         if (action.squad !== squadInState) return squadInState;
 

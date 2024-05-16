@@ -7,8 +7,6 @@ import { getPilotCost, getSquadPilotShip, maxPilotOrUpgradeReached } from "../da
 import { useSquadsDispatch } from "../contexts/SquadContext";
 import ShipUpgradeCpt from "./ShipUpgradeCpt";
 
-// TODO: get remaining processing from change upgrade included...stuff like restrictions and max number and prereqs
-
 interface PilotRowCptProps {
   squad: Squad;
   selectedPilot: SquadPilotShip;
