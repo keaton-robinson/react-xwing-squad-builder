@@ -38,7 +38,7 @@ export const SquadsProvider = ({ children }) => {
 };
 
 type SquadsDispatchAction =
-  | { type: "renameSquad"; squad: Squad; newName: string }
+  | { type: "renameSquad"; squad: Squad; newName: string; upgradesData: Upgrade[] }
   | {
       type: "addShip";
       squad: Squad;
@@ -64,7 +64,7 @@ type SquadsDispatchAction =
       upgradesData: Upgrade[];
       pilotsData: Pilot[];
     }
-  | { type: "removeFromSquad"; squad: Squad; pilotToRemove: SquadPilotShip }
+  | { type: "removeFromSquad"; squad: Squad; pilotToRemove: SquadPilotShip; upgradesData: Upgrade[] }
   | {
       type: "changePilot";
       squad: Squad;
@@ -84,15 +84,18 @@ type SquadsDispatchAction =
 
 const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction): ReadonlyArray<Squad> => {
   // console.log(`Squades reducer called with ${action.type} action`);
+  const updatedSquad = getUpdatedSquad(action.squad, action);
+  const squadWithoutInvalidUpgrades = getSquadWithInvalidUpgradesRemoved(updatedSquad, action.upgradesData);
+  return squads.map((squadInState) => (action.squad !== squadInState ? squadInState : squadWithoutInvalidUpgrades));
+};
+
+const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
   switch (action.type) {
     case "renameSquad":
-      return squads.map((squadInState) => {
-        if (action.squad !== squadInState) return squadInState;
-        return {
-          ...squadInState,
-          name: action.newName,
-        };
-      });
+      return {
+        ...squad,
+        name: action.newName,
+      };
     case "addShip":
       const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
         action.newShip,
@@ -102,16 +105,14 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
       );
       if (cheapestAvailablePilot) {
         const squadPilot = getSquadPilotShip(cheapestAvailablePilot, action.shipsData, action.upgradesData);
-        return squads.map((squadInState) => {
-          if (action.squad !== squadInState) return squadInState;
-          return {
-            ...squadInState,
-            squadPilots: [...squadInState.squadPilots, squadPilot],
-          };
-        });
+
+        return {
+          ...squad,
+          squadPilots: [...squad.squadPilots, squadPilot],
+        };
       }
       alert(`No pilot available for ${action.newShip}`);
-      return squads;
+      return squad;
     case "changeShip": {
       const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
         action.newShip,
@@ -126,18 +127,16 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
           action.upgradesData,
           action.currentPilot,
         );
-        return squads.map((squadInState) => {
-          if (action.squad !== squadInState) return squadInState;
-          return {
-            ...squadInState,
-            squadPilots: squadInState.squadPilots.map((squadPilot) =>
-              squadPilot === action.currentPilot ? replacementPilot : squadPilot,
-            ),
-          };
-        });
+
+        return {
+          ...squad,
+          squadPilots: squad.squadPilots.map((squadPilot) =>
+            squadPilot === action.currentPilot ? replacementPilot : squadPilot,
+          ),
+        };
       }
       alert(`No pilot available for ${action.newShip}`);
-      return squads;
+      return squad;
     }
     case "clonePilot": {
       //TODO: can this create more of an upgrade or pilot than allowed?
@@ -169,7 +168,7 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
           );
         } else {
           alert(`No pilot available for ${action.pilotToClone.ship}`);
-          return squads;
+          return squad;
         }
       }
 
@@ -178,21 +177,17 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
         squadPilots: [...action.squad.squadPilots, squadPilot],
       };
 
-      const squadWithoutBadUpgrades = getSquadWithInvalidUpgradesRemoved(squadWithPilotCloned, action.upgradesData);
-
-      return squads.map((squadInState) => (action.squad !== squadInState ? squadInState : squadWithoutBadUpgrades));
+      return squadWithPilotCloned;
     }
     case "removeFromSquad":
       //TODO: need to remove upgrades that become invalid due to losing a pre-req during / after this operation...and then other upgrades that become invalid...
-      return squads.map((squadInState) => {
-        if (action.squad !== squadInState) return squadInState;
-        return {
-          ...squadInState,
-          squadPilots: squadInState.squadPilots.filter(
-            (squadPilot) => squadPilot.squadPilotShipId !== action.pilotToRemove.squadPilotShipId,
-          ),
-        };
-      });
+
+      return {
+        ...squad,
+        squadPilots: squad.squadPilots.filter(
+          (squadPilot) => squadPilot.squadPilotShipId !== action.pilotToRemove.squadPilotShipId,
+        ),
+      };
     case "changePilot":
       //TODO: this might cause an upgrade pre-req to get removed...need to remove those...and then other upgrades that become invalid...
       const replacementPilot: SquadPilotShip = getSquadPilotShip(
@@ -201,17 +196,17 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
         action.upgradesData,
         action.currentPilot,
       );
-      return squads.map((squadInState) => {
-        if (action.squad !== squadInState) return squadInState;
-        return {
-          ...squadInState,
-          squadPilots: squadInState.squadPilots.map((squadPilot) =>
-            squadPilot === action.currentPilot ? replacementPilot : squadPilot,
-          ),
-        };
-      });
+
+      return {
+        ...squad,
+        squadPilots: squad.squadPilots.map((squadPilot) =>
+          squadPilot === action.currentPilot ? replacementPilot : squadPilot,
+        ),
+      };
+
     case "changeUpgrade": {
       //TODO: need to remove upgrades that become invalid...and then other upgrades that become invalid...
+      // TODO: need to do stuff like "confers addons" and other extra things associated with changing upgrades
 
       const squadWithUpgradeChanged: Squad = {
         ...action.squad,
@@ -237,14 +232,13 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
         action.upgradesData,
       );
 
-      return squads.map((squadInState) => (squadInState !== action.squad ? squadInState : squadWithoutBadUpgrades));
+      return squadWithoutBadUpgrades;
     }
   }
 };
 
 const getSquadWithInvalidUpgradesRemoved = (squad: Squad, upgradesData: Upgrade[]): Squad => {
   // TODO: not handling max upgrades currently (remove from the back of the list though)
-  console.log("gonna remove some badddd upgrades");
   for (const squadPilot of squad.squadPilots) {
     for (const squadPilotUpgrade of squadPilot.upgrades) {
       if (
@@ -252,7 +246,7 @@ const getSquadWithInvalidUpgradesRemoved = (squad: Squad, upgradesData: Upgrade[
         !isUpgradeAllowed(squadPilotUpgrade, squadPilotUpgrade.upgrade, squadPilot, squad, upgradesData)
       ) {
         // remove the bad upgrade and then check if the new squad is valid recursively
-        // TODO: removing upgrade needs to get fancier than this
+        // TODO: removing upgrade needs to get fancier than this  (so does adding)
 
         const invalidSquadPilot = squadPilot;
         const invalidSquadPilotUpgrade = squadPilotUpgrade;

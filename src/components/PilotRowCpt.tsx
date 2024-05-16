@@ -104,7 +104,12 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
   };
 
   const delBtnPressed = (e) => {
-    squadsDispatch({ type: "removeFromSquad", squad: props.squad, pilotToRemove: props.selectedPilot });
+    squadsDispatch({
+      type: "removeFromSquad",
+      squad: props.squad,
+      pilotToRemove: props.selectedPilot,
+      upgradesData: upgrades,
+    });
   };
 
   const cloneBtnPressed = (e) => {
