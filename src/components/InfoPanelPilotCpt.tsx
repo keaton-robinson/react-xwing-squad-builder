@@ -25,7 +25,7 @@ const InfoPanelPilotCpt: React.FC<InfoPanelPilotCptProps> = (props) => {
 
   return (
     <div>
-      <h3 className="infoName">{pilotStatsAfterUpgrades.pilotName}</h3>
+      <h3 className="infoName">{`${pilotStatsAfterUpgrades.pilotName} ${pilotStatsAfterUpgrades.unique ? " *" : pilotStatsAfterUpgrades.max_per_squad ? `(Up to ${pilotStatsAfterUpgrades.max_per_squad})` : ""}`}</h3>
       <h4 className="infoType">Pilot</h4>
       <div>
         <strong>Ship: </strong>

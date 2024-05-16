@@ -239,7 +239,7 @@ const InfoPanelUpgradeCpt: React.FC<InfoPanelUpgradeCptProps> = (props) => {
 
   return (
     <div>
-      <h3 className="infoName">{upgrade.name}</h3>
+      <h3 className="infoName">{`${upgrade.name}  ${upgrade.unique ? `*` : upgrade.max_per_squad ? `(Up to ${upgrade.max_per_squad})` : ""}`}</h3>
       <h4 className="infoType">Upgrade</h4>
       <div>
         <StatBlockCpt baseStats={upgrade} />

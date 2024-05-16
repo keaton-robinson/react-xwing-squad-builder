@@ -9,7 +9,7 @@ import {
   SquadPilotShipUpgradeSlot,
   Upgrade,
 } from "../data/xwing_types";
-import { getCheapestAvailablePilotForShip, getSquadPilotShip } from "../data/xwing_utils";
+import { getCheapestAvailablePilotForShip, getSquadPilotShip, maxPilotOrUpgradeReached } from "../data/xwing_utils";
 
 const SquadsContext = createContext<ReadonlyArray<Squad>>(null);
 const SquadsDispatchContext = createContext<React.Dispatch<SquadsDispatchAction>>(null);
@@ -135,29 +135,45 @@ const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchActio
     }
     case "clonePilot": {
       //TODO: can this create more of an upgrade or pilot than allowed?
-      const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
-        action.pilotToClone.ship,
-        action.squad,
-        action.upgradesData,
-        action.pilotsData,
-      );
-      if (cheapestAvailablePilot) {
-        const squadPilot = getSquadPilotShip(
-          cheapestAvailablePilot,
-          action.shipsData,
+      // upgrade...yes... pilot...not unless I mess up right now...get cheapest complains when it runs out of options
+
+      let squadPilot;
+      const pilot: Pilot = {
+        ...action.pilotToClone,
+        id: action.pilotToClone.pilotId,
+        name: action.pilotToClone.pilotName,
+      };
+
+      if (!maxPilotOrUpgradeReached(pilot, action.squad, action.upgradesData)) {
+        squadPilot = getSquadPilotShip(pilot, action.shipsData, action.upgradesData, action.pilotToClone);
+      } else {
+        const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
+          action.pilotToClone.ship,
+          action.squad,
           action.upgradesData,
-          action.pilotToClone,
+          action.pilotsData,
         );
-        return squads.map((squadInState) => {
-          if (action.squad !== squadInState) return squadInState;
-          return {
-            ...squadInState,
-            squadPilots: [...squadInState.squadPilots, squadPilot],
-          };
-        });
+
+        if (cheapestAvailablePilot) {
+          squadPilot = getSquadPilotShip(
+            cheapestAvailablePilot,
+            action.shipsData,
+            action.upgradesData,
+            action.pilotToClone,
+          );
+        } else {
+          alert(`No pilot available for ${action.pilotToClone.ship}`);
+          return squads;
+        }
       }
-      alert(`No pilot available for ${action.pilotToClone.ship}`);
-      return squads;
+
+      return squads.map((squadInState) => {
+        if (action.squad !== squadInState) return squadInState;
+        return {
+          ...squadInState,
+          squadPilots: [...squadInState.squadPilots, squadPilot],
+        };
+      });
     }
     case "removeFromSquad":
       //TODO: need to remove upgrades that become invalid due to losing a pre-req during / after this operation...and then other upgrades that become invalid...
