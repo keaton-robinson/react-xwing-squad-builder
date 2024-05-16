@@ -124,7 +124,7 @@ export function maxPilotOrUpgradeReached(cardToCheck: Pilot | Upgrade, squad: Sq
       let numberOfUpgradeInSquad: number = 0;
       for (const squadPilot of squad.squadPilots) {
         for (const pilotUpgrade of squadPilot.upgrades) {
-          if (pilotUpgrade.upgrade?.id === cardToCheck.id) {
+          if (pilotUpgrade.upgrade === cardToCheck) {
             numberOfUpgradeInSquad++;
           }
         }
@@ -182,15 +182,6 @@ export function isUpgradeAllowed(
   squad: Squad,
   upgradesData: Upgrade[],
 ): boolean {
-  if (!selectedUpgradeSlot || !upgrade || !pilot || !squad) {
-    createError("selectedUpgradeSlot, upgrade, pilot, and squad arguments are required for isUpgradeAllowed function", {
-      selectedUpgradeSlotVal: selectedUpgradeSlot,
-      upgradeVal: upgrade,
-      pilotVal: pilot,
-      squadVal: squad,
-    });
-  }
-
   const effectivePilot = getPilotEffectiveStats(pilot);
 
   if (upgrade.faction) {
@@ -242,19 +233,6 @@ export function isUpgradeAllowedByRestrictions(
   squad: Squad,
   upgradesData: Upgrade[],
 ): boolean {
-  if (!upgradeSlot || !restrictions || !upgrade || !squadPilot || !squad) {
-    throw createError(
-      "isUpgradeAllowedByRestrictions requires selectedUpgradeSlot, restrictions, upgrade, pilot, and squad parameters, but didn't receive one or more.",
-      {
-        selectedUpgradeSlotVal: upgradeSlot,
-        restrictionsVal: restrictions,
-        upgradeVal: upgrade,
-        pilotVal: squadPilot,
-        squadVal: squad,
-      },
-    );
-  }
-
   if (restrictions.length > 0) {
     const restriction = restrictions.shift();
 
@@ -300,7 +278,7 @@ export function isUpgradeAllowedByRestrictions(
       }
       case "Slot":
         //if the upgrade is not currently the equiped upgrade, need to check if another slot of the specified type is available
-        if (upgradeSlot.upgrade.id !== upgrade.id) {
+        if (upgradeSlot.upgrade !== upgrade) {
           if (
             !squadPilot.upgrades.find(
               (selUpgradeSlot) =>
@@ -585,36 +563,36 @@ export function getCheapestAvailablePilotForShip(
 //   return squad;
 // }
 
-// TODO: mutating state in place: fix
-function removeUpgrade(
-  selectedUpgradeSlot: SelectedUpgradeThatAllowsMutations,
-  pilot: SelectedPilotThatAllowsMutations,
-  upgradesData: Upgrade[],
-) {
-  if (isNotNullOrUndefined(selectedUpgradeSlot.selectedUpgradeId)) {
-    const upgradeRecord = upgradesData.find((upgrade) => upgrade.id === selectedUpgradeSlot.selectedUpgradeId);
-    selectedUpgradeSlot.selectedUpgradeId = null;
+// // TODO: mutating state in place: fix
+// function removeUpgrade(
+//   selectedUpgradeSlot: SquadPilotShipUpgradeSlot,
+//   pilot: SquadPilotShip,
+//   upgradesData: Upgrade[],
+// ) {
+//   if (isNotNullOrUndefined(selectedUpgradeSlot.upgrade)) {
 
-    if (upgradeRecord.confersAddons) {
-      //remove last matching slot
-      for (const addon of upgradeRecord.confersAddons) {
-        const lastIndexOfMatchingAddon = [...pilot.selectedUpgrades]
-          .reverse()
-          .findIndex((selUpgrade) => selUpgrade.slot === addon.slot);
-        pilot.selectedUpgrades.splice(lastIndexOfMatchingAddon, 1);
-      }
-    }
+//     selectedUpgradeSlot.upgrade = null;
 
-    //remove any upgrades that were applied by "also_occupies_upgrades" from the previous slot
-    pilot.selectedUpgrades.forEach((selUpgrade) => {
-      if (isNotNullOrUndefined(selUpgrade.parentUpgradeSlotKey)) {
-        if (selUpgrade.parentUpgradeSlotKey === selectedUpgradeSlot.key) {
-          delete selUpgrade.parentUpgradeSlotKey;
-        }
-      }
-    });
-  }
-}
+//     if (upgradeRecord.confersAddons) {
+//       //remove last matching slot
+//       for (const addon of upgradeRecord.confersAddons) {
+//         const lastIndexOfMatchingAddon = [...pilot.selectedUpgrades]
+//           .reverse()
+//           .findIndex((selUpgrade) => selUpgrade.slot === addon.slot);
+//         pilot.selectedUpgrades.splice(lastIndexOfMatchingAddon, 1);
+//       }
+//     }
+
+//     //remove any upgrades that were applied by "also_occupies_upgrades" from the previous slot
+//     pilot.selectedUpgrades.forEach((selUpgrade) => {
+//       if (isNotNullOrUndefined(selUpgrade.parentUpgradeSlotKey)) {
+//         if (selUpgrade.parentUpgradeSlotKey === selectedUpgradeSlot.key) {
+//           delete selUpgrade.parentUpgradeSlotKey;
+//         }
+//       }
+//     });
+//   }
+// }
 
 // // TODO: mutating state in place. Fix.
 // export function upgradeSquadShip(

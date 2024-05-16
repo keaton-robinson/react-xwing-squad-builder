@@ -114,9 +114,9 @@ const getAvailableUpgrades = (
   return upgrades.filter(
     (upgrade) =>
       matchingSlots.includes(upgrade.slot) && // upgrade.slot === props.upgradeSlot.slot
-      (!maxPilotOrUpgradeReached(upgrade, squad, upgrades) || upgradeSlot.upgrade.id === upgrade.id), // &&
-    // isUpgradeAllowed(props.upgradeSlot, upgrade, props.squadPilot, props.squad, upgrades) &&
-    // !upgradeAlreadySelectedOnADifferentSlot(upgrade),
+      (!maxPilotOrUpgradeReached(upgrade, squad, upgrades) || upgradeSlot.upgrade === upgrade) &&
+      isUpgradeAllowed(upgradeSlot, upgrade, squadPilot, squad, upgrades) &&
+      !upgradeAlreadySelectedOnADifferentSlot(upgrade, squadPilot, upgradeSlot),
   );
 };
 
@@ -127,7 +127,7 @@ const upgradeAlreadySelectedOnADifferentSlot = (
 ) => {
   return squadPilot.upgrades.find(
     (upgradeSlot) =>
-      upgradeSlot.upgrade?.id === upgrade.id &&
+      upgradeSlot.upgrade === upgrade &&
       upgradeSlot.squadPilotUpgradeSlotId !== currentUpgradeSlot.squadPilotUpgradeSlotId,
   );
 };
