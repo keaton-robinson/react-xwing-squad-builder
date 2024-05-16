@@ -24,7 +24,7 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
   const squadsDispatch = useSquadsDispatch();
 
   const handleUpgradeSelection = (selectedUpgrade: UpgradeDropDownItem) => {
-    if (selectedUpgrade?.value && selectedUpgrade.value !== props.upgradeSlot.upgrade?.id) {
+    if (selectedUpgrade && selectedUpgrade.value !== props.upgradeSlot.upgrade?.id) {
       squadsDispatch({
         type: "changeUpgrade",
         newlySelectedUpgrade: selectedUpgrade.upgradeRecord,

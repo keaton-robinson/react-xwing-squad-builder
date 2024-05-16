@@ -77,7 +77,7 @@ type SquadsDispatchAction =
     };
 
 const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction): ReadonlyArray<Squad> => {
-  console.log(`Squades reducer called with ${action.type} action`);
+  // console.log(`Squades reducer called with ${action.type} action`);
   switch (action.type) {
     case "renameSquad":
       return squads.map((squadInState) => {

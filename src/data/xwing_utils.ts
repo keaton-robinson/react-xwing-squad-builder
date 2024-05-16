@@ -106,10 +106,10 @@ export function getPilotEffectiveStats(squadPilot: SquadPilotShip): SquadPilotSh
 
   const squadPilotCopy: SquadPilotShip = JSON.parse(JSON.stringify(squadPilot));
 
-  for (const upgradeSlot of squadPilotCopy.upgrades) {
+  for (const upgradeSlot of squadPilot.upgrades) {
     //gotta get the upgrade data
     if (upgradeSlot.upgrade?.modifier_func) {
-      upgradeSlot.upgrade.modifier_func(squadPilotCopy);
+      upgradeSlot.upgrade.modifier_func(squadPilotCopy); // note that this passes the copied object as a param to the modifier_func func from the original object. Stringify/Parse doesn't copy functions
     }
   }
   return squadPilotCopy;

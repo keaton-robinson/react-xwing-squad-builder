@@ -22,7 +22,7 @@ interface StatBlockCptProps {
 }
 
 const StatBlockCpt: React.FC<StatBlockCptProps> = ({ baseStats, statsAfterUpgrades }) => {
-  const renderEffectiveStat = (baseStat, statAfterUpgrades) => {
+  const renderEffectiveStat = (baseStat: number | null, statAfterUpgrades: number | null) => {
     return (
       <span>
         {baseStat ? baseStat : 0}{" "}
@@ -122,25 +122,20 @@ const StatBlockCpt: React.FC<StatBlockCptProps> = ({ baseStats, statsAfterUpgrad
             <td className="info-shield">{renderEffectiveStat(baseStats.shields, statsAfterUpgrades?.shields)}</td>
           </tr>
         ) : null}
-        {baseStats?.force || baseStats.force || statsAfterUpgrades?.force + statsAfterUpgrades?.force ? (
+        {baseStats.force || statsAfterUpgrades?.force ? (
           <tr className="stat-icon">
             <td>
               <i className="xwing-miniatures-font header-force xwing-miniatures-font-forcecharge"></i>
             </td>
-            <td className="info-force">
-              {renderEffectiveStat(
-                baseStats?.force || baseStats.force,
-                statsAfterUpgrades?.force + statsAfterUpgrades?.force,
-              )}
-            </td>
+            <td className="info-force">{renderEffectiveStat(baseStats.force, statsAfterUpgrades?.force)}</td>
           </tr>
         ) : null}
-        {baseStats?.charge || baseStats.charge ? (
+        {baseStats.charge || statsAfterUpgrades?.charge ? (
           <tr className="stat-icon">
             <td>
               <i className="xwing-miniatures-font header-charge xwing-miniatures-font-charge"></i>
             </td>
-            <td className="info-charge">{renderEffectiveStat(baseStats?.charge || baseStats.charge, null)}</td>
+            <td className="info-charge">{renderEffectiveStat(baseStats.charge, statsAfterUpgrades?.charge)}</td>
           </tr>
         ) : null}
       </tbody>
