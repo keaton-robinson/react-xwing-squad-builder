@@ -119,8 +119,8 @@ const getAvailableUpgrades = (
   return upgrades.filter(
     (upgrade) =>
       matchingSlots.includes(upgrade.slot) && // upgrade.slot === props.upgradeSlot.slot
-      (!maxPilotOrUpgradeReached(upgrade, squad, upgrades) || upgradeSlot.upgrade === upgrade) &&
-      isUpgradeAllowed(upgradeSlot, upgrade, squadPilot, squad, upgrades) &&
+      (!maxPilotOrUpgradeReached(upgrade, squad, upgradesData) || upgradeSlot.upgrade === upgrade) &&
+      isUpgradeAllowed(upgradeSlot, upgrade, squadPilot, squad, upgradesData) &&
       !upgradeAlreadySelectedOnADifferentSlot(upgrade, squadPilot, upgradeSlot),
   );
 };
