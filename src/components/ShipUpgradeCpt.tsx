@@ -14,8 +14,9 @@ interface ShipUpgradeCptProps {
 }
 
 interface UpgradeDropDownItem {
-  value: Upgrade;
+  value: number;
   label: string;
+  upgradeRecord: Upgrade;
 }
 
 const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
@@ -23,10 +24,10 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
   const squadsDispatch = useSquadsDispatch();
 
   const handleUpgradeSelection = (selectedUpgrade: UpgradeDropDownItem) => {
-    if (selectedUpgrade.value !== props.upgradeSlot.upgrade) {
+    if (selectedUpgrade?.value && selectedUpgrade.value !== props.upgradeSlot.upgrade?.id) {
       squadsDispatch({
         type: "changeUpgrade",
-        newlySelectedUpgrade: selectedUpgrade.value,
+        newlySelectedUpgrade: selectedUpgrade.upgradeRecord,
         squad: props.squad,
         squadPilot: props.squadPilot,
         upgradeSlot: props.upgradeSlot,
@@ -36,7 +37,7 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
 
   const handleMouseEnter = (upgradeDropDownItem: UpgradeDropDownItem) => {
     if (upgradeDropDownItem.value) {
-      props.onRecordMouseEnter(upgradeDropDownItem.value);
+      props.onRecordMouseEnter(upgradeDropDownItem.upgradeRecord);
     }
   };
 
@@ -62,15 +63,19 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
     const availableUpgrades = getAvailableUpgrades(props.upgradeSlot, props.squad, props.squadPilot, upgrades).sort(
       (upgrade1, upgrade2) => getUpgradeCost(upgrade1, props.squadPilot) - getUpgradeCost(upgrade2, props.squadPilot),
     );
-    const upgradesAsDropDownItmes = availableUpgrades.map((availUpgrade) => ({
-      label: availUpgrade.name + " (" + getUpgradeCost(availUpgrade, props.squadPilot) + ")",
-      value: availUpgrade,
-    }));
+    const upgradesAsDropDownItmes = availableUpgrades.map(
+      (availUpgrade): UpgradeDropDownItem => ({
+        label: availUpgrade.name + " (" + getUpgradeCost(availUpgrade, props.squadPilot) + ")",
+        value: availUpgrade.id,
+        upgradeRecord: availUpgrade,
+      }),
+    );
 
     return [
       {
         value: null, // default value and used for removing upgrades
         label: `No ${slots[props.upgradeSlot.slot].displayName} Upgrade`,
+        upgradeRecord: null,
       },
       ...upgradesAsDropDownItmes,
     ];
@@ -88,7 +93,7 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
         styles={DropDownStyles}
         onMouseEnter={handleMouseEnter}
         immutable={props.upgradeSlot.parentSquadPilotUpgradeSlotId || squadContainsAnotherSolitaryCardForThisSlot}
-        select={{ value: props.upgradeSlot.upgrade }}
+        select={{ value: props.upgradeSlot.upgrade?.id }}
       />
     </span>
   );
