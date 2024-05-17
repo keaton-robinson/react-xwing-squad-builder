@@ -156,7 +156,7 @@ export interface SquadPilotShipUpgradeSlot {
   /**
    * For upgrades that take up two slots, this specifies which slot is the 'parent' slot that is causing this slot to be used
    */
-  readonly parentSquadPilotUpgradeSlotId?: string;
+  readonly parentSquadPilotUpgradeSlotKey?: string;
 }
 
 export interface PilotShip extends Ship {

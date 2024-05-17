@@ -329,7 +329,7 @@ export function isUpgradeAllowedByRestrictions(
                 selUpgradeSlot.squadPilotUpgradeSlotKey !== upgradeSlot.squadPilotUpgradeSlotKey &&
                 selUpgradeSlot.slot === restriction[1] &&
                 !isNotNullOrUndefined(selUpgradeSlot.upgrade) &&
-                !selUpgradeSlot.parentSquadPilotUpgradeSlotId,
+                !selUpgradeSlot.parentSquadPilotUpgradeSlotKey,
             )
           ) {
             return false; // didn't find an available slot of the required type
@@ -340,7 +340,7 @@ export function isUpgradeAllowedByRestrictions(
           //which will make the order that I apply UI keys important probably..they aren't very "UI" specific anymore
           if (
             !squadPilot.upgrades.find(
-              (selUpgrade) => selUpgrade.parentSquadPilotUpgradeSlotId === upgradeSlot.squadPilotUpgradeSlotKey,
+              (selUpgrade) => selUpgrade.parentSquadPilotUpgradeSlotKey === upgradeSlot.squadPilotUpgradeSlotKey,
             )
           ) {
             return false;

@@ -93,7 +93,7 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
         onChange={handleUpgradeSelection}
         styles={DropDownStyles}
         onMouseEnter={handleMouseEnter}
-        immutable={props.upgradeSlot.parentSquadPilotUpgradeSlotId || squadContainsAnotherSolitaryCardForThisSlot}
+        immutable={props.upgradeSlot.parentSquadPilotUpgradeSlotKey || squadContainsAnotherSolitaryCardForThisSlot}
         select={{ value: props.upgradeSlot.upgrade?.id }}
       />
     </span>

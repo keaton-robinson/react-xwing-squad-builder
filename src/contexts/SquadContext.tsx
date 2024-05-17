@@ -200,7 +200,21 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       };
 
     case "changeUpgrade": {
-      // TODO: need to do stuff like "confers addons" and other extra things associated with changing upgrades
+      // TODO: need to do all the extra steps associated with certain types of upgrades
+
+      // TODO: if previous upgrade was standardized,  remove that upgrade on all ships of the same type (safe to assume all ships have that upgrade in that slot)
+      // if selected upgrade is standardized...instead of setting upgrade on just this one ship...set it on all ships of the same type in the squad
+
+      //setting an individual upgrade...
+      // TODO: if parentupgrade key was set on the slot we're provided...throws error...not sure how possible this is, but doesn't hurt to be careful I guess
+      // setting upgrade would first remove the previous upgrade if it's there...
+      // removing previous upgrade would remove "confersAddons" if necessary
+      // removing would then also remove any "also_occupies_upgrades"
+      // if no new upgrade selected...(just trying to unequip an upgrade, then basically done here)
+      // otherwise...
+      // unequips_upgrade ....does...something involving removing...
+      // also_occupies_upgrades....seems to take up an extra slot ... presumably I have something checking that the slots are available...
+      // confersAddons adds an upgrade slot
 
       const squadWithUpgradeChanged: Squad = {
         ...action.squad,
@@ -256,7 +270,7 @@ const getSquadWithInvalidUpgradesRemoved = (squad: Squad, upgradesData: Upgrade[
                 if (innerUpgrade !== invalidSquadPilotUpgrade) return innerUpgrade;
                 return {
                   ...invalidSquadPilotUpgrade,
-                  parentSquadPilotUpgradeSlotId: null,
+                  parentSquadPilotUpgradeSlotKey: null,
                   upgrade: null,
                 };
               }),
