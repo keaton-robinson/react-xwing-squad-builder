@@ -13,7 +13,8 @@ import {
   getCheapestAvailablePilotForShip,
   getSquadPilotShip,
   isUpgradeAllowed,
-  maxPilotOrUpgradeReached,
+  maxPilotReached,
+  maxUpgradeExceeded,
 } from "../data/xwing_utils";
 
 const SquadsContext = createContext<ReadonlyArray<Squad>>(null);
@@ -149,7 +150,7 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         name: action.pilotToClone.pilotName,
       };
 
-      if (!maxPilotOrUpgradeReached(pilot, action.squad, action.upgradesData)) {
+      if (!maxPilotReached(pilot, action.squad)) {
         squadPilot = getSquadPilotShip(pilot, action.shipsData, action.upgradesData, action.pilotToClone);
       } else {
         const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
@@ -180,8 +181,6 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       return squadWithPilotCloned;
     }
     case "removeFromSquad":
-      //TODO: need to remove upgrades that become invalid due to losing a pre-req during / after this operation...and then other upgrades that become invalid...
-
       return {
         ...squad,
         squadPilots: squad.squadPilots.filter(
@@ -189,7 +188,6 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         ),
       };
     case "changePilot":
-      //TODO: this might cause an upgrade pre-req to get removed...need to remove those...and then other upgrades that become invalid...
       const replacementPilot: SquadPilotShip = getSquadPilotShip(
         action.newPilot,
         action.shipsData,
@@ -205,7 +203,6 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       };
 
     case "changeUpgrade": {
-      //TODO: need to remove upgrades that become invalid...and then other upgrades that become invalid...
       // TODO: need to do stuff like "confers addons" and other extra things associated with changing upgrades
 
       const squadWithUpgradeChanged: Squad = {
@@ -238,12 +235,14 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
 };
 
 const getSquadWithInvalidUpgradesRemoved = (squad: Squad, upgradesData: Upgrade[]): Squad => {
-  // TODO: not handling max upgrades currently (remove from the back of the list though)
-  for (const squadPilot of squad.squadPilots) {
+  // working from the back of the list ensure cloned pilots get maxed out upgrades removed rather than existing ones
+  for (let i = squad.squadPilots.length - 1; i >= 0; i--) {
+    const squadPilot = squad.squadPilots[i];
     for (const squadPilotUpgrade of squadPilot.upgrades) {
       if (
         squadPilotUpgrade.upgrade &&
-        !isUpgradeAllowed(squadPilotUpgrade, squadPilotUpgrade.upgrade, squadPilot, squad, upgradesData)
+        (maxUpgradeExceeded(squadPilotUpgrade.upgrade, squad) ||
+          !isUpgradeAllowed(squadPilotUpgrade, squadPilotUpgrade.upgrade, squadPilot, squad, upgradesData))
       ) {
         // remove the bad upgrade and then check if the new squad is valid recursively
         // TODO: removing upgrade needs to get fancier than this  (so does adding)

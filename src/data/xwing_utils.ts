@@ -116,32 +116,16 @@ export function getPilotEffectiveStats(squadPilot: SquadPilotShip): SquadPilotSh
 }
 
 //returns true if unique or max_per_squad pilot has already been selected max_times in the squad already
-export function maxPilotOrUpgradeReached(cardToCheck: Pilot | Upgrade, squad: Squad, upgradesData: Upgrade[]): boolean {
-  if (cardToCheck.max_per_squad) {
-    if ("slot" in cardToCheck) {
-      //we're looking at an upgrade card
-      let numberOfUpgradeInSquad: number = 0;
-      for (const squadPilot of squad.squadPilots) {
-        for (const pilotUpgrade of squadPilot.upgrades) {
-          if (pilotUpgrade.upgrade === cardToCheck) {
-            numberOfUpgradeInSquad++;
-          }
-        }
-      }
-      return numberOfUpgradeInSquad >= cardToCheck.max_per_squad;
-    } else {
-      //we're looking at a pilot card
-      const numberOfPilotInSquad: number = squad.squadPilots.filter(
-        (squadPilot) => squadPilot.pilotId === cardToCheck.id,
-      ).length;
-      return numberOfPilotInSquad >= cardToCheck.max_per_squad;
-    }
+export function maxPilotReached(pilot: Pilot, squad: Squad): boolean {
+  if (pilot.max_per_squad) {
+    const numberOfPilotInSquad: number = squad.squadPilots.filter(
+      (squadPilot) => squadPilot.pilotId === pilot.id,
+    ).length;
+    return numberOfPilotInSquad >= pilot.max_per_squad;
   }
 
-  if (cardToCheck.unique) {
-    if (
-      isUniqueInSquad(cardToCheck.canonical_name ? cardToCheck.canonical_name : cardToCheck.name, squad, upgradesData)
-    ) {
+  if (pilot.unique) {
+    if (getCountOfUniqueInSquad(pilot.canonical_name ? pilot.canonical_name : pilot.name, squad) >= 1) {
       return true;
     }
   }
@@ -149,28 +133,89 @@ export function maxPilotOrUpgradeReached(cardToCheck: Pilot | Upgrade, squad: Sq
   return false;
 }
 
-function isUniqueInSquad(uniqueCanonName: string, squad: Squad, upgradesData: Upgrade[]): boolean {
-  //if there's "uniqueName" pilot or upgrade in the squad, they are in.
-  let uniqueFound = false;
+//returns true if unique or max_per_squad pilot has already been selected more than allowed (from cloning pilots)
+export function maxPilotExceeded(pilot: Pilot, squad: Squad): boolean {
+  if (pilot.max_per_squad) {
+    const numberOfPilotInSquad: number = squad.squadPilots.filter(
+      (squadPilot) => squadPilot.pilotId === pilot.id,
+    ).length;
+    return numberOfPilotInSquad > pilot.max_per_squad;
+  }
 
-  for (const pilot of squad.squadPilots) {
-    if (!uniqueFound) {
-      if (pilot.pilotName.includes(uniqueCanonName)) {
-        uniqueFound = true;
-        break;
-      } else {
-        for (const selectedUpgrade of pilot.upgrades) {
-          if (selectedUpgrade.upgrade?.name.includes(uniqueCanonName)) {
-            uniqueFound = true;
-            break;
-          }
-        }
-      }
-    } else {
-      break;
+  if (pilot.unique) {
+    if (getCountOfUniqueInSquad(pilot.canonical_name ? pilot.canonical_name : pilot.name, squad) > 1) {
+      return true;
     }
   }
-  return uniqueFound;
+
+  return false;
+}
+
+//returns true if unique or max_per_squad upgrade has already been selected max_times in the squad already
+export function maxUpgradeReached(upgrade: Upgrade, squad: Squad): boolean {
+  if (upgrade.max_per_squad) {
+    let numberOfUpgradeInSquad: number = 0;
+    for (const squadPilot of squad.squadPilots) {
+      for (const pilotUpgrade of squadPilot.upgrades) {
+        if (pilotUpgrade.upgrade === upgrade) {
+          numberOfUpgradeInSquad++;
+        }
+      }
+    }
+    return numberOfUpgradeInSquad >= upgrade.max_per_squad;
+  }
+
+  if (upgrade.unique) {
+    if (getCountOfUniqueInSquad(upgrade.canonical_name ? upgrade.canonical_name : upgrade.name, squad) >= 1) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+//returns true if unique or max_per_squad upgrade has already been selected more than max_times in the squad already
+export function maxUpgradeExceeded(upgrade: Upgrade, squad: Squad): boolean {
+  if (upgrade.max_per_squad) {
+    let numberOfUpgradeInSquad: number = 0;
+    for (const squadPilot of squad.squadPilots) {
+      for (const pilotUpgrade of squadPilot.upgrades) {
+        if (pilotUpgrade.upgrade === upgrade) {
+          numberOfUpgradeInSquad++;
+        }
+      }
+    }
+    return numberOfUpgradeInSquad > upgrade.max_per_squad;
+  }
+
+  if (upgrade.unique) {
+    if (getCountOfUniqueInSquad(upgrade.canonical_name ? upgrade.canonical_name : upgrade.name, squad) > 1) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function isUniqueInSquad(uniqueCanonName: string, squad: Squad): boolean {
+  return getCountOfUniqueInSquad(uniqueCanonName, squad) >= 1;
+}
+
+function getCountOfUniqueInSquad(uniqueCanonName: string, squad: Squad): number {
+  let count = 0;
+
+  for (const pilot of squad.squadPilots) {
+    if (pilot.pilotName.includes(uniqueCanonName)) {
+      count++;
+    }
+    for (const selectedUpgrade of pilot.upgrades) {
+      if (selectedUpgrade.upgrade?.name.includes(uniqueCanonName)) {
+        count++;
+        break;
+      }
+    }
+  }
+  return count;
 }
 
 //upgrade should be data-repo upgrade, not "selected" upgrade
@@ -281,7 +326,7 @@ export function isUpgradeAllowedByRestrictions(
           if (
             !squadPilot.upgrades.find(
               (selUpgradeSlot) =>
-                selUpgradeSlot.squadPilotUpgradeSlotId !== upgradeSlot.squadPilotUpgradeSlotId &&
+                selUpgradeSlot.squadPilotUpgradeSlotKey !== upgradeSlot.squadPilotUpgradeSlotKey &&
                 selUpgradeSlot.slot === restriction[1] &&
                 !isNotNullOrUndefined(selUpgradeSlot.upgrade) &&
                 !selUpgradeSlot.parentSquadPilotUpgradeSlotId,
@@ -295,7 +340,7 @@ export function isUpgradeAllowedByRestrictions(
           //which will make the order that I apply UI keys important probably..they aren't very "UI" specific anymore
           if (
             !squadPilot.upgrades.find(
-              (selUpgrade) => selUpgrade.parentSquadPilotUpgradeSlotId === upgradeSlot.squadPilotUpgradeSlotId,
+              (selUpgrade) => selUpgrade.parentSquadPilotUpgradeSlotId === upgradeSlot.squadPilotUpgradeSlotKey,
             )
           ) {
             return false;
@@ -304,7 +349,7 @@ export function isUpgradeAllowedByRestrictions(
         break;
       case "orUnique": {
         //if there's "uniqueName" pilot or upgrade in the squad, they are in.
-        let uniqueFound = isUniqueInSquad(restriction[1], squad, upgradesData);
+        let uniqueFound = isUniqueInSquad(restriction[1], squad);
 
         //the "Or" part is handled here...
         if (restrictions.length < 1) {
@@ -484,24 +529,27 @@ function getSquadPilotUpgrades(params: {
 
     if (params.existingUpgrades) {
       // TODO: not accounting for when a parent slot goes away or restrictions are violated
+      // am I even doing anything with parent upgrade slots at all currently?
+      // feels like restrictions are taken care of now...but need to be sure...
       return {
-        squadPilotUpgradeSlotId: slotKey,
+        squadPilotUpgradeSlotKey: slotKey,
         slot: slotName,
-        upgrade: params.existingUpgrades?.find((existingUpgrade) => existingUpgrade.squadPilotUpgradeSlotId === slotKey)
-          ?.upgrade,
+        upgrade: params.existingUpgrades?.find(
+          (existingUpgrade) => existingUpgrade.squadPilotUpgradeSlotKey === slotKey,
+        )?.upgrade,
       };
     }
 
     if (slotName === "Configuration" && params.autoEquip) {
       return {
-        squadPilotUpgradeSlotId: slotKey,
+        squadPilotUpgradeSlotKey: slotKey,
         slot: slotName,
         upgrade: params.upgradesData.find((upgradeRecord) => upgradeRecord.name === params.autoEquip[0]),
       };
     }
 
     return {
-      squadPilotUpgradeSlotId: slotKey,
+      squadPilotUpgradeSlotKey: slotKey,
       slot: slotName,
       upgrade: null,
     };
@@ -525,10 +573,7 @@ export function getCheapestAvailablePilotForShip(
   }
 
   const availablePilotsForShip = pilotsData.filter(
-    (pilot) =>
-      pilot.ship === shipName &&
-      pilot.faction === squad.faction &&
-      !maxPilotOrUpgradeReached(pilot, squad, upgradesData),
+    (pilot) => pilot.ship === shipName && pilot.faction === squad.faction && !maxPilotReached(pilot, squad),
   );
 
   if (!availablePilotsForShip.length) {

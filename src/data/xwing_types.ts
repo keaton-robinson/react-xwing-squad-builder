@@ -144,7 +144,7 @@ export interface SquadPilotShipUpgradeSlot {
   /**
    * Provide unique value for react key prop.
    */
-  readonly squadPilotUpgradeSlotId: string;
+  readonly squadPilotUpgradeSlotKey: string;
   /**
    * The type of this upgrade slot holds
    */

@@ -22,7 +22,7 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
       return null;
     }
     return (
-      <tr key={selectedUpgrade.squadPilotUpgradeSlotId}>
+      <tr key={selectedUpgrade.squadPilotUpgradeSlotKey}>
         <td style={{ paddingLeft: "1.5rem" }}>{selectedUpgrade.upgrade.name}</td>
         <td style={{ textAlign: "right" }}>{getUpgradeCost(selectedUpgrade.upgrade, selectedPilot)}</td>
       </tr>

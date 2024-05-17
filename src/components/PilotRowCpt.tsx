@@ -3,7 +3,7 @@ import { Dropdown } from "@keatonr06/reactjs-dropdown-component";
 import { DropDownStyles } from "../styleData/styleData";
 import { InfoPanelCard, Pilot, ShipName, Squad, SquadPilotShip, Upgrade } from "../data/xwing_types";
 import { pilots, ships, upgrades } from "../data/xwing_data";
-import { getPilotCost, getSquadPilotShip, maxPilotOrUpgradeReached } from "../data/xwing_utils";
+import { getPilotCost, getSquadPilotShip, maxPilotReached } from "../data/xwing_utils";
 import { useSquadsDispatch } from "../contexts/SquadContext";
 import ShipUpgradeCpt from "./ShipUpgradeCpt";
 
@@ -34,8 +34,7 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
         (availPilot) =>
           availPilot.ship === props.selectedPilot.ship &&
           availPilot.faction === props.squad.faction &&
-          (!maxPilotOrUpgradeReached(availPilot, props.squad, upgrades) ||
-            availPilot.id === props.selectedPilot.pilotId),
+          (!maxPilotReached(availPilot, props.squad) || availPilot.id === props.selectedPilot.pilotId),
       )
       .sort((first, second) => first.points - second.points);
 
@@ -162,7 +161,7 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
       <div className="shipUpgrades">
         {props.selectedPilot.upgrades.map((upgrade) => (
           <ShipUpgradeCpt
-            key={upgrade.squadPilotUpgradeSlotId}
+            key={upgrade.squadPilotUpgradeSlotKey}
             upgradeSlot={upgrade}
             squadPilot={props.selectedPilot}
             squad={props.squad}
