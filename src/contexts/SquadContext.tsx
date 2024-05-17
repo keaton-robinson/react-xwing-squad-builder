@@ -140,9 +140,6 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       return squad;
     }
     case "clonePilot": {
-      //TODO: can this create more of an upgrade or pilot than allowed?
-      // upgrade...yes... pilot...not unless I mess up right now...get cheapest complains when it runs out of options
-
       let squadPilot;
       const pilot: Pilot = {
         ...action.pilotToClone,
