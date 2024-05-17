@@ -164,33 +164,6 @@ export interface PilotShip extends Ship {
   readonly charge?: number;
 }
 
-// TODO: delete this type
-export interface SelectedPilotThatAllowsMutations extends Pilot {
-  readonly pilotShip: PilotShip;
-  selectedUpgrades: SelectedUpgradeThatAllowsMutations[];
-  readonly uiKey?: string;
-}
-
-// TODO: delete this type
-export interface SelectedUpgradeThatAllowsMutations {
-  /**
-   * Provide unique value for react key prop. Needs to at least be unique within this pilot's collection of upgrades
-   */
-  readonly key: string;
-  /**
-   * The upgrade id from the xwing upgrades data
-   */
-  selectedUpgradeId: number;
-  /**
-   * The slot that the upgrade is applied to.
-   */
-  readonly slot: string;
-  /**
-   * For upgrades that take up two slots, this specifies which slot is the 'parent' slot that is causing this slot to be used
-   */
-  parentUpgradeSlotKey?: string;
-}
-
 export interface PilotRulesText {
   readonly display_name?: string;
   readonly text: string;
