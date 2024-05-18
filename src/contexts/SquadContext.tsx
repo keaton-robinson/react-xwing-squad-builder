@@ -317,8 +317,8 @@ const getSquadPilotWithUpgradeRemoved = (
       // then remove the slots that were conferred by the addon
       squadPilotToUpdate = {
         ...squadPilotToUpdate,
-        // eslint-disable-next-line no-loop-func
         upgrades: squadPilotToUpdate.upgrades.filter(
+          // eslint-disable-next-line no-loop-func
           (slot) =>
             slot.squadPilotUpgradeSlotKey !==
             squadPilotToUpdate.upgrades[lastIndexOfMatchingAddon].squadPilotUpgradeSlotKey,
