@@ -205,8 +205,6 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
     case "changeUpgrade": {
       // TODO: if previous upgrade was standardized,  remove that upgrade on all ships of the same type (safe to assume all ships have that upgrade in that slot)
       // if selected upgrade is standardized...instead of setting upgrade on just this one ship...set it on all ships of the same type in the squad
-      // TODO: still have something happening with "also_occupies" occupying all slots instead of one
-
       let squadPilotGettingChanged: SquadPilotShip = getSquadPilotWithUpgradeRemoved(
         action.upgradeSlot,
         action.squadPilot,
@@ -307,11 +305,14 @@ const getSquadPilotWithUpgradeRemoved = (
   if (upgradeRecord.confersAddons) {
     for (const conferredAddon of upgradeRecord.confersAddons) {
       // first remove upgrades from the slots that were added
-      const lastIndexOfMatchingAddon = squadPilot.upgrades
+      const lastIndexOfMatchingAddon = squadPilotToUpdate.upgrades
         .map((selUpgrade, index) => ({ selUpgrade, index }))
         .filter(({ selUpgrade }) => selUpgrade.slot === conferredAddon.slot)
         .reduce((maxIndex, { index }) => Math.max(maxIndex, index), -1);
-      squadPilotToUpdate = getSquadPilotWithUpgradeRemoved(squadPilot.upgrades[lastIndexOfMatchingAddon], squadPilot);
+      squadPilotToUpdate = getSquadPilotWithUpgradeRemoved(
+        squadPilotToUpdate.upgrades[lastIndexOfMatchingAddon],
+        squadPilotToUpdate,
+      );
 
       // then remove the slots that were conferred by the addon
       squadPilotToUpdate = {
