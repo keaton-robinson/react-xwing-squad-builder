@@ -518,6 +518,8 @@ function getSquadPilotUpgrades(params: {
 }): SquadPilotShipUpgradeSlot[] {
   let slotNameUsedTracker = {};
   let newSelectedUpgrades = params.pilot.slots.map((slotName): SquadPilotShipUpgradeSlot => {
+    // this won't handle slots that are added by titles or configurations...maybe don't copy titles or "unique" upgrades
+    // but still, there are non unique "configuration" upgrades that confer addons
     // Increment or initialize the count for the slot
     if (!slotNameUsedTracker[slotName]) {
       slotNameUsedTracker[slotName] = 1;
@@ -535,7 +537,7 @@ function getSquadPilotUpgrades(params: {
         squadPilotUpgradeSlotKey: slotKey,
         slot: slotName,
         upgrade: params.existingUpgrades?.find(
-          (existingUpgrade) => existingUpgrade.squadPilotUpgradeSlotKey === slotKey,
+          (existingUpgrade) => existingUpgrade.squadPilotUpgradeSlotKey === slotKey, // could easily mess up with an "also occupies" upgrade
         )?.upgrade,
       };
     }

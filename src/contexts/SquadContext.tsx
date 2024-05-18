@@ -115,6 +115,7 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       alert(`No pilot available for ${action.newShip}`);
       return squad;
     case "changeShip": {
+      // todo: feels like a place i need to do the complicated stuff on upgrades
       const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
         action.newShip,
         action.squad,
@@ -140,6 +141,7 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       return squad;
     }
     case "clonePilot": {
+      // TODO: feels like a place I may need to do all the complicated stuff on upgrades
       let squadPilot;
       const pilot: Pilot = {
         ...action.pilotToClone,
@@ -185,6 +187,7 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         ),
       };
     case "changePilot":
+      // TODO: feels like a place I may need to actually do all the complex stuff on upgrades
       const replacementPilot: SquadPilotShip = getSquadPilotShip(
         action.newPilot,
         action.shipsData,
@@ -235,8 +238,10 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
               if (
                 action.newlySelectedUpgrade.also_occupies_upgrades &&
                 !also_occupied_slot_filled &&
-                upgradeSlot.slot === action.newlySelectedUpgrade.also_occupies_upgrades[0]
+                upgradeSlot.slot === action.newlySelectedUpgrade.also_occupies_upgrades[0] &&
+                !upgradeSlot.upgrade
               ) {
+                also_occupied_slot_filled = true;
                 return {
                   ...upgradeSlot,
                   parentSquadPilotUpgradeSlotKey: action.upgradeSlot.squadPilotUpgradeSlotKey,
