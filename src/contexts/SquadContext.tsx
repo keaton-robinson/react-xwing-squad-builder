@@ -123,12 +123,7 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         action.pilotsData,
       );
       if (cheapestAvailablePilot) {
-        const replacementPilot = getSquadPilotShip(
-          cheapestAvailablePilot,
-          action.shipsData,
-          action.upgradesData,
-          action.currentPilot,
-        );
+        const replacementPilot = getSquadPilotShip(cheapestAvailablePilot, action.shipsData, action.upgradesData);
 
         return {
           ...squad,
@@ -150,7 +145,7 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       };
 
       if (!maxPilotReached(pilot, action.squad)) {
-        squadPilot = getSquadPilotShip(pilot, action.shipsData, action.upgradesData, action.pilotToClone);
+        squadPilot = getSquadPilotShip(pilot, action.shipsData, action.upgradesData);
       } else {
         const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
           action.pilotToClone.ship,
@@ -160,12 +155,7 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         );
 
         if (cheapestAvailablePilot) {
-          squadPilot = getSquadPilotShip(
-            cheapestAvailablePilot,
-            action.shipsData,
-            action.upgradesData,
-            action.pilotToClone,
-          );
+          squadPilot = getSquadPilotShip(cheapestAvailablePilot, action.shipsData, action.upgradesData);
         } else {
           alert(`No pilot available for ${action.pilotToClone.ship}`);
           return squad;
@@ -192,7 +182,6 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         action.newPilot,
         action.shipsData,
         action.upgradesData,
-        action.currentPilot,
       );
 
       return {
@@ -205,71 +194,12 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
     case "changeUpgrade": {
       // TODO: if previous upgrade was standardized,  remove that upgrade on all ships of the same type (safe to assume all ships have that upgrade in that slot)
       // if selected upgrade is standardized...instead of setting upgrade on just this one ship...set it on all ships of the same type in the squad
-      let squadPilotGettingChanged: SquadPilotShip = getSquadPilotWithUpgradeRemoved(
+
+      const squadPilotGettingChanged = getSquadPilotWithUpgradeSet(
+        action.newlySelectedUpgrade,
         action.upgradeSlot,
         action.squadPilot,
       );
-
-      if (action.newlySelectedUpgrade) {
-        if (action.newlySelectedUpgrade.unequips_upgrades) {
-          const lastIndexOfSlotToUnequip = squadPilotGettingChanged.upgrades
-            .map((selUpgrade, index) => ({ selUpgrade, index }))
-            .filter(({ selUpgrade }) => selUpgrade.slot === action.newlySelectedUpgrade.unequips_upgrades[0])
-            .reduce((maxIndex, { index }) => Math.max(maxIndex, index), -1);
-          squadPilotGettingChanged = getSquadPilotWithUpgradeRemoved(
-            squadPilotGettingChanged.upgrades[lastIndexOfSlotToUnequip],
-            squadPilotGettingChanged,
-          );
-        }
-
-        let also_occupied_slot_filled = false;
-        squadPilotGettingChanged = {
-          ...squadPilotGettingChanged,
-          upgrades: [
-            ...squadPilotGettingChanged.upgrades.map((upgradeSlot): SquadPilotShipUpgradeSlot => {
-              if (upgradeSlot.squadPilotUpgradeSlotKey === action.upgradeSlot.squadPilotUpgradeSlotKey) {
-                return {
-                  ...upgradeSlot,
-                  upgrade: action.newlySelectedUpgrade,
-                };
-              }
-              if (
-                action.newlySelectedUpgrade.also_occupies_upgrades &&
-                !also_occupied_slot_filled &&
-                upgradeSlot.slot === action.newlySelectedUpgrade.also_occupies_upgrades[0] &&
-                !upgradeSlot.upgrade
-              ) {
-                also_occupied_slot_filled = true;
-                return {
-                  ...upgradeSlot,
-                  parentSquadPilotUpgradeSlotKey: action.upgradeSlot.squadPilotUpgradeSlotKey,
-                };
-              }
-              return upgradeSlot;
-            }),
-          ],
-        };
-
-        // confersAddons adds an upgrade slot
-        if (action.newlySelectedUpgrade.confersAddons) {
-          squadPilotGettingChanged = {
-            ...squadPilotGettingChanged,
-            upgrades: [
-              ...squadPilotGettingChanged.upgrades,
-              ...action.newlySelectedUpgrade.confersAddons.map((conferredAddon): SquadPilotShipUpgradeSlot => {
-                const countOfSlot = squadPilotGettingChanged.upgrades.filter(
-                  (upgradeSlot) => upgradeSlot.slot === conferredAddon.slot,
-                ).length;
-                return {
-                  slot: conferredAddon.slot,
-                  upgrade: null,
-                  squadPilotUpgradeSlotKey: `${conferredAddon.slot}${countOfSlot + 1}`,
-                };
-              }),
-            ],
-          };
-        }
-      }
 
       const squadWithUpgradeChanged: Squad = {
         ...action.squad,
@@ -289,6 +219,79 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       return squadWithoutBadUpgrades;
     }
   }
+};
+
+const getSquadPilotWithUpgradeSet = (
+  newlySelectedUpgrade: Upgrade,
+  upgradeSlot: SquadPilotShipUpgradeSlot,
+  squadPilot: SquadPilotShip,
+): SquadPilotShip => {
+  // first remove existing upgrade
+  let squadPilotGettingChanged: SquadPilotShip = getSquadPilotWithUpgradeRemoved(upgradeSlot, squadPilot);
+
+  // add new upgrade if one was selected
+  if (newlySelectedUpgrade) {
+    if (newlySelectedUpgrade.unequips_upgrades) {
+      const lastIndexOfSlotToUnequip = squadPilotGettingChanged.upgrades
+        .map((selUpgrade, index) => ({ selUpgrade, index }))
+        .filter(({ selUpgrade }) => selUpgrade.slot === newlySelectedUpgrade.unequips_upgrades[0])
+        .reduce((maxIndex, { index }) => Math.max(maxIndex, index), -1);
+      squadPilotGettingChanged = getSquadPilotWithUpgradeRemoved(
+        squadPilotGettingChanged.upgrades[lastIndexOfSlotToUnequip],
+        squadPilotGettingChanged,
+      );
+    }
+
+    let also_occupied_slot_filled = false;
+    squadPilotGettingChanged = {
+      ...squadPilotGettingChanged,
+      upgrades: [
+        ...squadPilotGettingChanged.upgrades.map((upSlot): SquadPilotShipUpgradeSlot => {
+          if (upSlot.squadPilotUpgradeSlotKey === upgradeSlot.squadPilotUpgradeSlotKey) {
+            return {
+              ...upSlot,
+              upgrade: newlySelectedUpgrade,
+            };
+          }
+          if (
+            newlySelectedUpgrade.also_occupies_upgrades &&
+            !also_occupied_slot_filled &&
+            upSlot.slot === newlySelectedUpgrade.also_occupies_upgrades[0] &&
+            !upSlot.upgrade
+          ) {
+            also_occupied_slot_filled = true;
+            return {
+              ...upSlot,
+              parentSquadPilotUpgradeSlotKey: upgradeSlot.squadPilotUpgradeSlotKey,
+            };
+          }
+          return upSlot;
+        }),
+      ],
+    };
+
+    // confersAddons adds an upgrade slot
+    if (newlySelectedUpgrade.confersAddons) {
+      squadPilotGettingChanged = {
+        ...squadPilotGettingChanged,
+        upgrades: [
+          ...squadPilotGettingChanged.upgrades,
+          ...newlySelectedUpgrade.confersAddons.map((conferredAddon): SquadPilotShipUpgradeSlot => {
+            const countOfSlot = squadPilotGettingChanged.upgrades.filter(
+              (upgradeSlot) => upgradeSlot.slot === conferredAddon.slot,
+            ).length;
+            return {
+              slot: conferredAddon.slot,
+              upgrade: null,
+              squadPilotUpgradeSlotKey: `${conferredAddon.slot}${countOfSlot + 1}`,
+            };
+          }),
+        ],
+      };
+    }
+  }
+
+  return squadPilotGettingChanged;
 };
 
 const getSquadPilotWithUpgradeRemoved = (
@@ -360,25 +363,13 @@ const getSquadWithInvalidUpgradesRemoved = (squad: Squad, upgradesData: Upgrade[
           !isUpgradeAllowed(squadPilotUpgrade, squadPilotUpgrade.upgrade, squadPilot, squad, upgradesData))
       ) {
         // remove the bad upgrade and then check if the new squad is valid recursively
-        // TODO: removing upgrade needs to get fancier than this  (so does adding)
-
         const invalidSquadPilot = squadPilot;
-        const invalidSquadPilotUpgrade = squadPilotUpgrade;
+        const squadPilotWithUpgradeRemoved = getSquadPilotWithUpgradeRemoved(squadPilotUpgrade, invalidSquadPilot);
         const squadWithoutInvalidUpgrade: Squad = {
           ...squad,
           squadPilots: squad.squadPilots.map((innerSquadPilot): SquadPilotShip => {
             if (innerSquadPilot !== invalidSquadPilot) return innerSquadPilot;
-            return {
-              ...invalidSquadPilot,
-              upgrades: invalidSquadPilot.upgrades.map((innerUpgrade) => {
-                if (innerUpgrade !== invalidSquadPilotUpgrade) return innerUpgrade;
-                return {
-                  ...invalidSquadPilotUpgrade,
-                  parentSquadPilotUpgradeSlotKey: null,
-                  upgrade: null,
-                };
-              }),
-            };
+            return squadPilotWithUpgradeRemoved;
           }),
         };
 

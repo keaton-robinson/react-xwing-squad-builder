@@ -464,9 +464,7 @@ export function getSquadPilotShip(
   pilot: Pilot,
   shipsData: Record<string, Ship>,
   upgradesData: Upgrade[],
-  prevSquadPilot?: SquadPilotShip,
 ): SquadPilotShip {
-  //makes deep copies so I don't have side effects on my "data repo"
   const shipForPilot = shipsData[pilot.ship];
   if (!shipForPilot) {
     throw createError(`Couldn't find ship for pilot: ${pilot.name}`, {
@@ -503,7 +501,6 @@ export function getSquadPilotShip(
       pilot,
       autoEquip: shipForPilot.autoequip,
       upgradesData,
-      existingUpgrades: prevSquadPilot?.upgrades,
     }),
   };
 
@@ -514,7 +511,6 @@ function getSquadPilotUpgrades(params: {
   pilot: BasePilot;
   upgradesData: Upgrade[];
   autoEquip?: string[];
-  existingUpgrades?: SquadPilotShipUpgradeSlot[];
 }): SquadPilotShipUpgradeSlot[] {
   let slotNameUsedTracker = {};
   let newSelectedUpgrades = params.pilot.slots.map((slotName): SquadPilotShipUpgradeSlot => {
@@ -528,19 +524,6 @@ function getSquadPilotUpgrades(params: {
     }
 
     const slotKey = `${slotName}${slotNameUsedTracker[slotName]}`;
-
-    if (params.existingUpgrades) {
-      // TODO: not accounting for when a parent slot goes away or restrictions are violated
-      // am I even doing anything with parent upgrade slots at all currently?
-      // feels like restrictions are taken care of now...but need to be sure...
-      return {
-        squadPilotUpgradeSlotKey: slotKey,
-        slot: slotName,
-        upgrade: params.existingUpgrades?.find(
-          (existingUpgrade) => existingUpgrade.squadPilotUpgradeSlotKey === slotKey, // could easily mess up with an "also occupies" upgrade
-        )?.upgrade,
-      };
-    }
 
     if (slotName === "Configuration" && params.autoEquip) {
       return {
