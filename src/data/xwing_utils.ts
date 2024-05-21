@@ -329,7 +329,7 @@ export function isUpgradeAllowedByRestrictions(
                 selUpgradeSlot.squadPilotUpgradeSlotKey !== upgradeSlot.squadPilotUpgradeSlotKey &&
                 selUpgradeSlot.slot === restriction[1] &&
                 !isNotNullOrUndefined(selUpgradeSlot.upgrade) &&
-                !selUpgradeSlot.parentSquadPilotUpgradeSlotKey,
+                !selUpgradeSlot.parentSquadPilotUpgradeSlotKey, // TODO: I worry that something is flawed here
             )
           ) {
             return false; // didn't find an available slot of the required type

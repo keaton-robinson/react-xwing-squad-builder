@@ -177,12 +177,35 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         ),
       };
     case "changePilot":
-      // TODO: feels like a place I may need to actually do all the complex stuff on upgrades
-      const replacementPilot: SquadPilotShip = getSquadPilotShip(
-        action.newPilot,
-        action.shipsData,
-        action.upgradesData,
-      );
+      let replacementPilot: SquadPilotShip = getSquadPilotShip(action.newPilot, action.shipsData, action.upgradesData);
+
+      // try to set each upgrade...setting aside ones that fail...making multiple passes until we fail to make further changes
+      let upgradeSlotsToCopy = action.currentPilot.upgrades.filter((upgradeSlot) => upgradeSlot.upgrade);
+      let upgradeSlotsThatFailedToCopy: SquadPilotShipUpgradeSlot[] = [];
+      let changesMade = true;
+
+      while (changesMade) {
+        changesMade = false;
+        while (upgradeSlotsToCopy.length > 0) {
+          const upgradeSlotBeingCopied = upgradeSlotsToCopy.pop();
+          const matchingSlotOnNewShip = replacementPilot.upgrades.find(
+            (upgradeSlot) => upgradeSlot.squadPilotUpgradeSlotKey === upgradeSlotBeingCopied.squadPilotUpgradeSlotKey,
+          );
+          if (matchingSlotOnNewShip) {
+            replacementPilot = getSquadPilotWithUpgradeSet(
+              upgradeSlotBeingCopied.upgrade,
+              matchingSlotOnNewShip,
+              replacementPilot,
+            );
+            changesMade = true;
+          } else {
+            upgradeSlotsThatFailedToCopy.push(upgradeSlotBeingCopied);
+          }
+        }
+
+        upgradeSlotsToCopy = upgradeSlotsThatFailedToCopy;
+        upgradeSlotsThatFailedToCopy = [];
+      }
 
       return {
         ...squad,
@@ -257,7 +280,8 @@ const getSquadPilotWithUpgradeSet = (
             newlySelectedUpgrade.also_occupies_upgrades &&
             !also_occupied_slot_filled &&
             upSlot.slot === newlySelectedUpgrade.also_occupies_upgrades[0] &&
-            !upSlot.upgrade
+            !upSlot.upgrade &&
+            !upSlot.parentSquadPilotUpgradeSlotKey
           ) {
             also_occupied_slot_filled = true;
             return {
@@ -281,9 +305,9 @@ const getSquadPilotWithUpgradeSet = (
               (upgradeSlot) => upgradeSlot.slot === conferredAddon.slot,
             ).length;
             return {
+              squadPilotUpgradeSlotKey: `${conferredAddon.slot}${countOfSlot + 1}`,
               slot: conferredAddon.slot,
               upgrade: null,
-              squadPilotUpgradeSlotKey: `${conferredAddon.slot}${countOfSlot + 1}`,
             };
           }),
         ],
