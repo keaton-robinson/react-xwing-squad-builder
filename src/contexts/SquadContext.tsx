@@ -194,31 +194,41 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       };
 
     case "changeUpgrade": {
-      // TODO: if previous upgrade was standardized,  remove that upgrade on all ships of the same type (safe to assume all ships have that upgrade in that slot)
-      // if selected upgrade is standardized...instead of setting upgrade on just this one ship...set it on all ships of the same type in the squad
+      let pilotsGettingChanged: SquadPilotShip[];
 
-      const squadPilotGettingChanged = getSquadPilotWithUpgradeSet(
-        action.newlySelectedUpgrade,
-        action.upgradeSlot,
-        action.squadPilot,
-      );
+      // if selected upgrade is standardized...instead of setting upgrade on just this one ship...set it on all ships of the same type in the squad
+      if (action.newlySelectedUpgrade?.standardized || action.upgradeSlot.upgrade?.standardized) {
+        pilotsGettingChanged = action.squad.squadPilots.filter(
+          (squadPilot) => squadPilot.ship === action.squadPilot.ship,
+        );
+      } else {
+        pilotsGettingChanged = [action.squadPilot]; // not standardized. Only changing the specified squad pilot
+      }
+
+      for (let i = 0; i < pilotsGettingChanged.length; i++) {
+        pilotsGettingChanged[i] = getSquadPilotWithUpgradeSet(
+          action.newlySelectedUpgrade,
+          pilotsGettingChanged[i].upgrades.find(
+            (upgradeslot) => upgradeslot.squadPilotUpgradeSlotKey === action.upgradeSlot.squadPilotUpgradeSlotKey,
+          ),
+          pilotsGettingChanged[i],
+        );
+      }
 
       const squadWithUpgradeChanged: Squad = {
         ...action.squad,
         squadPilots: action.squad.squadPilots.map((squadPilotInState) => {
-          if (action.squadPilot !== squadPilotInState) {
-            return squadPilotInState;
+          const changedPilot = pilotsGettingChanged.find(
+            (changedSquadPilot) => changedSquadPilot.squadPilotShipId === squadPilotInState.squadPilotShipId,
+          );
+          if (changedPilot) {
+            return changedPilot;
           }
-          return squadPilotGettingChanged;
+          return squadPilotInState;
         }),
       };
 
-      const squadWithoutBadUpgrades: Squad = getSquadWithInvalidUpgradesRemoved(
-        squadWithUpgradeChanged,
-        action.upgradesData,
-      );
-
-      return squadWithoutBadUpgrades;
+      return squadWithUpgradeChanged;
     }
   }
 };

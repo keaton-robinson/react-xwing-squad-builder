@@ -570,6 +570,8 @@ export function getCheapestAvailablePilotForShip(
   return cheapestPilotForShip;
 }
 
+// TODO: get rid of all these comments
+
 // // TODO: mutating state in place. Fix
 // export function removeInvalidUpgrades(
 //   squad: SelectedPilotThatAllowsMutations[],
