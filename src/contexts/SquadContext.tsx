@@ -115,7 +115,6 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       alert(`No pilot available for ${action.newShip}`);
       return squad;
     case "changeShip": {
-      // todo: feels like a place i need to do the complicated stuff on upgrades
       const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
         action.newShip,
         action.squad,
@@ -123,7 +122,10 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         action.pilotsData,
       );
       if (cheapestAvailablePilot) {
-        const replacementPilot = getSquadPilotShip(cheapestAvailablePilot, action.shipsData, action.upgradesData);
+        let replacementPilot = getSquadPilotShip(cheapestAvailablePilot, action.shipsData, action.upgradesData);
+        const upgradesToCopy = getUpgradesOnSquadPilot(action.currentPilot);
+
+        replacementPilot = getSquadPilotWithUpgradesSet(upgradesToCopy, replacementPilot);
 
         return {
           ...squad,
@@ -136,7 +138,6 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       return squad;
     }
     case "clonePilot": {
-      // TODO: feels like a place I may need to do all the complicated stuff on upgrades
       let squadPilot;
       const pilot: Pilot = {
         ...action.pilotToClone,
@@ -162,6 +163,9 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         }
       }
 
+      const upgradesToCopy = getUpgradesOnSquadPilot(action.pilotToClone);
+      squadPilot = getSquadPilotWithUpgradesSet(upgradesToCopy, squadPilot);
+
       const squadWithPilotCloned = {
         ...action.squad,
         squadPilots: [...action.squad.squadPilots, squadPilot],
@@ -179,33 +183,8 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
     case "changePilot":
       let replacementPilot: SquadPilotShip = getSquadPilotShip(action.newPilot, action.shipsData, action.upgradesData);
 
-      // try to set each upgrade...setting aside ones that fail...making multiple passes until we fail to make further changes
-      let upgradeSlotsToCopy = action.currentPilot.upgrades.filter((upgradeSlot) => upgradeSlot.upgrade);
-      let upgradeSlotsThatFailedToCopy: SquadPilotShipUpgradeSlot[] = [];
-      let changesMade = true;
-
-      while (changesMade) {
-        changesMade = false;
-        while (upgradeSlotsToCopy.length > 0) {
-          const upgradeSlotBeingCopied = upgradeSlotsToCopy.pop();
-          const matchingSlotOnNewShip = replacementPilot.upgrades.find(
-            (upgradeSlot) => upgradeSlot.squadPilotUpgradeSlotKey === upgradeSlotBeingCopied.squadPilotUpgradeSlotKey,
-          );
-          if (matchingSlotOnNewShip) {
-            replacementPilot = getSquadPilotWithUpgradeSet(
-              upgradeSlotBeingCopied.upgrade,
-              matchingSlotOnNewShip,
-              replacementPilot,
-            );
-            changesMade = true;
-          } else {
-            upgradeSlotsThatFailedToCopy.push(upgradeSlotBeingCopied);
-          }
-        }
-
-        upgradeSlotsToCopy = upgradeSlotsThatFailedToCopy;
-        upgradeSlotsThatFailedToCopy = [];
-      }
+      const upgradesToCopy: Upgrade[] = getUpgradesOnSquadPilot(action.currentPilot);
+      replacementPilot = getSquadPilotWithUpgradesSet(upgradesToCopy, replacementPilot);
 
       return {
         ...squad,
@@ -244,6 +223,49 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
   }
 };
 
+const getUpgradesOnSquadPilot = (squadPilot: SquadPilotShip): Upgrade[] => {
+  return squadPilot.upgrades.filter((upgradeSlot) => upgradeSlot.upgrade).map((upgradeSlot) => upgradeSlot.upgrade);
+};
+
+// can fail to set an upgrade if the slots are not available
+const getSquadPilotWithUpgradesSet = (upgradesToSet: Upgrade[], squadPilot: SquadPilotShip): SquadPilotShip => {
+  let squadPilotGettingChanged = { ...squadPilot };
+
+  // try to set each upgrade...setting aside ones that fail...making multiple passes until we fail to make further changes
+  let upgradesToCopy: Upgrade[] = [...upgradesToSet];
+  let upgradesThatFailedToCopy: Upgrade[] = [];
+  let changesMade: boolean = true;
+
+  while (changesMade) {
+    changesMade = false;
+    while (upgradesToCopy.length > 0) {
+      const upgradeBeingCopied = upgradesToCopy.pop();
+      const matchingSlotOnNewShip = squadPilotGettingChanged.upgrades.find(
+        (upgradeSlot) =>
+          upgradeSlot.slot === upgradeBeingCopied.slot &&
+          !upgradeSlot.upgrade &&
+          !upgradeSlot.parentSquadPilotUpgradeSlotKey,
+      );
+      if (matchingSlotOnNewShip) {
+        squadPilotGettingChanged = getSquadPilotWithUpgradeSet(
+          upgradeBeingCopied,
+          matchingSlotOnNewShip,
+          squadPilotGettingChanged,
+        );
+        changesMade = true;
+      } else {
+        upgradesThatFailedToCopy.push(upgradeBeingCopied);
+      }
+    }
+
+    upgradesToCopy = upgradesThatFailedToCopy;
+    upgradesThatFailedToCopy = [];
+  }
+
+  return squadPilotGettingChanged;
+};
+
+// can fail to set an upgrade if the slots are not available
 const getSquadPilotWithUpgradeSet = (
   newlySelectedUpgrade: Upgrade,
   upgradeSlot: SquadPilotShipUpgradeSlot,
