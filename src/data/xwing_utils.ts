@@ -218,7 +218,6 @@ function getCountOfUniqueInSquad(uniqueCanonName: string, squad: Squad): number 
   return count;
 }
 
-//upgrade should be data-repo upgrade, not "selected" upgrade
 export function isUpgradeAllowed(
   selectedUpgradeSlot: SquadPilotShipUpgradeSlot,
   upgrade: Upgrade,
@@ -321,23 +320,22 @@ export function isUpgradeAllowedByRestrictions(
         break;
       }
       case "Slot":
-        //if the upgrade is not currently the equiped upgrade, need to check if another slot of the specified type is available
+        //if the upgrade is not currently the equiped upgrade, need to check if another slot of the specified type is available...c
         if (upgradeSlot.upgrade !== upgrade) {
+          // is this right?...no...probably not...can't assume that an upgrade that is applied is valid
           if (
             !squadPilot.upgrades.find(
               (selUpgradeSlot) =>
                 selUpgradeSlot.squadPilotUpgradeSlotKey !== upgradeSlot.squadPilotUpgradeSlotKey &&
                 selUpgradeSlot.slot === restriction[1] &&
-                !isNotNullOrUndefined(selUpgradeSlot.upgrade) &&
-                !selUpgradeSlot.parentSquadPilotUpgradeSlotKey, // TODO: I worry that something is flawed here
+                !selUpgradeSlot.upgrade &&
+                !selUpgradeSlot.parentSquadPilotUpgradeSlotKey,
             )
           ) {
             return false; // didn't find an available slot of the required type
           }
         } else {
           //it is the currently equipped upgrade, need to check that there is a slot of the specified type
-          //that has its "parent" set to this selectedUpgrade's key ...ahh fukc that could mess up if something starts adding / removing a slot a bunch
-          //which will make the order that I apply UI keys important probably..they aren't very "UI" specific anymore
           if (
             !squadPilot.upgrades.find(
               (selUpgrade) => selUpgrade.parentSquadPilotUpgradeSlotKey === upgradeSlot.squadPilotUpgradeSlotKey,
