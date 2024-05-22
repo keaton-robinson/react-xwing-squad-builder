@@ -112,13 +112,13 @@ export interface Squad {
   readonly id?: string;
   readonly name: string;
   readonly faction: Faction;
-  readonly squadPilots: SquadPilotShip[];
+  readonly squadPilots: SquadPilot[];
 }
 
 /**
  * Represents a pilot that has been added to a squad.
  */
-export interface SquadPilotShip extends BasePilot, BaseShip {
+export interface SquadPilot extends BasePilot, BaseShip {
   /**
    *  Provide a unique value for react 'key' prop.
    */
@@ -157,11 +157,6 @@ export interface SquadPilotShipUpgradeSlot {
    * For upgrades that take up two slots, this specifies which slot is the 'parent' slot that is causing this slot to be used
    */
   readonly parentSquadPilotUpgradeSlotKey?: string;
-}
-
-export interface PilotShip extends Ship {
-  readonly force?: number;
-  readonly charge?: number;
 }
 
 export interface PilotRulesText {
@@ -219,7 +214,7 @@ export type ShipName = keyof typeof ships;
 
 export type InfoPanelCard =
   | { readonly type: "Ship"; readonly cardData: Ship; readonly faction: Faction }
-  | { readonly type: "Pilot"; readonly cardData: SquadPilotShip }
+  | { readonly type: "Pilot"; readonly cardData: SquadPilot }
   | { readonly type: "Upgrade"; readonly cardData: Upgrade };
 
 export type ShipBaseSize = "Small" | "Medium" | "Large" | "Huge";

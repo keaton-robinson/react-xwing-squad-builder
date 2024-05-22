@@ -4,11 +4,11 @@ import ManeuversCpt from "./ManeuversCpt";
 import StatBlockCpt from "./StatBlockCpt";
 import UpgradesCpt from "./UpgradesCpt";
 import { pilotRules } from "../data/xwing_data";
-import { SquadPilotShip } from "../data/xwing_types";
+import { SquadPilot } from "../data/xwing_types";
 import { fixIcons, getPilotEffectiveStats, getShipBaseSize } from "../data/xwing_utils";
 
 interface InfoPanelPilotCptProps {
-  pilot?: SquadPilotShip;
+  pilot?: SquadPilot;
 }
 
 const InfoPanelPilotCpt: React.FC<InfoPanelPilotCptProps> = (props) => {
@@ -21,7 +21,7 @@ const InfoPanelPilotCpt: React.FC<InfoPanelPilotCptProps> = (props) => {
   };
 
   const pilotBaseStats = props.pilot;
-  const pilotStatsAfterUpgrades: SquadPilotShip = getPilotEffectiveStats(props.pilot);
+  const pilotStatsAfterUpgrades: SquadPilot = getPilotEffectiveStats(props.pilot);
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import { Ship, Pilot, Upgrade, ShipBaseSize, SquadPilotShip, Squad } from "./xwing_types";
+import { Ship, Pilot, Upgrade, ShipBaseSize, SquadPilot, Squad } from "./xwing_types";
 import {
   isNotNullOrUndefined,
   getShipBaseSize,
@@ -80,7 +80,7 @@ describe("getUpgradeCost", () => {
       [pilotWithSkill6, 6],
       [pilotWithSkillTen, 10],
     ])("when pilot is %s, return point cost from index %s", (pilot, returnValue) => {
-      expect(getUpgradeCost(upgradeWithVariableInitPoints as Upgrade, pilot as SquadPilotShip)).toBe(returnValue);
+      expect(getUpgradeCost(upgradeWithVariableInitPoints as Upgrade, pilot as SquadPilot)).toBe(returnValue);
     });
   });
   describe("variable point cost based on ship base size", () => {
@@ -89,10 +89,10 @@ describe("getUpgradeCost", () => {
       // Example point values for each base size
       pointsarray: [4, 6, 8, 10],
     };
-    const pilotWithHugeShip: Partial<SquadPilotShip> = { huge: true };
-    const pilotWithLargeShip: Partial<SquadPilotShip> = { large: true };
-    const pilotWithMediumShip: Partial<SquadPilotShip> = { medium: true };
-    const pilotWithSmallShip: Partial<SquadPilotShip> = {}; // Assuming small as default
+    const pilotWithHugeShip: Partial<SquadPilot> = { huge: true };
+    const pilotWithLargeShip: Partial<SquadPilot> = { large: true };
+    const pilotWithMediumShip: Partial<SquadPilot> = { medium: true };
+    const pilotWithSmallShip: Partial<SquadPilot> = {}; // Assuming small as default
 
     it.each([
       [pilotWithHugeShip, 10],
@@ -100,9 +100,7 @@ describe("getUpgradeCost", () => {
       [pilotWithMediumShip, 6],
       [pilotWithSmallShip, 4],
     ])("when pilot has %s ship, returns point cost %s", (squadPilotShip, returnValue) => {
-      expect(getUpgradeCost(upgradeWithVariableBasePoints as Upgrade, squadPilotShip as SquadPilotShip)).toBe(
-        returnValue,
-      );
+      expect(getUpgradeCost(upgradeWithVariableBasePoints as Upgrade, squadPilotShip as SquadPilot)).toBe(returnValue);
     });
   });
 
@@ -111,10 +109,10 @@ describe("getUpgradeCost", () => {
       variableagility: true,
       pointsarray: [3, 5, 6, 9], // Example point values for each agility level
     };
-    const pilotWithAgility0: Partial<SquadPilotShip> = { agility: 0 };
-    const pilotWithAgility1: Partial<SquadPilotShip> = { agility: 1 };
-    const pilotWithAgility2: Partial<SquadPilotShip> = { agility: 2 };
-    const pilotWithAgility3: Partial<SquadPilotShip> = { agility: 3 };
+    const pilotWithAgility0: Partial<SquadPilot> = { agility: 0 };
+    const pilotWithAgility1: Partial<SquadPilot> = { agility: 1 };
+    const pilotWithAgility2: Partial<SquadPilot> = { agility: 2 };
+    const pilotWithAgility3: Partial<SquadPilot> = { agility: 3 };
 
     it.each([
       [pilotWithAgility0, 3],
@@ -122,7 +120,7 @@ describe("getUpgradeCost", () => {
       [pilotWithAgility2, 6],
       [pilotWithAgility3, 9],
     ])("when pilot's ship has agility %s, returns point cost %s", (squadPilotShip, returnValue) => {
-      expect(getUpgradeCost(upgradeWithVariableAgilityPoints as Upgrade, squadPilotShip as SquadPilotShip)).toBe(
+      expect(getUpgradeCost(upgradeWithVariableAgilityPoints as Upgrade, squadPilotShip as SquadPilot)).toBe(
         returnValue,
       );
     });
@@ -137,7 +135,7 @@ describe("getPilotCost", () => {
 
   interface GetPilotCostTestCase {
     description: string;
-    testSquadPilotShip: DeepPartial<SquadPilotShip>;
+    testSquadPilotShip: DeepPartial<SquadPilot>;
     expectedCost: number;
   }
 
@@ -173,7 +171,7 @@ describe("getPilotCost", () => {
   ];
 
   it.each(getPilotCostTestCases)("$description", ({ description, testSquadPilotShip, expectedCost }) => {
-    const cost = getPilotCost(testSquadPilotShip as SquadPilotShip);
+    const cost = getPilotCost(testSquadPilotShip as SquadPilot);
     expect(cost).toBe(expectedCost);
   });
 });
@@ -182,11 +180,11 @@ describe("getSquadCost", () => {
   const fiftyPointPilot = {
     points: 50,
     upgrades: [],
-  } as SquadPilotShip;
+  } as SquadPilot;
   const fortyFivePointPilot = {
     points: 45,
     upgrades: [],
-  } as SquadPilotShip;
+  } as SquadPilot;
 
   it.each([
     ["empty squad costs zero", { squadPilots: [] }, 0],
@@ -214,7 +212,7 @@ describe("getPilotEffectiveStats", () => {
 
   it("with upgrade that modifies pilot ship, applies modifications to pilot ship", () => {
     const initialShieldValue = 2;
-    const squadPilot: DeepPartial<SquadPilotShip> = {
+    const squadPilot: DeepPartial<SquadPilot> = {
       upgrades: [{ upgrade: stubUpgradeWithModifier }],
       agility: 2,
       hull: 0,
@@ -224,14 +222,14 @@ describe("getPilotEffectiveStats", () => {
     };
     const expectedModifiedShieldValue = 3;
 
-    const result = getPilotEffectiveStats(squadPilot as SquadPilotShip);
+    const result = getPilotEffectiveStats(squadPilot as SquadPilot);
 
     expect(result.shields).toBe(expectedModifiedShieldValue);
   });
 
   it("with upgrade that does not modify pilot ship, does not make modifications to pilot ship", () => {
     const initialShieldValue = 2;
-    const squadPilot: DeepPartial<SquadPilotShip> = {
+    const squadPilot: DeepPartial<SquadPilot> = {
       upgrades: [{ upgrade: stubUpgradeWithoutModifier }],
       agility: 2,
       hull: 0,
@@ -240,7 +238,7 @@ describe("getPilotEffectiveStats", () => {
       maneuvers: [],
     };
 
-    const result = getPilotEffectiveStats(squadPilot as SquadPilotShip);
+    const result = getPilotEffectiveStats(squadPilot as SquadPilot);
 
     expect(JSON.stringify(squadPilot)).toBe(JSON.stringify(result));
   });

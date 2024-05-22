@@ -1,14 +1,14 @@
 import React, { useMemo, useRef } from "react";
 import { Dropdown } from "@keatonr06/reactjs-dropdown-component";
 import { DropDownStyles } from "../styleData/styleData";
-import { Upgrade, SquadPilotShipUpgradeSlot, SquadPilotShip, Squad } from "../data/xwing_types";
+import { Upgrade, SquadPilotShipUpgradeSlot, SquadPilot, Squad } from "../data/xwing_types";
 import { slots, upgrades } from "../data/xwing_data";
 import { isUpgradeAllowed, getUpgradeCost, isNotNullOrUndefined, maxUpgradeReached } from "../data/xwing_utils";
 import { useSquadsDispatch } from "../contexts/SquadContext";
 
 interface ShipUpgradeCptProps {
   upgradeSlot: SquadPilotShipUpgradeSlot;
-  squadPilot: SquadPilotShip;
+  squadPilot: SquadPilot;
   squad: Squad;
   onRecordMouseEnter: (upgrade: Upgrade) => void;
 }
@@ -103,7 +103,7 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
 const getAvailableUpgrades = (
   upgradeSlot: SquadPilotShipUpgradeSlot,
   squad: Squad,
-  squadPilot: SquadPilotShip,
+  squadPilot: SquadPilot,
   upgradesData: Upgrade[],
 ) => {
   const matchingSlots = [];
@@ -128,7 +128,7 @@ const getAvailableUpgrades = (
 
 const upgradeAlreadySelectedOnADifferentSlot = (
   upgrade: Upgrade,
-  squadPilot: SquadPilotShip,
+  squadPilot: SquadPilot,
   currentUpgradeSlot: SquadPilotShipUpgradeSlot,
 ) => {
   return squadPilot.upgrades.find(

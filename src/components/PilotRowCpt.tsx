@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from "react";
 import { Dropdown } from "@keatonr06/reactjs-dropdown-component";
 import { DropDownStyles } from "../styleData/styleData";
-import { InfoPanelCard, Pilot, ShipName, Squad, SquadPilotShip, Upgrade } from "../data/xwing_types";
+import { InfoPanelCard, Pilot, ShipName, Squad, SquadPilot, Upgrade } from "../data/xwing_types";
 import { pilots, ships, upgrades } from "../data/xwing_data";
 import { getPilotCost, getSquadPilotShip, maxPilotReached } from "../data/xwing_utils";
 import { useSquadsDispatch } from "../contexts/SquadContext";
@@ -9,7 +9,7 @@ import ShipUpgradeCpt from "./ShipUpgradeCpt";
 
 interface PilotRowCptProps {
   squad: Squad;
-  selectedPilot: SquadPilotShip;
+  selectedPilot: SquadPilot;
   onRecordMouseEnter: (infoPanelCard: InfoPanelCard) => void;
 }
 

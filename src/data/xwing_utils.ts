@@ -5,7 +5,7 @@ import {
   Upgrade,
   ShipBaseSize,
   UniqueKey,
-  SquadPilotShip,
+  SquadPilot,
   Squad,
   BaseShip,
   SquadPilotShipUpgradeSlot,
@@ -36,7 +36,7 @@ export const getShipBaseSize = (ship: BaseShip): ShipBaseSize => {
   }
 };
 
-export function getUpgradeCost(upgrade: Upgrade, squadPilotShip: SquadPilotShip): number {
+export function getUpgradeCost(upgrade: Upgrade, squadPilotShip: SquadPilot): number {
   if (isNotNullOrUndefined(upgrade.points)) {
     return upgrade.points;
   } else if (upgrade.pointsarray) {
@@ -62,7 +62,7 @@ export function getUpgradeCost(upgrade: Upgrade, squadPilotShip: SquadPilotShip)
   });
 }
 
-export function getPilotCost(squadPilot: SquadPilotShip): number {
+export function getPilotCost(squadPilot: SquadPilot): number {
   return (
     squadPilot.points +
     squadPilot.upgrades.reduce((prevPointsSum, selectedUpgrade) => {
@@ -80,14 +80,14 @@ export function getSquadCost(squad: Squad): number {
   }, 0);
 }
 
-export function getPilotEffectiveStatsNew(squadPilotShip: SquadPilotShip): SquadPilotShip {
+export function getPilotEffectiveStatsNew(squadPilotShip: SquadPilot): SquadPilot {
   if (!squadPilotShip) {
     throw createError("pilot ship required for getPilotEffectiveStats", {
       pilotVal: squadPilotShip,
     });
   }
 
-  const squadPilotShipCopy: SquadPilotShip = JSON.parse(JSON.stringify(squadPilotShip));
+  const squadPilotShipCopy: SquadPilot = JSON.parse(JSON.stringify(squadPilotShip));
 
   for (const selectedUpgrade of squadPilotShipCopy.upgrades) {
     if (selectedUpgrade.upgrade?.modifier_func) {
@@ -97,14 +97,14 @@ export function getPilotEffectiveStatsNew(squadPilotShip: SquadPilotShip): Squad
   return squadPilotShipCopy;
 }
 
-export function getPilotEffectiveStats(squadPilot: SquadPilotShip): SquadPilotShip {
+export function getPilotEffectiveStats(squadPilot: SquadPilot): SquadPilot {
   if (!squadPilot) {
     throw createError("pilot required for getPilotEffectiveStats", {
       pilotVal: squadPilot,
     });
   }
 
-  const squadPilotCopy: SquadPilotShip = JSON.parse(JSON.stringify(squadPilot));
+  const squadPilotCopy: SquadPilot = JSON.parse(JSON.stringify(squadPilot));
 
   for (const upgradeSlot of squadPilot.upgrades) {
     //gotta get the upgrade data
@@ -221,7 +221,7 @@ function getCountOfUniqueInSquad(uniqueCanonName: string, squad: Squad): number 
 export function isUpgradeAllowed(
   selectedUpgradeSlot: SquadPilotShipUpgradeSlot,
   upgrade: Upgrade,
-  pilot: SquadPilotShip,
+  pilot: SquadPilot,
   squad: Squad,
   upgradesData: Upgrade[],
 ): boolean {
@@ -271,7 +271,7 @@ export function isUpgradeAllowedByRestrictions(
   upgradeSlot: SquadPilotShipUpgradeSlot,
   restrictions: Restriction[],
   upgrade: Upgrade,
-  squadPilot: SquadPilotShip,
+  squadPilot: SquadPilot,
   squad: Squad,
   upgradesData: Upgrade[],
 ): boolean {
@@ -458,11 +458,7 @@ export function isUpgradeAllowedByRestrictions(
   return true;
 }
 
-export function getSquadPilotShip(
-  pilot: Pilot,
-  shipsData: Record<string, Ship>,
-  upgradesData: Upgrade[],
-): SquadPilotShip {
+export function getSquadPilotShip(pilot: Pilot, shipsData: Record<string, Ship>, upgradesData: Upgrade[]): SquadPilot {
   const shipForPilot = shipsData[pilot.ship];
   if (!shipForPilot) {
     throw createError(`Couldn't find ship for pilot: ${pilot.name}`, {
@@ -470,7 +466,7 @@ export function getSquadPilotShip(
     });
   }
 
-  let squadPilot: SquadPilotShip = {
+  let squadPilot: SquadPilot = {
     ...pilot,
     ...shipForPilot,
     squadPilotShipId: makeUniqueKey(25),
