@@ -72,13 +72,20 @@ type SquadsDispatchAction =
       upgradeSlot: SquadPilotUpgradeSlot;
       newlySelectedUpgrade: Upgrade;
       upgradesData: Upgrade[];
+    }
+  | {
+      type: "createNewSquad";
+      squad: Squad;
     };
 
 const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction): ReadonlyArray<Squad> => {
   // console.log(`Squades reducer called with ${action.type} action`);
-  const updatedSquad = getUpdatedSquad(action.squad, action);
-  const squadWithoutInvalidUpgrades = getSquadWithInvalidUpgradesRemoved(updatedSquad, action.upgradesData);
-  return squads.map((squadInState) => (action.squad !== squadInState ? squadInState : squadWithoutInvalidUpgrades));
+  let updatedSquad = getUpdatedSquad(action.squad, action);
+  // TODO: clean this up
+  if (action.type !== "createNewSquad") {
+    updatedSquad = getSquadWithInvalidUpgradesRemoved(updatedSquad, action.upgradesData);
+  }
+  return squads.map((squadInState) => (action.squad !== squadInState ? squadInState : updatedSquad));
 };
 
 const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
@@ -220,6 +227,9 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       };
 
       return squadWithUpgradeChanged;
+    }
+    case "createNewSquad": {
+      return getEmptyFactionSquad(action.squad.faction);
     }
   }
 };
@@ -438,11 +448,13 @@ export const factionsOrdered: Faction[] = [
   "Separatist Alliance",
 ];
 
-const initialSquadsState: Squad[] = factionsOrdered.map((factionName): Squad => {
+const getEmptyFactionSquad = (factionName): Squad => {
   return {
     id: null,
     faction: factionName,
     name: `${factionName} Squadron`,
     squadPilots: [],
   };
-});
+};
+
+const initialSquadsState: Squad[] = factionsOrdered.map(getEmptyFactionSquad);

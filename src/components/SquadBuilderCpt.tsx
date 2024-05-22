@@ -4,6 +4,7 @@ import SquadHeader from "./SquadHeader";
 import AddShipCpt from "./AddShipCpt";
 import InfoPanelCpt from "./InfoPanelCpt";
 import PilotRowCpt from "./PilotRowCpt";
+import SquadManagementBarCpt from "./SquadManagementBarCpt";
 
 interface SquadBuilderProps {
   squad: Squad;
@@ -15,32 +16,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderProps> = ({ squad }) => {
   return (
     <div>
       <SquadHeader squad={squad} />
-      {/* <SaveLoad
-        faction={props.faction}
-        squad={state.squad}
-        squadName={state.squadName}
-        onSquadSaved={(newSquadId: string): void => {
-          setState({ ...state, squadId: newSquadId });
-        }}
-        onSquadNameChanged={(newName: string): void => {
-          setState({ ...state, squadName: newName });
-        }}
-        onSquadLoaded={(loadedSquad: {
-          _id: string;
-          name: string;
-          pilots: SelectedPilotThatAllowsMutations[];
-        }): void => {
-          setState({
-            ...initialState,
-            squadId: loadedSquad._id,
-            squad: loadedSquad.pilots,
-            squadName: loadedSquad.name,
-          });
-        }}
-        onNewSquadStarted={(): void => {
-          setState(initialState);
-        }}
-      /> */}
+      <SquadManagementBarCpt squad={squad} />
       <div className="shipAndInfoContainer">
         <div className="shipSelectors">
           {squad.squadPilots.map((squadPilot) => (
