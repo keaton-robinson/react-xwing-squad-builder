@@ -1,14 +1,5 @@
 import React, { createContext, useContext, useReducer } from "react";
-import {
-  Faction,
-  Pilot,
-  Ship,
-  ShipName,
-  Squad,
-  SquadPilot,
-  SquadPilotShipUpgradeSlot,
-  Upgrade,
-} from "../data/xwing_types";
+import { Faction, Pilot, Ship, ShipName, Squad, SquadPilot, SquadPilotUpgradeSlot, Upgrade } from "../data/xwing_types";
 import {
   getCheapestAvailablePilotForShip,
   getSquadPilotShip,
@@ -78,7 +69,7 @@ type SquadsDispatchAction =
       type: "changeUpgrade";
       squad: Squad;
       squadPilot: SquadPilot;
-      upgradeSlot: SquadPilotShipUpgradeSlot;
+      upgradeSlot: SquadPilotUpgradeSlot;
       newlySelectedUpgrade: Upgrade;
       upgradesData: Upgrade[];
     };
@@ -177,7 +168,7 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       return {
         ...squad,
         squadPilots: squad.squadPilots.filter(
-          (squadPilot) => squadPilot.squadPilotShipId !== action.pilotToRemove.squadPilotShipId,
+          (squadPilot) => squadPilot.squadPilotId !== action.pilotToRemove.squadPilotId,
         ),
       };
     case "changePilot":
@@ -219,7 +210,7 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         ...action.squad,
         squadPilots: action.squad.squadPilots.map((squadPilotInState) => {
           const changedPilot = pilotsGettingChanged.find(
-            (changedSquadPilot) => changedSquadPilot.squadPilotShipId === squadPilotInState.squadPilotShipId,
+            (changedSquadPilot) => changedSquadPilot.squadPilotId === squadPilotInState.squadPilotId,
           );
           if (changedPilot) {
             return changedPilot;
@@ -278,7 +269,7 @@ const getSquadPilotWithUpgradesSet = (upgradesToSet: Upgrade[], squadPilot: Squa
 // can fail to set an upgrade if the slots are not available
 const getSquadPilotWithUpgradeSet = (
   newlySelectedUpgrade: Upgrade,
-  upgradeSlot: SquadPilotShipUpgradeSlot,
+  upgradeSlot: SquadPilotUpgradeSlot,
   squadPilot: SquadPilot,
 ): SquadPilot => {
   // first remove existing upgrade
@@ -301,7 +292,7 @@ const getSquadPilotWithUpgradeSet = (
     squadPilotGettingChanged = {
       ...squadPilotGettingChanged,
       upgrades: [
-        ...squadPilotGettingChanged.upgrades.map((upSlot): SquadPilotShipUpgradeSlot => {
+        ...squadPilotGettingChanged.upgrades.map((upSlot): SquadPilotUpgradeSlot => {
           if (upSlot.squadPilotUpgradeSlotKey === upgradeSlot.squadPilotUpgradeSlotKey) {
             return {
               ...upSlot,
@@ -332,7 +323,7 @@ const getSquadPilotWithUpgradeSet = (
         ...squadPilotGettingChanged,
         upgrades: [
           ...squadPilotGettingChanged.upgrades,
-          ...newlySelectedUpgrade.confersAddons.map((conferredAddon): SquadPilotShipUpgradeSlot => {
+          ...newlySelectedUpgrade.confersAddons.map((conferredAddon): SquadPilotUpgradeSlot => {
             const countOfSlot = squadPilotGettingChanged.upgrades.filter(
               (upgradeSlot) => upgradeSlot.slot === conferredAddon.slot,
             ).length;
@@ -351,7 +342,7 @@ const getSquadPilotWithUpgradeSet = (
 };
 
 const getSquadPilotWithUpgradeRemoved = (
-  upgradeSlotToEmpty: SquadPilotShipUpgradeSlot,
+  upgradeSlotToEmpty: SquadPilotUpgradeSlot,
   squadPilot: SquadPilot,
 ): SquadPilot => {
   if (!upgradeSlotToEmpty.upgrade) {
@@ -389,7 +380,7 @@ const getSquadPilotWithUpgradeRemoved = (
   // remove upgrade for slot specified and also its parent or child slots (if they exist)
   const squadPilotWithUpgradeRemoved: SquadPilot = {
     ...squadPilotToUpdate,
-    upgrades: squadPilotToUpdate.upgrades.map((slot): SquadPilotShipUpgradeSlot => {
+    upgrades: squadPilotToUpdate.upgrades.map((slot): SquadPilotUpgradeSlot => {
       if (
         slot === upgradeSlotToEmpty ||
         slot.parentSquadPilotUpgradeSlotKey === upgradeSlotToEmpty.squadPilotUpgradeSlotKey ||

@@ -122,11 +122,11 @@ export interface SquadPilot extends BasePilot, BaseShip {
   /**
    *  Provide a unique value for react 'key' prop.
    */
-  readonly squadPilotShipId: UniqueKey;
+  readonly squadPilotId: UniqueKey;
   /**
    * Array of selected upgrades user has applied to pilot
    */
-  readonly upgrades: SquadPilotShipUpgradeSlot[];
+  readonly upgrades: SquadPilotUpgradeSlot[];
 
   // properties from pilot and ship that need to be renamed to avoid name conflict
   readonly shipCanonicalName: string | null | undefined;
@@ -140,7 +140,7 @@ export interface SquadPilot extends BasePilot, BaseShip {
 /**
  * Represents an upgrade slot that a squad pilot has
  */
-export interface SquadPilotShipUpgradeSlot {
+export interface SquadPilotUpgradeSlot {
   /**
    * Provide unique value for react key prop.
    */

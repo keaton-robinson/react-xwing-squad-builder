@@ -45,7 +45,7 @@ const SquadBuilderCpt: React.FC<SquadBuilderProps> = ({ squad }) => {
         <div className="shipSelectors">
           {squad.squadPilots.map((squadPilot) => (
             <PilotRowCpt
-              key={squadPilot.squadPilotShipId}
+              key={squadPilot.squadPilotId}
               squad={squad}
               selectedPilot={squadPilot}
               onRecordMouseEnter={setInfoPanelCard}

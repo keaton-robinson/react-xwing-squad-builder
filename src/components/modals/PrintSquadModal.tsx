@@ -1,5 +1,5 @@
 import React from "react";
-import { Squad, SquadPilot, SquadPilotShipUpgradeSlot } from "../../data/xwing_types";
+import { Squad, SquadPilot, SquadPilotUpgradeSlot } from "../../data/xwing_types";
 import { getUpgradeCost, getPilotEffectiveStatsNew } from "../../data/xwing_utils";
 
 interface PrintSquadModalProps {
@@ -17,7 +17,7 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
     return cost;
   };
 
-  const renderUpgrade = (selectedUpgrade: SquadPilotShipUpgradeSlot, selectedPilot: SquadPilot) => {
+  const renderUpgrade = (selectedUpgrade: SquadPilotUpgradeSlot, selectedPilot: SquadPilot) => {
     if (!selectedUpgrade.upgrade) {
       return null;
     }
@@ -36,7 +36,7 @@ const PrintSquadModal: React.FC<PrintSquadModalProps> = ({ squad }) => {
   return (
     <div>
       {squad.squadPilots.map((squadPilot) => (
-        <table key={squadPilot.squadPilotShipId} style={{ marginBottom: "30px", minWidth: "500px" }}>
+        <table key={squadPilot.squadPilotId} style={{ marginBottom: "30px", minWidth: "500px" }}>
           <tbody>
             <tr>
               <td>

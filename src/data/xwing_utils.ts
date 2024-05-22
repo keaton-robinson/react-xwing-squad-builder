@@ -8,7 +8,7 @@ import {
   SquadPilot,
   Squad,
   BaseShip,
-  SquadPilotShipUpgradeSlot,
+  SquadPilotUpgradeSlot,
   BasePilot,
   Restriction,
 } from "./xwing_types";
@@ -219,7 +219,7 @@ function getCountOfUniqueInSquad(uniqueCanonName: string, squad: Squad): number 
 }
 
 export function isUpgradeAllowed(
-  selectedUpgradeSlot: SquadPilotShipUpgradeSlot,
+  selectedUpgradeSlot: SquadPilotUpgradeSlot,
   upgrade: Upgrade,
   pilot: SquadPilot,
   squad: Squad,
@@ -268,7 +268,7 @@ export function isUpgradeAllowed(
 }
 
 export function isUpgradeAllowedByRestrictions(
-  upgradeSlot: SquadPilotShipUpgradeSlot,
+  upgradeSlot: SquadPilotUpgradeSlot,
   restrictions: Restriction[],
   upgrade: Upgrade,
   squadPilot: SquadPilot,
@@ -469,7 +469,7 @@ export function getSquadPilotShip(pilot: Pilot, shipsData: Record<string, Ship>,
   let squadPilot: SquadPilot = {
     ...pilot,
     ...shipForPilot,
-    squadPilotShipId: makeUniqueKey(25),
+    squadPilotId: makeUniqueKey(25),
     pilotName: pilot.name,
     pilotId: pilot.id,
     shipCanonicalName: shipForPilot.canonical_name,
@@ -505,9 +505,9 @@ function getSquadPilotUpgrades(params: {
   pilot: BasePilot;
   upgradesData: Upgrade[];
   autoEquip?: string[];
-}): SquadPilotShipUpgradeSlot[] {
+}): SquadPilotUpgradeSlot[] {
   let slotNameUsedTracker = {};
-  let newSelectedUpgrades = params.pilot.slots.map((slotName): SquadPilotShipUpgradeSlot => {
+  let newSelectedUpgrades = params.pilot.slots.map((slotName): SquadPilotUpgradeSlot => {
     // this won't handle slots that are added by titles or configurations...maybe don't copy titles or "unique" upgrades
     // but still, there are non unique "configuration" upgrades that confer addons
     // Increment or initialize the count for the slot
