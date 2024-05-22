@@ -76,13 +76,26 @@ type SquadsDispatchAction =
   | {
       type: "createNewSquad";
       squad: Squad;
+    }
+  | {
+      type: "savedAsNewSquad";
+      squad: Squad;
+      newSquadId: string;
+      newSquadName: string;
+    }
+  | {
+      type: "loadedSquad";
+      squad: Squad;
+      loadedSquadId: string;
+      loadedSquadPilots: SquadPilot[];
+      loadedSquadName: string;
     };
 
 const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction): ReadonlyArray<Squad> => {
   // console.log(`Squades reducer called with ${action.type} action`);
   let updatedSquad = getUpdatedSquad(action.squad, action);
   // TODO: clean this up
-  if (action.type !== "createNewSquad") {
+  if (action.type !== "createNewSquad" && action.type !== "savedAsNewSquad" && action.type !== "loadedSquad") {
     updatedSquad = getSquadWithInvalidUpgradesRemoved(updatedSquad, action.upgradesData);
   }
   return squads.map((squadInState) => (action.squad !== squadInState ? squadInState : updatedSquad));
@@ -230,6 +243,21 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
     }
     case "createNewSquad": {
       return getEmptyFactionSquad(action.squad.faction);
+    }
+    case "savedAsNewSquad": {
+      return {
+        ...action.squad,
+        id: action.newSquadId,
+        name: action.newSquadName,
+      };
+    }
+    case "loadedSquad": {
+      return {
+        ...getEmptyFactionSquad(squad.faction),
+        id: action.loadedSquadId,
+        name: action.loadedSquadName,
+        squadPilots: action.loadedSquadPilots,
+      };
     }
   }
 };

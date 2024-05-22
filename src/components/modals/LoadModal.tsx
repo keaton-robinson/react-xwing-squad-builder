@@ -151,7 +151,7 @@ const LoadModal: React.FC<LoadModalProps> = (props) => {
                 </h4>
                 <span style={{ gridRow: 2 }}>
                   {squad.pilots.reduce((previousValue, currentValue) => {
-                    return previousValue ? previousValue + ", " + currentValue.name : currentValue.name;
+                    return previousValue ? previousValue + ", " + currentValue.pilotName : currentValue.pilotName;
                   }, "")}
                 </span>
               </li>

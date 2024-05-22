@@ -17,10 +17,6 @@ const saveStatusMessages = {
 
 interface SaveLoadNewProps {
   squad: Squad;
-  // onSquadSaved: (squadId: string) => void;
-  // onSquadNameChanged: (newName: string) => void;
-  // onSquadLoaded: (loadedSquad: { _id: string; name: string; pilots: SelectedPilotThatAllowsMutations[] }) => void;
-  // onNewSquadStarted: () => void;
 }
 
 const SquadManagementBarCpt: React.FC<SaveLoadNewProps> = (props) => {
@@ -38,105 +34,113 @@ const SquadManagementBarCpt: React.FC<SaveLoadNewProps> = (props) => {
     };
   }, []);
 
-  const saveClicked = async (event) => {
-    // if (!props.squadId) {
-    //   // saving new squad...do post
-    //   return saveSquadAs(props.squadName);
-    // }
-    // setSaveStatusMessage(saveStatusMessages.saving);
-    // try {
-    //   // updating existing squad... do put/patch
-    //   const response = await fetch(
-    //     // @ts-ignore
-    //     XWING_API_ENDPOINT + `/squads/${props.squadId}`,
-    //     {
-    //       method: "PATCH",
-    //       headers: {
-    //         "Content-type": "application/json; charset=UTF-8",
-    //         Authorization: userContextBundle.user.token,
-    //       },
-    //       body: JSON.stringify({
-    //         name: props.squadName,
-    //         points: getSquadCost(props.squad),
-    //         pilots: props.squad,
-    //       }),
-    //     },
-    //   );
-    //   const responseData = await response.json();
-    //   if (isMounted.current) {
-    //     if (responseData.success) {
-    //       props.onSquadSaved(responseData.savedSquad._id);
-    //       setSaveStatusMessage(saveStatusMessages.success);
-    //     } else {
-    //       setSaveStatusMessage(saveStatusMessages.error);
-    //     }
-    //   }
-    // } catch (error) {
-    //   if (isMounted.current) {
-    //     setSaveStatusMessage(saveStatusMessages.error);
-    //   }
-    // }
+  const saveClicked = async () => {
+    if (!props.squad.id) {
+      // saving new squad...do post
+      return saveSquadAs(props.squad.name);
+    }
+    setSaveStatusMessage(saveStatusMessages.saving);
+    try {
+      // updating existing squad... do put/patch
+      const response = await fetch(
+        // @ts-ignore
+        XWING_API_ENDPOINT + `/squads/${props.squad.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            Authorization: userContextBundle.user.token,
+          },
+          body: JSON.stringify({
+            name: props.squad.name,
+            points: getSquadCost(props.squad),
+            pilots: props.squad.squadPilots,
+          }),
+        },
+      );
+      const responseData = await response.json();
+      if (isMounted.current) {
+        if (responseData.success) {
+          setSaveStatusMessage(saveStatusMessages.success);
+        } else {
+          setSaveStatusMessage(saveStatusMessages.error);
+        }
+      }
+    } catch (error) {
+      if (isMounted.current) {
+        setSaveStatusMessage(saveStatusMessages.error);
+      }
+    }
   };
 
   const saveSquadAs = async (newSquadTitle) => {
-    // props.onSquadNameChanged(newSquadTitle);
-    // setSaveStatusMessage(saveStatusMessages.saving);
-    // setModal(null);
-    // try {
-    //   // @ts-ignore
-    //   const response = await fetch(XWING_API_ENDPOINT + "/squads", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-type": "application/json; charset=UTF-8",
-    //       Authorization: userContextBundle.user.token,
-    //     },
-    //     body: JSON.stringify({
-    //       faction: props.squad.faction,
-    //       name: newSquadTitle,
-    //       points: getSquadCost(props.squad),
-    //       pilots: props.squad.squadPilots,
-    //     }),
-    //   });
-    //   const responseData = await response.json();
-    //   if (isMounted.current) {
-    //     if (responseData.success) {
-    //       props.onSquadSaved(responseData.savedSquad._id);
-    //       setSaveStatusMessage(saveStatusMessages.success);
-    //     } else {
-    //       setSaveStatusMessage(saveStatusMessages.error);
-    //     }
-    //   }
-    // } catch (error) {
-    //   if (isMounted.current) {
-    //     setSaveStatusMessage(saveStatusMessages.error);
-    //   }
-    // }
+    setSaveStatusMessage(saveStatusMessages.saving);
+    setModal(null);
+    try {
+      // @ts-ignore
+      const response = await fetch(XWING_API_ENDPOINT + "/squads", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          Authorization: userContextBundle.user.token,
+        },
+        body: JSON.stringify({
+          faction: props.squad.faction,
+          name: newSquadTitle,
+          points: getSquadCost(props.squad),
+          pilots: props.squad.squadPilots,
+        }),
+      });
+      const responseData = await response.json();
+      if (isMounted.current) {
+        if (responseData.success) {
+          squadsDispatch({
+            type: "savedAsNewSquad",
+            squad: props.squad,
+            newSquadId: responseData.savedSquad._id,
+            newSquadName: newSquadTitle,
+          });
+          setSaveStatusMessage(saveStatusMessages.success);
+        } else {
+          setSaveStatusMessage(saveStatusMessages.error);
+        }
+      }
+    } catch (error) {
+      if (isMounted.current) {
+        setSaveStatusMessage(saveStatusMessages.error);
+      }
+    }
   };
 
   const loadSquad = (selectedSquad) => {
-    // reducer would make better encapsulated
-    // props.onSquadLoaded(selectedSquad);
-    // setModal(null);
+    squadsDispatch({
+      type: "loadedSquad",
+      squad: props.squad,
+      loadedSquadId: selectedSquad._id,
+      loadedSquadName: selectedSquad.name,
+      loadedSquadPilots: selectedSquad.pilots,
+    });
+    setSaveStatusMessage("");
+    setModal(null);
   };
 
   const showSaveAsModal = () => {
-    // setModal({
-    //   title: "Save squad",
-    //   children: <SaveAsModal saveSquad={saveSquadAs} squadName={props.squadName} />,
-    // });
+    setModal({
+      title: "Save squad",
+      children: <SaveAsModal saveSquad={saveSquadAs} squadName={props.squad.name} />,
+    });
   };
 
   const showLoadModal = () => {
-    // setModal({
-    //   title: `Load ${props.faction} squad`,
-    //   children: <LoadModal faction={props.faction} loadSquad={loadSquad} />,
-    // });
+    setModal({
+      title: `Load ${props.squad.faction} squad`,
+      children: <LoadModal faction={props.squad.faction} loadSquad={loadSquad} />,
+    });
   };
 
   const createNewSquad = () => {
-    // props.onNewSquadStarted();
-    // set this squad's state to initial state
     squadsDispatch({ type: "createNewSquad", squad: props.squad });
+    setSaveStatusMessage("");
     setModal(null);
   };
 
