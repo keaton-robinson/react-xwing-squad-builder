@@ -30,7 +30,7 @@ export const SquadsProvider = ({ children }) => {
 };
 
 type SquadsDispatchAction =
-  | { type: "renameSquad"; squad: Squad; newName: string; upgradesData: Upgrade[] }
+  | { type: "renameSquad"; squad: Squad; newName: string }
   | {
       type: "addShip";
       squad: Squad;
@@ -94,10 +94,6 @@ type SquadsDispatchAction =
 const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction): ReadonlyArray<Squad> => {
   // console.log(`Squades reducer called with ${action.type} action`);
   let updatedSquad = getUpdatedSquad(action.squad, action);
-  // TODO: clean this up
-  if (action.type !== "createNewSquad" && action.type !== "savedAsNewSquad" && action.type !== "loadedSquad") {
-    updatedSquad = getSquadWithInvalidUpgradesRemoved(updatedSquad, action.upgradesData);
-  }
   return squads.map((squadInState) => (action.squad !== squadInState ? squadInState : updatedSquad));
 };
 
@@ -108,7 +104,7 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         ...squad,
         name: action.newName,
       };
-    case "addShip":
+    case "addShip": {
       const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
         action.newShip,
         action.squad,
@@ -117,14 +113,15 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
       );
       if (cheapestAvailablePilot) {
         const squadPilot = getSquadPilotShip(cheapestAvailablePilot, action.shipsData, action.upgradesData);
-
-        return {
+        const squadWithNewPilot = {
           ...squad,
           squadPilots: [...squad.squadPilots, squadPilot],
         };
+        return getSquadWithInvalidUpgradesRemoved(squadWithNewPilot, action.upgradesData);
       }
       alert(`No pilot available for ${action.newShip}`);
       return squad;
+    }
     case "changeShip": {
       const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
         action.newShip,
@@ -138,12 +135,15 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
 
         replacementPilot = getSquadPilotWithUpgradesSet(upgradesToCopy, replacementPilot);
 
-        return {
-          ...squad,
-          squadPilots: squad.squadPilots.map((squadPilot) =>
-            squadPilot === action.currentPilot ? replacementPilot : squadPilot,
-          ),
-        };
+        return getSquadWithInvalidUpgradesRemoved(
+          {
+            ...squad,
+            squadPilots: squad.squadPilots.map((squadPilot) =>
+              squadPilot === action.currentPilot ? replacementPilot : squadPilot,
+            ),
+          },
+          action.upgradesData,
+        );
       }
       alert(`No pilot available for ${action.newShip}`);
       return squad;
@@ -182,27 +182,33 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         squadPilots: [...action.squad.squadPilots, squadPilot],
       };
 
-      return squadWithPilotCloned;
+      return getSquadWithInvalidUpgradesRemoved(squadWithPilotCloned, action.upgradesData);
     }
     case "removeFromSquad":
-      return {
-        ...squad,
-        squadPilots: squad.squadPilots.filter(
-          (squadPilot) => squadPilot.squadPilotId !== action.pilotToRemove.squadPilotId,
-        ),
-      };
+      return getSquadWithInvalidUpgradesRemoved(
+        {
+          ...squad,
+          squadPilots: squad.squadPilots.filter(
+            (squadPilot) => squadPilot.squadPilotId !== action.pilotToRemove.squadPilotId,
+          ),
+        },
+        action.upgradesData,
+      );
     case "changePilot":
       let replacementPilot: SquadPilot = getSquadPilotShip(action.newPilot, action.shipsData, action.upgradesData);
 
       const upgradesToCopy: Upgrade[] = getUpgradesOnSquadPilot(action.currentPilot);
       replacementPilot = getSquadPilotWithUpgradesSet(upgradesToCopy, replacementPilot);
 
-      return {
-        ...squad,
-        squadPilots: squad.squadPilots.map((squadPilot) =>
-          squadPilot === action.currentPilot ? replacementPilot : squadPilot,
-        ),
-      };
+      return getSquadWithInvalidUpgradesRemoved(
+        {
+          ...squad,
+          squadPilots: squad.squadPilots.map((squadPilot) =>
+            squadPilot === action.currentPilot ? replacementPilot : squadPilot,
+          ),
+        },
+        action.upgradesData,
+      );
 
     case "changeUpgrade": {
       let pilotsGettingChanged: SquadPilot[];
@@ -239,7 +245,7 @@ const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
         }),
       };
 
-      return squadWithUpgradeChanged;
+      return getSquadWithInvalidUpgradesRemoved(squadWithUpgradeChanged, action.upgradesData);
     }
     case "createNewSquad": {
       return getEmptyFactionSquad(action.squad.faction);
