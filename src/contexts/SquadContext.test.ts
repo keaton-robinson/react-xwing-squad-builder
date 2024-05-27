@@ -7,6 +7,7 @@ import {
   getSquadPilotWithUpgradeSet,
   getUpgradesOnSquadPilot,
   getEmptyFactionSquad,
+  getSquadPilotWithUpgradesSet,
 } from "./SquadContext";
 
 describe("squadsReducer", () => {
@@ -488,7 +489,7 @@ describe("squadsReducer", () => {
         upgrades: [anotherSlot, upgradeSlotToChange],
       };
 
-      const expected = {
+      const expected: Partial<SquadPilot> = {
         ...initialPilot,
         upgrades: [
           anotherSlot,
@@ -500,6 +501,7 @@ describe("squadsReducer", () => {
             squadPilotUpgradeSlotKey: `Crew2`,
             slot: "Crew",
             upgrade: null,
+            parentSquadPilotUpgradeSlotKey: null,
           },
         ],
       };
@@ -703,6 +705,202 @@ describe("squadsReducer", () => {
         name: "Rebel Alliance Squadron",
         squadPilots: [],
       });
+    });
+  });
+  describe("getSquadPilotWithUpgradesSet", () => {
+    it("should set upgrades if matching slots are available", () => {
+      const upgrades: Upgrade[] = [
+        { id: 1, name: "Upgrade 1", slot: "Astromech" },
+        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
+      ];
+
+      const squadPilot: SquadPilot = {
+        squadPilotId: "uniqueKey1" as UniqueKey,
+        upgrades: [
+          { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot2", slot: "Torpedo", upgrade: null },
+        ],
+        factions: ["Rebel Alliance"],
+        agility: 2,
+        hull: 3,
+        shields: 2,
+        actions: [],
+        maneuvers: [],
+        shipCanonicalName: null,
+        ship_keyword: null,
+        pilotName: null,
+        pilotId: null,
+        pilotKeyword: null,
+        pilotCanonicalName: null,
+        faction: "Rebel Alliance",
+        ship: "X-Wing",
+        skill: 5,
+        points: 50,
+        slots: [],
+      };
+
+      const result = getSquadPilotWithUpgradesSet(upgrades, squadPilot);
+
+      expect(result.upgrades[0].upgrade).toEqual(upgrades[0]);
+      expect(result.upgrades[1].upgrade).toEqual(upgrades[1]);
+    });
+
+    it("should not set upgrades if matching slots are not available", () => {
+      const upgrades: Upgrade[] = [
+        { id: 1, name: "Upgrade 1", slot: "Astromech" },
+        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
+      ];
+
+      const squadPilot: SquadPilot = {
+        squadPilotId: "uniqueKey2" as UniqueKey,
+        upgrades: [
+          { squadPilotUpgradeSlotKey: "slot1", slot: "Missile", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot2", slot: "Cannon", upgrade: null },
+        ],
+        factions: ["Rebel Alliance"],
+        agility: 2,
+        hull: 3,
+        shields: 2,
+        actions: [],
+        maneuvers: [],
+        shipCanonicalName: null,
+        ship_keyword: null,
+        pilotName: null,
+        pilotId: null,
+        pilotKeyword: null,
+        pilotCanonicalName: null,
+        faction: "Rebel Alliance",
+        ship: "X-Wing",
+        skill: 5,
+        points: 50,
+        slots: [],
+      };
+
+      const result = getSquadPilotWithUpgradesSet(upgrades, squadPilot);
+
+      expect(result.upgrades[0].upgrade).toBeNull();
+      expect(result.upgrades[1].upgrade).toBeNull();
+    });
+
+    it("should only set upgrades for available slots and leave others", () => {
+      const upgrades: Upgrade[] = [
+        { id: 1, name: "Upgrade 1", slot: "Astromech" },
+        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
+        { id: 3, name: "Upgrade 3", slot: "Cannon" },
+      ];
+
+      const squadPilot: SquadPilot = {
+        squadPilotId: "uniqueKey3" as UniqueKey,
+        upgrades: [
+          { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot3", slot: "Torpedo", upgrade: null },
+        ],
+        factions: ["Rebel Alliance"],
+        agility: 2,
+        hull: 3,
+        shields: 2,
+        actions: [],
+        maneuvers: [],
+        shipCanonicalName: null,
+        ship_keyword: null,
+        pilotName: null,
+        pilotId: null,
+        pilotKeyword: null,
+        pilotCanonicalName: null,
+        faction: "Rebel Alliance",
+        ship: "X-Wing",
+        skill: 5,
+        points: 50,
+        slots: [],
+      };
+
+      const result = getSquadPilotWithUpgradesSet(upgrades, squadPilot);
+
+      expect(result.upgrades[0].upgrade).toEqual(upgrades[0]);
+      expect(result.upgrades[1].upgrade).toBeNull();
+      expect(result.upgrades[2].upgrade).toEqual(upgrades[1]);
+    });
+    it("should set upgrade on a missing slot if that slot is added by confersAddons", () => {
+      const titleThatConfersAstromech: Upgrade = {
+        name: "Punishing One",
+        id: 233423,
+        slot: "Title",
+        confersAddons: [
+          {
+            type: "Upgrade",
+            slot: "Astromech",
+          },
+        ],
+      };
+
+      const astromechUpgrade: Upgrade = {
+        name: "an astromech",
+        id: 124313,
+        slot: "Astromech",
+      };
+
+      const upgradesToAdd: Upgrade[] = [
+        titleThatConfersAstromech,
+        astromechUpgrade, // dependent addon should be second to get a test that will fail to add the dependent addon at first
+      ];
+
+      const initialSquadPilot: Partial<SquadPilot> = {
+        upgrades: [
+          {
+            squadPilotUpgradeSlotKey: "Torpedo1",
+            slot: "Torpedo",
+            upgrade: undefined,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            squadPilotUpgradeSlotKey: "Crew1",
+            slot: "Crew",
+            upgrade: undefined,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            squadPilotUpgradeSlotKey: "Title1",
+            slot: "Title",
+            upgrade: undefined,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+        ],
+      };
+
+      const expected = {
+        ...initialSquadPilot,
+        upgrades: [
+          {
+            squadPilotUpgradeSlotKey: "Torpedo1",
+            slot: "Torpedo",
+            upgrade: undefined,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            squadPilotUpgradeSlotKey: "Crew1",
+            slot: "Crew",
+            upgrade: undefined,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            squadPilotUpgradeSlotKey: "Title1",
+            slot: "Title",
+            upgrade: titleThatConfersAstromech,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            squadPilotUpgradeSlotKey: "Astromech1",
+            slot: "Astromech",
+            upgrade: astromechUpgrade,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+        ],
+      };
+
+      const result = getSquadPilotWithUpgradesSet(upgradesToAdd, initialSquadPilot as SquadPilot);
+
+      expect(result).toEqual(expected);
     });
   });
 });

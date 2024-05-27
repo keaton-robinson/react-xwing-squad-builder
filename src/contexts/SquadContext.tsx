@@ -273,7 +273,7 @@ export const getUpgradesOnSquadPilot = (squadPilot: SquadPilot): Upgrade[] => {
 };
 
 // can fail to set an upgrade if the slots are not available
-const getSquadPilotWithUpgradesSet = (upgradesToSet: Upgrade[], squadPilot: SquadPilot): SquadPilot => {
+export const getSquadPilotWithUpgradesSet = (upgradesToSet: Upgrade[], squadPilot: SquadPilot): SquadPilot => {
   let squadPilotGettingChanged = { ...squadPilot };
 
   // try to set each upgrade...setting aside ones that fail...making multiple passes until we fail to make further changes
@@ -311,7 +311,6 @@ const getSquadPilotWithUpgradesSet = (upgradesToSet: Upgrade[], squadPilot: Squa
 };
 
 // can fail to set an upgrade if the slots are not available
-// TODO: this thing should probably throw an error when the also_occupies go wrong
 export const getSquadPilotWithUpgradeSet = (
   newlySelectedUpgrade: Upgrade,
   upgradeSlot: SquadPilotUpgradeSlot,
@@ -376,6 +375,7 @@ export const getSquadPilotWithUpgradeSet = (
               squadPilotUpgradeSlotKey: `${conferredAddon.slot}${countOfSlot + 1}`,
               slot: conferredAddon.slot,
               upgrade: null,
+              parentSquadPilotUpgradeSlotKey: null,
             };
           }),
         ],
