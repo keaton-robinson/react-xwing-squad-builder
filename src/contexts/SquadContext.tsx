@@ -311,7 +311,8 @@ const getSquadPilotWithUpgradesSet = (upgradesToSet: Upgrade[], squadPilot: Squa
 };
 
 // can fail to set an upgrade if the slots are not available
-const getSquadPilotWithUpgradeSet = (
+// TODO: this thing should probably throw an error when the also_occupies go wrong
+export const getSquadPilotWithUpgradeSet = (
   newlySelectedUpgrade: Upgrade,
   upgradeSlot: SquadPilotUpgradeSlot,
   squadPilot: SquadPilot,
