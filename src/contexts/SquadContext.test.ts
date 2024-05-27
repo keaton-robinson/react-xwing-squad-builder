@@ -1,10 +1,12 @@
-import { SquadPilot, SquadPilotUpgradeSlot, UniqueKey, Upgrade } from "../data/xwing_types";
+import { Faction, Squad, SquadPilot, SquadPilotUpgradeSlot, UniqueKey, Upgrade } from "../data/xwing_types";
 import {
   squadsReducer,
   getUpdatedSquad,
   initialSquadsState,
   getSquadPilotWithUpgradeRemoved,
   getSquadPilotWithUpgradeSet,
+  getUpgradesOnSquadPilot,
+  getEmptyFactionSquad,
 } from "./SquadContext";
 
 describe("squadsReducer", () => {
@@ -557,6 +559,150 @@ describe("squadsReducer", () => {
       const result = getSquadPilotWithUpgradeSet(upgradeThatUnequips, upgradeSlotToChange, initialPilot as SquadPilot);
 
       expect(expected).toEqual(result);
+    });
+  });
+  describe("getUpgradesOnSquadPilot", () => {
+    it("should return an empty array when there are no upgrades", () => {
+      const squadPilot: SquadPilot = {
+        squadPilotId: "uniqueKey1" as UniqueKey,
+        factions: ["Rebel Alliance"],
+        agility: 2,
+        hull: 3,
+        shields: 2,
+        actions: [],
+        maneuvers: [],
+        shipCanonicalName: null,
+        ship_keyword: null,
+        pilotName: null,
+        pilotId: null,
+        pilotKeyword: null,
+        pilotCanonicalName: null,
+        upgrades: [],
+        faction: "Rebel Alliance",
+        ship: "X-Wing",
+        skill: 5,
+        points: 50,
+        slots: [],
+      };
+
+      const result = getUpgradesOnSquadPilot(squadPilot);
+      expect(result).toEqual([]);
+    });
+
+    it("should return only the upgrades that are not null", () => {
+      const upgrades: Upgrade[] = [
+        { id: 1, name: "Upgrade 1", slot: "Astromech" },
+        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
+      ];
+
+      const squadPilot: SquadPilot = {
+        squadPilotId: "uniqueKey2" as UniqueKey,
+        factions: ["Rebel Alliance"],
+        agility: 2,
+        hull: 3,
+        shields: 2,
+        actions: [],
+        maneuvers: [],
+        shipCanonicalName: null,
+        ship_keyword: null,
+        pilotName: null,
+        pilotId: null,
+        pilotKeyword: null,
+        pilotCanonicalName: null,
+        upgrades: [
+          { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: upgrades[0] },
+          { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot3", slot: "Torpedo", upgrade: upgrades[1] },
+        ],
+        faction: "Rebel Alliance",
+        ship: "X-Wing",
+        skill: 5,
+        points: 50,
+        slots: [],
+      };
+
+      const result = getUpgradesOnSquadPilot(squadPilot);
+      expect(result).toEqual([upgrades[0], upgrades[1]]);
+    });
+
+    it("should return an empty array when all upgrades are null", () => {
+      const squadPilot: SquadPilot = {
+        squadPilotId: "uniqueKey3" as UniqueKey,
+        factions: ["Rebel Alliance"],
+        agility: 2,
+        hull: 3,
+        shields: 2,
+        actions: [],
+        maneuvers: [],
+        shipCanonicalName: null,
+        ship_keyword: null,
+        pilotName: null,
+        pilotId: null,
+        pilotKeyword: null,
+        pilotCanonicalName: null,
+        upgrades: [
+          { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null },
+        ],
+        faction: "Rebel Alliance",
+        ship: "X-Wing",
+        skill: 5,
+        points: 50,
+        slots: [],
+      };
+
+      const result = getUpgradesOnSquadPilot(squadPilot);
+      expect(result).toEqual([]);
+    });
+
+    it("should handle a mix of null and non-null upgrades", () => {
+      const upgrades: Upgrade[] = [
+        { id: 1, name: "Upgrade 1", slot: "Astromech" },
+        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
+      ];
+
+      const squadPilot: SquadPilot = {
+        squadPilotId: "uniqueKey4" as UniqueKey,
+        factions: ["Rebel Alliance"],
+        agility: 2,
+        hull: 3,
+        shields: 2,
+        actions: [],
+        maneuvers: [],
+        shipCanonicalName: null,
+        ship_keyword: null,
+        pilotName: null,
+        pilotId: null,
+        pilotKeyword: null,
+        pilotCanonicalName: null,
+        upgrades: [
+          { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: upgrades[0] },
+          { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot3", slot: "Missile", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot4", slot: "Torpedo", upgrade: upgrades[1] },
+        ],
+        faction: "Rebel Alliance",
+        ship: "X-Wing",
+        skill: 5,
+        points: 50,
+        slots: [],
+      };
+
+      const result = getUpgradesOnSquadPilot(squadPilot);
+      expect(result).toEqual([upgrades[0], upgrades[1]]);
+    });
+  });
+  describe("getEmptyFactionSquad", () => {
+    it("should return a squad object with the correct faction and name for Rebel Alliance", () => {
+      const factionName: Faction = "Rebel Alliance";
+      const result: Squad = getEmptyFactionSquad(factionName);
+
+      expect(result).toEqual({
+        id: null,
+        faction: "Rebel Alliance",
+        name: "Rebel Alliance Squadron",
+        squadPilots: [],
+      });
     });
   });
 });

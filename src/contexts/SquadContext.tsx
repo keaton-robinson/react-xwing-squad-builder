@@ -268,7 +268,7 @@ export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squ
   }
 };
 
-const getUpgradesOnSquadPilot = (squadPilot: SquadPilot): Upgrade[] => {
+export const getUpgradesOnSquadPilot = (squadPilot: SquadPilot): Upgrade[] => {
   return squadPilot.upgrades.filter((upgradeSlot) => upgradeSlot.upgrade).map((upgradeSlot) => upgradeSlot.upgrade);
 };
 
@@ -483,7 +483,7 @@ export const factionsOrdered: Faction[] = [
   "Separatist Alliance",
 ];
 
-const getEmptyFactionSquad = (factionName): Squad => {
+export const getEmptyFactionSquad = (factionName): Squad => {
   return {
     id: null,
     faction: factionName,
