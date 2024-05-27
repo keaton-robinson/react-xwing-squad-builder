@@ -4,7 +4,6 @@ import PrintSquadModal from "./modals/PrintSquadModal";
 import { Squad } from "../data/xwing_types";
 import { getSquadCost } from "../data/xwing_utils";
 import { useSquadsDispatch } from "../contexts/SquadContext";
-import { upgrades } from "../data/xwing_data";
 
 interface SquadHeaderProps {
   squad: Squad;
@@ -37,7 +36,7 @@ const SquadHeader: React.FC<SquadHeaderProps> = ({ squad }) => {
   };
 
   const handleNameChange = (event) => {
-    squadsDispatch({ type: "renameSquad", newName: event.target.value, squad: squad, upgradesData: upgrades });
+    squadsDispatch({ type: "renameSquad", newName: event.target.value, squad: squad });
   };
 
   const onSquadNameEditKeyDown = (event) => {

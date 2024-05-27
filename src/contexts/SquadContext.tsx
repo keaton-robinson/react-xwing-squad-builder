@@ -91,13 +91,13 @@ type SquadsDispatchAction =
       loadedSquadName: string;
     };
 
-const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction): ReadonlyArray<Squad> => {
+export const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction): ReadonlyArray<Squad> => {
   // console.log(`Squades reducer called with ${action.type} action`);
   let updatedSquad = getUpdatedSquad(action.squad, action);
   return squads.map((squadInState) => (action.squad !== squadInState ? squadInState : updatedSquad));
 };
 
-const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
+export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
   switch (action.type) {
     case "renameSquad":
       return {
@@ -385,18 +385,18 @@ const getSquadPilotWithUpgradeSet = (
   return squadPilotGettingChanged;
 };
 
-const getSquadPilotWithUpgradeRemoved = (
+export const getSquadPilotWithUpgradeRemoved = (
   upgradeSlotToEmpty: SquadPilotUpgradeSlot,
   squadPilot: SquadPilot,
 ): SquadPilot => {
-  if (!upgradeSlotToEmpty.upgrade) {
+  if (!upgradeSlotToEmpty.upgrade && !upgradeSlotToEmpty.parentSquadPilotUpgradeSlotKey) {
     return squadPilot; // nothing to do here
   }
   const upgradeRecord: Upgrade = upgradeSlotToEmpty.upgrade;
 
   let squadPilotToUpdate: SquadPilot = { ...squadPilot };
 
-  if (upgradeRecord.confersAddons) {
+  if (upgradeRecord && upgradeRecord.confersAddons) {
     for (const conferredAddon of upgradeRecord.confersAddons) {
       // first remove upgrades from the slots that were added
       const lastIndexOfMatchingAddon = squadPilotToUpdate.upgrades
@@ -491,4 +491,4 @@ const getEmptyFactionSquad = (factionName): Squad => {
   };
 };
 
-const initialSquadsState: Squad[] = factionsOrdered.map(getEmptyFactionSquad);
+export const initialSquadsState: Squad[] = factionsOrdered.map(getEmptyFactionSquad);
