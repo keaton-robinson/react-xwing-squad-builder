@@ -223,7 +223,6 @@ export function isUpgradeAllowed(
   upgrade: Upgrade,
   pilot: SquadPilot,
   squad: Squad,
-  upgradesData: Upgrade[],
 ): boolean {
   const effectivePilot = getPilotEffectiveStats(pilot);
 
@@ -251,16 +250,7 @@ export function isUpgradeAllowed(
     }
   }
   if (upgrade.restrictions) {
-    if (
-      !isUpgradeAllowedByRestrictions(
-        selectedUpgradeSlot,
-        upgrade.restrictions,
-        upgrade,
-        effectivePilot,
-        squad,
-        upgradesData,
-      )
-    ) {
+    if (!isUpgradeAllowedByRestrictions(selectedUpgradeSlot, upgrade.restrictions, upgrade, effectivePilot, squad)) {
       return false;
     }
   }
@@ -273,7 +263,6 @@ export function isUpgradeAllowedByRestrictions(
   upgrade: Upgrade,
   squadPilot: SquadPilot,
   squad: Squad,
-  upgradesData: Upgrade[],
 ): boolean {
   let i = 0;
   while (i < restrictions.length) {
@@ -363,10 +352,7 @@ export function isUpgradeAllowedByRestrictions(
         const nextRestriction = restrictions[i];
         //evaluate next restriction by itself by putting it in its own array
         if (
-          !(
-            uniqueFound ||
-            isUpgradeAllowedByRestrictions(upgradeSlot, [nextRestriction], upgrade, squadPilot, squad, upgradesData)
-          )
+          !(uniqueFound || isUpgradeAllowedByRestrictions(upgradeSlot, [nextRestriction], upgrade, squadPilot, squad))
         ) {
           return false;
         }

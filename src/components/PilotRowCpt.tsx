@@ -107,7 +107,6 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
       type: "removeFromSquad",
       squad: props.squad,
       pilotToRemove: props.selectedPilot,
-      upgradesData: upgrades,
     });
   };
 

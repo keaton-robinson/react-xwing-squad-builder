@@ -56,7 +56,7 @@ type SquadsDispatchAction =
       upgradesData: Upgrade[];
       pilotsData: Pilot[];
     }
-  | { type: "removeFromSquad"; squad: Squad; pilotToRemove: SquadPilot; upgradesData: Upgrade[] }
+  | { type: "removeFromSquad"; squad: Squad; pilotToRemove: SquadPilot }
   | {
       type: "changePilot";
       squad: Squad;
@@ -71,7 +71,6 @@ type SquadsDispatchAction =
       squadPilot: SquadPilot;
       upgradeSlot: SquadPilotUpgradeSlot;
       newlySelectedUpgrade: Upgrade;
-      upgradesData: Upgrade[];
     }
   | {
       type: "createNewSquad";
@@ -117,7 +116,7 @@ export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squ
           ...squad,
           squadPilots: [...squad.squadPilots, squadPilot],
         };
-        return getSquadWithInvalidUpgradesRemoved(squadWithNewPilot, action.upgradesData);
+        return getSquadWithInvalidUpgradesRemoved(squadWithNewPilot);
       }
       alert(`No pilot available for ${action.newShip}`);
       return squad;
@@ -135,15 +134,12 @@ export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squ
 
         replacementPilot = getSquadPilotWithUpgradesSet(upgradesToCopy, replacementPilot);
 
-        return getSquadWithInvalidUpgradesRemoved(
-          {
-            ...squad,
-            squadPilots: squad.squadPilots.map((squadPilot) =>
-              squadPilot === action.currentPilot ? replacementPilot : squadPilot,
-            ),
-          },
-          action.upgradesData,
-        );
+        return getSquadWithInvalidUpgradesRemoved({
+          ...squad,
+          squadPilots: squad.squadPilots.map((squadPilot) =>
+            squadPilot === action.currentPilot ? replacementPilot : squadPilot,
+          ),
+        });
       }
       alert(`No pilot available for ${action.newShip}`);
       return squad;
@@ -182,33 +178,27 @@ export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squ
         squadPilots: [...action.squad.squadPilots, squadPilot],
       };
 
-      return getSquadWithInvalidUpgradesRemoved(squadWithPilotCloned, action.upgradesData);
+      return getSquadWithInvalidUpgradesRemoved(squadWithPilotCloned);
     }
     case "removeFromSquad":
-      return getSquadWithInvalidUpgradesRemoved(
-        {
-          ...squad,
-          squadPilots: squad.squadPilots.filter(
-            (squadPilot) => squadPilot.squadPilotId !== action.pilotToRemove.squadPilotId,
-          ),
-        },
-        action.upgradesData,
-      );
+      return getSquadWithInvalidUpgradesRemoved({
+        ...squad,
+        squadPilots: squad.squadPilots.filter(
+          (squadPilot) => squadPilot.squadPilotId !== action.pilotToRemove.squadPilotId,
+        ),
+      });
     case "changePilot":
       let replacementPilot: SquadPilot = getSquadPilotShip(action.newPilot, action.shipsData, action.upgradesData);
 
       const upgradesToCopy: Upgrade[] = getUpgradesOnSquadPilot(action.currentPilot);
       replacementPilot = getSquadPilotWithUpgradesSet(upgradesToCopy, replacementPilot);
 
-      return getSquadWithInvalidUpgradesRemoved(
-        {
-          ...squad,
-          squadPilots: squad.squadPilots.map((squadPilot) =>
-            squadPilot === action.currentPilot ? replacementPilot : squadPilot,
-          ),
-        },
-        action.upgradesData,
-      );
+      return getSquadWithInvalidUpgradesRemoved({
+        ...squad,
+        squadPilots: squad.squadPilots.map((squadPilot) =>
+          squadPilot === action.currentPilot ? replacementPilot : squadPilot,
+        ),
+      });
 
     case "changeUpgrade": {
       let pilotsGettingChanged: SquadPilot[];
@@ -245,7 +235,7 @@ export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squ
         }),
       };
 
-      return getSquadWithInvalidUpgradesRemoved(squadWithUpgradeChanged, action.upgradesData);
+      return getSquadWithInvalidUpgradesRemoved(squadWithUpgradeChanged);
     }
     case "createNewSquad": {
       return getEmptyFactionSquad(action.squad.faction);
@@ -444,7 +434,7 @@ export const getSquadPilotWithUpgradeRemoved = (
   return squadPilotWithUpgradeRemoved;
 };
 
-const getSquadWithInvalidUpgradesRemoved = (squad: Squad, upgradesData: Upgrade[]): Squad => {
+export const getSquadWithInvalidUpgradesRemoved = (squad: Squad): Squad => {
   // working from the back of the list ensure cloned pilots get maxed out upgrades removed rather than existing ones
   for (let i = squad.squadPilots.length - 1; i >= 0; i--) {
     const squadPilot = squad.squadPilots[i];
@@ -452,7 +442,7 @@ const getSquadWithInvalidUpgradesRemoved = (squad: Squad, upgradesData: Upgrade[
       if (
         squadPilotUpgrade.upgrade &&
         (maxUpgradeExceeded(squadPilotUpgrade.upgrade, squad) ||
-          !isUpgradeAllowed(squadPilotUpgrade, squadPilotUpgrade.upgrade, squadPilot, squad, upgradesData))
+          !isUpgradeAllowed(squadPilotUpgrade, squadPilotUpgrade.upgrade, squadPilot, squad))
       ) {
         // remove the bad upgrade and then check if the new squad is valid recursively
         const invalidSquadPilot = squadPilot;
@@ -465,7 +455,7 @@ const getSquadWithInvalidUpgradesRemoved = (squad: Squad, upgradesData: Upgrade[
           }),
         };
 
-        return getSquadWithInvalidUpgradesRemoved(squadWithoutInvalidUpgrade, upgradesData);
+        return getSquadWithInvalidUpgradesRemoved(squadWithoutInvalidUpgrade);
       }
     }
   }

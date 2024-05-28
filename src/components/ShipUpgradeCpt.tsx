@@ -31,7 +31,6 @@ const ShipUpgradeCpt: React.FC<ShipUpgradeCptProps> = (props) => {
         squad: props.squad,
         squadPilot: props.squadPilot,
         upgradeSlot: props.upgradeSlot,
-        upgradesData: upgrades,
       });
     }
   };
@@ -121,7 +120,7 @@ const getAvailableUpgrades = (
     (upgrade) =>
       matchingSlots.includes(upgrade.slot) && // upgrade.slot === props.upgradeSlot.slot
       (!maxUpgradeReached(upgrade, squad) || upgradeSlot.upgrade === upgrade) &&
-      isUpgradeAllowed(upgradeSlot, upgrade, squadPilot, squad, upgradesData) &&
+      isUpgradeAllowed(upgradeSlot, upgrade, squadPilot, squad) &&
       !upgradeAlreadySelectedOnADifferentSlot(upgrade, squadPilot, upgradeSlot),
   );
 };
