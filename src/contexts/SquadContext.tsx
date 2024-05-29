@@ -263,7 +263,11 @@ export const getUpgradesOnSquadPilot = (squadPilot: SquadPilot): Upgrade[] => {
 };
 
 // can fail to set an upgrade if the slots are not available
-export const getSquadPilotWithUpgradesSet = (upgradesToSet: Upgrade[], squadPilot: SquadPilot): SquadPilot => {
+export const getSquadPilotWithUpgradesSet = (
+  upgradesToSet: Upgrade[],
+  squadPilot: SquadPilot,
+  { getSquadPilotWithUpgradeSetFn = getSquadPilotWithUpgradeSet } = {},
+): SquadPilot => {
   let squadPilotGettingChanged = { ...squadPilot };
 
   // try to set each upgrade...setting aside ones that fail...making multiple passes until we fail to make further changes
@@ -274,7 +278,7 @@ export const getSquadPilotWithUpgradesSet = (upgradesToSet: Upgrade[], squadPilo
   while (changesMade) {
     changesMade = false;
     while (upgradesToCopy.length > 0) {
-      const upgradeBeingCopied = upgradesToCopy.pop();
+      const upgradeBeingCopied = upgradesToCopy.shift();
       const matchingSlotOnNewShip = squadPilotGettingChanged.upgrades.find(
         (upgradeSlot) =>
           upgradeSlot.slot === upgradeBeingCopied.slot &&
@@ -282,7 +286,7 @@ export const getSquadPilotWithUpgradesSet = (upgradesToSet: Upgrade[], squadPilo
           !upgradeSlot.parentSquadPilotUpgradeSlotKey,
       );
       if (matchingSlotOnNewShip) {
-        squadPilotGettingChanged = getSquadPilotWithUpgradeSet(
+        squadPilotGettingChanged = getSquadPilotWithUpgradeSetFn(
           upgradeBeingCopied,
           matchingSlotOnNewShip,
           squadPilotGettingChanged,
@@ -305,9 +309,10 @@ export const getSquadPilotWithUpgradeSet = (
   newlySelectedUpgrade: Upgrade,
   upgradeSlot: SquadPilotUpgradeSlot,
   squadPilot: SquadPilot,
+  { getSquadPilotWithUpgradeRemovedFn = getSquadPilotWithUpgradeRemoved } = {},
 ): SquadPilot => {
   // first remove existing upgrade
-  let squadPilotGettingChanged: SquadPilot = getSquadPilotWithUpgradeRemoved(upgradeSlot, squadPilot);
+  let squadPilotGettingChanged: SquadPilot = getSquadPilotWithUpgradeRemovedFn(upgradeSlot, squadPilot);
 
   // add new upgrade if one was selected
   if (newlySelectedUpgrade) {
@@ -316,7 +321,7 @@ export const getSquadPilotWithUpgradeSet = (
         .map((selUpgrade, index) => ({ selUpgrade, index }))
         .filter(({ selUpgrade }) => selUpgrade.slot === newlySelectedUpgrade.unequips_upgrades[0])
         .reduce((maxIndex, { index }) => Math.max(maxIndex, index), -1);
-      squadPilotGettingChanged = getSquadPilotWithUpgradeRemoved(
+      squadPilotGettingChanged = getSquadPilotWithUpgradeRemovedFn(
         squadPilotGettingChanged.upgrades[lastIndexOfSlotToUnequip],
         squadPilotGettingChanged,
       );
