@@ -283,7 +283,7 @@ describe("squadContext", () => {
     });
   });
   describe("getSquadPilotWithUpgradeSet", () => {
-    it("removes upgrade from specified slot on provided squadPilot", () => {
+    it("removes upgrade from specified slot on provided squadPilot without doing anything else", () => {
       const upgradeSlotToEmpty: SquadPilotUpgradeSlot = {
         squadPilotUpgradeSlotKey: "Device1",
         slot: "Device",
@@ -299,16 +299,15 @@ describe("squadContext", () => {
         upgrades: [upgradeSlotToEmpty],
       };
 
-      const upgradeRemovalMock = jest.fn((upgradeSlotToEmpty: SquadPilotUpgradeSlot, squadPilot: SquadPilot) => {
-        return { ...squadPilot, upgrades: [] };
-      });
+      const removalReturnValueMock = { ...samplePilot, upgrades: [{ ...upgradeSlotToEmpty, upgrade: null }] };
+      const upgradeRemovalMock = jest.fn().mockReturnValue(removalReturnValueMock);
 
-      const pilotWithUpgradeRemoved = getSquadPilotWithUpgradeSet(null, upgradeSlotToEmpty, samplePilot as SquadPilot, {
+      const result = getSquadPilotWithUpgradeSet(null, upgradeSlotToEmpty, samplePilot as SquadPilot, {
         getSquadPilotWithUpgradeRemovedFn: upgradeRemovalMock,
       });
 
-      expect(pilotWithUpgradeRemoved.squadPilotId).toBe(samplePilot.squadPilotId);
       expect(upgradeRemovalMock).toHaveBeenLastCalledWith(upgradeSlotToEmpty, samplePilot);
+      expect(result).toBe(removalReturnValueMock);
     });
     it("sets upgrade if upgrade is provided", () => {
       const upgradeToApply: Upgrade = {
@@ -562,16 +561,23 @@ describe("squadContext", () => {
         upgrades: [crewSlot, secondCrewSlot, titleSlot],
       };
 
-      const upgradeRemovalMock = jest.fn((upgradeSlotToEmpty: SquadPilotUpgradeSlot, squadPilot: SquadPilot) => {
-        return squadPilot;
-      });
+      const emptiedSecondCrewSlot = { ...secondCrewSlot, upgrade: null };
+      const mockedPilotWithUpgradeUnequiped = {
+        ...initialPilot,
+        upgrades: [crewSlot, emptiedSecondCrewSlot, titleSlot],
+      };
+      const upgradeRemovalMock = jest
+        .fn()
+        .mockReturnValueOnce(initialPilot)
+        .mockReturnValueOnce(mockedPilotWithUpgradeUnequiped);
 
-      getSquadPilotWithUpgradeSet(upgradeThatUnequips, titleSlot, initialPilot as SquadPilot, {
+      const result = getSquadPilotWithUpgradeSet(upgradeThatUnequips, titleSlot, initialPilot as SquadPilot, {
         getSquadPilotWithUpgradeRemovedFn: upgradeRemovalMock,
       });
 
       expect(upgradeRemovalMock).toHaveBeenCalledTimes(2);
       expect(upgradeRemovalMock).toHaveBeenLastCalledWith(secondCrewSlot, initialPilot);
+      expect(result.upgrades[1]).toBe(emptiedSecondCrewSlot);
     });
   });
   describe("getUpgradesOnSquadPilot", () => {
