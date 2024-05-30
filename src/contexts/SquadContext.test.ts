@@ -7,7 +7,7 @@ import {
   getSquadPilotWithUpgradeSet,
   getUpgradesOnSquadPilot,
   getEmptyFactionSquad,
-  getSquadPilotWithUpgradesSet,
+  getSquadPilotWithMultipleUpgradesSet,
 } from "./SquadContext";
 
 describe("squadContext", () => {
@@ -718,7 +718,7 @@ describe("squadContext", () => {
       });
     });
   });
-  describe("getSquadPilotWithUpgradesSet", () => {
+  describe("getSquadPilotWithMultipleUpgradesSet", () => {
     it("should set upgrades for matching slots if matching slots are available", () => {
       const upgradesData: Upgrade[] = [
         { id: 1, name: "Upgrade 1", slot: "Astromech" },
@@ -754,7 +754,7 @@ describe("squadContext", () => {
         (upgradeBeingCopied, matchingSlotOnNewShip, squadPilot) => squadPilot,
       );
 
-      getSquadPilotWithUpgradesSet(upgradesData, squadPilot, {
+      getSquadPilotWithMultipleUpgradesSet(upgradesData, squadPilot, {
         getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
       });
 
@@ -798,7 +798,7 @@ describe("squadContext", () => {
         (upgradeBeingCopied, matchingSlotOnNewShip, squadPilot) => squadPilot,
       );
 
-      getSquadPilotWithUpgradesSet(upgrades, squadPilot, {
+      getSquadPilotWithMultipleUpgradesSet(upgrades, squadPilot, {
         getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
       });
 
@@ -852,7 +852,7 @@ describe("squadContext", () => {
         };
       });
 
-      getSquadPilotWithUpgradesSet(upgrades, squadPilot, {
+      getSquadPilotWithMultipleUpgradesSet(upgrades, squadPilot, {
         getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
       });
 
@@ -943,7 +943,7 @@ describe("squadContext", () => {
         ],
       });
 
-      getSquadPilotWithUpgradesSet(upgradesToAdd, initialSquadPilotWithNoAstromechSlots as SquadPilot, {
+      getSquadPilotWithMultipleUpgradesSet(upgradesToAdd, initialSquadPilotWithNoAstromechSlots as SquadPilot, {
         getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
       });
 

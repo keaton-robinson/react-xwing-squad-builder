@@ -132,7 +132,7 @@ export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squ
         let replacementPilot = getSquadPilotShip(cheapestAvailablePilot, action.shipsData, action.upgradesData);
         const upgradesToCopy = getUpgradesOnSquadPilot(action.currentPilot);
 
-        replacementPilot = getSquadPilotWithUpgradesSet(upgradesToCopy, replacementPilot);
+        replacementPilot = getSquadPilotWithMultipleUpgradesSet(upgradesToCopy, replacementPilot);
 
         return getSquadWithInvalidUpgradesRemoved({
           ...squad,
@@ -171,7 +171,7 @@ export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squ
       }
 
       const upgradesToCopy = getUpgradesOnSquadPilot(action.pilotToClone);
-      squadPilot = getSquadPilotWithUpgradesSet(upgradesToCopy, squadPilot);
+      squadPilot = getSquadPilotWithMultipleUpgradesSet(upgradesToCopy, squadPilot);
 
       const squadWithPilotCloned = {
         ...action.squad,
@@ -191,7 +191,7 @@ export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squ
       let replacementPilot: SquadPilot = getSquadPilotShip(action.newPilot, action.shipsData, action.upgradesData);
 
       const upgradesToCopy: Upgrade[] = getUpgradesOnSquadPilot(action.currentPilot);
-      replacementPilot = getSquadPilotWithUpgradesSet(upgradesToCopy, replacementPilot);
+      replacementPilot = getSquadPilotWithMultipleUpgradesSet(upgradesToCopy, replacementPilot);
 
       return getSquadWithInvalidUpgradesRemoved({
         ...squad,
@@ -263,7 +263,7 @@ export const getUpgradesOnSquadPilot = (squadPilot: SquadPilot): Upgrade[] => {
 };
 
 // can fail to set an upgrade if the slots are not available
-export const getSquadPilotWithUpgradesSet = (
+export const getSquadPilotWithMultipleUpgradesSet = (
   upgradesToSet: Upgrade[],
   squadPilot: SquadPilot,
   { getSquadPilotWithUpgradeSetFn = getSquadPilotWithUpgradeSet } = {},
