@@ -725,124 +725,92 @@ describe("squadContext", () => {
     });
   });
   describe("getSquadPilotWithMultipleUpgradesSet", () => {
-    it("should set upgrades for matching slots if matching slots are available", () => {
-      const upgradesData: Upgrade[] = [
+    it("should return a pilot with upgrades set for matching slots if matching slots are available", () => {
+      const upgradesToSet: Upgrade[] = [
         { id: 1, name: "Upgrade 1", slot: "Astromech" },
         { id: 2, name: "Upgrade 2", slot: "Torpedo" },
       ];
 
-      const squadPilot: SquadPilot = {
+      const astromechSlot = { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: null };
+      const torpedoSlot = { squadPilotUpgradeSlotKey: "slot2", slot: "Torpedo", upgrade: null };
+      const squadPilot: Partial<SquadPilot> = {
         squadPilotId: "uniqueKey1" as UniqueKey,
-        upgrades: [
-          { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: null },
-          { squadPilotUpgradeSlotKey: "slot2", slot: "Torpedo", upgrade: null },
-        ],
-        factions: ["Rebel Alliance"],
-        agility: 2,
-        hull: 3,
-        shields: 2,
-        actions: [],
-        maneuvers: [],
-        shipCanonicalName: null,
-        ship_keyword: null,
-        pilotName: null,
-        pilotId: null,
-        pilotKeyword: null,
-        pilotCanonicalName: null,
-        faction: "Rebel Alliance",
-        ship: "X-Wing",
-        skill: 5,
-        points: 50,
-        slots: [],
+        upgrades: [astromechSlot, torpedoSlot],
       };
 
-      const getSquadPilotWithUpgradeSetMock = jest.fn(
-        (upgradeBeingCopied, matchingSlotOnNewShip, squadPilot) => squadPilot,
-      );
+      const pilotWithFirstUpgrade = {
+        ...squadPilot,
+        upgrades: [{ ...astromechSlot, upgrade: upgradesToSet[0] }, torpedoSlot],
+      };
+      const pilotWithBothUpgrades = {
+        ...pilotWithFirstUpgrade,
+        upgrades: [
+          { ...astromechSlot, upgrade: upgradesToSet[0] },
+          { ...torpedoSlot, upgrade: upgradesToSet[1] },
+        ],
+      };
+      const getSquadPilotWithUpgradeSetMock = jest
+        .fn()
+        .mockReturnValueOnce(pilotWithFirstUpgrade)
+        .mockReturnValueOnce(pilotWithBothUpgrades);
 
-      getSquadPilotWithMultipleUpgradesSet(upgradesData, squadPilot, {
+      const result = getSquadPilotWithMultipleUpgradesSet(upgradesToSet, squadPilot as SquadPilot, {
         getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
       });
 
-      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(upgradesData[0], squadPilot.upgrades[0], squadPilot);
-      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(upgradesData[1], squadPilot.upgrades[1], squadPilot);
+      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(
+        upgradesToSet[0],
+        squadPilot.upgrades[0],
+        squadPilot,
+      );
+      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(
+        upgradesToSet[1],
+        squadPilot.upgrades[1],
+        pilotWithFirstUpgrade,
+      );
       expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledTimes(2);
+      expect(result).toBe(pilotWithBothUpgrades);
     });
 
-    it("should not set upgrades if matching slots are not available", () => {
+    it("should return a pilot with no upgrades changed if matching slots are not available", () => {
       const upgrades: Upgrade[] = [
         { id: 1, name: "Upgrade 1", slot: "Astromech" },
         { id: 2, name: "Upgrade 2", slot: "Torpedo" },
       ];
 
-      const squadPilot: SquadPilot = {
+      const initialPilot: Partial<SquadPilot> = {
         squadPilotId: "uniqueKey2" as UniqueKey,
         upgrades: [
           { squadPilotUpgradeSlotKey: "slot1", slot: "Missile", upgrade: null },
           { squadPilotUpgradeSlotKey: "slot2", slot: "Cannon", upgrade: null },
         ],
-        factions: ["Rebel Alliance"],
-        agility: 2,
-        hull: 3,
-        shields: 2,
-        actions: [],
-        maneuvers: [],
-        shipCanonicalName: null,
-        ship_keyword: null,
-        pilotName: null,
-        pilotId: null,
-        pilotKeyword: null,
-        pilotCanonicalName: null,
-        faction: "Rebel Alliance",
-        ship: "X-Wing",
-        skill: 5,
-        points: 50,
-        slots: [],
       };
 
-      const getSquadPilotWithUpgradeSetMock = jest.fn(
-        (upgradeBeingCopied, matchingSlotOnNewShip, squadPilot) => squadPilot,
-      );
+      const getSquadPilotWithUpgradeSetMock = jest.fn();
 
-      getSquadPilotWithMultipleUpgradesSet(upgrades, squadPilot, {
+      const result = getSquadPilotWithMultipleUpgradesSet(upgrades, initialPilot as SquadPilot, {
         getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
       });
 
       expect(getSquadPilotWithUpgradeSetMock).not.toHaveBeenCalled();
+      expect(result).toEqual(initialPilot);
     });
 
     it("should only set upgrades for available slots and leave others", () => {
-      const upgradeAstromech = { id: 1, name: "Upgrade 1", slot: "Astromech" };
-      const upgradeTorpedo1 = { id: 2, name: "Upgrade 2", slot: "Torpedo" };
-      const upgradeCannon = { id: 3, name: "Upgrade 3", slot: "Cannon" }; // shouldn't add because there are no cannon slots
-      const upgradeTorpedo2 = { id: 4, name: "Upgrade 4", slot: "Torpedo" }; // shouldnt add because there is only one slot available for torpedoes
+      const upgradeAstromech = { id: 1, name: "upgrade astromech", slot: "Astromech" };
+      const upgradeTorpedo1 = { id: 2, name: "Upgrade torpedo 1", slot: "Torpedo" };
+      const upgradeCannon = { id: 3, name: "Upgrade cannon", slot: "Cannon" }; // shouldn't add because there are no cannon slots
+      const upgradeTorpedo2 = { id: 4, name: "Upgrade torpedo 2", slot: "Torpedo" }; // shouldnt add because there is only one slot available for torpedoes
 
-      const upgrades: Upgrade[] = [upgradeAstromech, upgradeTorpedo1, upgradeCannon, upgradeTorpedo2];
+      const upgradesToSet: Upgrade[] = [upgradeAstromech, upgradeTorpedo1, upgradeCannon, upgradeTorpedo2];
 
       const slotAstromech = { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: null };
       const slotMissle = { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null };
       const slotTorpedo = { squadPilotUpgradeSlotKey: "slot3", slot: "Torpedo", upgrade: null };
 
-      const squadPilot: SquadPilot = {
+      const initialPilot: Partial<SquadPilot> = {
         squadPilotId: "uniqueKey3" as UniqueKey,
         upgrades: [slotAstromech, slotMissle, slotTorpedo],
-        factions: ["Rebel Alliance"],
-        agility: 2,
-        hull: 3,
-        shields: 2,
-        actions: [],
-        maneuvers: [],
-        shipCanonicalName: null,
-        ship_keyword: null,
-        pilotName: null,
-        pilotId: null,
-        pilotKeyword: null,
-        pilotCanonicalName: null,
-        faction: "Rebel Alliance",
-        ship: "X-Wing",
-        skill: 5,
-        points: 50,
-        slots: [],
       };
 
       const getSquadPilotWithUpgradeSetMock = jest.fn((upgradeBeingCopied, matchingSlotOnNewShip, squadPilot) => {
@@ -858,13 +826,21 @@ describe("squadContext", () => {
         };
       });
 
-      getSquadPilotWithMultipleUpgradesSet(upgrades, squadPilot, {
+      const result = getSquadPilotWithMultipleUpgradesSet(upgradesToSet, initialPilot as SquadPilot, {
         getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
       });
 
       expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledTimes(2);
       expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(upgradeAstromech, slotAstromech, expect.anything());
       expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(upgradeTorpedo1, slotTorpedo, expect.anything());
+      expect(result).toEqual({
+        ...initialPilot,
+        upgrades: [
+          { ...slotAstromech, upgrade: upgradeAstromech },
+          slotMissle,
+          { ...slotTorpedo, upgrade: upgradeTorpedo1 },
+        ],
+      });
     });
     it("should set upgrade on a missing slot if that slot is added by confersAddons", () => {
       const titleThatConfersAstromech: Upgrade = {
@@ -949,9 +925,13 @@ describe("squadContext", () => {
         ],
       });
 
-      getSquadPilotWithMultipleUpgradesSet(upgradesToAdd, initialSquadPilotWithNoAstromechSlots as SquadPilot, {
-        getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
-      });
+      const result = getSquadPilotWithMultipleUpgradesSet(
+        upgradesToAdd,
+        initialSquadPilotWithNoAstromechSlots as SquadPilot,
+        {
+          getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
+        },
+      );
 
       expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledTimes(2);
       expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(
@@ -964,6 +944,35 @@ describe("squadContext", () => {
         astromechSlotToadd,
         expect.anything(),
       );
+      expect(result).toEqual({
+        ...initialSquadPilotWithNoAstromechSlots,
+        upgrades: [
+          {
+            squadPilotUpgradeSlotKey: "Torpedo1",
+            slot: "Torpedo",
+            upgrade: undefined,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            squadPilotUpgradeSlotKey: "Crew1",
+            slot: "Crew",
+            upgrade: undefined,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            squadPilotUpgradeSlotKey: "Title1",
+            slot: "Title",
+            upgrade: titleThatConfersAstromech,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            squadPilotUpgradeSlotKey: "Astromech1",
+            slot: "Astromech",
+            upgrade: astromechUpgrade,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+        ],
+      });
     });
   });
 });
