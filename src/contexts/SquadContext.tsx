@@ -439,33 +439,52 @@ export const getSquadPilotWithUpgradeRemoved = (
   return squadPilotWithUpgradeRemoved;
 };
 
-export const getSquadWithInvalidUpgradesRemoved = (squad: Squad): Squad => {
-  // working from the back of the list ensure cloned pilots get maxed out upgrades removed rather than existing ones
-  for (let i = squad.squadPilots.length - 1; i >= 0; i--) {
-    const squadPilot = squad.squadPilots[i];
-    for (const squadPilotUpgrade of squadPilot.upgrades) {
-      if (
-        squadPilotUpgrade.upgrade &&
-        (maxUpgradeExceeded(squadPilotUpgrade.upgrade, squad) ||
-          !isUpgradeAllowed(squadPilotUpgrade, squadPilotUpgrade.upgrade, squadPilot, squad))
-      ) {
-        // remove the bad upgrade and then check if the new squad is valid recursively
-        const invalidSquadPilot = squadPilot;
-        const squadPilotWithUpgradeRemoved = getSquadPilotWithUpgradeRemoved(squadPilotUpgrade, invalidSquadPilot);
-        const squadWithoutInvalidUpgrade: Squad = {
-          ...squad,
-          squadPilots: squad.squadPilots.map((innerSquadPilot): SquadPilot => {
-            if (innerSquadPilot !== invalidSquadPilot) return innerSquadPilot;
-            return squadPilotWithUpgradeRemoved;
-          }),
-        };
+export const getSquadWithInvalidUpgradesRemoved = (
+  squad: Squad,
+  {
+    maxUpgradeExceededFn = maxUpgradeExceeded,
+    isUpgradeAllowedFn = isUpgradeAllowed,
+    getSquadPilotWithUpgradeRemovedFn = getSquadPilotWithUpgradeRemoved,
+  } = {},
+): Squad => {
+  let currentSquad = squad;
+  let changesMade = true;
 
-        return getSquadWithInvalidUpgradesRemoved(squadWithoutInvalidUpgrade);
+  while (changesMade) {
+    changesMade = false; // Reset the flag at the start of each iteration
+    let newSquadPilots = [...currentSquad.squadPilots]; // Clone squad pilots array
+
+    // working from the back makes sure we remove stuff from newly created cloned pilots instead of from existing ones
+    for (let i = currentSquad.squadPilots.length - 1; i >= 0; i--) {
+      const squadPilot = currentSquad.squadPilots[i];
+
+      for (let j = squadPilot.upgrades.length - 1; j >= 0; j--) {
+        const squadPilotUpgrade = squadPilot.upgrades[j];
+
+        if (
+          squadPilotUpgrade.upgrade &&
+          (maxUpgradeExceededFn(squadPilotUpgrade.upgrade, currentSquad) ||
+            !isUpgradeAllowedFn(squadPilotUpgrade, squadPilotUpgrade.upgrade, squadPilot, currentSquad))
+        ) {
+          // Remove the bad upgrade and mark the flag
+          const squadPilotWithUpgradeRemoved = getSquadPilotWithUpgradeRemovedFn(squadPilotUpgrade, squadPilot);
+          newSquadPilots[i] = squadPilotWithUpgradeRemoved; // Update the pilot in the cloned array
+          changesMade = true;
+
+          // Break out of the current pilot's loop to start from the last pilot again
+          break;
+        }
+      }
+
+      if (changesMade) {
+        // If a change was made, construct a new squad object and restart checking from the last pilot
+        currentSquad = { ...currentSquad, squadPilots: newSquadPilots };
+        break;
       }
     }
   }
 
-  return squad;
+  return currentSquad;
 };
 
 export const factionsOrdered: Faction[] = [
