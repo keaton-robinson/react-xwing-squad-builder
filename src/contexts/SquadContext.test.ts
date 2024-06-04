@@ -977,6 +977,14 @@ describe("squadContext", () => {
     });
   });
   describe("getSquadWithInvalidUpgradesRemoved", () => {
+    const getMockDeps = () => {
+      return {
+        getSquadPilotWithUpgradeRemovedFn: jest.fn(),
+        isUpgradeAllowedFn: jest.fn().mockReturnValue(true),
+        maxUpgradeExceededFn: jest.fn().mockReturnValue(false),
+      };
+    };
+
     it("should not change squad when no upgrades are invalid", () => {
       // arrange
       const squad: Squad = {
@@ -1034,21 +1042,13 @@ describe("squadContext", () => {
         ],
       };
 
-      const getSquadPilotWithUpgradeRemovedMock = jest.fn();
-      const isUpgradeAllowedMock = jest.fn().mockReturnValue(true);
-      const maxUpgradeExceededMock = jest.fn().mockReturnValue(false);
-
-      const dependenciesConfig = {
-        getSquadPilotWithUpgradeRemovedFn: getSquadPilotWithUpgradeRemovedMock,
-        isUpgradeAllowedFn: isUpgradeAllowedMock,
-        maxUpgradeExceededFn: maxUpgradeExceededMock,
-      };
+      const depsConfig = getMockDeps();
 
       // act
-      const result = getSquadWithInvalidUpgradesRemoved(squad, dependenciesConfig);
+      const result = getSquadWithInvalidUpgradesRemoved(squad, depsConfig);
 
       //assert
-      expect(getSquadPilotWithUpgradeRemovedMock).not.toHaveBeenCalled();
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).not.toHaveBeenCalled();
       expect(result).toEqual(squad);
     });
     it("should remove invalid upgrade when isUpgradeAllowed returns false", () => {
@@ -1089,19 +1089,13 @@ describe("squadContext", () => {
         squadPilots: [squadPilotWithUpgradeRemoved],
       };
 
-      const getSquadPilotWithUpgradeRemovedMock = jest.fn().mockReturnValue(squadPilotWithUpgradeRemoved);
-      const isUpgradeAllowedMock = jest.fn().mockReturnValue(true).mockReturnValueOnce(false);
-      const maxUpgradeExceededMock = jest.fn().mockReturnValue(false);
+      const depsConfig = getMockDeps();
+      depsConfig.getSquadPilotWithUpgradeRemovedFn.mockReturnValue(squadPilotWithUpgradeRemoved);
+      depsConfig.isUpgradeAllowedFn.mockReturnValueOnce(false);
 
-      const dependenciesConfig = {
-        getSquadPilotWithUpgradeRemovedFn: getSquadPilotWithUpgradeRemovedMock,
-        isUpgradeAllowedFn: isUpgradeAllowedMock,
-        maxUpgradeExceededFn: maxUpgradeExceededMock,
-      };
+      const result = getSquadWithInvalidUpgradesRemoved(initialSquad, depsConfig);
 
-      const result = getSquadWithInvalidUpgradesRemoved(initialSquad, dependenciesConfig);
-
-      expect(getSquadPilotWithUpgradeRemovedMock).toHaveBeenCalledTimes(1);
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).toHaveBeenCalledTimes(1);
       expect(result).toEqual(squadWithUpgradeRemoved);
     });
     it("should remove invalid upgrade when maxUpgradeExceeded returns true", () => {
@@ -1142,19 +1136,13 @@ describe("squadContext", () => {
         squadPilots: [squadPilotWithUpgradeRemoved],
       };
 
-      const getSquadPilotWithUpgradeRemovedMock = jest.fn().mockReturnValue(squadPilotWithUpgradeRemoved);
-      const isUpgradeAllowedMock = jest.fn().mockReturnValue(true);
-      const maxUpgradeExceededMock = jest.fn().mockReturnValue(false).mockReturnValueOnce(true);
+      const depsConfig = getMockDeps();
+      depsConfig.getSquadPilotWithUpgradeRemovedFn.mockReturnValue(squadPilotWithUpgradeRemoved);
+      depsConfig.maxUpgradeExceededFn.mockReturnValueOnce(true);
 
-      const dependenciesConfig = {
-        getSquadPilotWithUpgradeRemovedFn: getSquadPilotWithUpgradeRemovedMock,
-        isUpgradeAllowedFn: isUpgradeAllowedMock,
-        maxUpgradeExceededFn: maxUpgradeExceededMock,
-      };
+      const result = getSquadWithInvalidUpgradesRemoved(initialSquad, depsConfig);
 
-      const result = getSquadWithInvalidUpgradesRemoved(initialSquad, dependenciesConfig);
-
-      expect(getSquadPilotWithUpgradeRemovedMock).toHaveBeenCalledTimes(1);
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).toHaveBeenCalledTimes(1);
       expect(result).toEqual(squadWithUpgradeRemoved);
     });
     it("should remove only remove invalid upgrade", () => {
@@ -1213,27 +1201,267 @@ describe("squadContext", () => {
         squadPilots: [squadPilotWithUpgradeRemoved],
       };
 
-      const getSquadPilotWithUpgradeRemovedMock = jest.fn().mockReturnValue(squadPilotWithUpgradeRemoved);
-      const isUpgradeAllowedMock = jest.fn().mockReturnValue(true);
-      const maxUpgradeExceededMock = jest.fn().mockReturnValue(false).mockReturnValueOnce(true);
+      const depsConfig = getMockDeps();
+      depsConfig.getSquadPilotWithUpgradeRemovedFn.mockReturnValue(squadPilotWithUpgradeRemoved);
+      depsConfig.maxUpgradeExceededFn.mockReturnValueOnce(true);
 
-      const dependenciesConfig = {
-        getSquadPilotWithUpgradeRemovedFn: getSquadPilotWithUpgradeRemovedMock,
-        isUpgradeAllowedFn: isUpgradeAllowedMock,
-        maxUpgradeExceededFn: maxUpgradeExceededMock,
-      };
+      const result = getSquadWithInvalidUpgradesRemoved(initialSquad, depsConfig);
 
-      const result = getSquadWithInvalidUpgradesRemoved(initialSquad, dependenciesConfig);
-
-      expect(getSquadPilotWithUpgradeRemovedMock).toHaveBeenCalledTimes(1);
-      expect(getSquadPilotWithUpgradeRemovedMock).toHaveBeenCalledWith(
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).toHaveBeenCalledTimes(1);
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).toHaveBeenCalledWith(
         initialSquadPilot.upgrades[1],
         initialSquadPilot,
       );
       expect(result).toEqual(squadWithUpgradeRemoved);
     });
-    // with multiple pilots... removes invalid upgrades from both...or maybe just one? decide what to test...
-    // max upgrade exceeded causes upgrades to be removed from the back of the list, not front
-    // when removing one upgrade makes another invalid, forces other one to be removed too
+    it("should remove invalid upgrades from multiple pilots", () => {
+      const firstPilotUpgrade: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Torpedo1",
+        slot: "Torpedo",
+        upgrade: {
+          name: "Proton Torpedo",
+          id: 12312,
+          slot: "Torpedo",
+        },
+      };
+      const firstPilot: SquadPilot = {
+        squadPilotId: "pilot 1",
+        upgrades: [firstPilotUpgrade],
+      } as SquadPilot;
+
+      const secondPilotUpgrade: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Missile1",
+        slot: "Missile",
+        upgrade: {
+          name: "Discord Missiles",
+          id: 234324,
+          slot: "Missile",
+        },
+      };
+      const secondPilot: SquadPilot = {
+        squadPilotId: "pilot 2",
+        upgrades: [secondPilotUpgrade],
+      } as SquadPilot;
+
+      const initialSquad: Squad = {
+        name: "test",
+        faction: "Rebel Alliance",
+        squadPilots: [firstPilot, secondPilot],
+      };
+
+      const firstPilotWithUpgradeRemoved = {
+        ...firstPilot,
+        upgrades: [
+          {
+            ...firstPilotUpgrade,
+            upgrade: null,
+          },
+        ],
+      };
+
+      const secondPilotWithUpgradeRemoved = {
+        ...secondPilot,
+        upgrades: [
+          {
+            ...secondPilotUpgrade,
+            upgrade: null,
+          },
+        ],
+      };
+
+      const squadAfterRemovingBadUpgrades = {
+        ...initialSquad,
+        squadPilots: [firstPilotWithUpgradeRemoved, secondPilotWithUpgradeRemoved],
+      };
+
+      const depsConfig = getMockDeps();
+      depsConfig.isUpgradeAllowedFn.mockReturnValue(false);
+      depsConfig.getSquadPilotWithUpgradeRemovedFn.mockReturnValueOnce(secondPilotWithUpgradeRemoved);
+      depsConfig.getSquadPilotWithUpgradeRemovedFn.mockReturnValueOnce(firstPilotWithUpgradeRemoved);
+
+      const result = getSquadWithInvalidUpgradesRemoved(initialSquad, depsConfig);
+
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).toHaveBeenCalledTimes(2);
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).toHaveBeenNthCalledWith(
+        1,
+        secondPilot.upgrades[0],
+        secondPilot,
+      );
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).toHaveBeenNthCalledWith(
+        2,
+        firstPilot.upgrades[0],
+        firstPilot,
+      );
+      expect(result.squadPilots[0]).toBe(firstPilotWithUpgradeRemoved);
+      expect(result.squadPilots[1]).toBe(secondPilotWithUpgradeRemoved);
+      expect(result).toEqual(squadAfterRemovingBadUpgrades);
+    });
+    it("should remove invalid upgrades (max exceeded in particular) from the more recently added pilots in squad first", () => {
+      const upgradeThatIsOverLimit: Upgrade = {
+        name: "Discord Missiles",
+        id: 12312,
+        slot: "Missle",
+      };
+      const firstPilotUpgrade: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Missile1",
+        slot: "Missile",
+        upgrade: upgradeThatIsOverLimit,
+      };
+      const firstPilot: SquadPilot = {
+        squadPilotId: "pilot 1",
+        upgrades: [firstPilotUpgrade],
+      } as SquadPilot;
+
+      const secondPilotUpgrade: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Missile1",
+        slot: "Missile",
+        upgrade: upgradeThatIsOverLimit,
+      };
+      const secondPilot: SquadPilot = {
+        squadPilotId: "pilot 2",
+        upgrades: [secondPilotUpgrade],
+      } as SquadPilot;
+
+      const initialSquad: Squad = {
+        name: "test",
+        faction: "Rebel Alliance",
+        squadPilots: [firstPilot, secondPilot],
+      };
+
+      const secondPilotWithUpgradeRemoved = {
+        ...secondPilot,
+        upgrades: [
+          {
+            ...secondPilotUpgrade,
+            upgrade: null,
+          },
+        ],
+      };
+
+      const squadAfterRemovingBadUpgrades = {
+        ...initialSquad,
+        squadPilots: [firstPilot, secondPilotWithUpgradeRemoved],
+      };
+
+      const depsConfig = getMockDeps();
+      depsConfig.maxUpgradeExceededFn.mockReturnValueOnce(true);
+      depsConfig.getSquadPilotWithUpgradeRemovedFn.mockReturnValueOnce(secondPilotWithUpgradeRemoved);
+
+      const result = getSquadWithInvalidUpgradesRemoved(initialSquad, depsConfig);
+
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).toHaveBeenCalledTimes(1);
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).toHaveBeenCalledWith(secondPilot.upgrades[0], secondPilot);
+      expect(result.squadPilots[0]).toBe(firstPilot);
+      expect(result.squadPilots[1]).toBe(secondPilotWithUpgradeRemoved);
+      expect(result).toEqual(squadAfterRemovingBadUpgrades);
+    });
+    it("should remove upgrades that become invalid after removing pre-requisite upgrades", () => {
+      const upgradeThatWillGetRemovedInitially: Upgrade = {
+        name: "required upgrade (Ezra)",
+        id: 12312,
+        slot: "Gunner",
+      };
+      const upgradeThatRequiresTheOtherOne: Upgrade = {
+        name: "dependent upgrade (Maul)",
+        id: 1231234,
+        slot: "Crew",
+      };
+      const upgradeSlotThatWillBeEmptied: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Gunner1",
+        slot: "Gunner",
+        upgrade: upgradeThatWillGetRemovedInitially,
+      };
+      const firstPilot: SquadPilot = {
+        squadPilotId: "pilot 1",
+        upgrades: [upgradeSlotThatWillBeEmptied],
+      } as SquadPilot;
+
+      const dependentUpgradeSlot: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Crew1",
+        slot: "Crew",
+        upgrade: upgradeThatRequiresTheOtherOne,
+      };
+      const secondPilot: SquadPilot = {
+        squadPilotId: "pilot 2",
+        upgrades: [dependentUpgradeSlot],
+      } as SquadPilot;
+
+      const initialSquad: Squad = {
+        name: "test",
+        faction: "Rebel Alliance",
+        squadPilots: [firstPilot, secondPilot],
+      };
+
+      const firstPilotWithUpgradeRemoved = {
+        ...firstPilot,
+        upgrades: [
+          {
+            ...upgradeSlotThatWillBeEmptied,
+            upgrade: null,
+          },
+        ],
+      };
+      const secondPilotWithUpgradeRemoved = {
+        ...secondPilot,
+        upgrades: [
+          {
+            ...dependentUpgradeSlot,
+            upgrade: null,
+          },
+        ],
+      };
+
+      const squadAfterRemovingBadUpgrades = {
+        ...initialSquad,
+        squadPilots: [firstPilotWithUpgradeRemoved, secondPilotWithUpgradeRemoved],
+      };
+
+      const depsConfig = getMockDeps();
+      depsConfig.maxUpgradeExceededFn.mockImplementation((upgradeRecord: Upgrade, squad: Squad) => {
+        if (upgradeRecord === upgradeSlotThatWillBeEmptied.upgrade) {
+          return true;
+        }
+        return false;
+      });
+      depsConfig.isUpgradeAllowedFn.mockImplementation(
+        (upgradeSlot: SquadPilotUpgradeSlot, upgradeRecord: Upgrade, squadPilot: SquadPilot, squad: Squad): boolean => {
+          if (squad.squadPilots[0].upgrades[0].upgrade === upgradeSlotThatWillBeEmptied.upgrade) {
+            return true;
+          }
+          // second upgrade will no longer be allowed once first one is gone
+          return false;
+        },
+      );
+      depsConfig.getSquadPilotWithUpgradeRemovedFn.mockImplementation(
+        (upgradeSlot: SquadPilotUpgradeSlot, squadPilot: SquadPilot): SquadPilot => {
+          return {
+            ...squadPilot,
+            upgrades: squadPilot.upgrades.map((squadPilotUpgrade): SquadPilotUpgradeSlot => {
+              return {
+                ...squadPilotUpgrade,
+                upgrade: null,
+              };
+            }),
+          };
+        },
+      );
+
+      const result = getSquadWithInvalidUpgradesRemoved(initialSquad, depsConfig);
+
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).toHaveBeenCalledTimes(2);
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).toHaveBeenNthCalledWith(
+        1,
+        firstPilot.upgrades[0],
+        firstPilot,
+      );
+      expect(depsConfig.getSquadPilotWithUpgradeRemovedFn).toHaveBeenNthCalledWith(
+        2,
+        secondPilot.upgrades[0],
+        secondPilot,
+      );
+      expect(result.squadPilots[0]).toEqual(firstPilotWithUpgradeRemoved);
+      expect(result.squadPilots[1]).toEqual(secondPilotWithUpgradeRemoved);
+      expect(result).toEqual(squadAfterRemovingBadUpgrades);
+    });
   });
 });
