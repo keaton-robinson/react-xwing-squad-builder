@@ -524,12 +524,7 @@ function getSquadPilotUpgrades(params: {
 }
 
 //returns cheapest pilot in-faction that hasn't been selected max-times or selected elsewhere with uniqueness
-export function getCheapestAvailablePilotForShip(
-  shipName: ShipName,
-  squad: Squad,
-  upgradesData: Upgrade[],
-  pilotsData: Pilot[],
-): Pilot {
+export function getCheapestAvailablePilotForShip(shipName: ShipName, squad: Squad, pilotsData: Pilot[]): Pilot {
   if (!shipName || !squad) {
     throw createError("You must provide shipname and squad to the getCheapestAvailablePilotForShip function.", {
       shipValue: shipName,

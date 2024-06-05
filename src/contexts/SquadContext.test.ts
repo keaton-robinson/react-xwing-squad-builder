@@ -10,6 +10,8 @@ import {
   getSquadPilotWithMultipleUpgradesSet,
   getSquadWithInvalidUpgradesRemoved,
   SquadsReducerDeps,
+  GetUpdatedSquadDeps,
+  SquadsDispatchAction,
 } from "./SquadContext";
 
 describe("SquadContext", () => {
@@ -76,7 +78,24 @@ describe("SquadContext", () => {
         expect(result.name).toEqual(newName);
       });
     });
-    describe("addShip", () => {});
+    describe("addShip", () => {
+      // it("should get the cheapest pilot, add it, remove invalid upgrades from the squad, then return the squad with the new pilot in it", () => {
+      //   // const depsConfig: GetUpdatedSquadDeps = {
+      //   //   getCheapestAvailablePilotForShipFn: jest.fn(),
+      //   //   getSquadPilotShipFn: jest.fn(),
+      //   //   getSquadWithInvalidUpgradesRemovedFn: jest.fn(),
+      //   // };
+      //   // const dispatchAction: SquadsDispatchAction = {
+      //   //   type: "addShip",
+      //   //   newShip: null,
+      //   //   pilotsData: null,
+      //   //   shipsData: null,
+      //   //   squad: null,
+      //   //   upgradesData: null,
+      //   // };
+      //   // const result = getUpdatedSquad(initialSquadsState[0]);
+      // });
+    });
   });
   describe("getSquadPilotWithUpgradeRemoved", () => {
     it("should return squadPilot when upgrade is already unset", () => {
