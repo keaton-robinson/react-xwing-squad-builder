@@ -9,26 +9,61 @@ import {
   getEmptyFactionSquad,
   getSquadPilotWithMultipleUpgradesSet,
   getSquadWithInvalidUpgradesRemoved,
+  SquadsReducerDeps,
 } from "./SquadContext";
 
-describe("squadContext", () => {
-  it("should only update the specified squad", () => {
-    const newName = "RENAMED_SQUAD";
+describe("SquadContext", () => {
+  describe("squadsReducer", () => {
+    it("should only update the specified squad", () => {
+      const newName = "RENAMED_SQUAD";
 
-    const result = squadsReducer(initialSquadsState, {
-      type: "renameSquad",
-      squad: initialSquadsState[0],
-      newName: newName,
+      const result = squadsReducer(initialSquadsState, {
+        type: "renameSquad",
+        squad: initialSquadsState.squads[0],
+        newName: newName,
+      });
+
+      expect(result).not.toBe(initialSquadsState);
+      expect(result.squads[0]).not.toEqual(initialSquadsState.squads[0]);
+      expect(result.squads[1]).toBe(initialSquadsState.squads[1]);
     });
+    it("should set error property when getUpdatedSquadFn throws error", () => {
+      const errorMessage = "Test error";
+      const depsConfig: SquadsReducerDeps = {
+        getUpdatedSquadFn: jest.fn().mockImplementation(() => {
+          throw new Error(errorMessage);
+        }),
+      };
 
-    expect(result).not.toBe(initialSquadsState);
-    expect(result[0]).not.toEqual(initialSquadsState[0]);
-    expect(result[1]).toBe(initialSquadsState[1]);
+      const result = squadsReducer(
+        initialSquadsState,
+        { type: "renameSquad", newName: "unused name", squad: initialSquadsState[0] },
+        depsConfig,
+      );
+
+      expect(depsConfig.getUpdatedSquadFn).toThrow();
+      expect(result.squads).toBe(initialSquadsState.squads);
+      expect(result.error).toBe(errorMessage);
+    });
+    it("should clear error property when clearError action is dispatched", () => {
+      const squadsStateWithError = {
+        ...initialSquadsState,
+        error: "test value that should go away after clearing",
+      };
+      const depsConfig: SquadsReducerDeps = {
+        getUpdatedSquadFn: jest.fn(),
+      };
+
+      const result = squadsReducer(squadsStateWithError, { type: "clearError" }, depsConfig);
+
+      expect(result.error).toBe(null);
+      expect(depsConfig.getUpdatedSquadFn).not.toHaveBeenCalled();
+    });
   });
   describe("getUpdatedSquad", () => {
     describe("rename squad", () => {
       it("should rename the squad", () => {
-        const initialRebelSquad = initialSquadsState[0];
+        const initialRebelSquad = initialSquadsState.squads[0];
         const newName = "RENAMED_SQUAD";
         const result = getUpdatedSquad(initialRebelSquad, {
           squad: initialRebelSquad,

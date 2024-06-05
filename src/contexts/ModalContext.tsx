@@ -1,5 +1,6 @@
-import React, { ReactElement, useState, createContext, useContext } from "react";
+import React, { ReactElement, useState, createContext, useContext, useCallback } from "react";
 import ModalContainer from "../components/modals/ModalContainer";
+import { useSquadsDispatch } from "./SquadContext";
 
 interface ModalConfig {
   title: string;
@@ -16,16 +17,26 @@ export const useModalSetter = () => {
 
 const ModalProvider: React.FC<{ children }> = (props) => {
   const [modalToShow, setModalToShow] = useState<ReactElement | null>(null);
+  const squadsDispatch = useSquadsDispatch();
 
-  const setModal = (modalConfig: ModalConfig) => {
-    const newModalToShow = !modalConfig ? null : (
-      <ModalContainer handleClose={() => setModalToShow(null)} headerTitle={modalConfig.title}>
-        {modalConfig.children}
-      </ModalContainer>
-    );
+  const setModal = useCallback(
+    (modalConfig: ModalConfig) => {
+      const newModalToShow = !modalConfig ? null : (
+        <ModalContainer
+          handleClose={() => {
+            setModalToShow(null);
+            squadsDispatch({ type: "clearError" });
+          }}
+          headerTitle={modalConfig.title}
+        >
+          {modalConfig.children}
+        </ModalContainer>
+      );
 
-    setModalToShow(newModalToShow);
-  };
+      setModalToShow(newModalToShow);
+    },
+    [squadsDispatch],
+  );
 
   return (
     <SetModalContext.Provider value={setModal}>

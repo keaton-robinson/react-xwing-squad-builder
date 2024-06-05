@@ -9,11 +9,11 @@ const App: React.FC = () => {
   return (
     <XwingDataProvider>
       <UserProvider>
-        <ModalProvider>
-          <SquadsProvider>
+        <SquadsProvider>
+          <ModalProvider>
             <FactionSelector />
-          </SquadsProvider>
-        </ModalProvider>
+          </ModalProvider>
+        </SquadsProvider>
       </UserProvider>
     </XwingDataProvider>
   );

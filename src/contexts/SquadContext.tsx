@@ -8,7 +8,12 @@ import {
   maxUpgradeExceeded,
 } from "../data/xwing_utils";
 
-const SquadsContext = createContext<ReadonlyArray<Squad>>(null);
+interface SquadsState {
+  error: string;
+  squads: ReadonlyArray<Squad>;
+}
+
+const SquadsContext = createContext<SquadsState>(null);
 const SquadsDispatchContext = createContext<React.Dispatch<SquadsDispatchAction>>(null);
 
 export function useSquads() {
@@ -30,6 +35,7 @@ export const SquadsProvider = ({ children }) => {
 };
 
 type SquadsDispatchAction =
+  | { type: "clearError" }
   | { type: "renameSquad"; squad: Squad; newName: string }
   | {
       type: "addShip";
@@ -90,13 +96,37 @@ type SquadsDispatchAction =
       loadedSquadName: string;
     };
 
-export const squadsReducer = (squads: ReadonlyArray<Squad>, action: SquadsDispatchAction): ReadonlyArray<Squad> => {
+export interface SquadsReducerDeps {
+  getUpdatedSquadFn?: getUpdatedSquadSignature;
+}
+export const squadsReducer = (
+  state: SquadsState,
+  action: SquadsDispatchAction,
+  { getUpdatedSquadFn = getUpdatedSquad }: SquadsReducerDeps = {},
+): SquadsState => {
   // console.log(`Squades reducer called with ${action.type} action`);
-  let updatedSquad = getUpdatedSquad(action.squad, action);
-  return squads.map((squadInState) => (action.squad !== squadInState ? squadInState : updatedSquad));
+  if (action.type === "clearError") {
+    return {
+      ...state,
+      error: null,
+    };
+  }
+  try {
+    const updatedSquad = getUpdatedSquadFn(action.squad, action);
+    return {
+      ...state,
+      squads: state.squads.map((squadInState) => (action.squad !== squadInState ? squadInState : updatedSquad)),
+    };
+  } catch (errorObj) {
+    return {
+      ...state,
+      error: errorObj.message,
+    };
+  }
 };
 
-export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squad => {
+type getUpdatedSquadSignature = (squad: Squad, action: SquadsDispatchAction) => Squad;
+export const getUpdatedSquad: getUpdatedSquadSignature = (squad, action) => {
   switch (action.type) {
     case "renameSquad":
       return {
@@ -118,8 +148,7 @@ export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squ
         };
         return getSquadWithInvalidUpgradesRemoved(squadWithNewPilot);
       }
-      alert(`No pilot available for ${action.newShip}`);
-      return squad;
+      throw new Error(`No pilot available for ${action.newShip}`);
     }
     case "changeShip": {
       const cheapestAvailablePilot = getCheapestAvailablePilotForShip(
@@ -141,8 +170,7 @@ export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squ
           ),
         });
       }
-      alert(`No pilot available for ${action.newShip}`);
-      return squad;
+      throw new Error(`No pilot available for ${action.newShip}`);
     }
     case "clonePilot": {
       let squadPilot;
@@ -165,8 +193,7 @@ export const getUpdatedSquad = (squad: Squad, action: SquadsDispatchAction): Squ
         if (cheapestAvailablePilot) {
           squadPilot = getSquadPilotShip(cheapestAvailablePilot, action.shipsData, action.upgradesData);
         } else {
-          alert(`No pilot available for ${action.pilotToClone.ship}`);
-          return squad;
+          throw new Error(`No pilot available for ${action.pilotToClone.ship}`);
         }
       }
 
@@ -506,4 +533,7 @@ export const getEmptyFactionSquad = (factionName): Squad => {
   };
 };
 
-export const initialSquadsState: Squad[] = factionsOrdered.map(getEmptyFactionSquad);
+export const initialSquadsState: SquadsState = {
+  error: null,
+  squads: factionsOrdered.map(getEmptyFactionSquad),
+};
