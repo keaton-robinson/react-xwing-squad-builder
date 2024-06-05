@@ -1,4 +1,4 @@
-import { Faction, Squad, SquadPilot, SquadPilotUpgradeSlot, UniqueKey, Upgrade } from "../data/xwing_types";
+import { Faction, Pilot, Squad, SquadPilot, SquadPilotUpgradeSlot, UniqueKey, Upgrade } from "../data/xwing_types";
 import {
   squadsReducer,
   getUpdatedSquad,
@@ -10,7 +10,6 @@ import {
   getSquadPilotWithMultipleUpgradesSet,
   getSquadWithInvalidUpgradesRemoved,
   SquadsReducerDeps,
-  GetUpdatedSquadDeps,
   SquadsDispatchAction,
 } from "./SquadContext";
 
@@ -79,22 +78,72 @@ describe("SquadContext", () => {
       });
     });
     describe("addShip", () => {
-      // it("should get the cheapest pilot, add it, remove invalid upgrades from the squad, then return the squad with the new pilot in it", () => {
-      //   // const depsConfig: GetUpdatedSquadDeps = {
-      //   //   getCheapestAvailablePilotForShipFn: jest.fn(),
-      //   //   getSquadPilotShipFn: jest.fn(),
-      //   //   getSquadWithInvalidUpgradesRemovedFn: jest.fn(),
-      //   // };
-      //   // const dispatchAction: SquadsDispatchAction = {
-      //   //   type: "addShip",
-      //   //   newShip: null,
-      //   //   pilotsData: null,
-      //   //   shipsData: null,
-      //   //   squad: null,
-      //   //   upgradesData: null,
-      //   // };
-      //   // const result = getUpdatedSquad(initialSquadsState[0]);
-      // });
+      const initialSquad = initialSquadsState.squads[0];
+      const dispatchAction: SquadsDispatchAction = {
+        type: "addShip",
+        newShip: "test ship",
+        squad: initialSquad,
+      };
+
+      const getMockDeps = () => {
+        const deps = {
+          getCheapestAvailablePilotForShipFn: jest.fn(),
+          getSquadPilotShipFn: jest.fn(),
+          getSquadWithInvalidUpgradesRemovedFn: jest.fn(),
+        };
+        return deps;
+      };
+
+      it("should get the cheapest pilot, add it, remove invalid upgrades from the squad, then return the squad with the new pilot in it", () => {
+        const cheapPilotStub: Pilot = {
+          name: "cheapo",
+          id: 12312,
+          faction: "Rebel Alliance",
+          ship: "xwing",
+          skill: 1,
+          points: 45,
+          slots: [],
+        };
+        const squadPilotStub: Partial<SquadPilot> = {
+          squadPilotId: undefined,
+          pilotName: cheapPilotStub.name,
+          upgrades: [],
+        };
+        const squadWithPilotAddedStub: Squad = {
+          ...initialSquad,
+          squadPilots: [...initialSquad.squadPilots, squadPilotStub as SquadPilot],
+        };
+        const validatedSquadStub: Squad = { ...squadWithPilotAddedStub };
+        const depsConfig = getMockDeps();
+        depsConfig.getCheapestAvailablePilotForShipFn.mockReturnValue(cheapPilotStub);
+        depsConfig.getSquadPilotShipFn.mockReturnValue(squadPilotStub);
+        depsConfig.getSquadWithInvalidUpgradesRemovedFn.mockReturnValue(validatedSquadStub);
+
+        const result = getUpdatedSquad(initialSquad, dispatchAction, depsConfig);
+
+        expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenCalledWith(
+          dispatchAction.newShip,
+          dispatchAction.squad,
+        );
+        expect(depsConfig.getSquadPilotShipFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getSquadPilotShipFn).toHaveBeenCalledWith(cheapPilotStub);
+        expect(depsConfig.getSquadWithInvalidUpgradesRemovedFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getSquadWithInvalidUpgradesRemovedFn).toHaveBeenCalledWith(squadWithPilotAddedStub);
+        expect(result).toBe(validatedSquadStub);
+        expect(result).not.toBe(squadWithPilotAddedStub);
+      });
+      it("should throw error when no pilots remain available for the ship", () => {
+        const depsConfig = getMockDeps();
+        depsConfig.getCheapestAvailablePilotForShipFn.mockReturnValue(null);
+
+        expect(() => getUpdatedSquad(initialSquad, dispatchAction, depsConfig)).toThrow();
+        expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenLastCalledWith(
+          dispatchAction.newShip,
+          dispatchAction.squad,
+        );
+      });
     });
   });
   describe("getSquadPilotWithUpgradeRemoved", () => {

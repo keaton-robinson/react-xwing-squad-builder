@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer } from "react";
-import { Faction, Pilot, Ship, ShipName, Squad, SquadPilot, SquadPilotUpgradeSlot, Upgrade } from "../data/xwing_types";
+import { Faction, Pilot, ShipName, Squad, SquadPilot, SquadPilotUpgradeSlot, Upgrade } from "../data/xwing_types";
 import {
   getCheapestAvailablePilotForShip,
   getSquadPilotShip,
