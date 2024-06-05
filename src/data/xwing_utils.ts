@@ -1,5 +1,5 @@
+import { pilots, ships, upgrades } from "./xwing_data";
 import {
-  Ship,
   ShipName,
   Pilot,
   Upgrade,
@@ -444,8 +444,8 @@ export function isUpgradeAllowedByRestrictions(
   return true;
 }
 
-export function getSquadPilotShip(pilot: Pilot, shipsData: Record<string, Ship>, upgradesData: Upgrade[]): SquadPilot {
-  const shipForPilot = shipsData[pilot.ship];
+export function getSquadPilotShip(pilot: Pilot): SquadPilot {
+  const shipForPilot = ships[pilot.ship];
   if (!shipForPilot) {
     throw createError(`Couldn't find ship for pilot: ${pilot.name}`, {
       pilotVal: pilot,
@@ -480,18 +480,13 @@ export function getSquadPilotShip(pilot: Pilot, shipsData: Record<string, Ship>,
     upgrades: getSquadPilotUpgrades({
       pilot,
       autoEquip: shipForPilot.autoequip,
-      upgradesData,
     }),
   };
 
   return squadPilot;
 }
 
-function getSquadPilotUpgrades(params: {
-  pilot: BasePilot;
-  upgradesData: Upgrade[];
-  autoEquip?: string[];
-}): SquadPilotUpgradeSlot[] {
+function getSquadPilotUpgrades(params: { pilot: BasePilot; autoEquip?: string[] }): SquadPilotUpgradeSlot[] {
   let slotNameUsedTracker = {};
   let newSelectedUpgrades = params.pilot.slots.map((slotName): SquadPilotUpgradeSlot => {
     // this won't handle slots that are added by titles or configurations...maybe don't copy titles or "unique" upgrades
@@ -509,7 +504,7 @@ function getSquadPilotUpgrades(params: {
       return {
         squadPilotUpgradeSlotKey: slotKey,
         slot: slotName,
-        upgrade: params.upgradesData.find((upgradeRecord) => upgradeRecord.name === params.autoEquip[0]),
+        upgrade: upgrades.find((upgradeRecord) => upgradeRecord.name === params.autoEquip[0]),
       };
     }
 
@@ -524,7 +519,7 @@ function getSquadPilotUpgrades(params: {
 }
 
 //returns cheapest pilot in-faction that hasn't been selected max-times or selected elsewhere with uniqueness
-export function getCheapestAvailablePilotForShip(shipName: ShipName, squad: Squad, pilotsData: Pilot[]): Pilot {
+export function getCheapestAvailablePilotForShip(shipName: ShipName, squad: Squad): Pilot {
   if (!shipName || !squad) {
     throw createError("You must provide shipname and squad to the getCheapestAvailablePilotForShip function.", {
       shipValue: shipName,
@@ -532,7 +527,7 @@ export function getCheapestAvailablePilotForShip(shipName: ShipName, squad: Squa
     });
   }
 
-  const availablePilotsForShip = pilotsData.filter(
+  const availablePilotsForShip = pilots.filter(
     (pilot) => pilot.ship === shipName && pilot.faction === squad.faction && !maxPilotReached(pilot, squad),
   );
 

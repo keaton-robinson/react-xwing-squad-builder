@@ -56,9 +56,6 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
         squad: props.squad,
         currentPilot: props.selectedPilot,
         newShip: selectedRecord.value,
-        upgradesData: upgrades,
-        pilotsData: pilots,
-        shipsData: ships,
       });
     }
   };
@@ -70,8 +67,6 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
         squad: props.squad,
         currentPilot: props.selectedPilot,
         newPilot: selectedRecord.pilotRecord,
-        upgradesData: upgrades,
-        shipsData: ships,
       });
     }
   };
@@ -86,7 +81,7 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
 
   const handlePilotMouseEnter = (pilotDropDownItem: { label: string; value: number; pilotRecord: Pilot }) => {
     props.onRecordMouseEnter({
-      cardData: getSquadPilotShip(pilotDropDownItem.pilotRecord, ships, upgrades),
+      cardData: getSquadPilotShip(pilotDropDownItem.pilotRecord),
       type: "Pilot",
     });
   };
@@ -115,9 +110,6 @@ const PilotRowCpt: React.FC<PilotRowCptProps> = (props) => {
       type: "clonePilot",
       squad: props.squad,
       pilotToClone: props.selectedPilot,
-      pilotsData: pilots,
-      shipsData: ships,
-      upgradesData: upgrades,
     });
   };
 

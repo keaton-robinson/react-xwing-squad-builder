@@ -41,26 +41,17 @@ export type SquadsDispatchAction =
       type: "addShip";
       squad: Squad;
       newShip: ShipName;
-      shipsData: Record<string, Ship>;
-      upgradesData: Upgrade[];
-      pilotsData: Pilot[];
     }
   | {
       type: "changeShip";
       squad: Squad;
       currentPilot: SquadPilot;
       newShip: ShipName;
-      shipsData: Record<string, Ship>;
-      upgradesData: Upgrade[];
-      pilotsData: Pilot[];
     }
   | {
       type: "clonePilot";
       squad: Squad;
       pilotToClone: SquadPilot;
-      shipsData: Record<string, Ship>;
-      upgradesData: Upgrade[];
-      pilotsData: Pilot[];
     }
   | { type: "removeFromSquad"; squad: Squad; pilotToRemove: SquadPilot }
   | {
@@ -68,8 +59,6 @@ export type SquadsDispatchAction =
       squad: Squad;
       currentPilot: SquadPilot;
       newPilot: Pilot;
-      upgradesData: Upgrade[];
-      shipsData: Record<string, Ship>;
     }
   | {
       type: "changeUpgrade";
@@ -154,13 +143,9 @@ export const getUpdatedSquad = (
         name: action.newName,
       };
     case "addShip": {
-      const cheapestAvailablePilot = getCheapestAvailablePilotForShipFn(
-        action.newShip,
-        action.squad,
-        action.pilotsData,
-      );
+      const cheapestAvailablePilot = getCheapestAvailablePilotForShipFn(action.newShip, action.squad);
       if (cheapestAvailablePilot) {
-        const squadPilot = getSquadPilotShipFn(cheapestAvailablePilot, action.shipsData, action.upgradesData);
+        const squadPilot = getSquadPilotShipFn(cheapestAvailablePilot);
         const squadWithNewPilot = {
           ...squad,
           squadPilots: [...squad.squadPilots, squadPilot],
@@ -170,13 +155,9 @@ export const getUpdatedSquad = (
       throw new Error(`No pilot available for ${action.newShip}`);
     }
     case "changeShip": {
-      const cheapestAvailablePilot = getCheapestAvailablePilotForShipFn(
-        action.newShip,
-        action.squad,
-        action.pilotsData,
-      );
+      const cheapestAvailablePilot = getCheapestAvailablePilotForShipFn(action.newShip, action.squad);
       if (cheapestAvailablePilot) {
-        let replacementPilot = getSquadPilotShipFn(cheapestAvailablePilot, action.shipsData, action.upgradesData);
+        let replacementPilot = getSquadPilotShipFn(cheapestAvailablePilot);
         const upgradesToCopy = getUpgradesOnSquadPilotFn(action.currentPilot);
 
         replacementPilot = getSquadPilotWithMultipleUpgradesSetFn(upgradesToCopy, replacementPilot);
@@ -199,16 +180,12 @@ export const getUpdatedSquad = (
       };
 
       if (!maxPilotReached(pilot, action.squad)) {
-        squadPilot = getSquadPilotShipFn(pilot, action.shipsData, action.upgradesData);
+        squadPilot = getSquadPilotShipFn(pilot);
       } else {
-        const cheapestAvailablePilot = getCheapestAvailablePilotForShipFn(
-          action.pilotToClone.ship,
-          action.squad,
-          action.pilotsData,
-        );
+        const cheapestAvailablePilot = getCheapestAvailablePilotForShipFn(action.pilotToClone.ship, action.squad);
 
         if (cheapestAvailablePilot) {
-          squadPilot = getSquadPilotShipFn(cheapestAvailablePilot, action.shipsData, action.upgradesData);
+          squadPilot = getSquadPilotShipFn(cheapestAvailablePilot);
         } else {
           throw new Error(`No pilot available for ${action.pilotToClone.ship}`);
         }
@@ -232,7 +209,7 @@ export const getUpdatedSquad = (
         ),
       });
     case "changePilot":
-      let replacementPilot: SquadPilot = getSquadPilotShipFn(action.newPilot, action.shipsData, action.upgradesData);
+      let replacementPilot: SquadPilot = getSquadPilotShipFn(action.newPilot);
 
       const upgradesToCopy: Upgrade[] = getUpgradesOnSquadPilotFn(action.currentPilot);
       replacementPilot = getSquadPilotWithMultipleUpgradesSetFn(upgradesToCopy, replacementPilot);

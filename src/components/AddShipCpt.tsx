@@ -32,9 +32,6 @@ const AddShipCpt: React.FC<AddShipCptProps> = (props) => {
         type: "addShip",
         squad: props.squad,
         newShip: selectedDropDownOption.value,
-        pilotsData: pilots,
-        shipsData: ships,
-        upgradesData: upgrades,
       });
 
       ddlAddShipRef.current.clearSelection(); //tell parent component about new ship, but reset this dropdown's value to "none"
