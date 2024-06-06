@@ -333,6 +333,285 @@ describe("SquadContext", () => {
         expect(result).toEqual(nonvalidatedSquadWithClone);
       });
     });
+    describe("removeFromSquad", () => {
+      const aPilot: SquadPilot = {
+        squadPilotId: "aPilot" as UniqueKey,
+        upgrades: [],
+      } as SquadPilot;
+
+      const anotherPilot: SquadPilot = {
+        squadPilotId: "anotherPilot" as UniqueKey,
+        upgrades: [],
+      } as SquadPilot;
+
+      const pilotToRemove: SquadPilot = {
+        squadPilotId: "pilotToRemove" as UniqueKey,
+        upgrades: [],
+      } as SquadPilot;
+
+      const initialSquad: Squad = {
+        name: "test",
+        faction: "Rebel Alliance",
+        squadPilots: [aPilot, pilotToRemove, anotherPilot],
+      };
+      const removeFromSquadDispatch: SquadsDispatchAction = {
+        type: "removeFromSquad",
+        pilotToRemove: pilotToRemove,
+        squad: initialSquad,
+      };
+      it("should remove pilot from squad, then remove invalidated upgrades and return result", () => {
+        const squadWithChosenPilotRemoved: Squad = {
+          ...initialSquad,
+          squadPilots: [aPilot, anotherPilot],
+        };
+        const squadWithInvalidUpgradesRemoved: Squad = {
+          ...squadWithChosenPilotRemoved,
+          squadPilots: [...squadWithChosenPilotRemoved.squadPilots],
+        };
+
+        const depsConfig = getMockUpdateSquadDeps();
+        depsConfig.getSquadWithInvalidUpgradesRemovedFn.mockReturnValue(squadWithInvalidUpgradesRemoved);
+
+        const result = getUpdatedSquad(initialSquad, removeFromSquadDispatch, depsConfig);
+
+        expect(depsConfig.getSquadWithInvalidUpgradesRemovedFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getSquadWithInvalidUpgradesRemovedFn).toHaveBeenCalledWith(
+          expect.objectContaining(squadWithChosenPilotRemoved),
+        );
+        expect(result).toBe(squadWithInvalidUpgradesRemoved);
+      });
+    });
+    describe("changePilot", () => {
+      const initialSquadPilot: SquadPilot = {
+        squadPilotId: "initial pilot" as UniqueKey,
+        pilotId: 1,
+        pilotName: "initial pilot",
+      } as SquadPilot;
+      const anotherPilotToNotTouch: SquadPilot = {
+        squadPilotId: "dont touch me" as UniqueKey,
+        pilotId: 9,
+        pilotName: "I should still be in squad pilots when you're done",
+      } as SquadPilot;
+      const initialSquad: Squad = {
+        name: "test squad",
+        faction: "Rebel Alliance",
+        squadPilots: [initialSquadPilot, anotherPilotToNotTouch],
+      };
+      const pilotToSwitchTo: Pilot = {
+        name: "new pilot",
+        id: 2,
+      } as Pilot;
+      const changePilotDispatchAction: SquadsDispatchAction = {
+        type: "changePilot",
+        currentPilot: initialSquadPilot,
+        newPilot: pilotToSwitchTo,
+        squad: initialSquad,
+      };
+      it("gets new squadPilot, applies upgrades to it, removes invalidated upgrades, and returns final result", () => {
+        const newSquadPilotStub: SquadPilot = {
+          squadPilotId: "new pilot" as UniqueKey,
+          pilotId: pilotToSwitchTo.id,
+          pilotName: pilotToSwitchTo.name,
+        } as SquadPilot;
+        const upgradesFromOldPilotStub: Upgrade[] = [];
+        const newPilotWithUpgradesSet: SquadPilot = {
+          ...newSquadPilotStub,
+          upgrades: [],
+        };
+        const unvalidatedSquadWithNewPilot: Squad = {
+          ...initialSquad,
+          squadPilots: [newPilotWithUpgradesSet, anotherPilotToNotTouch],
+        };
+
+        const validatedSquadStub = {
+          ...unvalidatedSquadWithNewPilot,
+          squadPilots: [...unvalidatedSquadWithNewPilot.squadPilots],
+        };
+
+        const depsConfig = getMockUpdateSquadDeps();
+        depsConfig.getSquadPilotShipFn.mockReturnValue(newSquadPilotStub);
+        depsConfig.getUpgradesOnSquadPilotFn.mockReturnValue(upgradesFromOldPilotStub);
+        depsConfig.getSquadPilotWithMultipleUpgradesSetFn.mockReturnValue(newPilotWithUpgradesSet);
+        depsConfig.getSquadWithInvalidUpgradesRemovedFn.mockReturnValue(validatedSquadStub);
+
+        const result = getUpdatedSquad(initialSquad, changePilotDispatchAction, depsConfig);
+
+        expect(depsConfig.getSquadPilotShipFn).toHaveBeenCalledWith(changePilotDispatchAction.newPilot);
+        expect(depsConfig.getUpgradesOnSquadPilotFn).toHaveBeenCalledWith(changePilotDispatchAction.currentPilot);
+        expect(depsConfig.getSquadPilotWithMultipleUpgradesSetFn).toHaveBeenLastCalledWith(
+          upgradesFromOldPilotStub,
+          newSquadPilotStub,
+        );
+        expect(depsConfig.getSquadWithInvalidUpgradesRemovedFn).toHaveBeenCalledWith(unvalidatedSquadWithNewPilot);
+        expect(result).toBe(validatedSquadStub);
+      });
+    });
+    describe("changeUpgrade", () => {
+      const proTorpUpgrade: Upgrade = {
+        name: "Proton Torpedoes Test",
+        id: 8232,
+        slot: "Torpedo",
+      };
+      const advTorpUpgrade: Upgrade = {
+        name: "Advanced Torpedoes Test",
+        id: 8231232132,
+        slot: "Torpedo",
+      };
+      const vectoredCannonsUpgrade: Upgrade = {
+        name: "Vectored Cannons test",
+        id: 1238982,
+        slot: "Configuration",
+        standardized: true,
+      };
+      const generateSquadPilots = (
+        amount: number,
+        shipName: string,
+        configUpgrade: Upgrade,
+        torpUpgrade: Upgrade,
+      ): SquadPilot[] => {
+        const pilots: SquadPilot[] = [];
+        for (let i = 1; i <= amount; i++) {
+          const pilot: SquadPilot = {
+            squadPilotId: `${shipName}${i}` as UniqueKey,
+            upgrades: [
+              {
+                squadPilotUpgradeSlotKey: `Configuration1`,
+                slot: "Configuration",
+                upgrade: configUpgrade,
+              },
+              {
+                squadPilotUpgradeSlotKey: `Torpedo1`,
+                slot: "Torpedo",
+                upgrade: torpUpgrade,
+              },
+            ],
+            ship: shipName,
+          } as SquadPilot;
+          pilots.push(pilot);
+        }
+        return pilots;
+      };
+      const initialSquad: Squad = {
+        name: "initial squad",
+        faction: "Rebel Alliance",
+        squadPilots: [
+          ...generateSquadPilots(2, "x-wing", null, proTorpUpgrade),
+          ...generateSquadPilots(2, "a-wing", null, proTorpUpgrade),
+        ],
+      };
+      it("with non standardized upgrades, should change the upgrade on just the squadPilot provided, then return with invalid upgrades removed", () => {
+        const initialSquadPilot = initialSquad.squadPilots[2];
+        const dispatchChangeUpgradeAction: SquadsDispatchAction = {
+          type: "changeUpgrade",
+          squad: initialSquad,
+          newlySelectedUpgrade: advTorpUpgrade,
+          squadPilot: initialSquadPilot,
+          upgradeSlot: initialSquadPilot.upgrades[1],
+        };
+        const squadPilotWithUpgradeChangedStub = {
+          ...initialSquadPilot,
+          upgrades: [
+            initialSquadPilot.upgrades[0],
+            {
+              ...initialSquadPilot.upgrades[1],
+              upgrade: advTorpUpgrade,
+            },
+          ],
+        };
+        const nonValidatedSquadWithNewUpgradeapplied: Squad = {
+          ...initialSquad,
+          squadPilots: [
+            initialSquad.squadPilots[0],
+            initialSquad.squadPilots[1],
+            squadPilotWithUpgradeChangedStub,
+            initialSquad.squadPilots[3],
+          ],
+        };
+        const validatedSquad: Squad = {
+          ...nonValidatedSquadWithNewUpgradeapplied,
+        };
+        const depsConfig = getMockUpdateSquadDeps();
+        depsConfig.getSquadPilotWithUpgradeSetFn.mockReturnValue(squadPilotWithUpgradeChangedStub);
+        depsConfig.getSquadWithInvalidUpgradesRemovedFn.mockReturnValue(validatedSquad);
+        const result = getUpdatedSquad(initialSquad, dispatchChangeUpgradeAction, depsConfig);
+        expect(depsConfig.getSquadPilotWithUpgradeSetFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getSquadPilotWithUpgradeSetFn).toHaveBeenCalledWith(
+          dispatchChangeUpgradeAction.newlySelectedUpgrade,
+          dispatchChangeUpgradeAction.upgradeSlot,
+          dispatchChangeUpgradeAction.squadPilot,
+        );
+        expect(depsConfig.getSquadWithInvalidUpgradesRemovedFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getSquadWithInvalidUpgradesRemovedFn).toHaveBeenCalledWith(
+          expect.objectContaining(nonValidatedSquadWithNewUpgradeapplied),
+        );
+        expect(result).toBe(validatedSquad);
+      });
+      it("with standardized upgrade, should change the upgrade for each squadpilot with same ship in the squad, then return with invalid upgrades removed", () => {
+        const initialSquadPilot = initialSquad.squadPilots[2];
+        const dispatchChangeUpgradeAction: SquadsDispatchAction = {
+          type: "changeUpgrade",
+          squad: initialSquad,
+          newlySelectedUpgrade: vectoredCannonsUpgrade,
+          squadPilot: initialSquadPilot,
+          upgradeSlot: initialSquadPilot.upgrades[0],
+        };
+        const squadPilotWithUpgradeChangedStub = {
+          ...initialSquadPilot,
+          upgrades: [
+            {
+              ...initialSquadPilot.upgrades[0],
+              upgrade: vectoredCannonsUpgrade,
+            },
+            initialSquadPilot.upgrades[1],
+          ],
+        };
+        const otherAWingThatChangedStub = {
+          ...initialSquad.squadPilots[3],
+          ugrades: [
+            {
+              ...initialSquad.squadPilots[3].upgrades[0],
+              upgrade: vectoredCannonsUpgrade,
+            },
+            initialSquad.squadPilots[3].upgrades[1],
+          ],
+        };
+        const nonValidatedSquadWithNewUpgradeapplied: Squad = {
+          ...initialSquad,
+          squadPilots: [
+            initialSquad.squadPilots[0],
+            initialSquad.squadPilots[1],
+            squadPilotWithUpgradeChangedStub,
+            otherAWingThatChangedStub,
+          ],
+        };
+        const validatedSquad: Squad = {
+          ...nonValidatedSquadWithNewUpgradeapplied,
+        };
+        const depsConfig = getMockUpdateSquadDeps();
+        depsConfig.getSquadPilotWithUpgradeSetFn.mockReturnValueOnce(squadPilotWithUpgradeChangedStub);
+        depsConfig.getSquadPilotWithUpgradeSetFn.mockReturnValueOnce(otherAWingThatChangedStub);
+        depsConfig.getSquadWithInvalidUpgradesRemovedFn.mockReturnValue(validatedSquad);
+
+        const result = getUpdatedSquad(initialSquad, dispatchChangeUpgradeAction, depsConfig);
+
+        expect(depsConfig.getSquadPilotWithUpgradeSetFn).toHaveBeenCalledTimes(2);
+        expect(depsConfig.getSquadPilotWithUpgradeSetFn).toHaveBeenCalledWith(
+          dispatchChangeUpgradeAction.newlySelectedUpgrade,
+          dispatchChangeUpgradeAction.upgradeSlot,
+          dispatchChangeUpgradeAction.squadPilot,
+        );
+        expect(depsConfig.getSquadPilotWithUpgradeSetFn).toHaveBeenCalledWith(
+          dispatchChangeUpgradeAction.newlySelectedUpgrade,
+          initialSquad.squadPilots[3].upgrades[0],
+          initialSquad.squadPilots[3],
+        );
+        expect(depsConfig.getSquadWithInvalidUpgradesRemovedFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getSquadWithInvalidUpgradesRemovedFn).toHaveBeenCalledWith(
+          expect.objectContaining(nonValidatedSquadWithNewUpgradeapplied),
+        );
+        expect(result).toBe(validatedSquad);
+      });
+    });
   });
   describe("getSquadPilotWithUpgradeRemoved", () => {
     it("should return squadPilot when upgrade is already unset", () => {

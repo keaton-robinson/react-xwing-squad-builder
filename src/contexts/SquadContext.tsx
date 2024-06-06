@@ -226,7 +226,7 @@ export const getUpdatedSquad = (
     case "changeUpgrade": {
       let pilotsGettingChanged: SquadPilot[];
 
-      // if selected upgrade is standardized...instead of setting upgrade on just this one ship...set it on all ships of the same type in the squad
+      // if selected upgrade is standardized...instead of marking just this ship for changing..mark all ships of the same type in the squad for update
       if (action.newlySelectedUpgrade?.standardized || action.upgradeSlot.upgrade?.standardized) {
         pilotsGettingChanged = action.squad.squadPilots.filter(
           (squadPilot) => squadPilot.ship === action.squadPilot.ship,
@@ -235,6 +235,7 @@ export const getUpdatedSquad = (
         pilotsGettingChanged = [action.squadPilot]; // not standardized. Only changing the specified squad pilot
       }
 
+      // update the pilots that need to be changed
       for (let i = 0; i < pilotsGettingChanged.length; i++) {
         pilotsGettingChanged[i] = getSquadPilotWithUpgradeSetFn(
           action.newlySelectedUpgrade,
@@ -245,6 +246,7 @@ export const getUpdatedSquad = (
         );
       }
 
+      // replace the updated pilots in the squad pilots array
       const squadWithUpgradeChanged: Squad = {
         ...action.squad,
         squadPilots: action.squad.squadPilots.map((squadPilotInState) => {
@@ -258,6 +260,7 @@ export const getUpdatedSquad = (
         }),
       };
 
+      // remove invalid upgrades and return
       return getSquadWithInvalidUpgradesRemovedFn(squadWithUpgradeChanged);
     }
     case "createNewSquad": {
