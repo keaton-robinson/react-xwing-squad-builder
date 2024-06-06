@@ -122,6 +122,7 @@ export interface GetUpdatedSquadDeps {
   getSquadPilotWithMultipleUpgradesSetFn?: typeof getSquadPilotWithMultipleUpgradesSet;
   getSquadPilotWithUpgradeSetFn?: typeof getSquadPilotWithUpgradeSet;
   getEmptyFactionSquadFn?: typeof getEmptyFactionSquad;
+  maxPilotReachedFn?: typeof maxPilotReached;
 }
 export const getUpdatedSquad = (
   squad: Squad,
@@ -134,6 +135,7 @@ export const getUpdatedSquad = (
     getSquadPilotWithMultipleUpgradesSetFn = getSquadPilotWithMultipleUpgradesSet,
     getSquadPilotWithUpgradeSetFn = getSquadPilotWithUpgradeSet,
     getEmptyFactionSquadFn = getEmptyFactionSquad,
+    maxPilotReachedFn = maxPilotReached,
   }: GetUpdatedSquadDeps = {},
 ): Squad => {
   switch (action.type) {
@@ -179,7 +181,7 @@ export const getUpdatedSquad = (
         name: action.pilotToClone.pilotName,
       };
 
-      if (!maxPilotReached(pilot, action.squad)) {
+      if (!maxPilotReachedFn(pilot, action.squad)) {
         squadPilot = getSquadPilotShipFn(pilot);
       } else {
         const cheapestAvailablePilot = getCheapestAvailablePilotForShipFn(action.pilotToClone.ship, action.squad);

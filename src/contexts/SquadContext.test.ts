@@ -11,6 +11,7 @@ import {
   getSquadWithInvalidUpgradesRemoved,
   SquadsReducerDeps,
   SquadsDispatchAction,
+  GetUpdatedSquadDeps,
 } from "./SquadContext";
 
 describe("SquadContext", () => {
@@ -62,6 +63,26 @@ describe("SquadContext", () => {
     });
   });
   describe("getUpdatedSquad", () => {
+    type MockedGetUpdatedSquadDeps = {
+      [K in keyof GetUpdatedSquadDeps]: jest.Mock<
+        ReturnType<NonNullable<GetUpdatedSquadDeps[K]>>,
+        Parameters<NonNullable<GetUpdatedSquadDeps[K]>>
+      >;
+    };
+    const getMockUpdateSquadDeps = () => {
+      const mockDeps: GetUpdatedSquadDeps = {
+        getCheapestAvailablePilotForShipFn: jest.fn(),
+        getSquadPilotShipFn: jest.fn(),
+        getSquadWithInvalidUpgradesRemovedFn: jest.fn(),
+        getUpgradesOnSquadPilotFn: jest.fn(),
+        getSquadPilotWithMultipleUpgradesSetFn: jest.fn(),
+        getSquadPilotWithUpgradeSetFn: jest.fn(),
+        getEmptyFactionSquadFn: jest.fn(),
+        maxPilotReachedFn: jest.fn(),
+      };
+
+      return mockDeps as MockedGetUpdatedSquadDeps; // returning as any lets me call mocking functions on the members of this object
+    };
     describe("rename squad", () => {
       it("should rename the squad", () => {
         const initialRebelSquad = initialSquadsState.squads[0];
@@ -79,21 +100,11 @@ describe("SquadContext", () => {
     });
     describe("addShip", () => {
       const initialSquad = initialSquadsState.squads[0];
-      const dispatchAction: SquadsDispatchAction = {
+      const dispatchAddAction: SquadsDispatchAction = {
         type: "addShip",
         newShip: "test ship",
         squad: initialSquad,
       };
-
-      const getMockDeps = () => {
-        const deps = {
-          getCheapestAvailablePilotForShipFn: jest.fn(),
-          getSquadPilotShipFn: jest.fn(),
-          getSquadWithInvalidUpgradesRemovedFn: jest.fn(),
-        };
-        return deps;
-      };
-
       it("should get the cheapest pilot, add it, remove invalid upgrades from the squad, then return the squad with the new pilot in it", () => {
         const cheapPilotStub: Pilot = {
           name: "cheapo",
@@ -114,17 +125,17 @@ describe("SquadContext", () => {
           squadPilots: [...initialSquad.squadPilots, squadPilotStub as SquadPilot],
         };
         const validatedSquadStub: Squad = { ...squadWithPilotAddedStub };
-        const depsConfig = getMockDeps();
+        const depsConfig = getMockUpdateSquadDeps();
         depsConfig.getCheapestAvailablePilotForShipFn.mockReturnValue(cheapPilotStub);
-        depsConfig.getSquadPilotShipFn.mockReturnValue(squadPilotStub);
+        depsConfig.getSquadPilotShipFn.mockReturnValue(squadPilotStub as SquadPilot);
         depsConfig.getSquadWithInvalidUpgradesRemovedFn.mockReturnValue(validatedSquadStub);
 
-        const result = getUpdatedSquad(initialSquad, dispatchAction, depsConfig);
+        const result = getUpdatedSquad(initialSquad, dispatchAddAction, depsConfig);
 
         expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenCalledTimes(1);
         expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenCalledWith(
-          dispatchAction.newShip,
-          dispatchAction.squad,
+          dispatchAddAction.newShip,
+          dispatchAddAction.squad,
         );
         expect(depsConfig.getSquadPilotShipFn).toHaveBeenCalledTimes(1);
         expect(depsConfig.getSquadPilotShipFn).toHaveBeenCalledWith(cheapPilotStub);
@@ -134,15 +145,192 @@ describe("SquadContext", () => {
         expect(result).not.toBe(squadWithPilotAddedStub);
       });
       it("should throw error when no pilots remain available for the ship", () => {
-        const depsConfig = getMockDeps();
+        const depsConfig = getMockUpdateSquadDeps();
         depsConfig.getCheapestAvailablePilotForShipFn.mockReturnValue(null);
 
-        expect(() => getUpdatedSquad(initialSquad, dispatchAction, depsConfig)).toThrow();
+        expect(() => getUpdatedSquad(initialSquad, dispatchAddAction, depsConfig)).toThrow();
         expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenCalledTimes(1);
         expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenLastCalledWith(
-          dispatchAction.newShip,
-          dispatchAction.squad,
+          dispatchAddAction.newShip,
+          dispatchAddAction.squad,
         );
+      });
+    });
+    describe("changeShip", () => {
+      const initialSquadPilot: Partial<SquadPilot> = {
+        squadPilotId: undefined,
+        upgrades: [],
+      };
+      const initialSquad: Squad = { ...initialSquadsState.squads[0], squadPilots: [initialSquadPilot as SquadPilot] };
+      const dispatchChangeShipAction: SquadsDispatchAction = {
+        type: "changeShip",
+        currentPilot: initialSquadPilot as SquadPilot,
+        newShip: "test ship",
+        squad: initialSquad,
+      };
+      it("should throw error if no pilot available for new ship", () => {
+        const depsConfig = getMockUpdateSquadDeps();
+        depsConfig.getCheapestAvailablePilotForShipFn.mockReturnValue(null);
+
+        expect(() => getUpdatedSquad(initialSquad, dispatchChangeShipAction, depsConfig)).toThrow();
+        expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenLastCalledWith(
+          dispatchChangeShipAction.newShip,
+          dispatchChangeShipAction.squad,
+        );
+      });
+      it("should get the cheapest pilot for new ship, copy upgrades to new squad pilot, replace existing pilot in squad, remove invalid upgrades from the squad, then return the squad with the new pilot in it", () => {
+        const cheapPilotStub: Pilot = {
+          name: "cheapo",
+          id: 12312,
+          faction: "Rebel Alliance",
+          ship: "xwing",
+          skill: 1,
+          points: 45,
+          slots: [],
+        };
+        const replacementSquadPilotStub: Partial<SquadPilot> = {
+          squadPilotId: undefined,
+          pilotName: cheapPilotStub.name,
+          upgrades: [],
+        };
+        const upgradesToAddStub: Upgrade[] = []; // just need an object reference...not important what the contents are for now
+        const replacementSquadPilotWIthUpgradesAddedStub: Partial<SquadPilot> = {
+          ...replacementSquadPilotStub,
+        };
+        const squadWithExistingPilotReplaced: Squad = {
+          ...initialSquad,
+          squadPilots: initialSquad.squadPilots.map((squadPilot) => {
+            if (squadPilot === initialSquadPilot) {
+              return replacementSquadPilotWIthUpgradesAddedStub as SquadPilot;
+            }
+            return squadPilot;
+          }),
+        };
+        const validatedSquadStub: Squad = { ...squadWithExistingPilotReplaced };
+        const depsConfig = getMockUpdateSquadDeps();
+        depsConfig.getCheapestAvailablePilotForShipFn.mockReturnValue(cheapPilotStub);
+        depsConfig.getSquadPilotShipFn.mockReturnValue(replacementSquadPilotStub as SquadPilot);
+        depsConfig.getUpgradesOnSquadPilotFn.mockReturnValue(upgradesToAddStub);
+        depsConfig.getSquadPilotWithMultipleUpgradesSetFn.mockReturnValue(
+          replacementSquadPilotWIthUpgradesAddedStub as SquadPilot,
+        );
+        depsConfig.getSquadWithInvalidUpgradesRemovedFn.mockReturnValue(validatedSquadStub);
+
+        const result = getUpdatedSquad(initialSquad, dispatchChangeShipAction, depsConfig);
+
+        expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenCalledWith(
+          dispatchChangeShipAction.newShip,
+          dispatchChangeShipAction.squad,
+        );
+        expect(depsConfig.getSquadPilotShipFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getSquadPilotShipFn).toHaveBeenCalledWith(cheapPilotStub);
+        expect(depsConfig.getSquadPilotWithMultipleUpgradesSetFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getSquadPilotWithMultipleUpgradesSetFn).toHaveBeenCalledWith(
+          upgradesToAddStub,
+          replacementSquadPilotStub,
+        );
+        expect(depsConfig.getSquadWithInvalidUpgradesRemovedFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getSquadWithInvalidUpgradesRemovedFn).toHaveBeenCalledWith(squadWithExistingPilotReplaced);
+        expect(result).toBe(validatedSquadStub);
+        expect(result).not.toBe(squadWithExistingPilotReplaced);
+        expect(result).not.toBe(initialSquad);
+      });
+    });
+    describe("clonePilot", () => {
+      const initialSquadPilot: Partial<SquadPilot> = {
+        squadPilotId: "squadPilotIdTest" as UniqueKey,
+        pilotId: 1,
+        pilotName: "pilotNameTest",
+        upgrades: [],
+      };
+      const initialSquad: Squad = { ...initialSquadsState.squads[0], squadPilots: [initialSquadPilot as SquadPilot] };
+      const dispatchClonePilotAction: SquadsDispatchAction = {
+        type: "clonePilot",
+        pilotToClone: initialSquadPilot as SquadPilot,
+        squad: initialSquad,
+      };
+      const expectedPilot: Pilot = {
+        ...dispatchClonePilotAction.pilotToClone,
+        id: dispatchClonePilotAction.pilotToClone.pilotId,
+        name: dispatchClonePilotAction.pilotToClone.pilotName,
+      };
+      it("should throw an error if no pilots are available for ship", () => {
+        const depsConfig = getMockUpdateSquadDeps();
+        depsConfig.maxPilotReachedFn.mockReturnValue(true);
+        depsConfig.getCheapestAvailablePilotForShipFn.mockReturnValue(null);
+
+        expect(() => {
+          getUpdatedSquad(initialSquad, dispatchClonePilotAction, depsConfig);
+        }).toThrow();
+        expect(depsConfig.maxPilotReachedFn).toHaveBeenCalledTimes(1);
+        expect(depsConfig.getCheapestAvailablePilotForShipFn).toHaveBeenCalledTimes(1);
+      });
+      it("should clone provided pilot if that pilot is not maxed out", () => {
+        const depsConfig = getMockUpdateSquadDeps();
+        depsConfig.maxPilotReachedFn.mockReturnValue(false);
+
+        getUpdatedSquad(initialSquad, dispatchClonePilotAction, depsConfig);
+
+        expect(depsConfig.getSquadPilotShipFn).toHaveBeenCalledWith(expect.objectContaining(expectedPilot));
+        expect(depsConfig.getSquadPilotShipFn).toHaveBeenCalledTimes(1);
+      });
+      it("should use cheapest pilot for ship if provided pilot is maxed out already", () => {
+        const cheapestAvailablePilotStub: Pilot = {
+          name: "",
+          id: 0,
+          faction: "Rebel Alliance",
+          ship: "",
+          skill: 0,
+          points: 0,
+          slots: [],
+        };
+
+        const depsConfig = getMockUpdateSquadDeps();
+        depsConfig.maxPilotReachedFn.mockReturnValue(true);
+        depsConfig.getCheapestAvailablePilotForShipFn.mockReturnValue(cheapestAvailablePilotStub);
+
+        getUpdatedSquad(initialSquad, dispatchClonePilotAction, depsConfig);
+
+        expect(depsConfig.getSquadPilotShipFn).toHaveBeenCalledWith(cheapestAvailablePilotStub);
+        expect(depsConfig.getSquadPilotShipFn).toHaveBeenCalledTimes(1);
+      });
+      it("should copy upgrades to new squad pilot, replace existing pilot in squad, remove invalid upgrades from the squad, then return the squad with the new pilot in it", () => {
+        const squadPilotCloneStub: SquadPilot = {
+          ...dispatchClonePilotAction.pilotToClone,
+        };
+        const upgradesOnPilotStub: Upgrade[] = [];
+        const upgradeSlotsStub: SquadPilotUpgradeSlot[] = [];
+        const pilotWithUpgradesStub: SquadPilot = {
+          ...squadPilotCloneStub,
+          upgrades: upgradeSlotsStub,
+        };
+        const nonvalidatedSquadWithClone: Squad = {
+          ...initialSquad,
+          squadPilots: [...dispatchClonePilotAction.squad.squadPilots, pilotWithUpgradesStub],
+        };
+        const validatedSquadStub: Squad = {
+          ...nonvalidatedSquadWithClone,
+          squadPilots: [...nonvalidatedSquadWithClone.squadPilots],
+        };
+
+        const depsConfig = getMockUpdateSquadDeps();
+        depsConfig.maxPilotReachedFn.mockReturnValue(false);
+        depsConfig.getSquadPilotShipFn.mockReturnValue(squadPilotCloneStub);
+        depsConfig.getUpgradesOnSquadPilotFn.mockReturnValue(upgradesOnPilotStub);
+        depsConfig.getSquadPilotWithMultipleUpgradesSetFn.mockReturnValue(pilotWithUpgradesStub);
+        depsConfig.getSquadWithInvalidUpgradesRemovedFn.mockReturnValue(validatedSquadStub);
+
+        const result = getUpdatedSquad(initialSquad, dispatchClonePilotAction, depsConfig);
+
+        expect(depsConfig.getUpgradesOnSquadPilotFn).toHaveBeenCalledWith(dispatchClonePilotAction.pilotToClone);
+        expect(depsConfig.getSquadPilotWithMultipleUpgradesSetFn).toHaveBeenCalledWith(
+          upgradesOnPilotStub,
+          squadPilotCloneStub,
+        );
+        expect(depsConfig.getSquadWithInvalidUpgradesRemovedFn).toHaveBeenCalledWith(nonvalidatedSquadWithClone);
+        expect(result).toEqual(nonvalidatedSquadWithClone);
       });
     });
   });

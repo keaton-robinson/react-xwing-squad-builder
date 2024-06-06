@@ -8,6 +8,8 @@ import {
   getPilotEffectiveStats,
 } from "./xwing_utils";
 
+// TODO: go mock the dependencies in these functions. Right now this functions more like a suite of integration tests.
+
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
 };
