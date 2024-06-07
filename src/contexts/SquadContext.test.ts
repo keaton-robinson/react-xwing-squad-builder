@@ -612,6 +612,88 @@ describe("SquadContext", () => {
         expect(result).toBe(validatedSquad);
       });
     });
+    describe("createNewSquad", () => {
+      it("should return an empty faction squad", () => {
+        const emptyFactionStub = {} as Squad;
+        const depsConfig = getMockUpdateSquadDeps();
+        depsConfig.getEmptyFactionSquadFn.mockReturnValue(emptyFactionStub);
+
+        const result = getUpdatedSquad(
+          initialSquadsState.squads[0],
+          { type: "createNewSquad", squad: initialSquadsState.squads[0] },
+          depsConfig,
+        );
+
+        expect(depsConfig.getEmptyFactionSquadFn).toHaveBeenCalledWith(initialSquadsState.squads[0].faction);
+        expect(result).toBe(emptyFactionStub);
+      });
+    });
+    describe("savedAsNewSquad", () => {
+      it("should set id and name on squad that was saved", () => {
+        const initialSquad: Squad = initialSquadsState.squads[0];
+        const testId = "9009707";
+        const testNewName = "name after saving";
+
+        const expected = {
+          ...initialSquad,
+          id: testId,
+          name: testNewName,
+        };
+
+        const result = getUpdatedSquad(initialSquad, {
+          type: "savedAsNewSquad",
+          newSquadId: testId,
+          newSquadName: testNewName,
+          squad: initialSquad,
+        });
+        expect(result).not.toBe(initialSquad);
+        expect(result).toEqual(expected);
+      });
+    });
+    describe("loadedSquad", () => {
+      it("should return a new faction squad object populated with id, name, and squad pilots", () => {
+        const initialSquad = initialSquadsState.squads[0];
+        const testId = "987987";
+        const testName = "loaded squad name";
+        const testLoadedSquadPilots: SquadPilot[] = [
+          {
+            squadPilotId: "test pilot1 id" as UniqueKey,
+          } as SquadPilot,
+          {
+            squadPilotId: "test pilot2 id" as UniqueKey,
+          } as SquadPilot,
+        ];
+        const emptySquadStub = {
+          id: null,
+          faction: initialSquad.faction,
+          name: `${initialSquad.faction} Squadron`,
+          squadPilots: [],
+        };
+        const depsConfig = getMockUpdateSquadDeps();
+        depsConfig.getEmptyFactionSquadFn.mockReturnValue(emptySquadStub);
+        const expected: Squad = {
+          ...emptySquadStub,
+          id: testId,
+          name: testName,
+          squadPilots: testLoadedSquadPilots,
+        };
+
+        const result = getUpdatedSquad(
+          initialSquad,
+          {
+            type: "loadedSquad",
+            loadedSquadId: testId,
+            loadedSquadName: testName,
+            loadedSquadPilots: testLoadedSquadPilots,
+            squad: initialSquad,
+          },
+          depsConfig,
+        );
+
+        expect(result).not.toBe(initialSquad);
+        expect(result).toEqual(expected);
+      });
+    });
   });
   describe("getSquadPilotWithUpgradeRemoved", () => {
     it("should return squadPilot when upgrade is already unset", () => {
