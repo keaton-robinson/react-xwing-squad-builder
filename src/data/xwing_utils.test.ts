@@ -8,8 +8,7 @@ import {
   getPilotEffectiveStats,
 } from "./xwing_utils";
 
-// TODO: go mock the dependencies in these functions. Right now this functions more like a suite of integration tests.
-// SquadContext.test.ts is built using actual mocking
+// TODO: could do some mocking in the getSquad and getPilotCost. It's a bit integration test-ish rather than a pure unit test
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
