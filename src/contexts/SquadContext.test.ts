@@ -2116,4 +2116,19 @@ describe("SquadContext", () => {
       expect(result).toEqual(squadAfterRemovingBadUpgrades);
     });
   });
+  describe("getEmptyFactionSquad", () => {
+    it("should return an empty squad with a generic faction name", () => {
+      const testFactionName: Faction = "Galactic Empire";
+      const expected: Squad = {
+        id: null,
+        faction: testFactionName,
+        name: `${testFactionName} Squadron`,
+        squadPilots: [],
+      };
+
+      const result = getEmptyFactionSquad(testFactionName);
+
+      expect(result).toEqual(expected);
+    });
+  });
 });
