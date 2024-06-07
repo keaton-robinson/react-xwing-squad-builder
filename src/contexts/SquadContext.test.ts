@@ -695,244 +695,386 @@ describe("SquadContext", () => {
       });
     });
   });
-  describe("getSquadPilotWithUpgradeRemoved", () => {
-    it("should return squadPilot when upgrade is already unset", () => {
-      const emptyUpgradeSlot: SquadPilotUpgradeSlot = {
-        squadPilotUpgradeSlotKey: "Modification1",
-        slot: "Modification",
-        upgrade: null,
-        parentSquadPilotUpgradeSlotKey: null,
-      };
-      const samplePilot: Partial<SquadPilot> = {
-        squadPilotId: "test_ship" as UniqueKey,
-        upgrades: [emptyUpgradeSlot],
+  describe("getUpgradesOnSquadPilot", () => {
+    it("should return an empty array when there are no upgrades", () => {
+      const squadPilot: SquadPilot = {
+        squadPilotId: "uniqueKey1" as UniqueKey,
+        factions: ["Rebel Alliance"],
+        agility: 2,
+        hull: 3,
+        shields: 2,
+        actions: [],
+        maneuvers: [],
+        shipCanonicalName: null,
+        ship_keyword: null,
+        pilotName: null,
+        pilotId: null,
+        pilotKeyword: null,
+        pilotCanonicalName: null,
+        upgrades: [],
+        faction: "Rebel Alliance",
+        ship: "X-Wing",
+        skill: 5,
+        points: 50,
+        slots: [],
       };
 
-      const result = getSquadPilotWithUpgradeRemoved(emptyUpgradeSlot, samplePilot as SquadPilot);
-      expect(result).toBe(samplePilot);
+      const result = getUpgradesOnSquadPilot(squadPilot);
+      expect(result).toEqual([]);
     });
-    it("should remove upgrade from the upgrade slot specified", () => {
-      const upgradeSlotToEmpty: SquadPilotUpgradeSlot = {
-        squadPilotUpgradeSlotKey: "Modification1",
-        slot: "Modification",
-        upgrade: {
-          name: "test_upgrade",
-          id: 5,
-          slot: "Modification",
-        },
-      };
-      const samplePilot: Partial<SquadPilot> = {
-        squadPilotId: "test_ship" as UniqueKey,
-        upgrades: [upgradeSlotToEmpty],
+
+    it("should return only the upgrades that are not null", () => {
+      const upgrades: Upgrade[] = [
+        { id: 1, name: "Upgrade 1", slot: "Astromech" },
+        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
+      ];
+
+      const squadPilot: SquadPilot = {
+        squadPilotId: "uniqueKey2" as UniqueKey,
+        factions: ["Rebel Alliance"],
+        agility: 2,
+        hull: 3,
+        shields: 2,
+        actions: [],
+        maneuvers: [],
+        shipCanonicalName: null,
+        ship_keyword: null,
+        pilotName: null,
+        pilotId: null,
+        pilotKeyword: null,
+        pilotCanonicalName: null,
+        upgrades: [
+          { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: upgrades[0] },
+          { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot3", slot: "Torpedo", upgrade: upgrades[1] },
+        ],
+        faction: "Rebel Alliance",
+        ship: "X-Wing",
+        skill: 5,
+        points: 50,
+        slots: [],
       };
 
-      const expected: Partial<SquadPilot> = {
-        ...samplePilot,
+      const result = getUpgradesOnSquadPilot(squadPilot);
+      expect(result).toEqual([upgrades[0], upgrades[1]]);
+    });
+
+    it("should return an empty array when all upgrades are null", () => {
+      const squadPilot: SquadPilot = {
+        squadPilotId: "uniqueKey3" as UniqueKey,
+        factions: ["Rebel Alliance"],
+        agility: 2,
+        hull: 3,
+        shields: 2,
+        actions: [],
+        maneuvers: [],
+        shipCanonicalName: null,
+        ship_keyword: null,
+        pilotName: null,
+        pilotId: null,
+        pilotKeyword: null,
+        pilotCanonicalName: null,
         upgrades: [
-          {
-            ...upgradeSlotToEmpty,
-            upgrade: null,
-            parentSquadPilotUpgradeSlotKey: null,
-          },
+          { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null },
+        ],
+        faction: "Rebel Alliance",
+        ship: "X-Wing",
+        skill: 5,
+        points: 50,
+        slots: [],
+      };
+
+      const result = getUpgradesOnSquadPilot(squadPilot);
+      expect(result).toEqual([]);
+    });
+
+    it("should handle a mix of null and non-null upgrades", () => {
+      const upgrades: Upgrade[] = [
+        { id: 1, name: "Upgrade 1", slot: "Astromech" },
+        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
+      ];
+
+      const squadPilot: SquadPilot = {
+        squadPilotId: "uniqueKey4" as UniqueKey,
+        factions: ["Rebel Alliance"],
+        agility: 2,
+        hull: 3,
+        shields: 2,
+        actions: [],
+        maneuvers: [],
+        shipCanonicalName: null,
+        ship_keyword: null,
+        pilotName: null,
+        pilotId: null,
+        pilotKeyword: null,
+        pilotCanonicalName: null,
+        upgrades: [
+          { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: upgrades[0] },
+          { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot3", slot: "Missile", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot4", slot: "Torpedo", upgrade: upgrades[1] },
+        ],
+        faction: "Rebel Alliance",
+        ship: "X-Wing",
+        skill: 5,
+        points: 50,
+        slots: [],
+      };
+
+      const result = getUpgradesOnSquadPilot(squadPilot);
+      expect(result).toEqual([upgrades[0], upgrades[1]]);
+    });
+  });
+  describe("getSquadPilotWithMultipleUpgradesSet", () => {
+    it("should return a pilot with upgrades set for matching slots if matching slots are available", () => {
+      const upgradesToSet: Upgrade[] = [
+        { id: 1, name: "Upgrade 1", slot: "Astromech" },
+        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
+      ];
+
+      const astromechSlot = { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: null };
+      const torpedoSlot = { squadPilotUpgradeSlotKey: "slot2", slot: "Torpedo", upgrade: null };
+      const squadPilot: Partial<SquadPilot> = {
+        squadPilotId: "uniqueKey1" as UniqueKey,
+        upgrades: [astromechSlot, torpedoSlot],
+      };
+
+      const pilotWithFirstUpgrade = {
+        ...squadPilot,
+        upgrades: [{ ...astromechSlot, upgrade: upgradesToSet[0] }, torpedoSlot],
+      };
+      const pilotWithBothUpgrades = {
+        ...pilotWithFirstUpgrade,
+        upgrades: [
+          { ...astromechSlot, upgrade: upgradesToSet[0] },
+          { ...torpedoSlot, upgrade: upgradesToSet[1] },
+        ],
+      };
+      const getSquadPilotWithUpgradeSetMock = jest
+        .fn()
+        .mockReturnValueOnce(pilotWithFirstUpgrade)
+        .mockReturnValueOnce(pilotWithBothUpgrades);
+
+      const result = getSquadPilotWithMultipleUpgradesSet(upgradesToSet, squadPilot as SquadPilot, {
+        getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
+      });
+
+      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(
+        upgradesToSet[0],
+        squadPilot.upgrades[0],
+        squadPilot,
+      );
+      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(
+        upgradesToSet[1],
+        squadPilot.upgrades[1],
+        pilotWithFirstUpgrade,
+      );
+      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledTimes(2);
+      expect(result).toBe(pilotWithBothUpgrades);
+    });
+
+    it("should return a pilot with no upgrades changed if matching slots are not available", () => {
+      const upgrades: Upgrade[] = [
+        { id: 1, name: "Upgrade 1", slot: "Astromech" },
+        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
+      ];
+
+      const initialPilot: Partial<SquadPilot> = {
+        squadPilotId: "uniqueKey2" as UniqueKey,
+        upgrades: [
+          { squadPilotUpgradeSlotKey: "slot1", slot: "Missile", upgrade: null },
+          { squadPilotUpgradeSlotKey: "slot2", slot: "Cannon", upgrade: null },
         ],
       };
 
-      const result = getSquadPilotWithUpgradeRemoved(upgradeSlotToEmpty, samplePilot as SquadPilot);
+      const getSquadPilotWithUpgradeSetMock = jest.fn();
 
-      expect(result).toEqual(expected);
+      const result = getSquadPilotWithMultipleUpgradesSet(upgrades, initialPilot as SquadPilot, {
+        getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
+      });
+
+      expect(getSquadPilotWithUpgradeSetMock).not.toHaveBeenCalled();
+      expect(result).toEqual(initialPilot);
     });
-    it("should remove also_occupies reservations due to the upgrade slot specified", () => {
-      const parentSlotKey = "Payload1";
-      const parentSlot: SquadPilotUpgradeSlot = {
-        squadPilotUpgradeSlotKey: parentSlotKey,
-        slot: "Payload",
-        upgrade: {
-          name: "bomblet_generator",
-          id: 5,
-          slot: "Modification",
-        },
-        parentSquadPilotUpgradeSlotKey: null,
-      };
-      const also_occupied_slot: SquadPilotUpgradeSlot = {
-        squadPilotUpgradeSlotKey: "Payload2",
-        slot: "Payload",
-        upgrade: null,
-        parentSquadPilotUpgradeSlotKey: parentSlotKey,
-      };
-      const samplePilot: Partial<SquadPilot> = {
-        squadPilotId: "test_ship" as UniqueKey,
-        upgrades: [parentSlot, also_occupied_slot],
+
+    it("should only set upgrades for available slots and leave others", () => {
+      const upgradeAstromech = { id: 1, name: "upgrade astromech", slot: "Astromech" };
+      const upgradeTorpedo1 = { id: 2, name: "Upgrade torpedo 1", slot: "Torpedo" };
+      const upgradeCannon = { id: 3, name: "Upgrade cannon", slot: "Cannon" }; // shouldn't add because there are no cannon slots
+      const upgradeTorpedo2 = { id: 4, name: "Upgrade torpedo 2", slot: "Torpedo" }; // shouldnt add because there is only one slot available for torpedoes
+
+      const upgradesToSet: Upgrade[] = [upgradeAstromech, upgradeTorpedo1, upgradeCannon, upgradeTorpedo2];
+
+      const slotAstromech = { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: null };
+      const slotMissle = { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null };
+      const slotTorpedo = { squadPilotUpgradeSlotKey: "slot3", slot: "Torpedo", upgrade: null };
+
+      const initialPilot: Partial<SquadPilot> = {
+        squadPilotId: "uniqueKey3" as UniqueKey,
+        upgrades: [slotAstromech, slotMissle, slotTorpedo],
       };
 
-      const expected: Partial<SquadPilot> = {
-        ...samplePilot,
+      const getSquadPilotWithUpgradeSetMock = jest.fn((upgradeBeingCopied, matchingSlotOnNewShip, squadPilot) => {
+        return {
+          // simplified mock of set upgrade function...
+          ...squadPilot,
+          upgrades: squadPilot.upgrades.map((upslot) => {
+            if (upslot.slot === upgradeBeingCopied.slot && !upslot.upgrade) {
+              return { ...upslot, upgrade: upgradeBeingCopied };
+            }
+            return upslot;
+          }),
+        };
+      });
+
+      const result = getSquadPilotWithMultipleUpgradesSet(upgradesToSet, initialPilot as SquadPilot, {
+        getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
+      });
+
+      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledTimes(2);
+      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(upgradeAstromech, slotAstromech, expect.anything());
+      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(upgradeTorpedo1, slotTorpedo, expect.anything());
+      expect(result).toEqual({
+        ...initialPilot,
         upgrades: [
-          {
-            ...parentSlot,
-            upgrade: null,
-            parentSquadPilotUpgradeSlotKey: null,
-          },
-          {
-            ...also_occupied_slot,
-            upgrade: null,
-            parentSquadPilotUpgradeSlotKey: null,
-          },
+          { ...slotAstromech, upgrade: upgradeAstromech },
+          slotMissle,
+          { ...slotTorpedo, upgrade: upgradeTorpedo1 },
         ],
-      };
-
-      const result = getSquadPilotWithUpgradeRemoved(parentSlot, samplePilot as SquadPilot);
-
-      expect(result).toEqual(expected);
+      });
     });
-    it("should remove parent slot if also_occupies_slot has removeUpgrade called on it", () => {
-      const parentSlotKey = "Payload1";
-      const parentSlot: SquadPilotUpgradeSlot = {
-        squadPilotUpgradeSlotKey: parentSlotKey,
-        slot: "Payload",
-        upgrade: {
-          name: "bomblet_generator",
-          id: 5,
-          slot: "Modification",
-        },
-        parentSquadPilotUpgradeSlotKey: null,
-      };
-      const also_occupied_slot: SquadPilotUpgradeSlot = {
-        squadPilotUpgradeSlotKey: "Payload2",
-        slot: "Payload",
-        upgrade: null,
-        parentSquadPilotUpgradeSlotKey: parentSlotKey,
-      };
-      const samplePilot: Partial<SquadPilot> = {
-        squadPilotId: "test_ship" as UniqueKey,
-        upgrades: [parentSlot, also_occupied_slot],
-      };
-
-      const expected: Partial<SquadPilot> = {
-        ...samplePilot,
-        upgrades: [
-          {
-            ...parentSlot,
-            upgrade: null,
-            parentSquadPilotUpgradeSlotKey: null,
-          },
-          {
-            ...also_occupied_slot,
-            upgrade: null,
-            parentSquadPilotUpgradeSlotKey: null,
-          },
-        ],
-      };
-
-      const result = getSquadPilotWithUpgradeRemoved(also_occupied_slot, samplePilot as SquadPilot);
-
-      expect(result).toEqual(expected);
-    });
-    it("should remove conferredAddon slots when upgrade that confers addons is removed", () => {
-      const parentSlotKey = "Device1";
-      const parentSlot: SquadPilotUpgradeSlot = {
-        squadPilotUpgradeSlotKey: parentSlotKey,
-        slot: "Device",
-        upgrade: {
-          name: "just_a_bomb",
-          id: 5,
-          slot: "Device",
-        },
-        parentSquadPilotUpgradeSlotKey: null,
-      };
-      const upgradeSlotThatIsConferringAddon: SquadPilotUpgradeSlot = {
-        squadPilotUpgradeSlotKey: "Title1",
+    it("should set upgrade on a missing slot if that slot is added by confersAddons", () => {
+      const titleThatConfersAstromech: Upgrade = {
+        name: "Punishing One",
+        id: 233423,
         slot: "Title",
-        parentSquadPilotUpgradeSlotKey: null,
-        upgrade: {
-          name: "upgradeThatAddsDeviceSlot",
-          id: 2,
-          slot: "Title",
-          confersAddons: [
-            {
-              type: "Upgrade",
-              slot: "Device",
-            },
-          ],
-        },
-      };
-      const samplePilot: Partial<SquadPilot> = {
-        squadPilotId: "test_ship" as UniqueKey,
-        upgrades: [parentSlot, upgradeSlotThatIsConferringAddon],
+        confersAddons: [
+          {
+            type: "Upgrade",
+            slot: "Astromech",
+          },
+        ],
       };
 
-      const expected: Partial<SquadPilot> = {
-        ...samplePilot,
+      const astromechUpgrade: Upgrade = {
+        name: "an astromech",
+        id: 124313,
+        slot: "Astromech",
+      };
+
+      const upgradesToAdd: Upgrade[] = [
+        astromechUpgrade, // putting dependent addon at the front so that the test will fail if the function doesn't attempt to add after adding title
+        titleThatConfersAstromech,
+      ];
+
+      const initialSquadPilotWithNoAstromechSlots: Partial<SquadPilot> = {
         upgrades: [
           {
-            ...upgradeSlotThatIsConferringAddon,
-            upgrade: null,
+            squadPilotUpgradeSlotKey: "Torpedo1",
+            slot: "Torpedo",
+            upgrade: undefined,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            squadPilotUpgradeSlotKey: "Crew1",
+            slot: "Crew",
+            upgrade: undefined,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            squadPilotUpgradeSlotKey: "Title1",
+            slot: "Title",
+            upgrade: undefined,
             parentSquadPilotUpgradeSlotKey: null,
           },
         ],
       };
 
-      const result = getSquadPilotWithUpgradeRemoved(upgradeSlotThatIsConferringAddon, samplePilot as SquadPilot);
-
-      expect(result).toEqual(expected);
-    });
-    it("should remove conferredAddon slots and parent upgrade when upgrade that confers addons is removed", () => {
-      const parentSlotKey = "Device1";
-      const parentSlot: SquadPilotUpgradeSlot = {
-        squadPilotUpgradeSlotKey: parentSlotKey,
-        slot: "Device",
-        upgrade: {
-          name: "bomblet_generator",
-          id: 5,
-          slot: "Modification",
-        },
+      const astromechSlotToadd: SquadPilotUpgradeSlot = {
+        slot: "Astromech",
+        squadPilotUpgradeSlotKey: "Astromech1",
         parentSquadPilotUpgradeSlotKey: null,
-      };
-      const also_occupied_slot: SquadPilotUpgradeSlot = {
-        squadPilotUpgradeSlotKey: "Device2",
-        slot: "Device",
         upgrade: null,
-        parentSquadPilotUpgradeSlotKey: parentSlotKey,
-      };
-      const upgradeSlotThatIsConferringAddon: SquadPilotUpgradeSlot = {
-        squadPilotUpgradeSlotKey: "Title1",
-        slot: "Title",
-        parentSquadPilotUpgradeSlotKey: null,
-        upgrade: {
-          name: "upgradeThatAddsDeviceSlot",
-          id: 2,
-          slot: "Title",
-          confersAddons: [
-            {
-              type: "Upgrade",
-              slot: "Device",
-            },
-          ],
-        },
-      };
-      const samplePilot: Partial<SquadPilot> = {
-        squadPilotId: "test_ship" as UniqueKey,
-        upgrades: [parentSlot, also_occupied_slot, upgradeSlotThatIsConferringAddon],
       };
 
-      const expected: Partial<SquadPilot> = {
-        ...samplePilot,
+      const getSquadPilotWithUpgradeSetMock = jest.fn((upgradeBeingCopied, matchingSlotOnNewShip, squadPilot) => {
+        return {
+          // simplified mock of set upgrade function...
+          ...squadPilot,
+          upgrades: squadPilot.upgrades.map((upslot) => {
+            if (upslot.slot === upgradeBeingCopied.slot && !upslot.upgrade) {
+              return { ...upslot, upgrade: upgradeBeingCopied };
+            }
+            return upslot;
+          }),
+        };
+      });
+
+      getSquadPilotWithUpgradeSetMock.mockReturnValueOnce({
+        ...initialSquadPilotWithNoAstromechSlots,
+        upgrades: [
+          ...initialSquadPilotWithNoAstromechSlots.upgrades.map((upslot) => {
+            if (upslot.slot !== "Title") {
+              return upslot;
+            }
+            return {
+              ...upslot,
+              upgrade: titleThatConfersAstromech,
+            };
+          }),
+          astromechSlotToadd,
+        ],
+      });
+
+      const result = getSquadPilotWithMultipleUpgradesSet(
+        upgradesToAdd,
+        initialSquadPilotWithNoAstromechSlots as SquadPilot,
+        {
+          getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
+        },
+      );
+
+      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledTimes(2);
+      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(
+        titleThatConfersAstromech,
+        initialSquadPilotWithNoAstromechSlots.upgrades[2],
+        initialSquadPilotWithNoAstromechSlots,
+      );
+      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(
+        astromechUpgrade,
+        astromechSlotToadd,
+        expect.anything(),
+      );
+      expect(result).toEqual({
+        ...initialSquadPilotWithNoAstromechSlots,
         upgrades: [
           {
-            ...parentSlot,
-            upgrade: null,
+            squadPilotUpgradeSlotKey: "Torpedo1",
+            slot: "Torpedo",
+            upgrade: undefined,
             parentSquadPilotUpgradeSlotKey: null,
           },
           {
-            ...upgradeSlotThatIsConferringAddon,
-            upgrade: null,
+            squadPilotUpgradeSlotKey: "Crew1",
+            slot: "Crew",
+            upgrade: undefined,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            squadPilotUpgradeSlotKey: "Title1",
+            slot: "Title",
+            upgrade: titleThatConfersAstromech,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            squadPilotUpgradeSlotKey: "Astromech1",
+            slot: "Astromech",
+            upgrade: astromechUpgrade,
             parentSquadPilotUpgradeSlotKey: null,
           },
         ],
-      };
-
-      const result = getSquadPilotWithUpgradeRemoved(upgradeSlotThatIsConferringAddon, samplePilot as SquadPilot);
-
-      expect(result).toEqual(expected);
+      });
     });
   });
   describe("getSquadPilotWithUpgradeSet", () => {
@@ -1233,399 +1375,244 @@ describe("SquadContext", () => {
       expect(result.upgrades[1]).toBe(emptiedSecondCrewSlot);
     });
   });
-  describe("getUpgradesOnSquadPilot", () => {
-    it("should return an empty array when there are no upgrades", () => {
-      const squadPilot: SquadPilot = {
-        squadPilotId: "uniqueKey1" as UniqueKey,
-        factions: ["Rebel Alliance"],
-        agility: 2,
-        hull: 3,
-        shields: 2,
-        actions: [],
-        maneuvers: [],
-        shipCanonicalName: null,
-        ship_keyword: null,
-        pilotName: null,
-        pilotId: null,
-        pilotKeyword: null,
-        pilotCanonicalName: null,
-        upgrades: [],
-        faction: "Rebel Alliance",
-        ship: "X-Wing",
-        skill: 5,
-        points: 50,
-        slots: [],
-      };
-
-      const result = getUpgradesOnSquadPilot(squadPilot);
-      expect(result).toEqual([]);
-    });
-
-    it("should return only the upgrades that are not null", () => {
-      const upgrades: Upgrade[] = [
-        { id: 1, name: "Upgrade 1", slot: "Astromech" },
-        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
-      ];
-
-      const squadPilot: SquadPilot = {
-        squadPilotId: "uniqueKey2" as UniqueKey,
-        factions: ["Rebel Alliance"],
-        agility: 2,
-        hull: 3,
-        shields: 2,
-        actions: [],
-        maneuvers: [],
-        shipCanonicalName: null,
-        ship_keyword: null,
-        pilotName: null,
-        pilotId: null,
-        pilotKeyword: null,
-        pilotCanonicalName: null,
-        upgrades: [
-          { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: upgrades[0] },
-          { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null },
-          { squadPilotUpgradeSlotKey: "slot3", slot: "Torpedo", upgrade: upgrades[1] },
-        ],
-        faction: "Rebel Alliance",
-        ship: "X-Wing",
-        skill: 5,
-        points: 50,
-        slots: [],
-      };
-
-      const result = getUpgradesOnSquadPilot(squadPilot);
-      expect(result).toEqual([upgrades[0], upgrades[1]]);
-    });
-
-    it("should return an empty array when all upgrades are null", () => {
-      const squadPilot: SquadPilot = {
-        squadPilotId: "uniqueKey3" as UniqueKey,
-        factions: ["Rebel Alliance"],
-        agility: 2,
-        hull: 3,
-        shields: 2,
-        actions: [],
-        maneuvers: [],
-        shipCanonicalName: null,
-        ship_keyword: null,
-        pilotName: null,
-        pilotId: null,
-        pilotKeyword: null,
-        pilotCanonicalName: null,
-        upgrades: [
-          { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: null },
-          { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null },
-        ],
-        faction: "Rebel Alliance",
-        ship: "X-Wing",
-        skill: 5,
-        points: 50,
-        slots: [],
-      };
-
-      const result = getUpgradesOnSquadPilot(squadPilot);
-      expect(result).toEqual([]);
-    });
-
-    it("should handle a mix of null and non-null upgrades", () => {
-      const upgrades: Upgrade[] = [
-        { id: 1, name: "Upgrade 1", slot: "Astromech" },
-        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
-      ];
-
-      const squadPilot: SquadPilot = {
-        squadPilotId: "uniqueKey4" as UniqueKey,
-        factions: ["Rebel Alliance"],
-        agility: 2,
-        hull: 3,
-        shields: 2,
-        actions: [],
-        maneuvers: [],
-        shipCanonicalName: null,
-        ship_keyword: null,
-        pilotName: null,
-        pilotId: null,
-        pilotKeyword: null,
-        pilotCanonicalName: null,
-        upgrades: [
-          { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: upgrades[0] },
-          { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null },
-          { squadPilotUpgradeSlotKey: "slot3", slot: "Missile", upgrade: null },
-          { squadPilotUpgradeSlotKey: "slot4", slot: "Torpedo", upgrade: upgrades[1] },
-        ],
-        faction: "Rebel Alliance",
-        ship: "X-Wing",
-        skill: 5,
-        points: 50,
-        slots: [],
-      };
-
-      const result = getUpgradesOnSquadPilot(squadPilot);
-      expect(result).toEqual([upgrades[0], upgrades[1]]);
-    });
-  });
-  describe("getEmptyFactionSquad", () => {
-    it("should return a squad object with the correct faction and name for Rebel Alliance", () => {
-      const factionName: Faction = "Rebel Alliance";
-      const result: Squad = getEmptyFactionSquad(factionName);
-
-      expect(result).toEqual({
-        id: null,
-        faction: "Rebel Alliance",
-        name: "Rebel Alliance Squadron",
-        squadPilots: [],
-      });
-    });
-  });
-  describe("getSquadPilotWithMultipleUpgradesSet", () => {
-    it("should return a pilot with upgrades set for matching slots if matching slots are available", () => {
-      const upgradesToSet: Upgrade[] = [
-        { id: 1, name: "Upgrade 1", slot: "Astromech" },
-        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
-      ];
-
-      const astromechSlot = { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: null };
-      const torpedoSlot = { squadPilotUpgradeSlotKey: "slot2", slot: "Torpedo", upgrade: null };
-      const squadPilot: Partial<SquadPilot> = {
-        squadPilotId: "uniqueKey1" as UniqueKey,
-        upgrades: [astromechSlot, torpedoSlot],
-      };
-
-      const pilotWithFirstUpgrade = {
-        ...squadPilot,
-        upgrades: [{ ...astromechSlot, upgrade: upgradesToSet[0] }, torpedoSlot],
-      };
-      const pilotWithBothUpgrades = {
-        ...pilotWithFirstUpgrade,
-        upgrades: [
-          { ...astromechSlot, upgrade: upgradesToSet[0] },
-          { ...torpedoSlot, upgrade: upgradesToSet[1] },
-        ],
-      };
-      const getSquadPilotWithUpgradeSetMock = jest
-        .fn()
-        .mockReturnValueOnce(pilotWithFirstUpgrade)
-        .mockReturnValueOnce(pilotWithBothUpgrades);
-
-      const result = getSquadPilotWithMultipleUpgradesSet(upgradesToSet, squadPilot as SquadPilot, {
-        getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
-      });
-
-      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(
-        upgradesToSet[0],
-        squadPilot.upgrades[0],
-        squadPilot,
-      );
-      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(
-        upgradesToSet[1],
-        squadPilot.upgrades[1],
-        pilotWithFirstUpgrade,
-      );
-      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledTimes(2);
-      expect(result).toBe(pilotWithBothUpgrades);
-    });
-
-    it("should return a pilot with no upgrades changed if matching slots are not available", () => {
-      const upgrades: Upgrade[] = [
-        { id: 1, name: "Upgrade 1", slot: "Astromech" },
-        { id: 2, name: "Upgrade 2", slot: "Torpedo" },
-      ];
-
-      const initialPilot: Partial<SquadPilot> = {
-        squadPilotId: "uniqueKey2" as UniqueKey,
-        upgrades: [
-          { squadPilotUpgradeSlotKey: "slot1", slot: "Missile", upgrade: null },
-          { squadPilotUpgradeSlotKey: "slot2", slot: "Cannon", upgrade: null },
-        ],
-      };
-
-      const getSquadPilotWithUpgradeSetMock = jest.fn();
-
-      const result = getSquadPilotWithMultipleUpgradesSet(upgrades, initialPilot as SquadPilot, {
-        getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
-      });
-
-      expect(getSquadPilotWithUpgradeSetMock).not.toHaveBeenCalled();
-      expect(result).toEqual(initialPilot);
-    });
-
-    it("should only set upgrades for available slots and leave others", () => {
-      const upgradeAstromech = { id: 1, name: "upgrade astromech", slot: "Astromech" };
-      const upgradeTorpedo1 = { id: 2, name: "Upgrade torpedo 1", slot: "Torpedo" };
-      const upgradeCannon = { id: 3, name: "Upgrade cannon", slot: "Cannon" }; // shouldn't add because there are no cannon slots
-      const upgradeTorpedo2 = { id: 4, name: "Upgrade torpedo 2", slot: "Torpedo" }; // shouldnt add because there is only one slot available for torpedoes
-
-      const upgradesToSet: Upgrade[] = [upgradeAstromech, upgradeTorpedo1, upgradeCannon, upgradeTorpedo2];
-
-      const slotAstromech = { squadPilotUpgradeSlotKey: "slot1", slot: "Astromech", upgrade: null };
-      const slotMissle = { squadPilotUpgradeSlotKey: "slot2", slot: "Missile", upgrade: null };
-      const slotTorpedo = { squadPilotUpgradeSlotKey: "slot3", slot: "Torpedo", upgrade: null };
-
-      const initialPilot: Partial<SquadPilot> = {
-        squadPilotId: "uniqueKey3" as UniqueKey,
-        upgrades: [slotAstromech, slotMissle, slotTorpedo],
-      };
-
-      const getSquadPilotWithUpgradeSetMock = jest.fn((upgradeBeingCopied, matchingSlotOnNewShip, squadPilot) => {
-        return {
-          // simplified mock of set upgrade function...
-          ...squadPilot,
-          upgrades: squadPilot.upgrades.map((upslot) => {
-            if (upslot.slot === upgradeBeingCopied.slot && !upslot.upgrade) {
-              return { ...upslot, upgrade: upgradeBeingCopied };
-            }
-            return upslot;
-          }),
-        };
-      });
-
-      const result = getSquadPilotWithMultipleUpgradesSet(upgradesToSet, initialPilot as SquadPilot, {
-        getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
-      });
-
-      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledTimes(2);
-      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(upgradeAstromech, slotAstromech, expect.anything());
-      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(upgradeTorpedo1, slotTorpedo, expect.anything());
-      expect(result).toEqual({
-        ...initialPilot,
-        upgrades: [
-          { ...slotAstromech, upgrade: upgradeAstromech },
-          slotMissle,
-          { ...slotTorpedo, upgrade: upgradeTorpedo1 },
-        ],
-      });
-    });
-    it("should set upgrade on a missing slot if that slot is added by confersAddons", () => {
-      const titleThatConfersAstromech: Upgrade = {
-        name: "Punishing One",
-        id: 233423,
-        slot: "Title",
-        confersAddons: [
-          {
-            type: "Upgrade",
-            slot: "Astromech",
-          },
-        ],
-      };
-
-      const astromechUpgrade: Upgrade = {
-        name: "an astromech",
-        id: 124313,
-        slot: "Astromech",
-      };
-
-      const upgradesToAdd: Upgrade[] = [
-        astromechUpgrade, // putting dependent addon at the front so that the test will fail if the function doesn't attempt to add after adding title
-        titleThatConfersAstromech,
-      ];
-
-      const initialSquadPilotWithNoAstromechSlots: Partial<SquadPilot> = {
-        upgrades: [
-          {
-            squadPilotUpgradeSlotKey: "Torpedo1",
-            slot: "Torpedo",
-            upgrade: undefined,
-            parentSquadPilotUpgradeSlotKey: null,
-          },
-          {
-            squadPilotUpgradeSlotKey: "Crew1",
-            slot: "Crew",
-            upgrade: undefined,
-            parentSquadPilotUpgradeSlotKey: null,
-          },
-          {
-            squadPilotUpgradeSlotKey: "Title1",
-            slot: "Title",
-            upgrade: undefined,
-            parentSquadPilotUpgradeSlotKey: null,
-          },
-        ],
-      };
-
-      const astromechSlotToadd: SquadPilotUpgradeSlot = {
-        slot: "Astromech",
-        squadPilotUpgradeSlotKey: "Astromech1",
-        parentSquadPilotUpgradeSlotKey: null,
+  describe("getSquadPilotWithUpgradeRemoved", () => {
+    it("should return squadPilot when upgrade is already unset", () => {
+      const emptyUpgradeSlot: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Modification1",
+        slot: "Modification",
         upgrade: null,
+        parentSquadPilotUpgradeSlotKey: null,
+      };
+      const samplePilot: Partial<SquadPilot> = {
+        squadPilotId: "test_ship" as UniqueKey,
+        upgrades: [emptyUpgradeSlot],
       };
 
-      const getSquadPilotWithUpgradeSetMock = jest.fn((upgradeBeingCopied, matchingSlotOnNewShip, squadPilot) => {
-        return {
-          // simplified mock of set upgrade function...
-          ...squadPilot,
-          upgrades: squadPilot.upgrades.map((upslot) => {
-            if (upslot.slot === upgradeBeingCopied.slot && !upslot.upgrade) {
-              return { ...upslot, upgrade: upgradeBeingCopied };
-            }
-            return upslot;
-          }),
-        };
-      });
-
-      getSquadPilotWithUpgradeSetMock.mockReturnValueOnce({
-        ...initialSquadPilotWithNoAstromechSlots,
-        upgrades: [
-          ...initialSquadPilotWithNoAstromechSlots.upgrades.map((upslot) => {
-            if (upslot.slot !== "Title") {
-              return upslot;
-            }
-            return {
-              ...upslot,
-              upgrade: titleThatConfersAstromech,
-            };
-          }),
-          astromechSlotToadd,
-        ],
-      });
-
-      const result = getSquadPilotWithMultipleUpgradesSet(
-        upgradesToAdd,
-        initialSquadPilotWithNoAstromechSlots as SquadPilot,
-        {
-          getSquadPilotWithUpgradeSetFn: getSquadPilotWithUpgradeSetMock,
+      const result = getSquadPilotWithUpgradeRemoved(emptyUpgradeSlot, samplePilot as SquadPilot);
+      expect(result).toBe(samplePilot);
+    });
+    it("should remove upgrade from the upgrade slot specified", () => {
+      const upgradeSlotToEmpty: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Modification1",
+        slot: "Modification",
+        upgrade: {
+          name: "test_upgrade",
+          id: 5,
+          slot: "Modification",
         },
-      );
+      };
+      const samplePilot: Partial<SquadPilot> = {
+        squadPilotId: "test_ship" as UniqueKey,
+        upgrades: [upgradeSlotToEmpty],
+      };
 
-      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledTimes(2);
-      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(
-        titleThatConfersAstromech,
-        initialSquadPilotWithNoAstromechSlots.upgrades[2],
-        initialSquadPilotWithNoAstromechSlots,
-      );
-      expect(getSquadPilotWithUpgradeSetMock).toHaveBeenCalledWith(
-        astromechUpgrade,
-        astromechSlotToadd,
-        expect.anything(),
-      );
-      expect(result).toEqual({
-        ...initialSquadPilotWithNoAstromechSlots,
+      const expected: Partial<SquadPilot> = {
+        ...samplePilot,
         upgrades: [
           {
-            squadPilotUpgradeSlotKey: "Torpedo1",
-            slot: "Torpedo",
-            upgrade: undefined,
-            parentSquadPilotUpgradeSlotKey: null,
-          },
-          {
-            squadPilotUpgradeSlotKey: "Crew1",
-            slot: "Crew",
-            upgrade: undefined,
-            parentSquadPilotUpgradeSlotKey: null,
-          },
-          {
-            squadPilotUpgradeSlotKey: "Title1",
-            slot: "Title",
-            upgrade: titleThatConfersAstromech,
-            parentSquadPilotUpgradeSlotKey: null,
-          },
-          {
-            squadPilotUpgradeSlotKey: "Astromech1",
-            slot: "Astromech",
-            upgrade: astromechUpgrade,
+            ...upgradeSlotToEmpty,
+            upgrade: null,
             parentSquadPilotUpgradeSlotKey: null,
           },
         ],
-      });
+      };
+
+      const result = getSquadPilotWithUpgradeRemoved(upgradeSlotToEmpty, samplePilot as SquadPilot);
+
+      expect(result).toEqual(expected);
+    });
+    it("should remove also_occupies reservations due to the upgrade slot specified", () => {
+      const parentSlotKey = "Payload1";
+      const parentSlot: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: parentSlotKey,
+        slot: "Payload",
+        upgrade: {
+          name: "bomblet_generator",
+          id: 5,
+          slot: "Modification",
+        },
+        parentSquadPilotUpgradeSlotKey: null,
+      };
+      const also_occupied_slot: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Payload2",
+        slot: "Payload",
+        upgrade: null,
+        parentSquadPilotUpgradeSlotKey: parentSlotKey,
+      };
+      const samplePilot: Partial<SquadPilot> = {
+        squadPilotId: "test_ship" as UniqueKey,
+        upgrades: [parentSlot, also_occupied_slot],
+      };
+
+      const expected: Partial<SquadPilot> = {
+        ...samplePilot,
+        upgrades: [
+          {
+            ...parentSlot,
+            upgrade: null,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            ...also_occupied_slot,
+            upgrade: null,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+        ],
+      };
+
+      const result = getSquadPilotWithUpgradeRemoved(parentSlot, samplePilot as SquadPilot);
+
+      expect(result).toEqual(expected);
+    });
+    it("should remove parent slot if also_occupies_slot has removeUpgrade called on it", () => {
+      const parentSlotKey = "Payload1";
+      const parentSlot: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: parentSlotKey,
+        slot: "Payload",
+        upgrade: {
+          name: "bomblet_generator",
+          id: 5,
+          slot: "Modification",
+        },
+        parentSquadPilotUpgradeSlotKey: null,
+      };
+      const also_occupied_slot: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Payload2",
+        slot: "Payload",
+        upgrade: null,
+        parentSquadPilotUpgradeSlotKey: parentSlotKey,
+      };
+      const samplePilot: Partial<SquadPilot> = {
+        squadPilotId: "test_ship" as UniqueKey,
+        upgrades: [parentSlot, also_occupied_slot],
+      };
+
+      const expected: Partial<SquadPilot> = {
+        ...samplePilot,
+        upgrades: [
+          {
+            ...parentSlot,
+            upgrade: null,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            ...also_occupied_slot,
+            upgrade: null,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+        ],
+      };
+
+      const result = getSquadPilotWithUpgradeRemoved(also_occupied_slot, samplePilot as SquadPilot);
+
+      expect(result).toEqual(expected);
+    });
+    it("should remove conferredAddon slots when upgrade that confers addons is removed", () => {
+      const parentSlotKey = "Device1";
+      const parentSlot: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: parentSlotKey,
+        slot: "Device",
+        upgrade: {
+          name: "just_a_bomb",
+          id: 5,
+          slot: "Device",
+        },
+        parentSquadPilotUpgradeSlotKey: null,
+      };
+      const upgradeSlotThatIsConferringAddon: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Title1",
+        slot: "Title",
+        parentSquadPilotUpgradeSlotKey: null,
+        upgrade: {
+          name: "upgradeThatAddsDeviceSlot",
+          id: 2,
+          slot: "Title",
+          confersAddons: [
+            {
+              type: "Upgrade",
+              slot: "Device",
+            },
+          ],
+        },
+      };
+      const samplePilot: Partial<SquadPilot> = {
+        squadPilotId: "test_ship" as UniqueKey,
+        upgrades: [parentSlot, upgradeSlotThatIsConferringAddon],
+      };
+
+      const expected: Partial<SquadPilot> = {
+        ...samplePilot,
+        upgrades: [
+          {
+            ...upgradeSlotThatIsConferringAddon,
+            upgrade: null,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+        ],
+      };
+
+      const result = getSquadPilotWithUpgradeRemoved(upgradeSlotThatIsConferringAddon, samplePilot as SquadPilot);
+
+      expect(result).toEqual(expected);
+    });
+    it("should remove conferredAddon slots and parent upgrade when upgrade that confers addons is removed", () => {
+      const parentSlotKey = "Device1";
+      const parentSlot: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: parentSlotKey,
+        slot: "Device",
+        upgrade: {
+          name: "bomblet_generator",
+          id: 5,
+          slot: "Modification",
+        },
+        parentSquadPilotUpgradeSlotKey: null,
+      };
+      const also_occupied_slot: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Device2",
+        slot: "Device",
+        upgrade: null,
+        parentSquadPilotUpgradeSlotKey: parentSlotKey,
+      };
+      const upgradeSlotThatIsConferringAddon: SquadPilotUpgradeSlot = {
+        squadPilotUpgradeSlotKey: "Title1",
+        slot: "Title",
+        parentSquadPilotUpgradeSlotKey: null,
+        upgrade: {
+          name: "upgradeThatAddsDeviceSlot",
+          id: 2,
+          slot: "Title",
+          confersAddons: [
+            {
+              type: "Upgrade",
+              slot: "Device",
+            },
+          ],
+        },
+      };
+      const samplePilot: Partial<SquadPilot> = {
+        squadPilotId: "test_ship" as UniqueKey,
+        upgrades: [parentSlot, also_occupied_slot, upgradeSlotThatIsConferringAddon],
+      };
+
+      const expected: Partial<SquadPilot> = {
+        ...samplePilot,
+        upgrades: [
+          {
+            ...parentSlot,
+            upgrade: null,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+          {
+            ...upgradeSlotThatIsConferringAddon,
+            upgrade: null,
+            parentSquadPilotUpgradeSlotKey: null,
+          },
+        ],
+      };
+
+      const result = getSquadPilotWithUpgradeRemoved(upgradeSlotThatIsConferringAddon, samplePilot as SquadPilot);
+
+      expect(result).toEqual(expected);
     });
   });
   describe("getSquadWithInvalidUpgradesRemoved", () => {
