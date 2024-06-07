@@ -9,6 +9,7 @@ import {
 } from "./xwing_utils";
 
 // TODO: go mock the dependencies in these functions. Right now this functions more like a suite of integration tests.
+// SquadContext.test.ts is built using actual mocking
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
