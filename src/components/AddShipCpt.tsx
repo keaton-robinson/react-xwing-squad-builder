@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from "react";
 import { Dropdown } from "@keatonr06/reactjs-dropdown-component";
 import { DropDownStyles } from "../styleData/styleData";
-import { pilots, ships, upgrades } from "../data/xwing_data";
+import { ships } from "../data/xwing_data";
 import { InfoPanelCard, ShipName, Squad } from "../data/xwing_types";
 import { useSquadsDispatch } from "../contexts/SquadContext";
 
@@ -28,13 +28,14 @@ const AddShipCpt: React.FC<AddShipCptProps> = (props) => {
 
   const handleShipSelection = (selectedDropDownOption: { label: ShipName; value: ShipName }) => {
     if (selectedDropDownOption) {
+      // tell parent component about new ship,
       squadsDispatch({
         type: "addShip",
         squad: props.squad,
         newShip: selectedDropDownOption.value,
       });
 
-      ddlAddShipRef.current.clearSelection(); //tell parent component about new ship, but reset this dropdown's value to "none"
+      ddlAddShipRef.current.clearSelection(); // reset this dropdown's value to "none"
     }
   };
 
