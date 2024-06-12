@@ -12,8 +12,8 @@ interface InfoPanelPilotCptProps {
 }
 
 const InfoPanelPilotCpt: React.FC<InfoPanelPilotCptProps> = (props) => {
-  const getRulesMarkupForPilot = (pilotToShow) => {
-    const thePilotRules = pilotRules[pilotToShow.name];
+  const getRulesMarkupForPilot = (pilotToShow: SquadPilot) => {
+    const thePilotRules = pilotRules[pilotToShow.pilotName];
     if (thePilotRules) {
       return fixIcons(thePilotRules.text);
     }
