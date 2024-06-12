@@ -20,14 +20,14 @@ const HeaderComponent: React.FC<HeaderProps> = (props) => {
   const showLogin = () => {
     setModal({
       title: "Login",
-      children: <LoginModal switchToRegister={showRegister} close={() => setModal(null)} />,
+      children: <LoginModal switchToRegister={showRegister} close={() => setModal(null)} />, // would be good to test that register modal is shown when user clicks this button
     });
   };
 
   const showRegister = () => {
     setModal({
       title: "Register",
-      children: <RegisterModal switchToLogin={showLogin} />,
+      children: <RegisterModal switchToLogin={showLogin} />, // would be good to test login modal is shown when switch button is pressed
     });
   };
 
