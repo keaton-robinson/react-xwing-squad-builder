@@ -10,7 +10,7 @@ interface InfoPanelUpgradeCptProps {
 }
 
 const InfoPanelUpgradeCpt: React.FC<InfoPanelUpgradeCptProps> = (props) => {
-  const renderRestrictions = (upgrade) => {
+  const renderRestrictions = (upgrade: Upgrade) => {
     if (upgrade.faction || upgrade.ship || upgrade.restrictions) {
       const textRestrictions = [];
       const actionRestrictions = [];
@@ -252,7 +252,10 @@ const InfoPanelUpgradeCpt: React.FC<InfoPanelUpgradeCptProps> = (props) => {
           </span>
           <span style={{ marginLeft: "10px" }}>
             {upgrade.rangebonus ? (
-              <i className="xwing-miniatures-font red header-range xwing-miniatures-font-rangebonusindicator"></i>
+              <i
+                className="xwing-miniatures-font red header-range xwing-miniatures-font-rangebonusindicator"
+                title="range bonus"
+              />
             ) : null}
           </span>
         </div>
