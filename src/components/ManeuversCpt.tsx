@@ -3,12 +3,12 @@ import ManeuverCpt from "./ManeuverCpt";
 import { difficulties, bearings } from "../data/xwing_data";
 import { Difficulty } from "../data/xwing_types";
 
-interface ManeuverCptProps {
+interface ManeuversCptProps {
   maneuvers: Difficulty[][];
   maneuversAfterUpgrades?: Difficulty[][];
 }
 
-const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
+const ManeuversCpt: React.FC<ManeuversCptProps> = (props) => {
   const determineRowsAndColumnsToRender = () => {
     const rowsToRender = {};
     const columnsToRender = {};
@@ -23,7 +23,7 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
     return { rowsToRender, columnsToRender };
   };
 
-  const getEffectiveManeuver = (row, column) => {
+  const getEffectiveDifficulty = (row, column) => {
     if (props.maneuversAfterUpgrades) {
       return props.maneuversAfterUpgrades[row][column];
     }
@@ -42,78 +42,81 @@ const ManeuversCpt: React.FC<ManeuverCptProps> = (props) => {
           <tr key={`speed${i}`}>
             <td>{i}</td>
             {columnsToRender[0] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.left_hard} difficulty={getEffectiveManeuver(i, 0)} />
+              <td className={bearings.left_hard}>
+                <ManeuverCpt bearing={bearings.left_hard} difficulty={getEffectiveDifficulty(i, 0)} />
               </td>
             ) : null}
             {columnsToRender[1] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.left_bank} difficulty={getEffectiveManeuver(i, 1)} />
+              <td className={bearings.left_bank}>
+                <ManeuverCpt bearing={bearings.left_bank} difficulty={getEffectiveDifficulty(i, 1)} />
               </td>
             ) : null}
             {columnsToRender[2] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.straight} difficulty={getEffectiveManeuver(i, 2)} />
+              <td className={i !== 0 ? bearings.straight : bearings.stationary}>
+                <ManeuverCpt
+                  bearing={i !== 0 ? bearings.straight : bearings.stationary}
+                  difficulty={getEffectiveDifficulty(i, 2)}
+                />
               </td>
             ) : null}
 
             {columnsToRender[3] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.right_bank} difficulty={getEffectiveManeuver(i, 3)} />
+              <td className={bearings.right_bank}>
+                <ManeuverCpt bearing={bearings.right_bank} difficulty={getEffectiveDifficulty(i, 3)} />
               </td>
             ) : null}
 
             {columnsToRender[4] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.right_hard} difficulty={getEffectiveManeuver(i, 4)} />
+              <td className={bearings.right_hard}>
+                <ManeuverCpt bearing={bearings.right_hard} difficulty={getEffectiveDifficulty(i, 4)} />
               </td>
             ) : null}
 
             {columnsToRender[5] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.k_turn} difficulty={getEffectiveManeuver(i, 5)} />
+              <td className={bearings.k_turn}>
+                <ManeuverCpt bearing={bearings.k_turn} difficulty={getEffectiveDifficulty(i, 5)} />
               </td>
             ) : null}
 
             {columnsToRender[6] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.left_sloop} difficulty={getEffectiveManeuver(i, 6)} />
+              <td className={bearings.left_sloop}>
+                <ManeuverCpt bearing={bearings.left_sloop} difficulty={getEffectiveDifficulty(i, 6)} />
               </td>
             ) : null}
 
             {columnsToRender[7] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.right_sloop} difficulty={getEffectiveManeuver(i, 7)} />
+              <td className={bearings.right_sloop}>
+                <ManeuverCpt bearing={bearings.right_sloop} difficulty={getEffectiveDifficulty(i, 7)} />
               </td>
             ) : null}
 
             {columnsToRender[8] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.left_tallion} difficulty={getEffectiveManeuver(i, 8)} />
+              <td className={bearings.left_tallion}>
+                <ManeuverCpt bearing={bearings.left_tallion} difficulty={getEffectiveDifficulty(i, 8)} />
               </td>
             ) : null}
 
             {columnsToRender[9] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.right_tallion} difficulty={getEffectiveManeuver(i, 9)} />
+              <td className={bearings.right_tallion}>
+                <ManeuverCpt bearing={bearings.right_tallion} difficulty={getEffectiveDifficulty(i, 9)} />
               </td>
             ) : null}
 
             {columnsToRender[10] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.reverse_left} difficulty={getEffectiveManeuver(i, 10)} />
+              <td className={bearings.reverse_left}>
+                <ManeuverCpt bearing={bearings.reverse_left} difficulty={getEffectiveDifficulty(i, 10)} />
               </td>
             ) : null}
 
             {columnsToRender[11] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.reverse_straight} difficulty={getEffectiveManeuver(i, 11)} />
+              <td className={bearings.reverse_straight}>
+                <ManeuverCpt bearing={bearings.reverse_straight} difficulty={getEffectiveDifficulty(i, 11)} />
               </td>
             ) : null}
 
             {columnsToRender[12] ? (
-              <td>
-                <ManeuverCpt bearing={bearings.reverse_right} difficulty={getEffectiveManeuver(i, 12)} />
+              <td className={bearings.reverse_right}>
+                <ManeuverCpt bearing={bearings.reverse_right} difficulty={getEffectiveDifficulty(i, 12)} />
               </td>
             ) : null}
           </tr>,
