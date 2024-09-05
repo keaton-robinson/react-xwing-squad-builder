@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Recreation of yasb 2.0 using react and some of the yasb 2.0 images and fonts for learning purposes",
   "main": "index.js",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watchAll",
