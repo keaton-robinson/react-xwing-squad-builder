@@ -7,19 +7,6 @@ This is the front-end's git repository. To see the backend api's codebase , see 
 
 # go to live app: https://xwing-front-0819d636876c.herokuapp.com/
 
-This was my first attempt at a non-trivial functioning React application. I made some rookie mistakes in here that I would fix if I rewrote this app. There's some direct mutation of React state in here that needs correcting.
-
-If I were writing this again, here's some changes I would make:
-
-- don't use React class component at all. Use only functional components
-- redesign how state is managed to avoid any direct state mutation
-- consider using a React context to avoid some prop drilling.
-- Use TypeScript from the very beginning
-- include unit tests from the beginning. I added a few unit tests here as an exercise, but ran into problems once I started finding direct state mutations.
-- focus on having easy dependency injection so that faking test dependencies is possible without fancy Jest tricks
-
-I borrowed a few aeshetic things and a dataset from YASB so that I could focus on the engineering aspects of this project.
-
 What I wrote myself:
 
 - my own React components which implement the core features of YASB
